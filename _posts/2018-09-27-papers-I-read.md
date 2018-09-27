@@ -5,7 +5,8 @@ date: 2018-09-27
 categoires: lists update
 ---
 
-# Contents
+gkgkgk its 
+<!-- # Contents
 ### Papers I read
 * [Unsupervised Deep Embedding for Clustering Analysis, J. Xie, R. Girshick, A. Farhadi (University of Washington, Facebook AI Reaserch), 2016](https://github.com/yjucho1/articles/blob/master/DEC/readme.md)
 
@@ -22,4 +23,4 @@ categoires: lists update
 
 * [Generative Adversarial Nets](https://github.com/yjucho1/articles/blob/master/GAN2/README.md)
 * [Variational Auto-Encoder](https://github.com/yjucho1/articles/blob/master/VAE/README.md)
-* [AutoML package - Auto Keras 이용 후기](https://github.com/yjucho1/articles/blob/master/auto-keras/readme.md)
+* [AutoML package - Auto Keras 이용 후기](https://github.com/yjucho1/articles/blob/master/auto-keras/readme.md) -->
