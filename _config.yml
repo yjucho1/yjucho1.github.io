@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "ko-KR"
-title                    : "yjucho"
+title                    : "yjucho' blog"
 title_separator          : "-"
 name                     : "yjucho"
 description              : "DATA, Deep Learning, AI"
@@ -101,15 +101,15 @@ analytics:
 
 # Site Author
 author:
-  name             : "조윤주"
+  name             : "yjucho"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "data scientist"
+  bio              : "공부하기, Data, Deep Learning, AI"
   location         : "Seoul, Korea"
   email            : "jyj0729@gmail.com"
   links:
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope-square"
-      url: mailto:jyj0729@gmail.com
+    # - label: "Email"
+    #   icon: "fas fa-fw fa-envelope-square"
+    #   url: mailto:jyj0729@gmail.com
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
@@ -282,7 +282,13 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: #true
+      read_time: true
       comments: true
       share: true
       related: true
+   - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      author_profile: true
