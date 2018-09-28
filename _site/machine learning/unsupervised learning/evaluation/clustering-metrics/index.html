@@ -1,0 +1,454 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information - yjucho’s blog</title>
+<meta name="description" content="클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information">
+<meta property="og:url" content="http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics/">
+
+
+  <meta property="og:description" content="클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-09-28T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2018-09-28T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information">
+    <meta itemprop="description" content="클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.">
+    <meta itemprop="datePublished" content="September 28, 2018">
+    <meta itemprop="dateModified" content="September 28, 2018">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.</p>
+
+<p>알고리즘 측면에서는 전통적으로 <a href="https://en.wikipedia.org/wiki/Hierarchical_clustering">Hierarchical clustering</a>, <a href="https://en.wikipedia.org/wiki/K-means_clustering">K-means clustering</a> 등 다양한 클러스터링 알고리즘이 존재하고, 최근에는 <a href="https://arxiv.org/abs/1801.07648">딥러닝 기반의 클러스터링</a> 알고리즘도 다양하게 제안되고 있습니다.</p>
+
+<p>여러가지 논문이나 자료들을 찾아보면 클러스터링 후 결과를 평가하는 방법이 잘 와닿지 않는 경우가 많습니다. 기회가 될 때 한번 정리해보자는 생각으로 시작합니다.</p>
+
+<p>클러스터링 결과를 평가하는 방식은 크게 2가지 형태가 있습니다.</p>
+<ul>
+  <li>supervised, which uses a ground truth class values for each sample.</li>
+  <li>unsupervised, which does not and measures the ‘quality’ of the model itself.</li>
+</ul>
+
+<p>여기서는 unsupervised 방식의 지표들을 소개하고자 합니다.</p>
+
+<p>그 첫번째 놈으로 Mutual Information에 대해서 정리합니다.</p>
+
+<p>http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
+http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation</p>
+
+<p>Mutual Information 
+두 랜덤 변수간의 상호 의존도를 나타냄
+독립변수 A를 통해서 B에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가
+결합확률 P(X, Y)와 marginal distribution분포의 곱, P(X)*P(Y)이 얼마나 유사한지를 결정</p>
+
+<h2 id="정의">정의</h2>
+
+<p><img src="/assets/img/2018-09-28/MI_definition.png" width="400" /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#evaluation" class="page__taxonomy-item" rel="tag">Evaluation</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#machine-learning" class="page__taxonomy-item" rel="tag">Machine Learning</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#unsupervised-learning" class="page__taxonomy-item" rel="tag">Unsupervised Learning</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-09-28">September 28, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BML%5D+%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0%EB%A7%81%EC%9D%84+%ED%8F%89%EA%B0%80%ED%95%98%EB%8A%94+%EC%B2%99%EB%8F%84+-+Normalized+Mutual+Information%20http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/blogging/hello-world/" class="pagination--pager" title="hello, world
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/blogging/hello-world/" rel="permalink">hello, world
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">hi?
+I’m yjucho!
+</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

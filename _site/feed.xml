@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-09-28T18:04:07+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information</title><link href="http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics/" rel="alternate" type="text/html" title="[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information" /><published>2018-09-28T00:00:00+09:00</published><updated>2018-09-28T00:00:00+09:00</updated><id>http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics</id><content type="html" xml:base="http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics/">&lt;p&gt;클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.&lt;/p&gt;
+
+&lt;p&gt;알고리즘 측면에서는 전통적으로 &lt;a href=&quot;https://en.wikipedia.org/wiki/Hierarchical_clustering&quot;&gt;Hierarchical clustering&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/K-means_clustering&quot;&gt;K-means clustering&lt;/a&gt; 등 다양한 클러스터링 알고리즘이 존재하고, 최근에는 &lt;a href=&quot;https://arxiv.org/abs/1801.07648&quot;&gt;딥러닝 기반의 클러스터링&lt;/a&gt; 알고리즘도 다양하게 제안되고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;여러가지 논문이나 자료들을 찾아보면 클러스터링 후 결과를 평가하는 방법이 잘 와닿지 않는 경우가 많습니다. 기회가 될 때 한번 정리해보자는 생각으로 시작합니다.&lt;/p&gt;
+
+&lt;p&gt;클러스터링 결과를 평가하는 방식은 크게 2가지 형태가 있습니다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;supervised, which uses a ground truth class values for each sample.&lt;/li&gt;
+  &lt;li&gt;unsupervised, which does not and measures the ‘quality’ of the model itself.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;여기서는 unsupervised 방식의 지표들을 소개하고자 합니다.&lt;/p&gt;
+
+&lt;p&gt;그 첫번째 놈으로 Mutual Information에 대해서 정리합니다.&lt;/p&gt;
+
+&lt;p&gt;http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
+http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation&lt;/p&gt;
+
+&lt;p&gt;Mutual Information 
+두 랜덤 변수간의 상호 의존도를 나타냄
+독립변수 A를 통해서 B에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가
+결합확률 P(X, Y)와 marginal distribution분포의 곱, P(X)*P(Y)이 얼마나 유사한지를 결정&lt;/p&gt;
+
+&lt;h2 id=&quot;정의&quot;&gt;정의&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-09-28/MI_definition.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.</summary></entry><entry><title type="html">hello, world</title><link href="http://localhost:4000/blogging/hello-world/" rel="alternate" type="text/html" title="hello, world" /><published>2018-09-27T00:00:00+09:00</published><updated>2018-09-27T00:00:00+09:00</updated><id>http://localhost:4000/blogging/hello-world</id><content type="html" xml:base="http://localhost:4000/blogging/hello-world/">&lt;p&gt;hi?
+I’m yjucho!&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">hi? I’m yjucho!</summary></entry></feed>
