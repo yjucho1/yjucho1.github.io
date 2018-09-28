@@ -26,4 +26,4 @@ Mutual Information
 
 ## 정의
 
-![Mutual Information Definition]({{ "/assets/img/2018-09-28/MI_definition.png"}})
+<img src= "/assets/img/2018-09-28/MI_definition.png" width="300">
