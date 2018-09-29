@@ -9,19 +9,19 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information - yjucho’s blog</title>
-<meta name="description" content="클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.">
+<!-- begin _includes/seo.html --><title>[ML] 클러스터링을 평가하는 척도 - yjucho’s blog</title>
+<meta name="description" content="클러스터링은 주어진 데이터에 대한 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 세그먼트를 나눠 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도) 속성을 분석하여 인사이트를 도출하는 분석 등등에서 활용됩니다.">
 
 
 
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information">
-<meta property="og:url" content="http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics/">
+<meta property="og:title" content="[ML] 클러스터링을 평가하는 척도">
+<meta property="og:url" content="http://localhost:4000/machine%20learning/unsupervised%20learning/clustering%20evaluation/clustering-metrics/">
 
 
-  <meta property="og:description" content="클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.">
+  <meta property="og:description" content="클러스터링은 주어진 데이터에 대한 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 세그먼트를 나눠 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도) 속성을 분석하여 인사이트를 도출하는 분석 등등에서 활용됩니다.">
 
 
 
@@ -42,7 +42,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/machine%20learning/unsupervised%20learning/evaluation/clustering-metrics/">
+<link rel="canonical" href="http://localhost:4000/machine%20learning/unsupervised%20learning/clustering%20evaluation/clustering-metrics/">
 
 
 
@@ -257,15 +257,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information">
-    <meta itemprop="description" content="클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.">
+    <meta itemprop="headline" content="[ML] 클러스터링을 평가하는 척도">
+    <meta itemprop="description" content="클러스터링은 주어진 데이터에 대한 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 세그먼트를 나눠 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도) 속성을 분석하여 인사이트를 도출하는 분석 등등에서 활용됩니다.">
     <meta itemprop="datePublished" content="September 28, 2018">
     <meta itemprop="dateModified" content="September 28, 2018">
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">[ML] 클러스터링을 평가하는 척도 - Normalized Mutual Information
+          <h1 id="page-title" class="page__title" itemprop="headline">[ML] 클러스터링을 평가하는 척도
 </h1>
           
         </header>
@@ -273,29 +273,34 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>클러스터링은 주어진 데이터에 대한 정보가 많이 많을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 군집화하여 맞춤 전략을 도출한다던지, 상품(요즘엔 동영상, 음원까지도) 속성을 기반으로 카테고리화하는 것들 등등에서 활용됩니다.</p>
+        <p>클러스터링은 주어진 데이터에 대한 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 세그먼트를 나눠 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도) 속성을 분석하여 인사이트를 도출하는 분석 등등에서 활용됩니다.</p>
 
 <p>알고리즘 측면에서는 전통적으로 <a href="https://en.wikipedia.org/wiki/Hierarchical_clustering">Hierarchical clustering</a>, <a href="https://en.wikipedia.org/wiki/K-means_clustering">K-means clustering</a> 등 다양한 클러스터링 알고리즘이 존재하고, 최근에는 <a href="https://arxiv.org/abs/1801.07648">딥러닝 기반의 클러스터링</a> 알고리즘도 다양하게 제안되고 있습니다.</p>
 
-<p>여러가지 논문이나 자료들을 찾아보면 클러스터링 후 결과를 평가하는 방법이 잘 와닿지 않는 경우가 많습니다. 기회가 될 때 한번 정리해보자는 생각으로 시작합니다.</p>
+<p>여러가지 논문이나 자료들을 찾아보면 클러스터링 후 결과를 평가하는 방법이 잘 와닿지 않는 경우가 많습니다. 기회가 될 때 한번 정리해보자는 생각이 들어 포스팅을 시작하게 되었습니다.</p>
 
 <p>클러스터링 결과를 평가하는 방식은 크게 2가지 형태가 있습니다.</p>
 <ul>
-  <li>supervised, which uses a ground truth class values for each sample.</li>
-  <li>unsupervised, which does not and measures the ‘quality’ of the model itself.</li>
+  <li>supervised, which uses a ground truth class values for each sample.
+    <ul>
+      <li>지도 방식으로 실제 데이터의 클래스가 존재할때입니다.</li>
+      <li>새로운 클러스터링 알고리즘의 성능을 평가하기위해 이미 알려진 벤치마크 데이터셋을 이용해 다른 알고리즘들과 Accuracy 기준으로 비교하는 방식입니다.</li>
+    </ul>
+  </li>
+  <li>unsupervised, which does not and measures the ‘quality’ of the model itself.
+    <ul>
+      <li>비지도 방식으로 모델의 좋고 나쁨을 평가하지 않는 방식입니다.</li>
+    </ul>
+  </li>
 </ul>
 
-<p>여기서는 unsupervised 방식의 지표들을 소개하고자 합니다.</p>
-
-<p>그 첫번째 놈으로 Mutual Information에 대해서 정리합니다.</p>
+<p>이 포스팅에서는 비지도 방식으로 클러스터링 결과를 펴가하는 지표들을 소개하고자 합니다.</p>
 
 <p>http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
 http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation</p>
 
-<p>Mutual Information 
-두 랜덤 변수간의 상호 의존도를 나타냄
-독립변수 A를 통해서 B에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가
-결합확률 P(X, Y)와 marginal distribution분포의 곱, P(X)*P(Y)이 얼마나 유사한지를 결정</p>
+<h2 id="mutual-information">Mutual Information</h2>
+<p><a href="https://en.wikipedia.org/wiki/Mutual_information">Mutual Information</a>은 정보학이나 확률론에서 두 확률 변수간의 상호 의존도를 나타내는 지표입니다. 확률변수 X와 Y가 존재할때, X를 통해서 Y에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가를 측정하는 것으로 결합확률분포 P(X, Y)와 각 변수의 marginal distribution의 곱, P(X)*P(Y)이 얼마나 유사한가로도 해석할수 있습니다.</p>
 
 <h2 id="정의">정의</h2>
 
@@ -322,7 +327,7 @@ http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation</p>
     
       
       
-      <a href="/categories/#evaluation" class="page__taxonomy-item" rel="tag">Evaluation</a><span class="sep">, </span>
+      <a href="/categories/#clustering-evaluation" class="page__taxonomy-item" rel="tag">Clustering Evaluation</a><span class="sep">, </span>
     
       
       
@@ -344,13 +349,13 @@ http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation</p>
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=%5BML%5D+%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0%EB%A7%81%EC%9D%84+%ED%8F%89%EA%B0%80%ED%95%98%EB%8A%94+%EC%B2%99%EB%8F%84+-+Normalized+Mutual+Information%20http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%5BML%5D+%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0%EB%A7%81%EC%9D%84+%ED%8F%89%EA%B0%80%ED%95%98%EB%8A%94+%EC%B2%99%EB%8F%84%20http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fclustering%2520evaluation%2Fclustering-metrics%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fclustering%2520evaluation%2Fclustering-metrics%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fclustering%2520evaluation%2Fclustering-metrics%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fevaluation%2Fclustering-metrics%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fmachine%2520learning%2Funsupervised%2520learning%2Fclustering%2520evaluation%2Fclustering-metrics%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
