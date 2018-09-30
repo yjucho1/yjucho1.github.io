@@ -1,5 +1,5 @@
 ---
-title: "[ML] 클러스터링을 평가하는 척도"
+title: "클러스터링을 평가하는 척도"
 categories: 
   - Machine Learning
   - Unsupervised Learning
