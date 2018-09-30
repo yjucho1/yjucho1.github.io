@@ -1,8 +1,6 @@
 ---
-title: "클러스터링을 평가하는 척도"
+title: "클러스터링을 평가하는 척도 - Mutual Information"
 categories: 
-  - Machine Learning
-  - Unsupervised Learning
   - Clustering Evaluation
 comments: true
 last_modified_at: 2018-09-28
