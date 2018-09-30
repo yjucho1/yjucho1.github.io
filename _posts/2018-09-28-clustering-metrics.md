@@ -48,7 +48,7 @@ In the case of continuous random variables,
 
 
 
-## 클러스터링 평가 지표로서 Mutual Infomation
+## 클러스터링 평가 지표로서 Mutual information
  Mutual Information을 클러스터링 결과를 평가하는 지표로 사용하는 경우는 아래와 같이 정의됩니다. 두가지 클러스터링 할당 결과인 U와 V에 대해서 클러스터에 할당된 확률을 이용합니다.
 
 <img src= "/assets/img/2018-09-28/MI_clustering.png" width="400">
@@ -68,7 +68,7 @@ Normalized Mutual Information은 Mutual Information 값이 0과 1의 사이 값�
 
 -------------
 ### Adjusted Mutual Information
-Normalized Mutual Infomation이 0과 1사이의 값을 갖더라도 여전히 클러스터 수가 증가하면 실제 상호의존도와 상관없이 값이 증가하는 경향이 있습니다. 따라서 최근에는 상호의존도의 기대값을 이용해 각 클러스터에 할당될 확률값(chance)으로 조정한 Adjusted Mutual Infomation을 주로 사용합니다. AMI는 두 클러스터링 결과가 랜덤한 경우 0에 가깝고, 할당 결과가 동일한 경우 1이 되도록 합니다.
+Normalized Mutual information이 0과 1사이의 값을 갖더라도 여전히 클러스터 수가 증가하면 실제 상호의존도와 상관없이 값이 증가하는 경향이 있습니다. 따라서 최근에는 상호의존도의 기대값을 이용해 각 클러스터에 할당될 확률값(chance)으로 조정한 Adjusted Mutual information을 주로 사용합니다. AMI는 두 클러스터링 결과가 랜덤한 경우 0에 가깝고, 할당 결과가 동일한 경우 1이 되도록 합니다.
 
 <img src= "/assets/img/2018-09-28/AMI.png" width="700">
 
@@ -179,7 +179,7 @@ plt.figure(figsize=(8, 4))
 plt.plot(num_cluster, MI, marker='*', label='MI')
 plt.plot(num_cluster, NMI, marker='+', label='NMI')
 plt.plot(num_cluster, AMI, marker='o', label='AMI')
-plt.title('Mutual Infomation based Score')
+plt.title('Mutual information based Score')
 plt.xlabel('number of cluster')
 plt.ylabel('score')
 plt.xticks([2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
