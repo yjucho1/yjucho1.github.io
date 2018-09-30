@@ -4,32 +4,88 @@ categories:
   - Machine Learning
   - Unsupervised Learning
   - Clustering Evaluation
+comments: true
 last_modified_at: 2018-09-28
 ---
 
-클러스터링은 주어진 데이터에 대한 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 마케팅에서 유저 정보를 이용해 세그먼트를 나눠 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도) 속성을 분석하여 인사이트를 도출하는 분석 등등에서 활용됩니다. 
+클러스터링은 주어진 데이터에 대한 명시적인 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 다양한 사용자 정보를 이용해 몇가지 고객군으로 분류하여 고객군별 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도)군의 속성을 분석하여 의미있는 인사이트를 도출하는 것에 활용됩니다. 
 
-알고리즘 측면에서는 전통적으로 [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering), [K-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) 등 다양한 클러스터링 알고리즘이 존재하고, 최근에는 [딥러닝 기반의 클러스터링](https://arxiv.org/abs/1801.07648) 알고리즘도 다양하게 제안되고 있습니다. 
+클러스터링 알고리즘 측면에서는 전통적인 [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering), [K-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) 등이 비교적 쉽게 사용되고 있고, 최근에는 [딥러닝 기반의 클러스터링](https://arxiv.org/abs/1801.07648) 알고리즘이 다양하게 시도되고 있습니다. 
 
-여러가지 논문이나 자료들을 찾아보면 클러스터링 후 결과를 평가하는 방법이 잘 와닿지 않는 경우가 많습니다. 기회가 될 때 한번 정리해보자는 생각이 들어 포스팅을 시작하게 되었습니다.
+여러가지 논문이나 자료들을 찾아보면 클러스터링 결과를 평가하는 방법이 잘 와닿지 않는 경우가 많습니다. 이 포스팅에서는 클러스터링 결과를 평가하는 지표 중 하나인 Mutual Information에 대해 소개하고자 합니다. 
 
 클러스터링 결과를 평가하는 방식은 크게 2가지 형태가 있습니다.
 * supervised, which uses a ground truth class values for each sample.
   * 지도 방식으로 실제 데이터의 클래스가 존재할때입니다. 
-  * 새로운 클러스터링 알고리즘의 성능을 평가하기위해 이미 알려진 벤치마크 데이터셋을 이용해 다른 알고리즘들과 Accuracy 기준으로 비교하는 방식입니다. 
+  * 이미 알려진 벤치마크 데이터셋을 이용해 실제 데이터의 라벨링(ground truth)과 클러스터링 결과를 방식입니다. 
 * unsupervised, which does not and measures the ‘quality’ of the model itself.
-  * 비지도 방식으로 모델의 좋고 나쁨을 평가하지 않는 방식입니다.
+  * 비지도 방식으로 모델의 좋고 나쁨을 직접적으로 평가하지 않는 방식입니다.
+  * 도메인 지식을 사용하거나, 클러스터 내의 데이터들의 밀집도((SSE;sum of the squared error) 등을 사용하여 평가할 수 있습니다. 
 
-이 포스팅에서는 비지도 방식으로 클러스터링 결과를 펴가하는 지표들을 소개하고자 합니다. 
-
-
-
-http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
-http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation
 
 ## Mutual Information 
-[Mutual Information](https://en.wikipedia.org/wiki/Mutual_information)은 정보학이나 확률론에서 두 확률 변수간의 상호 의존도를 나타내는 지표입니다. 확률변수 X와 Y가 존재할때, X를 통해서 Y에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가를 측정하는 것으로 결합확률분포 P(X, Y)와 각 변수의 marginal distribution의 곱, P(X)*P(Y)이 얼마나 유사한가로도 해석할수 있습니다.
+[Mutual Information](https://en.wikipedia.org/wiki/Mutual_information)은 정보학이나 확률론에서 두 확률 변수간의 상호 의존도를 나타내는 지표입니다. 확률변수 X와 Y가 존재할때, X를 통해서 Y에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가를 의미하는 것으로 결합확률분포 P(X, Y)와 각 변수의 marginal distribution의 곱 P(X)*P(Y)이 얼마나 유사한가로 측정됩니다.
 
 ## 정의
+Mutual information of two discrete random variables X and Y can be defined as 
 
-<img src= "/assets/img/2018-09-28/MI_definition.png" width="400">
+<img src= "/assets/img/2018-09-28/MI_definition.png" width="300">
+
+In the case of continuous random variables, 
+
+<img src= "/assets/img/2018-09-28/MI_definition2.png" width="350">
+
+* X와 Y가 서로 독립적이라면 p(x, y) = p(x) * p(y)가 되어 Mutual Information은 0이 됩니다.
+* 또한 X와 Y에 대한 Mutual Information은 p(x, y)와 p(x)*p(y)의 KL divergence와 같습니다.
+
+  <img src= "/assets/img/2018-09-28/MI_KLD.png" width="250">
+
+* 엔트로피 관점에서 Mutual Information은 각 변수가 가진 엔트로피에서 조건부 엔트로피를 뺀 값과 같습니다.
+
+  <img src="/assets/img/2018-09-28/information_quantities.png" width="350">
+  
+  <i>Fig. 엔트로피 다이어그램</i>
+
+  <img src="/assets/img/2018-09-28/MI_entropy.png" width="300">
+
+
+
+## 클러스터링 평가 지표로서 Mutual Infomation
+ Mutual Information을 클러스터링 결과를 평가하는 지표로 사용하는 경우는 아래와 같이 정의됩니다. 두가지 클러스터링 할당 결과인 U와 V에 대해서 클러스터에 할당된 확률을 이용합니다.
+
+<img src= "/assets/img/2018-09-28/MI_clustering.png" width="400">
+ 
+ 하지만 위의 정의를 그대로 사용할 경우 몇가지 문제점이 있고, 이를 보완하기 위해 Normalized MI와 Adjusted MI 등을 주로 사용합니다.
+
+ * 단순히 클러스터의 수가 많을 수록 더 큰 값을 갖게 되는 경향이 있습니다. U와 V의 각 클러스터 수에 따라 정규화할 필요성이 있습니다.
+ * 랜덤하게 할당된 경우에도 일정값을 갖게 됩니다. 랜덤하게 할당된 경우는 0에 가까운 값이 되도록 하고, U와 V의 두 할당이 같을 때는 1이 되도록 하는 것이 바람직합니다.
+
+ -------------
+### Normalized Mutual Information
+Normalized Mutual Information은 Mutual Information 값이 0과 1의 사이 값이 되도록 upper bound 값을 기준으로 정규화한 지표입니다. 이 때 upper bound는 U와 V가 가진 엔트로피(불확실성)의 산술평균값 혹은 기하평균, 최대/최소값 등을 사용할 수 있습니다. 
+
+<img src= "/assets/img/2018-09-28/NMI.png" width="280">
+
+* [scikit-learn 패키지를 이용해 NMI](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.normalized_mutual_info_score.html)를 쉽게 계산할수 있습니다. average_method 파라미터 값을 이용해 정규화 방식을 선택할수 있습니다.
+
+-------------
+### Adjusted Mutual Information
+Normalized Mutual Infomation이 0과 1사이의 값을 갖더라도 여전히 클러스터 수가 증가하면 실제 상호의존도와 상관없이 값이 증가하는 경향이 있습니다. 따라서 최근에는 상호의존도의 기대값을 이용해 각 클러스터에 할당될 확률값(chance)으로 조정한 Adjusted Mutual Infomation을 주로 사용합니다. AMI는 두 클러스터링 결과가 랜덤한 경우 0에 가깝고, 할당 결과가 동일한 경우 1이 되도록 합니다.
+
+<img src= "/assets/img/2018-09-28/AMI.png" width="700">
+
+* [scikit-learn 패키지를 이용해 AMI](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.adjusted_mutual_info_score.html)를 쉽게 계산할수 있습니다. average_method 파라미터 값을 이용해 정규화 방식을 선택할수 있습니다.
+
+---------------------------------------
+> NMI와 AMI 모두 클러스터 라벨의 절대값과는 무관합니다. 클러스터 라벨이 permutation되더라도 값은 변하지 않습니다.
+
+> 또한 symmetric하기 때문에 U와 V의 순서를 바꿔도 값은 동일합니다. 데이터의 실제 클래스(groud truth)를 모르더라도 두가지 서로 다른 클러스터링 알고리즘을 비교하는데 유용합니다.
+
+## NMI와 AMI를 이용한 클러스터링 결과 분석 예제
+
+
+
+## Reference
+[1] http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics.cluster
+
+[2] http://scikit-learn.org/stable/modules/clustering.html#clustering-evaluation
