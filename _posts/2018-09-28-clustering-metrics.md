@@ -8,7 +8,7 @@ comments: true
 last_modified_at: 2018-09-28
 ---
 
-클러스터링은 주어진 데이터에 대한 명시적인 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 다양한 사용자 정보를 이용해 몇가지 고객군으로 분류하여 고객군별 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도)군의 속성을 분석하여 의미있는 인사이트를 도출하는 것에 활용됩니다. 
+[클러스터링](https://en.wikipedia.org/wiki/Cluster_analysis)은 주어진 데이터에 대한 명시적인 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 다양한 사용자 정보를 이용해 몇가지 고객군으로 분류하여 고객군별 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도)군의 속성을 분석하여 의미있는 인사이트를 도출하는 것에 활용됩니다. 
 
 클러스터링 알고리즘 측면에서는 전통적인 [Hierarchical clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering), [K-means clustering](https://en.wikipedia.org/wiki/K-means_clustering) 등이 비교적 쉽게 사용되고 있고, 최근에는 [딥러닝 기반의 클러스터링](https://arxiv.org/abs/1801.07648) 알고리즘이 다양하게 시도되고 있습니다. 
 
@@ -20,7 +20,7 @@ last_modified_at: 2018-09-28
   * 이미 알려진 벤치마크 데이터셋을 이용해 실제 데이터의 라벨링(ground truth)과 클러스터링 결과를 방식입니다. 
 * unsupervised, which does not and measures the ‘quality’ of the model itself.
   * 비지도 방식으로 모델의 좋고 나쁨을 직접적으로 평가하지 않는 방식입니다.
-  * 도메인 지식을 사용하거나, 클러스터 내의 데이터들의 밀집도((SSE;sum of the squared error) 등을 사용하여 평가할 수 있습니다. 
+  * 도메인 지식을 사용하거나, 클러스터 내의 데이터들의 밀집도(SSE;sum of the squared error) 등을 사용하여 평가할 수 있습니다. 
 
 
 ## Mutual Information 
@@ -81,9 +81,115 @@ Normalized Mutual Infomation이 0과 1사이의 값을 갖더라도 여전히 �
 
 > 또한 symmetric하기 때문에 U와 V의 순서를 바꿔도 값은 동일합니다. 데이터의 실제 클래스(groud truth)를 모르더라도 두가지 서로 다른 클러스터링 알고리즘을 비교하는데 유용합니다.
 
-## NMI와 AMI를 이용한 클러스터링 결과 분석 예제
+### Fashin MNIST를 이용한 K- means Clustering 결과 분석
+
+Keras의 dataset api를 이용해 fashion mnist 데이터를 불러왔습니다.
+fashion mnist 데이터는 총 10개의 클래스로 이루어져있습니다.
+
+<img src= "/assets/img/2018-09-28/fashion-mnist-samples.png" width="700">
+
+<i>Fig. fashion mnist samples</i>
+
+fashion mnist는 train 데이터 기준으로 클래스별 6000개의 샘플이 있지만, 여기서는 편의상 클래스별로 1000개씩 샘플을 뽑아 K-means 클러스터링을 수행하였습니다.
+
+클러스터링 결과 y_pred와 실제 클래스 라벨인 y_true를 이용해 NMI와 AMI를 계산해보았습니다. NMI와 AMI 모두 symmetric한 성질을 가지고 있는 걸 확인할 수 있습니다.
+
+```python
+y_pred = KMeans(n_clusters=10, random_state=0).fit_predict(X)
+
+## check symmetric property
+print(normalized_mutual_info_score(y_pred, y_true))
+## output : 0.5117333108689629
+print(normalized_mutual_info_score(y_true, y_pred))
+## output : 0.5117333108689628
+
+print(adjusted_mutual_info_score(y_pred, y_true))
+## output : 0.49785636941083883
+print(adjusted_mutual_info_score(y_true, y_pred))
+## output : 0.49785636941083883
+```
+클러스터링 수를 2부터 20까지 증가시키면서 MI, NMI, AMI를 계산해보았습니다. 클러스터 수가 많아질수록 MI 스코어는 0.3 ~ 1.4까지 지속적으로 증가하게 됩니다. 실제 클래스는 10개임에도 불구하고 클러스터 수가 20일 때 가장 높은 값을 갖게 됩니다. 반면에 NMI와 AMI는 클러스터 수가 10 이상에서는 값이 거의 변하지 않는 것을 볼 수 있습니다. 
+
+<img src= "/assets/img/2018-09-28/MI_variant_plot.png" width="700">
+
+<i>Fig. 클러스터 수에 따른 NMI 및 AMI 스코어 변화</i>
 
 
+<b> Appendix. 전체 코드 </b>
+```python
+from keras.datasets import fashion_mnist
+from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import numpy as np
+import collections
+from sklearn.metrics import adjusted_mutual_info_score, normalized_mutual_info_score, mutual_info_score
+
+%matplotlib inline
+
+class_labels = {0:'T-shirt/top', 1: 'Trouser', 2:'Pullover', 3: 'Dress', 4: 'Coat', \
+ 5:'Sandal', 6: 'Shirt', 7:'Sneaker', 8:'Bag',9:'Ankleboot'}
+
+(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+
+n = 10  
+plt.figure(figsize=(20, 4))
+for i in range(n):
+    # display original
+    ax = plt.subplot(2, n, i + 1)
+    plt.imshow(x_test[i].reshape(28, 28))
+    plt.title(class_labels[y_test[i]])
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+plt.show()
+
+X, y_true = np.empty((0, 28*28)), np.empty((0))
+for i in range(10):
+    chosen_idx = np.random.choice(np.where(y_train == i)[0], replace=False, size=100 * (i+1))
+    X = np.concatenate((X, x_train[chosen_idx].reshape(-1, 28*28)))
+    y_true = np.concatenate((y_true, y_train[chosen_idx]))
+y_true_occurence = collections.Counter(y_true)
+print('number of samples per class:\n')
+for k, v in class_labels.items():
+    print(v,' \t: ', y_true_occurence[k])
+
+# number of samples per class:
+# T-shirt/top   :  100
+# Trouser       :  200
+# Pullover      :  300
+# Dress         :  400
+# Coat          :  500
+# Sandal        :  600
+# Shirt         :  700
+# Sneaker       :  800
+# Bag           :  900
+# Ankleboot     :  1000
+
+NMI = []
+AMI = []
+MI = []
+for i in range(2, 21):
+    print("number of cluster = ", i)
+    y_pred = KMeans(n_clusters=i, random_state=0).fit_predict(X)
+    
+    NMI.append(normalized_mutual_info_score(y_true, y_pred))
+    AMI.append(adjusted_mutual_info_score(y_true, y_pred))
+    MI.append(mutual_info_score(y_true, y_pred))
+
+num_cluster = list(range(2,21))
+plt.figure(figsize=(8, 4))
+plt.plot(num_cluster, MI, marker='*', label='MI')
+plt.plot(num_cluster, NMI, marker='+', label='NMI')
+plt.plot(num_cluster, AMI, marker='o', label='AMI')
+plt.title('Mutual Infomation based Score')
+plt.xlabel('number of cluster')
+plt.ylabel('score')
+plt.xticks([2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
+plt.grid(True)
+plt.legend()
+plt.show()
+
+```
 
 ## Reference
 [1] http://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics.cluster
