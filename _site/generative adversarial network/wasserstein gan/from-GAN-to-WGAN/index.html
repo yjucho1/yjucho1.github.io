@@ -29,11 +29,11 @@
 
 
 
-  <meta property="article:published_time" content="2018-09-30T00:00:00+09:00">
+  <meta property="article:published_time" content="2018-09-25T00:00:00+09:00">
 
 
 
-  <meta property="article:modified_time" content="2018-09-28T00:00:00+09:00">
+  <meta property="article:modified_time" content="2018-09-25T00:00:00+09:00">
 
 
 
@@ -267,8 +267,8 @@
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="[번역] from GAN to WGAN">
     <meta itemprop="description" content="  이 글은 lilianweng의 from GAN to WGAN 포스팅을 동의하에 번역한 글입니다.">
-    <meta itemprop="datePublished" content="September 30, 2018">
-    <meta itemprop="dateModified" content="September 28, 2018">
+    <meta itemprop="datePublished" content="September 25, 2018">
+    <meta itemprop="dateModified" content="September 25, 2018">
 
     <div class="page__inner-wrap">
       
@@ -330,15 +330,15 @@
 
 <p>1) <a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence">KL(Kullback - Leibler) divergence</a> 는 <i>p</i> 분포가 다른 분포 <i>q</i>와 얼마나 떨어져 있는지를 측정합니다.</p>
 
-<p><img src="/assets/img/2018-09-30/KL_divergence.gif" /></p>
+<p><img src="/assets/img/2018-09-25/KL_divergence.gif" /></p>
 
 <p>D<sub>KL</sub>는 p(x)==q(x)일때 최소값 zero를 갖습니다. KL divergence는 비대칭적인 형태라는 점을 기억해두시길 바랍니다. 또한 p(x)가 0에 가깝고 q(x)가 non-zero일 경우, q의 효과는 무시됩니다. 이로 인해 두 분포를 동등하게 사용하여 유사도를 측정하고자 할때 잘못된 결과를 얻을수 있습니다.</p>
 
 <p>2) <a href="https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence">Jensen-Shannon Divergence</a> 는 두 분포의 유사도를 특정하는 다른 메트릭으로 [0, 1] 사이값을 갖습니다. JS divergence는 대칭적입니다(야호!) 그리고 더 스무스(smooth)합니다. KL divergence와 JS divergence를 더 자세히 비교하는 내용은 이 <a href="https://www.quora.com/Why-isnt-the-Jensen-Shannon-divergence-used-more-often-than-the-Kullback-Leibler-since-JS-is-symmetric-thus-possibly-a-better-indicator-of-distance">Quora post</a>를 참고하세요.</p>
 
-<p><img src="/assets/img/2018-09-30/JS_divergence.gif" /></p>
+<p><img src="/assets/img/2018-09-25/JS_divergence.gif" /></p>
 
-<p><img src="/assets/img/2018-09-30/KL_JS_divergence.png" width="450" /></p>
+<p><img src="/assets/img/2018-09-25/KL_JS_divergence.png" width="450" /></p>
 
 <p><i>Fig.1. 두 가우시안 분포, p는 평균 0과 분산 1이고 q는 평균 1과 분산 1. 두 분포의 평균은 m=(p+q)/2. KL divergence는 비대칭적이지만 JS divergence는 대칭적입니다. </i></p>
 
@@ -351,7 +351,7 @@
   <li>generator G는 노이즈 변수인 z (z는 가능한 출력의 다양성을 나타냅니다)를 입력으로 받아 위조된 샘플을 만듭니다. 실제 데이터의 분포를 모사하도록 학습되어 생성된 샘플은 실제 데이터의 샘플과 유사하며, discriminator를 속이는 역할을 합니다.</li>
 </ul>
 
-<p><img src="/assets/img/2018-09-30/GAN.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/GAN.png" width="400" /></p>
 
 <p><i>Fig.2. GAN의 구조 (출처 : <a href="https://www.kdnuggets.com/2017/01/generative-adversarial-networks-hot-topic-machine-learning.html">여기</a>)</i></p>
 
@@ -390,32 +390,32 @@
 
 <p>이 두 가지를 합쳐서, D와 G는 minmax game을 하게 되고 아래와 같은 손실함수를 최적화하도록 설계되어 있습니다.</p>
 
-<p><img src="/assets/img/2018-09-30/GAN_loss.gif" /></p>
+<p><img src="/assets/img/2018-09-25/GAN_loss.gif" /></p>
 
 <p>(E<sub>x ~ p<sub>r</sub>(x)</sub>[logD(x)]는 그래디언트 디센트 업데이트에서 G에 아무런 영향을 주지 않습니다.)</p>
 
 <h3 id="what-is-the-optimal-value-for-d">What is the optimal value for D?</h3>
 <p>자, 이제 잘 정의된 손실함수를 이용해 D에 대해서 가장 최적화된 값을 찾아보도록 하겠습니다.</p>
 
-<p><img src="/assets/img/2018-09-30/GAN_loss2.gif" /></p>
+<p><img src="/assets/img/2018-09-25/GAN_loss2.gif" /></p>
 
 <p>우리는 L(G, D)를 최대화는 최적의 D(x)값을 찾는 것이 목적입니다. 아래와 같은 라벨을 사용하여 인테그랄 안쪽의 식을 다시 나타내도록 하겠습니다. (x는 가능한 모든 경우에 대해서 샘플된 값이기때문에 인테그랄은 무시해도 됩니다.)</p>
 
-<p><img src="/assets/img/2018-09-30/opt_D_notation.gif" /></p>
+<p><img src="/assets/img/2018-09-25/opt_D_notation.gif" /></p>
 
-<p><img src="/assets/img/2018-09-30/opt_D.gif" /></p>
+<p><img src="/assets/img/2018-09-25/opt_D.gif" /></p>
 
 <p>일단 generator가 최적으로 학습이 된다면, p<sub>g</sub>는 p<sub>r</sub>에 매우 가까워질것입니다. p<sub>g</sub> = p<sub>r</sub> 가 되면, D<sup>*</sup>(x)은 1/2가 됩니다.</p>
 
 <h3 id="what-is-the-global-optimal">what is the global optimal?</h3>
 <p>G와 D 모두 최적값일때, p<sub>g</sub> = p<sub>r</sub>이고, D<sup>*</sup>(x)=1/2가 되어 손실함수는 -2log2가 됩니다.</p>
 
-<p><img src="/assets/img/2018-09-30/global_opt.gif" /></p>
+<p><img src="/assets/img/2018-09-25/global_opt.gif" /></p>
 
 <h3 id="what-does-the-loss-function-represent">what does the loss function represent?</h3>
 <p>앞서 설명한 JS divergence를 적용하여 p<sub>r</sub>과 p<sub>g</sub> 사이의 JS divergence는 아래처럼 계산됩니다.</p>
 
-<p><img src="/assets/img/2018-09-30/JS_dvg.gif" /></p>
+<p><img src="/assets/img/2018-09-25/JS_dvg.gif" /></p>
 
 <p>즉, 핵심은 discriminator가 최적으로 학습되었을때 GAN의 손실함수는 데이터에 의해 생성된 분포 p<sub>g</sub>와 실제 샘플데이터의 분포 p<sub>r</sub> 사이의 유사도를 JS divergence로 정량화하는 것과 같습니다. 실데 데이터 분포를 모사하는 최적의 G<sup>*</sup>는 최소값으로 L(G<sup>*</sup>, D<sup>*</sup>) = -2 log2 가 됩니다.</p>
 
@@ -435,7 +435,7 @@
 
 <p>∂f<sub>1</sub>/∂x = y, ∂f<sub>1</sub>/∂x = -x이기 때문에 한 iteration에서 x와 y는 각 각 x - η⋅y와 y + η⋅x로 동시에 업데이트 됩니다(η는 러닝 레이트임). x와 y가 서로 다른 부호를 가지면, 다음의 모든 그래디언트 업데이트는 진동하게 되고 그림3과 같이 불안정성이 시간이 갈수록 심해지는 경향으로 나타납니다.</p>
 
-<p><img src="/assets/img/2018-09-30/nash_equilibrium.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/nash_equilibrium.png" width="400" /></p>
 
 <p><i>Fig.3. xy를 최소화하도록 x를 업데이트하고, -xy를 최소화하기 위해 y를 업데이트하는 상황을 시뮬레이션한 결과(러닝레이트 η =0.1) iteration이 증가할수록 진동폭이 점점 커지고 불안정해지는 현상이 나타납니다.</i></p>
 
@@ -468,14 +468,14 @@
 
 <p>결론적으로 p<sub>g</sub>와 p<sub>r</sub>이 저차원 매니포드 공간에 놓여있기때문에, 두 분포는 <i>fig.4</i>처럼 거의 확실하게 분리가능(disjoint)할 것입니다. 두 분포가 서로 분리할수있는 서포트를 갖을 경우, 우리는 항상 진짜와 가짜 샘플을 100% 구분할수 있는 완벽한 discriminator를 찾을수 있습니다. (증명과정이이 궁금하다면 <a href="https://arxiv.org/pdf/1701.04862.pdf">이 논문</a>을 참조하세요.)</p>
 
-<p><img src="/assets/img/2018-09-30/low_dim_manifold.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/low_dim_manifold.png" width="400" /></p>
 
 <p><i>Fig.4. 고차원공간에서 저차원 매니폴드는 거의 서로 겹치지 않습니다.왼쪽의 3차원 공간에서 두 직선처럼요. 또는 오른쪽의 3차원공간에서 두 평면처럼요.</i></p>
 
 <h3 id="vanishing-gradient">Vanishing gradient</h3>
 <p>만약 discriminator가 완벽하다면, 우리는 D(x) = 1 <sup>∀</sup>x ∈ p<sub>r</sub>와 D(x) = 0 <sup>∀</sup>x ∈ p<sub>g</sub>를 확신할수 있습니다. 따라서 손실함수 L은 0에 가까워지고, 학습 과정에서 loss를 업데이트할수 있는 gradient를 얻지 못하여 결국 학습이 종료됩니다. fig.5는 discriminator가 점점 좋아질수록 gradient가 더 빨리 사라지는(vanish) 현상을 나타냅니다.</p>
 
-<p><img src="/assets/img/2018-09-30/GAN_vanishing_gradient.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/GAN_vanishing_gradient.png" width="400" /></p>
 
 <p><i>Fig.5.먼저 DCGAN 모델을 1, 10, 25 epoch만큼 학습시킵니다. 그리고, <b>generator는 고정시킨채</b>, discriminator를 학습시키면서 손실함수의 gradient를 측정하였습니다. 4000번의 이터레이션 후에 5 order 수준으로 gradient가 빠르게 감소하는 것을 볼수 있습니다(in best case = after 1 epoch, Image source: <a href="https://arxiv.org/pdf/1701.04862.pdf">Arjovsky and Bottou, 2017)</a>) </i></p>
 
@@ -490,7 +490,7 @@
 <h3 id="mode-collapse">Mode collapse</h3>
 <p>학습과정에서 generator가 항상 동일한 아웃풋을 만들어낼수도 있습니다. 이 살패 현상은 ‘Mode Collapse’라고 부르며, GAN 학습과정에서 흔하게 발생합니다. 비록 generator가 discriminator를 속이는 데는 성공하였지만, 실제 데이터의 복잡한 분포를 학습하는데 실패하고 극단적으로 낮은 다양성을 갖는 작은 공간 안에 갇혀버린 경우입니다.</p>
 
-<p><img src="/assets/img/2018-09-30/mode_collapse.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/mode_collapse.png" width="400" /></p>
 
 <p><i>Fig. 6. 학습된 DCGAN(MLP network with 4 layers, 512 units and ReLu activation function)에 의해 생성된 이미지들로 mode collapse 현상을 보이고 있습니다. Image source : <a href="https://arxiv.org/pdf/1701.07875.pdf">Arjovsky, Chintala, &amp; Bottou, 2017.</a></i></p>
 
@@ -540,7 +540,7 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 <p>먼저 간단한 <i>이산(discrete)</i> 확률 분포를 이용해 예를 들어 설명해보겠습니다. 예를 들어서 P와 Q 라는 두 분포가 있을때, 각 각은 4개의 흙더미를 가지고 있고 흙의 총량은 10이라고 해봅시다. 각 흙더미에 있는 흙의 양은 아래와 같습니다.</p>
 
-<p><img src="/assets/img/2018-09-30/P_Q.png" width="200" /></p>
+<p><img src="/assets/img/2018-09-25/P_Q.png" width="200" /></p>
 
 <p>P를 Q처럼 바꾸기 위해서는</p>
 <ul>
@@ -551,23 +551,23 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 <p>P<sub>i</sub>와 Q<sub>i</sub>가 같아지게 하는데 드는 비용을 δ<sub>i</sub>라고 표시하면, δ<sub>i+1</sub> =  δ<sub>i</sub> +  P<sub>i</sub> -  Q<sub>i</sub>로 나타낼수 있습니다. 따라서 위의 과정을 수식으로 표현하면 아래와 같습니다.</p>
 
-<p><img src="/assets/img/2018-09-30/P_Q2.png" width="150" /></p>
+<p><img src="/assets/img/2018-09-25/P_Q2.png" width="150" /></p>
 
 <p>최종적으로 Earth Mover’s distance W = ∑|δ<sub>i</sub>| = 5 가 됩니다.</p>
 
-<p><img src="/assets/img/2018-09-30/EM_distance_discrete.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/EM_distance_discrete.png" width="400" /></p>
 
 <p><i>Fig. 7. P와 Q가 같아지도록 흙더미를 옮기는 과정을 단계별로 나타낸 그림.</i></p>
 
 <p>연속형 확률분포이 경우에는 아래와 같은 공식을 사용합니다.</p>
 
-<p><img src="/assets/img/2018-09-30/w_distance.png" width="300" /></p>
+<p><img src="/assets/img/2018-09-25/w_distance.png" width="300" /></p>
 
 <p>이 공식에서 Π(p<sub>r</sub>, p<sub>g</sub>)는  p<sub>r</sub>과 p<sub>g</sub> 사이의 가능한 모든 결합확률분포(joint probability distribution)의 집합을 나타냅니다. 이 집합에 속하는 감마라는 분포는, γ ∈ Π(p<sub>r</sub>,p<sub>g</sub>), 위의 예시처럼 흙더미는 옮기는 한가지 방법에 대응됩니다(연속확률분포라는 점은 다르고요). 정확하게 설명하면, γ(x, y)는 x가 y분포를 따르게 하기 위해서 x에서 y로 옮겨야하는 흙더미의 비율을 나타냅니다. 따라서 γ(x, y)를 x에 대한 marigal distribution으로 계산하면 p<sub>g</sub>와 같아집니다. ∑<sub>x</sub> γ(x,y)=p<sub>g</sub>(y) (x를 p<sub>g</sub>를 따르는 y가 되도록 흙더미를 옮기고 나면, 마지막 분포는 p<sub>g</sub>와 같아지겠죠) 마찬가지로 y에 대한 marginal distribution은 p<sub>r</sub>(x)가 됩니다. ∑<sub>y</sub> γ(x,y)=p<sub>r</sub>(x)</p>
 
 <p>x를 출발점으로 하고 y를 도착점으로 할 때, 전체 옮겨지는 흙의 양은 γ(x,y)이고, 이동하는 거리는 ||x-y||이기때문에 총 비용은 γ(x,y)*||x-y||가 됩니다. 모든 (x, y)경우에 대해서 기대 비용을 구하면 아래와 같습니다.</p>
 
-<p><img src="/assets/img/2018-09-30/EM_distance.png" width="300" /></p>
+<p><img src="/assets/img/2018-09-25/EM_distance.png" width="300" /></p>
 
 <p>최종적으로 우리는 EM distance로 계산되는 모든 값 중에서 최소값을 선택합니다. 위의 Wasserstein distance 정의에서 inf는 최소값에만 관심이 있다는 표시입니다. (<a href="https://en.wikipedia.org/wiki/Infimum_and_supremum">infimum</a>, greatest lower bound로도 알려져있습니다)</p>
 
@@ -579,19 +579,19 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 <p>P와 Q라는 두 분포가 있다고 가정합시다.</p>
 
-<p><img src="/assets/img/2018-09-30/P-Q_vertical.png" width="300" /></p>
+<p><img src="/assets/img/2018-09-25/P-Q_vertical.png" width="300" /></p>
 
-<p><img src="/assets/img/2018-09-30/wasserstein_simple_example.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/wasserstein_simple_example.png" width="400" /></p>
 
 <p><i>Fig.8. θ가 0이 아니라면 P와 Q는 겹치지 않음.</i></p>
 
 <p>when θ≠0 :</p>
 
-<p><img src="/assets/img/2018-09-30/w_simle_example.png" width="500" /></p>
+<p><img src="/assets/img/2018-09-25/w_simle_example.png" width="500" /></p>
 
 <p>when θ = 0일때는 두 분포는 완전히 겹쳐집니다 :</p>
 
-<p><img src="/assets/img/2018-09-30/w_when0.png" width="300" /></p>
+<p><img src="/assets/img/2018-09-25/w_when0.png" width="300" /></p>
 
 <p>D<sub>KL</sub>는 두 분포가 서로 겹치지 않을 때는 무한대 값을 갖게 되고, D<sub>JS</sub>는 θ가 0일 때 값이 갑자기 튀게 되어 미분불가능해집니다. Wasserstein metric만 연속적인 값으로 측정되며, 이러한 성질은 그래디언 디센트를 사용하여 안정적인 학습을 하는데 큰 도움이 됩니다!</p>
 
@@ -599,7 +599,7 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 <p>inf<sub>γ∼Π(p<sub>r</sub>,p<sub>g</sub>)</sub>를 구하기 위해 Π(p<sub>r</sub>, p<sub>g</sub>)에 속하는 모든 경우의 결합확률분포를 추적하는 것은 불가능합니다. 논문의 저자는 Kantorovich-Rubinstein duality를 이용해 새롭게 변형된 형태를 제안하였습니다.</p>
 
-<p><img src="/assets/img/2018-09-30/w_sup_ver.png" width="300" /></p>
+<p><img src="/assets/img/2018-09-25/w_sup_ver.png" width="300" /></p>
 
 <p>sup(<a href="https://en.wikipedia.org/wiki/Infimum_and_supremum">supremum</a>)는 inf(infimum)의 반대로 least upper bound를 측정하고자 하는 것, 즉 최대값을 의미합니다.</p>
 
@@ -615,13 +615,13 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 <p>함수 f가 w를 파라미터로 가진 K-Lipschitz continuous functions의 집합, {f<sub>w</sub>}<sub>w ∈ W</sub> 에서 추출되었다고 가정해봅시다. 수정된 Wassertein-GAN에서 discriminator는 좋은 f<sub>w</sub>를 찾기위해 학습이 되고, 손실함수는 p<sub>r</sub>과 p<sub>g</sub> 사이의 wasserstein distance를 측정하게 됩니다.</p>
 
-<p><img src="/assets/img/2018-09-30/WGAN_loss.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/WGAN_loss.png" width="400" /></p>
 
 <p>따라서 discriminator는 더이상 진짜 데이터와 generator가 생성한 가짜 데이터를 식별하는 직접적인 기준치가 아닙니다. 대신에 Wasserstein distance를 계산하기 위기 위해 사용되는 K-Lipschitz continuous function을 학습하게 됩니다. 학습과정에서 손실함수가 작아질수록, wasserstein distance는 점점 작아지게 되어 generator의 결과값은 실제 데이터 분포와 점점 가까워지게 됩니다.</p>
 
 <p>한가지 중요한 문제는 모든 것이 잘 작동하기 위해서는 학습과정에서 K-Lipschitz continuity를 유지하도록 하는 것입니다. 논문에서는 간단하지만 매우 실용적인 트릭을 사용하였습니다. 그래디어트가 업데이트될 때마다, 가중치 w를 아주 작은 범위로, 예를 들면 [-0.01, 0.01]로 고정시면 컴팩트한 파라미터 공간 W가 되도록 합니다.  f<sub>w</sub>는 하한선과 상한선이 생기게 되어 Lipschitz continuity를 유지하게 됩니다.</p>
 
-<p><img src="/assets/img/2018-09-30/WGAN_algorithm.png" width="450" /></p>
+<p><img src="/assets/img/2018-09-25/WGAN_algorithm.png" width="450" /></p>
 
 <p><i>Fig.9. Wasserstein GAN 알고리즘 (Image source : <a href="https://arxiv.org/pdf/1701.07875.pdf">Arjovsky, Chintala, &amp; Bottou, 2017.</a>) </i></p>
 
@@ -644,7 +644,7 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 <p>모델이 만든 새로운 포켓몬 종류를 확인해보겠습니다. 불행히도 학습데이터가 적어서 새로운 포켓몬은 디테일이 잘 살아나지 않고 러프한 모양압니다. 전체적인 형태나 색깔은 학습 에폭이 진행될수록 더 나아지는 것으로 보이네요. 와우!</p>
 
-<p><img src="/assets/img/2018-09-30/pokemon-GAN.png" width="400" /></p>
+<p><img src="/assets/img/2018-09-25/pokemon-GAN.png" width="400" /></p>
 
 <p><i>Fig.10. 포켓몬 이미지에 <a href="https://github.com/carpedm20/DCGAN-tensorflow">carpedm20/DCGAN-tensorflow</a>를 학습시킨 결과. epoches = 7, 21, 49에서 샘플 결과들.
 </i></p>
@@ -706,7 +706,7 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
 
 
         
-          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-09-28">September 28, 2018</time></p>
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-09-25">September 25, 2018</time></p>
         
       </footer>
 
@@ -726,11 +726,11 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
       
   <nav class="pagination">
     
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
       <a href="/machine%20learning/unsupervised%20learning/clustering%20evaluation/clustering-metrics/" class="pagination--pager" title="클러스터링을 평가하는 척도
-">Previous</a>
-    
-    
-      <a href="#" class="pagination--pager disabled">Next</a>
+">Next</a>
     
   </nav>
 
@@ -763,9 +763,30 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
   </article>
 </div>
         
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/generative%20adversarial%20network/wasserstein%20gan/from-GAN-to-WGAN/" rel="permalink">[번역] from GAN to WGAN
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  이 글은 lilianweng의 from GAN to WGAN 포스팅을 동의하에 번역한 글입니다.
+
+
+</p>
+  </article>
+</div>
+        
       </div>
     </div>
-  
   
 </div>
     </div>
