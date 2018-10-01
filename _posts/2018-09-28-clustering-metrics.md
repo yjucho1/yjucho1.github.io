@@ -17,8 +17,8 @@ last_modified_at: 2018-09-28
   * 지도 방식으로 실제 데이터의 클래스가 존재할때입니다. 
   * 이미 알려진 벤치마크 데이터셋을 이용해 실제 데이터의 라벨링(ground truth)과 클러스터링 결과를 방식입니다. 
 * unsupervised, which does not and measures the ‘quality’ of the model itself.
-  * 비지도 방식으로 모델의 좋고 나쁨을 직접적으로 평가하지 않는 방식입니다.
-  * 도메인 지식을 사용하거나, 클러스터 내의 데이터들의 밀집도(SSE;sum of the squared error) 등을 사용하여 평가할 수 있습니다. 
+  * 비지도 방식으로 모델 자체만 이용하여 평가하는 방식입니다.
+  * 도메인 지식을 사용하거나, 클러스터 내의 분산과 클러스터 간의 거리(SSE;sum of the squared error)등을 고려하여 평가할 수 있습니다. 
 
 
 ## Mutual Information 
@@ -111,6 +111,7 @@ print(adjusted_mutual_info_score(y_true, y_pred))
 <img src= "/assets/img/2018-09-28/MI_variant_plot.png" width="700">
 
 <i>Fig. 클러스터 수에 따른 NMI 및 AMI 스코어 변화</i>
+
 
 
 <b> Appendix. 전체 코드 </b>
