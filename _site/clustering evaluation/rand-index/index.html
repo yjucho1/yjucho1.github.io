@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>클러스터링을 평가하는 척도 - Rand Index - yjucho’s blog</title>
-<meta name="description" content="클러스터링을 평가하는 척도 - Mutual Information와 이어집니다.">
+<meta name="description" content="클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다.">
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://localhost:4000/clustering%20evaluation/rand-index/">
 
 
-  <meta property="og:description" content="클러스터링을 평가하는 척도 - Mutual Information와 이어집니다.">
+  <meta property="og:description" content="클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다.">
 
 
 
@@ -33,7 +33,7 @@
 
 
 
-  <meta property="article:modified_time" content="2018-10-01T00:00:00+09:00">
+  <meta property="article:modified_time" content="2018-10-02T00:00:00+09:00">
 
 
 
@@ -266,9 +266,9 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="클러스터링을 평가하는 척도 - Rand Index">
-    <meta itemprop="description" content="클러스터링을 평가하는 척도 - Mutual Information와 이어집니다.">
+    <meta itemprop="description" content="클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다.">
     <meta itemprop="datePublished" content="October 01, 2018">
-    <meta itemprop="dateModified" content="October 01, 2018">
+    <meta itemprop="dateModified" content="October 02, 2018">
 
     <div class="page__inner-wrap">
       
@@ -281,13 +281,9 @@
 
       <section class="page__content" itemprop="text">
         
-        <p><a href="/clustering%20evaluation/clustering-metrics/">클러스터링을 평가하는 척도 - Mutual Information</a>와 이어집니다.</p>
+        <p><a href="/clustering%20evaluation/clustering-metrics/">클러스터링을 평가하는 척도 - Mutual Information</a>와 이어집니다. 클러스터링 결과를 평가하기 위해 <a href="https://en.wikipedia.org/wiki/Rand_index">Rand Index</a> 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다.</p>
 
 <h2 id="rand-index">Rand Index</h2>
-
-<p>클러스터링 결과를 평가하기 위해 <a href="https://en.wikipedia.org/wiki/Rand_index">Rand Index</a> 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다.</p>
-
-<h2 id="정의">정의</h2>
 
 <p>n개의 원소로 이루어진 집합 S={o<sub>1</sub>, … o<sub>n</sub>}와 S를 r개의 부분집합으로 할당한 partition U={U<sub>1</sub>, …, U<sub>r</sub>}와 S를 s개의 부분집합으로 할당한 partition V={V<sub>1</sub>, …, V<sub>r</sub>}에 대해서 아래와 같을 때,</p>
 <ul>
@@ -317,11 +313,11 @@
   <p>두가지 클러스터링 결과인 U와 V가 서로 완전히 일치할 때, Rand Index는 1의 값을 갖습니다. 반대로 어떤 데이터 쌍에 대해서도 일치된 결과를 보이지 않을 경우 0의 값을 갖게 됩니다.</p>
 </blockquote>
 
-<p>하지만 Rand Index를 그대로 사용하는 경우는 없습니다. 사례를 통해 살펴보겠습니다. 지난번에 살펴보았던 Fashin MNIST를 이용해 데이터를 랜덤으로 할당한 결과(y_random)와 실제 클래스(y_true)를 이용해 rand index를 구해보겠습니다.</p>
+<p>하지만 Rand Index를 그대로 사용하는 경우는 없습니다. 사례를 통해 살펴보겠습니다. 지난번에 살펴보았던 Fashin MNIST를 이용해 데이터를 랜덤으로 할당한 결과(y_random)와 실제 클래스(y_true)의 rand index를 구해보겠습니다.</p>
 
-<blockquote>
-  <p>scikit-learn에는 rand index를 바로 계산하는 api가 없네요.</p>
-</blockquote>
+<ul>
+  <li>scikit-learn에는 rand index를 바로 계산하는 api가 없네요.</li>
+</ul>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="kn">import</span> <span class="n">fashion_mnist</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
@@ -359,14 +355,133 @@
 
 <h3 id="adjusted-rand-index">Adjusted Rand Index</h3>
 
-<p>따라서 일반적으로 Rand Index를 확률적으로 조정한 Adjusted Rand Index를 사용합니다.</p>
+<p>따라서 일반적으로 Rand Index를 확률적으로 조정한 Adjusted Rand Index를 사용합니다. 
+contingency table은 U와 V partition을 |U<sub>i</sub> ∩ V<sub>i</sub>| = n<sub>ij</sub> 로 표기하여 요약한 테이블로 아래와 같은 contingency table이 주어질 때, ARI는 다음과 같이 정의 됩니다.</p>
 
-<h3 id="contingency-table">contingency table</h3>
-<p>contingency table은 U와 V partition을 |U<sub>i</sub> ∩ V<sub>i</sub>| = n<sub>ij</sub> 로 표기하여 요약한 테이블 입니다.</p>
-
-<p><img src="/assets/img/2018-09-28/contingency.svg" width="300" /></p>
+<script type="math/tex; mode=display">% <![CDATA[
+\newcommand\T{\Rule{0pt}{1em}{.3em}}
+\begin{array} {c|lllr|c}
+U \setminus V  & V_1 & V_2 & \cdots & V_s & Sums \\
+\hline
+U_1  & n_11 & n_12 & \cdots & n_1s & a_1  \\
+U_2  & n_21 & n_22 & \cdots & n_2s & a_2 \\
+\vdots & \vdots  & \vdots & \cdots & \vdots & \vdots \\
+U_r  & n_r1 & n_r2 & \cdots & n_rs & a_r \\ 
+\hline
+Sums  & b_1 & b_2 & \cdots & b_s & \\
+\end{array} %]]></script>
 
 <p><img src="/assets/img/2018-09-28/ARI.gif" width="400" /></p>
+
+<p>위와 마찬가지로 Fashin MNIST 데이터를 랜덤으로 할당한 결과(y_random)와 실제 클래스(y_true)를 이용해 Adjusted Rand Index를 구해보겠습니다.</p>
+<ul>
+  <li><a href="http://scikit-learn.org/stable/modules/generated/sklearn.metrics.adjusted_rand_score.html#sklearn.metrics.adjusted_rand_score">scikit-learn 패키지를 이용해 ARI</a>를 쉽게 계산할수 있습니다.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="kn">import</span> <span class="n">fashion_mnist</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">adjusted_rand_score</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_true</span><span class="p">)</span> <span class="o">=</span> <span class="n">fashion_mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+<span class="n">y_random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+
+
+<span class="k">print</span><span class="p">(</span><span class="n">adjusted_rand_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_random</span><span class="p">))</span>
+<span class="c">## output : -0.00016616515609661287</span>
+</code></pre></div></div>
+
+<p>ARI는 0에 가까운 값이 나오는 것을 확인할 수 있습니다. 또한 클러스터 수가 증가하더라도 값이 증가하지 않는 것을 볼수 있습니다.</p>
+
+<p><img src="/assets/img/2018-09-28/ARI_num_cluster.png" width="700" /></p>
+
+<p>또한 Mutual Information based Score(MI, Normalized MI, Adjusted MI)와도 비교해았습니다. Rand Index를 제외하고 4가지 스코어는 모두 0에 가까운 값이 나타납니다. 랜덤으로 클러스터를 할당한 것과 실제 클래스와의 아무런 상관이 없으니까요. 다만 MI, NMI의 경우 클러스터가 증가할 수록 값이 증가하는 경향이 있지만, 확률적으로 조정된 AMI와 ARI는 클러스터 수에 상관없이 0에 가까운 값을 유지한다는 경향이 있다는 것을 알수 있습니다.</p>
+
+<blockquote>
+  <p>Adjusted Mutual Information 혹은 Adjusted Rand Index를 사용하세요.
+paper works에서 자주 사용하는 지표는 NMI이니 참고하세요.</p>
+</blockquote>
+
+<p><b> Appendix. 전체 코드 </b></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="kn">import</span> <span class="n">fashion_mnist</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">adjusted_mutual_info_score</span><span class="p">,</span> <span class="n">normalized_mutual_info_score</span><span class="p">,</span> \
+<span class="n">mutual_info_score</span><span class="p">,</span> <span class="n">adjusted_rand_score</span>
+
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+
+<span class="n">class_labels</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="s">'T-shirt/top'</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s">'Trouser'</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s">'Pullover'</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">'Dress'</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s">'Coat'</span><span class="p">,</span> \
+ <span class="mi">5</span><span class="p">:</span><span class="s">'Sandal'</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span> <span class="s">'Shirt'</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span><span class="s">'Sneaker'</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span><span class="s">'Bag'</span><span class="p">,</span><span class="mi">9</span><span class="p">:</span><span class="s">'Ankleboot'</span><span class="p">}</span>
+
+<span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">X_all</span><span class="p">,</span> <span class="n">y_all</span><span class="p">)</span> <span class="o">=</span> <span class="n">fashion_mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">rand_index</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">y_true</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span>
+                <span class="n">a</span> <span class="o">+=</span><span class="mi">1</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">y_true</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y_true</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y_pred</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span>
+                <span class="n">b</span> <span class="o">+=</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+    <span class="n">RI</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">RI</span>
+
+<span class="n">RI</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ARI</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">AMI</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">NMI</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">MI</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">chosen_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">y_all</span> <span class="o">==</span> <span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">X_all</span><span class="p">[</span><span class="n">chosen_idx</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="p">)))</span>
+        <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_all</span><span class="p">[</span><span class="n">chosen_idx</span><span class="p">]))</span>
+    <span class="n">y_random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span>
+    <span class="n">ARI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">adjusted_rand_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_random</span><span class="p">))</span>
+    <span class="n">RI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rand_index</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_random</span><span class="p">))</span>
+    <span class="n">MI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mutual_info_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_random</span><span class="p">))</span>
+    <span class="n">NMI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">normalized_mutual_info_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_random</span><span class="p">))</span>
+    <span class="n">AMI</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">adjusted_mutual_info_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_random</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">RI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'+'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Rand Index'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">ARI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'*'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Adjusted Rand Index'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">MI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Mutual Infomation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">NMI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'^'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Normalized Mutual Infomation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">AMI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'1'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Adjusted Mutual Infomation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Score'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'number of clusters'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">ARI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'*'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Adjusted Rand Index'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">MI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Mutual Infomation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">NMI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'^'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Normalized Mutual Infomation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="n">AMI</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">'1'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Adjusted Mutual Infomation'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Score'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'number of clusters'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s">'Random Assignment and True class'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="reference">Reference</h2>
+<p>[1] https://en.wikipedia.org/wiki/Rand_index</p>
+
+<p>[2] http://scikit-learn.org/stable/modules/generated/sklearn.metrics.adjusted_rand_score.html#sklearn.metrics.adjusted_rand_score</p>
+
+<p>[3] https://davetang.org/muse/2017/09/28/rand-index-versus-adjusted-rand-index/</p>
 
 
         
@@ -397,7 +512,7 @@
 
 
         
-          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-01">October 01, 2018</time></p>
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-02">October 02, 2018</time></p>
         
       </footer>
 
@@ -546,6 +661,12 @@
 
 
   
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 
 
 

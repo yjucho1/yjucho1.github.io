@@ -10,7 +10,7 @@ var store = [{
         "url": "http://localhost:4000/clustering%20evaluation/clustering-metrics/",
         "teaser":null},{
         "title": "클러스터링을 평가하는 척도 - Rand Index",
-        "excerpt":"클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. Rand Index 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다. 정의 n개의 원소로 이루어진 집합 S={o1, … on}와 S를...","categories": ["Clustering Evaluation"],
+        "excerpt":"클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다. Rand Index n개의 원소로 이루어진 집합 S={o1, … on}와 S를 r개의...","categories": ["Clustering Evaluation"],
         "tags": [],
         "url": "http://localhost:4000/clustering%20evaluation/rand-index/",
         "teaser":null}]
