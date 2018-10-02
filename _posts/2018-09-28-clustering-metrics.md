@@ -25,11 +25,11 @@ last_modified_at: 2018-09-28
 [Mutual Information](https://en.wikipedia.org/wiki/Mutual_information)은 정보학이나 확률론에서 두 확률 변수간의 상호 의존도를 나타내는 지표입니다. 확률변수 X와 Y가 존재할때, X를 통해서 Y에 대해서 정보(shannons처럼 단위, 일반적으로는 bits)를 얼마나 얻을수 있는가를 의미하는 것으로 결합확률분포 P(X, Y)와 각 변수의 marginal distribution의 곱 P(X)*P(Y)이 얼마나 유사한가로 측정됩니다.
 
 ## 정의
-Mutual information of two discrete random variables X and Y can be defined as 
+두 개의 이산 확률변수 X와 Y의 Mutual inforamtions는 다음과 정의할 수 있습니다.  
 
 <img src= "/assets/img/2018-09-28/MI_definition.png" width="300">
 
-In the case of continuous random variables, 
+연속 확률 변수의 경우에는 다음과 같습니다.
 
 <img src= "/assets/img/2018-09-28/MI_definition2.png" width="350">
 
@@ -58,7 +58,7 @@ In the case of continuous random variables,
  * 단순히 클러스터의 수가 많을 수록 더 큰 값을 갖게 되는 경향이 있습니다. U와 V의 각 클러스터 수에 따라 정규화할 필요성이 있습니다.
  * 랜덤하게 할당된 경우에도 일정값을 갖게 됩니다. 랜덤하게 할당된 경우는 0에 가까운 값이 되도록 하고, U와 V의 두 할당이 같을 때는 1이 되도록 하는 것이 바람직합니다.
 
- -------------
+-------------
 ### Normalized Mutual Information
 Normalized Mutual Information은 Mutual Information 값이 0과 1의 사이 값이 되도록 upper bound 값을 기준으로 정규화한 지표입니다. 이 때 upper bound는 U와 V가 가진 엔트로피(불확실성)의 산술평균값 혹은 기하평균, 최대/최소값 등을 사용할 수 있습니다. 
 
@@ -79,7 +79,7 @@ Normalized Mutual information이 0과 1사이의 값을 갖더라도 여전히 �
 
 > 또한 symmetric하기 때문에 U와 V의 순서를 바꿔도 값은 동일합니다. 데이터의 실제 클래스(groud truth)를 모르더라도 두가지 서로 다른 클러스터링 알고리즘을 비교하는데 유용합니다.
 
-### Fashin MNIST를 이용한 K- means Clustering 결과 분석
+### Fashin MNIST를 이용한 K-means Clustering 결과 분석
 
 Keras의 dataset api를 이용해 fashion mnist 데이터를 불러왔습니다.
 fashion mnist 데이터는 총 10개의 클래스로 이루어져있습니다.
@@ -110,9 +110,15 @@ print(adjusted_mutual_info_score(y_true, y_pred))
 
 <img src= "/assets/img/2018-09-28/MI_variant_plot.png" width="700">
 
-<i>Fig. 클러스터 수에 따른 NMI 및 AMI 스코어 변화</i>
+<i>Fig. y_ture vs. K-means : 클러스터 수에 따른 NMI 및 AMI 스코어 변화</i>
+
+그렇다면 k-means 클러스터링이 데이터를 랜덤하게 클러스터링 한것보다 더 나은 것일까요? 10000개의 데이터를 랜덤하게 n개의 클러스터로 할당한 결과(y_random)와 K-means 결과(y_pred)로 MI, NMI, AMI를 계산해보았습니다.
 
 
+<img src= "/assets/img/2018-09-28/y_true_y_random.png" width="700">
+<i>Fig. y_ture vs. random assignment : 클러스터 수에 다른 NMI 및 AMI 스코어 변화 </i>
+
+이전 그림과 달리 y-axis의 스케일이 매우 작아졌습니다. 3가지 지표 모두 0에 가까운 값을 갖습니다. 다만 NMI와 MI는 클러스터 수가 증가할 수록 증가하는 경향이 보이지만, AMI는 클러스터 수와 상관없이 0에 아주 가까운 값을 갖습니다.
 
 <b> Appendix. 전체 코드 </b>
 ```python
@@ -144,7 +150,7 @@ plt.show()
 
 X, y_true = np.empty((0, 28*28)), np.empty((0))
 for i in range(10):
-    chosen_idx = np.random.choice(np.where(y_train == i)[0], replace=False, size=100 * (i+1))
+    chosen_idx = np.random.choice(np.where(y_train == i)[0], replace=False, size=1000)
     X = np.concatenate((X, x_train[chosen_idx].reshape(-1, 28*28)))
     y_true = np.concatenate((y_true, y_train[chosen_idx]))
 y_true_occurence = collections.Counter(y_true)
@@ -153,17 +159,33 @@ for k, v in class_labels.items():
     print(v,' \t: ', y_true_occurence[k])
 
 # number of samples per class:
-# T-shirt/top   :  100
-# Trouser       :  200
-# Pullover      :  300
-# Dress         :  400
-# Coat          :  500
-# Sandal        :  600
-# Shirt         :  700
-# Sneaker       :  800
-# Bag           :  900
+# T-shirt/top   :  1000
+# Trouser       :  1000
+# Pullover      :  1000
+# Dress         :  1000
+# Coat          :  1000
+# Sandal        :  1000
+# Shirt         :  1000
+# Sneaker       :  1000
+# Bag           :  1000
 # Ankleboot     :  1000
 
+## check symmetric property
+
+y_pred = KMeans(n_clusters=10, random_state=0).fit_predict(X)
+
+print(normalized_mutual_info_score(y_pred, y_true))
+## output : 0.5117333108689629
+print(normalized_mutual_info_score(y_true, y_pred))
+## output : 0.5117333108689628
+
+print(adjusted_mutual_info_score(y_pred, y_true))
+## output : 0.49785636941083883
+print(adjusted_mutual_info_score(y_true, y_pred))
+## output : 0.49785636941083883
+
+
+## y_true vs. k-means : scores by number of clusters
 NMI = []
 AMI = []
 MI = []
@@ -188,6 +210,31 @@ plt.grid(True)
 plt.legend()
 plt.show()
 
+## y_true vs. y_random : scores by number of clusters
+NMI = []
+AMI = []
+MI = []
+for i in range(2, 21):
+    print("number of cluster = ", i)
+    y_random = np.random.randint(0, i, 10000)
+    y_pred = KMeans(n_clusters=10, random_state=0).fit_predict(X)
+
+    NMI.append(normalized_mutual_info_score(y_pred, y_random))
+    AMI.append(adjusted_mutual_info_score(y_pred, y_random))
+    MI.append(mutual_info_score(y_pred, y_random))
+
+num_cluster = list(range(2,21))
+plt.figure(figsize=(8, 4))
+plt.plot(num_cluster, MI, marker='*', label='MI')
+plt.plot(num_cluster, NMI, marker='+', label='NMI')
+plt.plot(num_cluster, AMI, marker='o', label='AMI')
+plt.title('Mutual information based Score')
+plt.xlabel('number of cluster')
+plt.ylabel('score')
+plt.xticks([2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
+plt.grid(True)
+plt.legend()
+plt.show()
 ```
 
 ## Reference

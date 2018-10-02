@@ -8,4 +8,9 @@ var store = [{
         "excerpt":"클러스터링은 주어진 데이터에 대한 명시적인 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 다양한 사용자 정보를 이용해 몇가지 고객군으로 분류하여 고객군별 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도)군의 속성을 분석하여 의미있는 인사이트를 도출하는 것에 활용됩니다. 클러스터링 알고리즘 측면에서는 전통적인 Hierarchical clustering, K-means clustering 등이 비교적 쉽게 사용되고 있고, 최근에는...","categories": ["Clustering Evaluation"],
         "tags": [],
         "url": "http://localhost:4000/clustering%20evaluation/clustering-metrics/",
+        "teaser":null},{
+        "title": "클러스터링을 평가하는 척도 - Rand Index",
+        "excerpt":"클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. Rand Index 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다. 정의 n개의 원소로 이루어진 집합 S={o1, … on}와 S를...","categories": ["Clustering Evaluation"],
+        "tags": [],
+        "url": "http://localhost:4000/clustering%20evaluation/rand-index/",
         "teaser":null}]
