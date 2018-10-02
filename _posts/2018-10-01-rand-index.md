@@ -7,7 +7,7 @@ mathjax : true
 last_modified_at: 2018-10-02
 ---
 
-[클러스터링을 평가하는 척도 - Mutual Information](/clustering%20evaluation/clustering-metrics/)와 이어집니다. 클러스터링 결과를 평가하기 위해 [Rand Index](https://en.wikipedia.org/wiki/Rand_index) 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다. 
+[클러스터링을 평가하는 척도 - Mutual Information](/clustering%20evaluation/mutual-information/)와 이어집니다. 클러스터링 결과를 평가하기 위해 [Rand Index](https://en.wikipedia.org/wiki/Rand_index) 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터에 속하는지, 서로 다른 클러스터에 속하는지를 확인합니다. 
 
 ## Rand Index
 
@@ -115,6 +115,9 @@ ARI는 0에 가까운 값이 나오는 것을 확인할 수 있습니다. 또한
 <img src= "/assets/img/2018-09-28/ARI_num_cluster.png" width="700">
 
 또한 Mutual Information based Score(MI, Normalized MI, Adjusted MI)와도 비교해았습니다. Rand Index를 제외하고 4가지 스코어는 모두 0에 가까운 값이 나타납니다. 랜덤으로 클러스터를 할당한 것과 실제 클래스와의 아무런 상관이 없으니까요. 다만 MI, NMI의 경우 클러스터가 증가할 수록 값이 증가하는 경향이 있지만, 확률적으로 조정된 AMI와 ARI는 클러스터 수에 상관없이 0에 가까운 값을 유지한다는 경향이 있다는 것을 알수 있습니다. 
+
+<img src= "/assets/img/2018-09-28/random_vs_true.png" width="700">
+
 
 > Adjusted Mutual Information 혹은 Adjusted Rand Index를 사용하세요.
 > paper works에서 자주 사용하는 지표는 NMI이니 참고하세요.
