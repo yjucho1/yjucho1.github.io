@@ -69,15 +69,22 @@ print(rand_index(y_true, y_random))
 
 <b>랜덤하게 클래스를 할당했음에도 불구하고 RI가 0.82로 높게 나타납니다.</b> 클러스터의 수가 증가할수록 pair를 이루는 두 데이터가 서로 다른 클러스터에 속할 확률이 높아지기 때문입니다. 이로 인해 클러스터 수가 많아지면 b값이 커질 확률이 크고, rand index도 높은 값을 갖습니다. 
 
-> 이런건 우리가 원하는게 아니잖아요?
-
 <img src= "/assets/img/2018-09-28/RI_num_cluster.png" width="700">
 <i>Fig. 클러스터 수에 따른 Rand Index 변화</i>
+
+> 이런건 우리가 원하는게 아니잖아요?
 
 
 ### Adjusted Rand Index
 
 따라서 일반적으로 Rand Index를 확률적으로 조정한 Adjusted Rand Index를 사용합니다. 
+
+### contingency table
+contingency table은 U와 V partition을 |U<sub>i</sub> ∩ V<sub>i</sub>| = n<sub>ij</sub> 로 표기하여 요약한 테이블 입니다.
+
+<img src= "/assets/img/2018-09-28/contingency.svg" width="300">
+
+<img src= "/assets/img/2018-09-28/ARI.gif" width="400">
 
 
 

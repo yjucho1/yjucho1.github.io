@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-02T18:07:00+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">클러스터링을 평가하는 척도 - Rand Index</title><link href="http://localhost:4000/clustering%20evaluation/rand-index/" rel="alternate" type="text/html" title="클러스터링을 평가하는 척도 - Rand Index" /><published>2018-10-01T00:00:00+09:00</published><updated>2018-10-01T00:00:00+09:00</updated><id>http://localhost:4000/clustering%20evaluation/rand-index</id><content type="html" xml:base="http://localhost:4000/clustering%20evaluation/rand-index/">&lt;p&gt;&lt;a href=&quot;/clustering%20evaluation/clustering-metrics/&quot;&gt;클러스터링을 평가하는 척도 - Mutual Information&lt;/a&gt;와 이어집니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-02T18:27:31+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">클러스터링을 평가하는 척도 - Rand Index</title><link href="http://localhost:4000/clustering%20evaluation/rand-index/" rel="alternate" type="text/html" title="클러스터링을 평가하는 척도 - Rand Index" /><published>2018-10-01T00:00:00+09:00</published><updated>2018-10-01T00:00:00+09:00</updated><id>http://localhost:4000/clustering%20evaluation/rand-index</id><content type="html" xml:base="http://localhost:4000/clustering%20evaluation/rand-index/">&lt;p&gt;&lt;a href=&quot;/clustering%20evaluation/clustering-metrics/&quot;&gt;클러스터링을 평가하는 척도 - Mutual Information&lt;/a&gt;와 이어집니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;rand-index&quot;&gt;Rand Index&lt;/h2&gt;
 
@@ -67,16 +67,23 @@
 
 &lt;p&gt;&lt;b&gt;랜덤하게 클래스를 할당했음에도 불구하고 RI가 0.82로 높게 나타납니다.&lt;/b&gt; 클러스터의 수가 증가할수록 pair를 이루는 두 데이터가 서로 다른 클러스터에 속할 확률이 높아지기 때문입니다. 이로 인해 클러스터 수가 많아지면 b값이 커질 확률이 크고, rand index도 높은 값을 갖습니다.&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-09-28/RI_num_cluster.png&quot; width=&quot;700&quot; /&gt;
+&lt;i&gt;Fig. 클러스터 수에 따른 Rand Index 변화&lt;/i&gt;&lt;/p&gt;
+
 &lt;blockquote&gt;
   &lt;p&gt;이런건 우리가 원하는게 아니잖아요?&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-09-28/RI_num_cluster.png&quot; width=&quot;700&quot; /&gt;
-&lt;i&gt;Fig. 클러스터 수에 따른 Rand Index 변화&lt;/i&gt;&lt;/p&gt;
-
 &lt;h3 id=&quot;adjusted-rand-index&quot;&gt;Adjusted Rand Index&lt;/h3&gt;
 
-&lt;p&gt;따라서 일반적으로 Rand Index를 확률적으로 조정한 Adjusted Rand Index를 사용합니다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">클러스터링을 평가하는 척도 - Mutual Information와 이어집니다.</summary></entry><entry><title type="html">클러스터링을 평가하는 척도 - Mutual Information</title><link href="http://localhost:4000/clustering%20evaluation/clustering-metrics/" rel="alternate" type="text/html" title="클러스터링을 평가하는 척도 - Mutual Information" /><published>2018-09-28T00:00:00+09:00</published><updated>2018-09-28T00:00:00+09:00</updated><id>http://localhost:4000/clustering%20evaluation/clustering-metrics</id><content type="html" xml:base="http://localhost:4000/clustering%20evaluation/clustering-metrics/">&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Cluster_analysis&quot;&gt;클러스터링&lt;/a&gt;은 주어진 데이터에 대한 명시적인 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 다양한 사용자 정보를 이용해 몇가지 고객군으로 분류하여 고객군별 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도)군의 속성을 분석하여 의미있는 인사이트를 도출하는 것에 활용됩니다.&lt;/p&gt;
+&lt;p&gt;따라서 일반적으로 Rand Index를 확률적으로 조정한 Adjusted Rand Index를 사용합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;contingency-table&quot;&gt;contingency table&lt;/h3&gt;
+&lt;p&gt;contingency table은 U와 V partition을 |U&lt;sub&gt;i&lt;/sub&gt; ∩ V&lt;sub&gt;i&lt;/sub&gt;| = n&lt;sub&gt;ij&lt;/sub&gt; 로 표기하여 요약한 테이블 입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-09-28/contingency.svg&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-09-28/ARI.gif&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">클러스터링을 평가하는 척도 - Mutual Information와 이어집니다.</summary></entry><entry><title type="html">클러스터링을 평가하는 척도 - Mutual Information</title><link href="http://localhost:4000/clustering%20evaluation/clustering-metrics/" rel="alternate" type="text/html" title="클러스터링을 평가하는 척도 - Mutual Information" /><published>2018-09-28T00:00:00+09:00</published><updated>2018-09-28T00:00:00+09:00</updated><id>http://localhost:4000/clustering%20evaluation/clustering-metrics</id><content type="html" xml:base="http://localhost:4000/clustering%20evaluation/clustering-metrics/">&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Cluster_analysis&quot;&gt;클러스터링&lt;/a&gt;은 주어진 데이터에 대한 명시적인 정보가 많지 않을 때 유용하게 쓸수있는 머신러닝 기법 중 하나입니다. 다양한 사용자 정보를 이용해 몇가지 고객군으로 분류하여 고객군별 맞춤 전략을 도출한다던지, 유사한 상품(동영상, 음원까지도)군의 속성을 분석하여 의미있는 인사이트를 도출하는 것에 활용됩니다.&lt;/p&gt;
 
 &lt;p&gt;클러스터링 알고리즘 측면에서는 전통적인 &lt;a href=&quot;https://en.wikipedia.org/wiki/Hierarchical_clustering&quot;&gt;Hierarchical clustering&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/K-means_clustering&quot;&gt;K-means clustering&lt;/a&gt; 등이 비교적 쉽게 사용되고 있고, 최근에는 &lt;a href=&quot;https://arxiv.org/abs/1801.07648&quot;&gt;딥러닝 기반의 클러스터링&lt;/a&gt; 알고리즘이 다양하게 시도되고 있습니다.&lt;/p&gt;
 
