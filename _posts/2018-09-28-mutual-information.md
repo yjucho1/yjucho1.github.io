@@ -112,13 +112,13 @@ print(adjusted_mutual_info_score(y_true, y_pred))
 
 <i>Fig. y_ture vs. K-means : 클러스터 수에 따른 NMI 및 AMI 스코어 변화</i>
 
-그렇다면 k-means 클러스터링이 데이터를 랜덤하게 클러스터링 한것보다 더 나은 것일까요? 10000개의 데이터를 랜덤하게 n개의 클러스터로 할당한 결과(y_random)와 K-means 결과(y_pred)로 MI, NMI, AMI를 계산해보았습니다.
+그렇다면 k-means 클러스터링이 데이터를 랜덤하게 클러스터링 한것보다 더 나은 것일까요? 10000개의 데이터를 랜덤하게 n개의 클러스터로 할당한 결과(y_random)와 실제 클래스(y_true)의  MI, NMI, AMI를 계산해보았습니다.
 
 
 <img src= "/assets/img/2018-09-28/y_true_y_random.png" width="700">
 <i>Fig. y_ture vs. random assignment : 클러스터 수에 다른 NMI 및 AMI 스코어 변화 </i>
 
-이전 그림과 달리 y-axis의 스케일이 매우 작아졌습니다. 3가지 지표 모두 0에 가까운 값을 갖습니다. 다만 NMI와 MI는 클러스터 수가 증가할 수록 증가하는 경향이 보이지만, AMI는 클러스터 수와 상관없이 0에 아주 가까운 값을 갖습니다.
+이전 그림과 달리 y-axis의 스케일이 매우 작아진 것이 보이시나요? 3가지 지표 모두 0에 가까운 값을 갖습니다. 또한 (미세하지만) NMI와 MI는 클러스터 수가 증가할 수록 증가하는 경향이 보이지만, AMI는 클러스터 수와 상관없이 0에 아주 가까운 값을 갖습니다.
 
 <b> Appendix. 전체 코드 </b>
 ```python
