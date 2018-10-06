@@ -18,9 +18,4 @@ var store = [{
         "excerpt":"Unsupervised Deep Embedding for Clustering Analysis, J. Xie, R. Girshick, A. Farhadi (University of Washington, Facebook AI Reaserch), 2016 Visualizing and Understanding Convolutional Networks, Matthew D. Zeiler, Rob Fergus, 2013 ChoiceNet: Robust Learning by Revealing Output Correlations, Sungjoon Choi, Sanghoon Hong, Sungbin Lim (Kakao Brain, 2018) Generative Adversarial Nets, Ian...","categories": ["migration"],
         "tags": [],
         "url": "http://localhost:4000/migration/old-posts/",
-        "teaser":null},{
-        "title": "[Tensorflow Tutorial] RNN for Quick drawing ",
-        "excerpt":"Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw Code : https://github.com/tensorflow/models/blob/master/tutorials/rnn/quickdraw/train_model.py 발번역 주의 Recurrent Neural Networks for Drawing Classification Quick, Draw!는 플레이어가 물체를 그리고, 컴퓨터가 그림을 인식해서 어떤 물체를 그린것인지 맞출 수 있는지 확인하는 게임입니다. Quick, Draw!에서는 사용자가 그린 그림에서 x,y의 점의 시퀀스를 입력으로 받아 학습된 딥러닝 모델이 사용자가 그렸던 물체의 카테고리를 맞추는 것으로 동작합니다....","categories": ["Tensorflow Tutorial"],
-        "tags": [],
-        "url": "http://localhost:4000/tensorflow%20tutorial/quick-draw/",
         "teaser":null}]
