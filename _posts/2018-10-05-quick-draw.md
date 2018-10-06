@@ -5,6 +5,8 @@ categories:
 comments: true
 toc : true
 last_modified_at: 2018-10-05
+published: false
+
 ---
 
 Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw
