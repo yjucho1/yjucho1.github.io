@@ -18,4 +18,9 @@ var store = [{
         "excerpt":"Unsupervised Deep Embedding for Clustering Analysis, J. Xie, R. Girshick, A. Farhadi (University of Washington, Facebook AI Reaserch), 2016 Visualizing and Understanding Convolutional Networks, Matthew D. Zeiler, Rob Fergus, 2013 ChoiceNet: Robust Learning by Revealing Output Correlations, Sungjoon Choi, Sanghoon Hong, Sungbin Lim (Kakao Brain, 2018) Generative Adversarial Nets, Ian...","categories": ["migration"],
         "tags": [],
         "url": "http://localhost:4000/migration/old-posts/",
+        "teaser":null},{
+        "title": "Quick drawing - dogs and cats",
+        "excerpt":"개와 고양이는 어떻게 구분되는가 quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다. 345개 종류의 5백만장의 그림으로 이루어져있습니다. 이 포스팅에서는 그 중 개와 고양이 그림을 이용해 개와 고양이 그림을 구분하는 모델을 학습하고, 모델이 그림을 어떻게 인식하는지 시각화해보았습니다.import numpy as npimport matplotlib.pyplot as plt## Quick! drawing dataset## https://quickdraw.withgoogle.com/data## https://github.com/googlecreativelab/quickdraw-dataset## download : https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmapdogs = np.load('full%2Fnumpy_bitmap%2Fdog.npy')cats...","categories": ["Keras","Visualizing filters"],
+        "tags": [],
+        "url": "http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/",
         "teaser":null}]
