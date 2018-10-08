@@ -300,4 +300,6 @@ def vis_img_in_filter(img = np.array(x_train[13]).reshape((1, 28, 28, 1)).astype
 
 vis_img_in_filter()
 ```
+<img src= "/assets/img/2018-10-09/output_9_0.png">
+
 reference : https://www.kaggle.com/ernie55ernie/mnist-with-keras-visualization-and-saliency-map
