@@ -19,6 +19,16 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/migration/old-posts/",
         "teaser":null},{
+        "title": "RNN for Quick drawing ",
+        "excerpt":"Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw Code : https://github.com/tensorflow/models/blob/master/tutorials/rnn/quickdraw/train_model.py 발번역 주의 Recurrent Neural Networks for Drawing Classification Quick, Draw!는 플레이어가 물체를 그리고, 컴퓨터가 그림을 인식해서 어떤 물체를 그린것인지 맞출 수 있는지 확인하는 게임입니다. Quick, Draw!에서는 사용자가 그린 그림에서 x,y의 점의 시퀀스를 입력으로 받아 학습된 딥러닝 모델이 사용자가 그렸던 물체의 카테고리를 맞추는 것으로 동작합니다....","categories": ["Tensorflow Tutorial"],
+        "tags": [],
+        "url": "http://localhost:4000/tensorflow%20tutorial/quick-draw/",
+        "teaser":null},{
+        "title": "cs231n - 이해하기",
+        "excerpt":"cs231n http://cs231n.stanford.edu/이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다. Sigmoid outputs are not zero-centered. Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data...","categories": ["cs231n"],
+        "tags": [],
+        "url": "http://localhost:4000/cs231n/cs231n/",
+        "teaser":null},{
         "title": "Quick drawing - dogs and cats",
         "excerpt":"개와 고양이는 어떻게 구분되는가 quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다. 345개 종류의 5백만장의 그림으로 이루어져있습니다. 이 포스팅에서는 그 중 개와 고양이 그림을 이용해 개와 고양이 그림을 구분하는 모델을 학습하고, 모델이 그림을 어떻게 인식하는지 시각화해보았습니다.import numpy as npimport matplotlib.pyplot as plt## Quick! drawing dataset## https://quickdraw.withgoogle.com/data## https://github.com/googlecreativelab/quickdraw-dataset## download : https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmapdogs = np.load('full%2Fnumpy_bitmap%2Fdog.npy')cats...","categories": ["Keras","Visualizing filters"],
         "tags": [],

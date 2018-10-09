@@ -1,0 +1,685 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>cs231n - 이해하기 - yjucho’s blog</title>
+<meta name="description" content="cs231n  http://cs231n.stanford.edu/">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="cs231n - 이해하기">
+<meta property="og:url" content="http://localhost:4000/cs231n/cs231n/">
+
+
+  <meta property="og:description" content="cs231n  http://cs231n.stanford.edu/">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-10-09T00:00:00+09:00">
+
+
+
+  <meta property="article:modified_time" content="2018-10-09T00:00:00+09:00">
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/cs231n/cs231n/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="cs231n - 이해하기">
+    <meta itemprop="description" content="cs231n  http://cs231n.stanford.edu/">
+    <meta itemprop="datePublished" content="October 09, 2018">
+    <meta itemprop="dateModified" content="October 09, 2018">
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">cs231n - 이해하기
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>cs231n</p>
+<ul>
+  <li>http://cs231n.stanford.edu/</li>
+</ul>
+
+<p>이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
+간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.</p>
+
+<h3 id="sigmoid-outputs-are-not-zero-centered">Sigmoid outputs are not zero-centered.</h3>
+
+<p><img src="/assets/img/2018-10-09/cs231n-01.png" width="500" /></p>
+
+<p>Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data that is not zero-centered. This has implications on the dynamics during gradient descent, because if the data coming into a neuron is always positive (e.g. x&gt;0 elementwise in f=wTx+b)), then the gradient on the weights w will during backpropagation become either all be positive, or all negative (depending on the gradient of the whole expression f). This could introduce undesirable zig-zagging dynamics in the gradient updates for the weights. However, notice that once these gradients are added up across a batch of data the final update for the weights can have variable signs, somewhat mitigating this issue. Therefore, this is an inconvenience but it has less severe consequences compared to the saturated activation problem above.</p>
+
+<script type="math/tex; mode=display">\frac{dL}{dw} =  \frac{dL}{df}\frac{df}{dw}\\
+\frac{df}{dw} =  x \ and \ x \ are \ all \ positive</script>
+
+<h3 id="nesterov-momentum">Nesterov Momentum</h3>
+
+<p><img src="/assets/img/2018-10-09/cs231n-04.png" width="250" />
+<img src="/assets/img/2018-10-09/cs231n-03.png" width="250" /></p>
+
+<p><img src="https://tensorflowkorea.files.wordpress.com/2017/03/ec8aa4ed81aceba6b0ec83b7-2017-03-22-ec98a4eca084-11-40-58.png" /></p>
+
+<blockquote>
+  <p>현재 위치의 그래디언트 g(<script type="math/tex">\theta_t</script>) 를 이용하는 것이 아니고 현재 위치에서 속도 <script type="math/tex">\mu v_t</script>만큼 전진한 후의 그래디언트 g(<script type="math/tex">\theta_t + \mu v_t</script>) 를 이용합니다. 사람들은 이를 가리켜 선험적으로 혹은 모험적으로 먼저 진행한 후 에러를 교정한다라고 표현합니다. <small> (ref : https://tensorflow.blog/2017/03/22/momentum-nesterov-momentum/) </small></p>
+</blockquote>
+
+<h3 id="optimizer">optimizer</h3>
+
+<p>1) SGD</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while True : 
+  dx = compute_gradient(x)
+  x += -learning_rate * dx
+</code></pre></div></div>
+
+<p>2) SGD + Momentum</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vx = 0 
+while True :
+  dx = compute_gradient(x)
+  vx = rho * vx + dx 
+  x += -learning_rate * vx
+</code></pre></div></div>
+<p>3) Nesterov Accelerated Gradient(NAG)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vx = 0
+while True :
+  dx = compute_gradient(x)
+  old_vx = vx
+  vx = rho * vx - learning_rate * dx
+  x += -rho * old_vx + (1 + rho) * vx
+</code></pre></div></div>
+<p>4) AdaGrad</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grad_squared = 0 
+while True :
+  dx = compute_gradient(x)
+  grad_squared += dx * dx
+  x += -learning_rate * dx / (np.sqrt(grad_squared) + 1e-7)
+</code></pre></div></div>
+<p>5) RMSProp</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grad_squared = 0 
+while True :
+  dx = compute_gradient(x)
+  grad_squared += decay_rate * grad_squared + (1-dacay_rate) * dx * dx
+  x += -learning_rate * dx / (np.sqrt(grad_squared) + 1e-7)
+</code></pre></div></div>
+<p>6) Adam</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>first_moment = 0
+second_moment = 0
+for t in range(num_iterations):
+  dx = compute_gradient(x)
+  first_moment = beta1 * first_moment + (1-beta1) * dx
+  second_moment = beta2 * second_moment + (1-beta2) * dx * dx
+  ## bias correction for the fact that first and second momentum estimates start at zero
+  first_unbias = first_moment / (1-beta1 ** t)
+  second_unbias = second_moment / (1-beta2 ** t)
+  x -= learning_rate * first_moment / (np.sqrt(second_moment) + 1e-7)
+#### Tips!!
+## Adam with bete1 = 0.9 and beta2 = 0.999 and 
+## learning_rate = 1e-3 or 5e-4 is a great starting point 
+## for many models!
+</code></pre></div></div>
+
+<p>옵티마이저에 상관없이 모두 learning rate 하이퍼파라미터가 필요함. 어떻게 조절하지? decay over time!</p>
+<ul>
+  <li>SGD with Momentum에서는 흔히 사용. 하지만 Adam에서는 잘 사용안함.</li>
+  <li>second order hyperprameter임. First, try no decay and see what happen.</li>
+</ul>
+
+<h3 id="model-ensembel-trick">Model ensembel trick</h3>
+<ul>
+  <li>Enjoy 2% extra performance</li>
+  <li>독립적인 모델을 여러개 만드는 것보다 한가지 모델의 여러 스냅샷을 앙상블하는게 효과적.</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-09/cs231n-05.png" width="500" /></p>
+
+<h3 id="regularization">regularization</h3>
+<p>common pattern : add random noise in train, marginalize over the noise in test</p>
+
+<p>1) Dropout
+2) Batch Normalization
+3) Data Augmentation
+– below is not common in practice, but cool ideas
+4) DropConnect - 랜덤하게 activation값을 제로로 만드는 dropout과 비슷. 하지만 activation이 아니라 weight를 제로로 만드는 것
+5) Fractional max pooling - 풀링레이어에서 풀링 영역을 랜덤하게 선택
+6) stochastic depth - 전체 레이어 중 랜덤하게 선택한 레이어만 학습. 테스트할때는 averaging하여 전체를 사용</p>
+
+<h3 id="transfer-learning">transfer learning</h3>
+<ul>
+  <li>It’s the norm, not the exception</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-09/cs231n-06.png" width="500" /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>very similar dataset</th>
+      <th>very different dataset</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>very little data</b></td>
+      <td>Use Linear Classifier on top layer</td>
+      <td>you’re in trouble.. Try linear classifier from different stages</td>
+    </tr>
+    <tr>
+      <td><b>quite a lot of data</b></td>
+      <td>Finetune a few layers</td>
+      <td>Finetune a larger number of layers</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="cnn-architectures">CNN architectures</h2>
+
+<p>1) Lenet-5
+2) AlexNet - 7x7 filter size
+3) VGG - 3x3 filter size</p>
+<ul>
+  <li>why use smaller filters? (3x3 conv)
+    <ul>
+      <li>stack of three 3x3 conv (stride 1) layer has same effective receptive field as one 7x7 layer</li>
+      <li>But deeper, more non-linearities</li>
+      <li>And fewer parameters: 3 * (3<sup>2</sup>C<sup>2</sup>) vs. 7<sup>2</sup>C<sup>2</sup> for C channels per layer
+4) GoogLeNet</li>
+    </ul>
+  </li>
+  <li>Inception module : 1x1 conv, 3x3 conv, 5x5 conv and 3x3 pooling in parallel  –&gt; concatenate outputs
+    <ul>
+      <li>computational expensive</li>
+      <li>adding 1x1 conv(64 filter) as bottlenecks</li>
+    </ul>
+  </li>
+  <li>auxiliary classification outputs to inject additional gradient at lower layers
+5) ResNet
+– below others to know
+6) Network in Network (NiN)</li>
+  <li>philosophical inspiration for googLeNet
+7) Wide Residul Networks</li>
+  <li>residuals are the important factor, not depth</li>
+  <li>Use wider residual blocks (F x k filters instead of F filters in each layer)</li>
+  <li>50-layer wide resnet outperforms 152-layers original resnet
+8) deep networks with stochastic depth</li>
+  <li>randomly drop a subset of layers during each training pass
+9) FractalNet
+10) Densely connected conv net</li>
+  <li>each layer is connected to every other layer in feedforward fashion</li>
+</ul>
+
+<h2 id="rnn-architectures">RNN architectures</h2>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#cs231n" class="page__taxonomy-item" rel="tag">cs231n</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-09">October 09, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=cs231n+-+%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0%20http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/tensorflow%20tutorial/quick-draw/" class="pagination--pager" title="RNN for Quick drawing
+">Previous</a>
+    
+    
+      <a href="/keras/visualizing%20filters/quick-drawing-exec/" class="pagination--pager" title="Quick drawing - dogs and cats
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/keras/visualizing%20filters/quick-drawing-exec/" rel="permalink">Quick drawing - dogs and cats
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">개와 고양이는 어떻게 구분되는가
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/tensorflow%20tutorial/quick-draw/" rel="permalink">RNN for Quick drawing
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw
+
+</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/migration/old-posts/" rel="permalink">[old] Paper I read
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+  Unsupervised Deep Embedding for Clustering Analysis, J. Xie, R. Girshick, A. Farhadi (University of Washington, Facebook AI Reaserch), 2016
+  Visualizing ...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/clustering%20evaluation/rand-index/" rel="permalink">클러스터링을 평가하는 척도 - Rand Index
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">클러스터링을 평가하는 척도 - Mutual Information와 이어집니다. 클러스터링 결과를 평가하기 위해 Rand Index 도 자주 쓰입니다. Rand Index는 주어진 N개의 데이터 중에서 2개을 선택해 이 쌍(pair)이 클러스터링 결과 U와 V에서 모두 같은 클러스터...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/cs231n/cs231n/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/cs231n/cs231n"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>
