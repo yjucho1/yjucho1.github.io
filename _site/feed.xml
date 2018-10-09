@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-10T00:45:44+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-10T00:47:20+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다.&lt;/li&gt;
@@ -272,18 +272,26 @@ _________________________________________________________________
 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.&lt;/p&gt;
 
 &lt;h3 id=&quot;activation-functions&quot;&gt;activation functions&lt;/h3&gt;
-&lt;p&gt;sigmoid&lt;/p&gt;
+&lt;p&gt;1) sigmoid&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;saturated neurons kill the gradient&lt;/li&gt;
-  &lt;li&gt;sigmoid outputs are not zero-centered
-tanh&lt;/li&gt;
-  &lt;li&gt;zero-cented but staturated neurons kill the gradient
-relu&lt;/li&gt;
-  &lt;li&gt;doest not saturate&lt;/li&gt;
-  &lt;li&gt;computationally efficient 
-leaky relu
-exponential Linear Units&lt;/li&gt;
+  &lt;li&gt;sigmoid outputs are not zero-centered&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;2) tanh&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;zero-cented but staturated neurons kill the gradient&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3) relu&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;doest not saturate&lt;/li&gt;
+  &lt;li&gt;computationally efficient&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;4) leaky relu&lt;/p&gt;
+
+&lt;p&gt;5) exponential Linear Units&lt;/p&gt;
 
 &lt;h3 id=&quot;sigmoid-outputs-are-not-zero-centered-why-is-it-problem&quot;&gt;Sigmoid outputs are not zero-centered. why is it problem?&lt;/h3&gt;
 

@@ -290,18 +290,26 @@
 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.</p>
 
 <h3 id="activation-functions">activation functions</h3>
-<p>sigmoid</p>
+<p>1) sigmoid</p>
 <ul>
   <li>saturated neurons kill the gradient</li>
-  <li>sigmoid outputs are not zero-centered
-tanh</li>
-  <li>zero-cented but staturated neurons kill the gradient
-relu</li>
-  <li>doest not saturate</li>
-  <li>computationally efficient 
-leaky relu
-exponential Linear Units</li>
+  <li>sigmoid outputs are not zero-centered</li>
 </ul>
+
+<p>2) tanh</p>
+<ul>
+  <li>zero-cented but staturated neurons kill the gradient</li>
+</ul>
+
+<p>3) relu</p>
+<ul>
+  <li>doest not saturate</li>
+  <li>computationally efficient</li>
+</ul>
+
+<p>4) leaky relu</p>
+
+<p>5) exponential Linear Units</p>
 
 <h3 id="sigmoid-outputs-are-not-zero-centered-why-is-it-problem">Sigmoid outputs are not zero-centered. why is it problem?</h3>
 
