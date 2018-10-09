@@ -419,37 +419,57 @@ for t in range(num_iterations):
 
 <h2 id="cnn-architectures">CNN architectures</h2>
 
-<p>1) Lenet-5
-2) AlexNet - 7x7 filter size
-3) VGG - 3x3 filter size</p>
+<p>1) Lenet-5</p>
+
+<p>2) AlexNet - 7x7 filter size</p>
+
+<p>3) VGG - 3x3 filter size</p>
 <ul>
   <li>why use smaller filters? (3x3 conv)
     <ul>
       <li>stack of three 3x3 conv (stride 1) layer has same effective receptive field as one 7x7 layer</li>
       <li>But deeper, more non-linearities</li>
-      <li>And fewer parameters: 3 * (3<sup>2</sup>C<sup>2</sup>) vs. 7<sup>2</sup>C<sup>2</sup> for C channels per layer
-4) GoogLeNet</li>
+      <li>And fewer parameters: 3 * (3<sup>2</sup>C<sup>2</sup>) vs. 7<sup>2</sup>C<sup>2</sup> for C channels per layer</li>
     </ul>
   </li>
+</ul>
+
+<p>4) GoogLeNet</p>
+<ul>
   <li>Inception module : 1x1 conv, 3x3 conv, 5x5 conv and 3x3 pooling in parallel  –&gt; concatenate outputs
     <ul>
       <li>computational expensive</li>
       <li>adding 1x1 conv(64 filter) as bottlenecks</li>
     </ul>
   </li>
-  <li>auxiliary classification outputs to inject additional gradient at lower layers
-5) ResNet
-– below others to know
-6) Network in Network (NiN)</li>
-  <li>philosophical inspiration for googLeNet
-7) Wide Residul Networks</li>
+  <li>auxiliary classification outputs to inject additional gradient at lower layers</li>
+</ul>
+
+<p>5) ResNet</p>
+
+<p>– below others to know</p>
+
+<p>6) Network in Network (NiN)</p>
+<ul>
+  <li>philosophical inspiration for googLeNet</li>
+</ul>
+
+<p>7) Wide Residul Networks</p>
+<ul>
   <li>residuals are the important factor, not depth</li>
   <li>Use wider residual blocks (F x k filters instead of F filters in each layer)</li>
-  <li>50-layer wide resnet outperforms 152-layers original resnet
-8) deep networks with stochastic depth</li>
-  <li>randomly drop a subset of layers during each training pass
-9) FractalNet
-10) Densely connected conv net</li>
+  <li>50-layer wide resnet outperforms 152-layers original resnet</li>
+</ul>
+
+<p>8) deep networks with stochastic depth</p>
+<ul>
+  <li>randomly drop a subset of layers during each training pass</li>
+</ul>
+
+<p>9) FractalNet</p>
+
+<p>10) Densely connected conv net</p>
+<ul>
   <li>each layer is connected to every other layer in feedforward fashion</li>
 </ul>
 
