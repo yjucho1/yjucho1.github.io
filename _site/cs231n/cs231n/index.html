@@ -526,7 +526,7 @@ minibatch별로 나눠서 그래디언트 업데이트 <br /></p>
 
 <h3 id="vanilla-rnn-gradient-flow">vanilla RNN gradient flow</h3>
 
-<p><img src="/assets/img/2018-10-09/cs231n-07.png" width="600" /></p>
+<p><img src="/assets/img/2018-10-09/cs231n-07.png" width="500" /></p>
 
 <p>computing gradient of h<sub>0</sub> involves many factors of W</p>
 <ul>
@@ -536,21 +536,21 @@ minibatch별로 나눠서 그래디언트 업데이트 <br /></p>
 
 <h3 id="lstm">LSTM</h3>
 
-<p><img src="/assets/img/2018-10-09/cs231n-08.png" width="600" /></p>
+<p><img src="/assets/img/2018-10-09/cs231n-08.png" width="500" /></p>
 
 <ul>
-  <li>i, f, o, g gate 
-forget gate : whether to erase cell
-input gate : whether to wirte to cell
-gate gate : how much to wirte to cell
-output gate : how much to reveal cell</li>
+  <li>i, f, o, g gate</li>
+  <li>forget gate : whether to erase cell</li>
+  <li>input gate : whether to wirte to cell</li>
+  <li>gate gate : how much to wirte to cell</li>
+  <li>output gate : how much to reveal cell</li>
 </ul>
 
-<p><img src="/assets/img/2018-10-09/cs231n-09.png" width="600" /></p>
+<p><img src="/assets/img/2018-10-09/cs231n-09.png" width="500" /></p>
 
 <p>backpropagation from c<sub>t</sub> to c<sub>t-1</sub> only elementwise multiplication by f, no matrix multiply by W</p>
 
-<p><img src="/assets/img/2018-10-09/cs231n-10.png" width="600" /></p>
+<p><img src="/assets/img/2018-10-09/cs231n-10.png" width="500" /></p>
 
         
       </section>

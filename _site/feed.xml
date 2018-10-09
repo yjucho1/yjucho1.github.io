@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-10T00:47:20+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-10T00:48:59+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다.&lt;/li&gt;
@@ -508,7 +508,7 @@ minibatch별로 나눠서 그래디언트 업데이트 &lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;vanilla-rnn-gradient-flow&quot;&gt;vanilla RNN gradient flow&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-07.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-07.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;computing gradient of h&lt;sub&gt;0&lt;/sub&gt; involves many factors of W&lt;/p&gt;
 &lt;ul&gt;
@@ -518,21 +518,21 @@ minibatch별로 나눠서 그래디언트 업데이트 &lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;lstm&quot;&gt;LSTM&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-08.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-08.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;i, f, o, g gate 
-forget gate : whether to erase cell
-input gate : whether to wirte to cell
-gate gate : how much to wirte to cell
-output gate : how much to reveal cell&lt;/li&gt;
+  &lt;li&gt;i, f, o, g gate&lt;/li&gt;
+  &lt;li&gt;forget gate : whether to erase cell&lt;/li&gt;
+  &lt;li&gt;input gate : whether to wirte to cell&lt;/li&gt;
+  &lt;li&gt;gate gate : how much to wirte to cell&lt;/li&gt;
+  &lt;li&gt;output gate : how much to reveal cell&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-09.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-09.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;backpropagation from c&lt;sub&gt;t&lt;/sub&gt; to c&lt;sub&gt;t-1&lt;/sub&gt; only elementwise multiplication by f, no matrix multiply by W&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-10.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">RNN for Quick drawing</title><link href="http://localhost:4000/tensorflow%20tutorial/quick-draw/" rel="alternate" type="text/html" title="RNN for Quick drawing " /><published>2018-10-05T00:00:00+09:00</published><updated>2018-10-05T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow%20tutorial/quick-draw</id><content type="html" xml:base="http://localhost:4000/tensorflow%20tutorial/quick-draw/">&lt;p&gt;Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-10.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">RNN for Quick drawing</title><link href="http://localhost:4000/tensorflow%20tutorial/quick-draw/" rel="alternate" type="text/html" title="RNN for Quick drawing " /><published>2018-10-05T00:00:00+09:00</published><updated>2018-10-05T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow%20tutorial/quick-draw</id><content type="html" xml:base="http://localhost:4000/tensorflow%20tutorial/quick-draw/">&lt;p&gt;Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw&lt;/p&gt;
 
 &lt;p&gt;Code : https://github.com/tensorflow/models/blob/master/tutorials/rnn/quickdraw/train_model.py&lt;/p&gt;
 
