@@ -25,7 +25,7 @@ var store = [{
         "url": "http://localhost:4000/tensorflow%20tutorial/quick-draw/",
         "teaser":null},{
         "title": "cs231n - 이해하기",
-        "excerpt":"cs231n http://cs231n.stanford.edu/이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다. Sigmoid outputs are not zero-centered. Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data...","categories": ["cs231n"],
+        "excerpt":"cs231n http://cs231n.stanford.edu/이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다. activation functions sigmoid saturated neurons kill the gradient sigmoid outputs are not zero-centeredtanh zero-cented but staturated neurons kill the gradientrelu doest not saturate computationally efficient leaky reluexponential Linear UnitsSigmoid outputs are not...","categories": ["cs231n"],
         "tags": [],
         "url": "http://localhost:4000/cs231n/cs231n/",
         "teaser":null},{

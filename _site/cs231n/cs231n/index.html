@@ -289,14 +289,28 @@
 <p>이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.</p>
 
-<h3 id="sigmoid-outputs-are-not-zero-centered">Sigmoid outputs are not zero-centered.</h3>
+<h3 id="activation-functions">activation functions</h3>
+<p>sigmoid</p>
+<ul>
+  <li>saturated neurons kill the gradient</li>
+  <li>sigmoid outputs are not zero-centered
+tanh</li>
+  <li>zero-cented but staturated neurons kill the gradient
+relu</li>
+  <li>doest not saturate</li>
+  <li>computationally efficient 
+leaky relu
+exponential Linear Units</li>
+</ul>
+
+<h3 id="sigmoid-outputs-are-not-zero-centered-why-is-it-problem">Sigmoid outputs are not zero-centered. why is it problem?</h3>
 
 <p><img src="/assets/img/2018-10-09/cs231n-01.png" width="500" /></p>
 
 <p>Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data that is not zero-centered. This has implications on the dynamics during gradient descent, because if the data coming into a neuron is always positive (e.g. x&gt;0 elementwise in f=wTx+b)), then the gradient on the weights w will during backpropagation become either all be positive, or all negative (depending on the gradient of the whole expression f). This could introduce undesirable zig-zagging dynamics in the gradient updates for the weights. However, notice that once these gradients are added up across a batch of data the final update for the weights can have variable signs, somewhat mitigating this issue. Therefore, this is an inconvenience but it has less severe consequences compared to the saturated activation problem above.</p>
 
 <script type="math/tex; mode=display">\frac{dL}{dw} =  \frac{dL}{df}\frac{df}{dw}\\
-\frac{df}{dw} =  x \ and \ x \ are \ all \ positive</script>
+\frac{df}{dw} =  x \ and \ x \ are \ all \ positive,\ the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{df} \ (all \ positive \ or \ all \ negative )</script>
 
 <h3 id="nesterov-momentum">Nesterov Momentum</h3>
 
@@ -417,7 +431,7 @@ for t in range(num_iterations):
   </tbody>
 </table>
 
-<h2 id="cnn-architectures">CNN architectures</h2>
+<h3 id="cnn-architectures">CNN architectures</h3>
 
 <p>1) Lenet-5</p>
 
@@ -473,8 +487,62 @@ for t in range(num_iterations):
   <li>each layer is connected to every other layer in feedforward fashion</li>
 </ul>
 
-<h2 id="rnn-architectures">RNN architectures</h2>
+<h3 id="rnn">RNN</h3>
 
+<ul>
+  <li>one to one - vanilla NN</li>
+  <li>one to many - image captioning</li>
+  <li>many to one - sentiment classification</li>
+  <li>many to many - machine translation</li>
+  <li>many to many - video classfiction on frame level</li>
+</ul>
+
+<blockquote>
+  <p>backpropagation through time is super slow! <br />
+Truncated Backpropagation through time <br />
+minibatch별로 나눠서 그래디언트 업데이트 <br /></p>
+</blockquote>
+
+<p>1) Image captioning</p>
+<ul>
+  <li>input : image -&gt; ConvNet -&gt; FC 4096</li>
+  <li>take FC 4096 as first hidden state vector</li>
+</ul>
+
+<p>2) Image captioning with Attention</p>
+<ul>
+  <li>이미지의 location 정보를 이용하도록 함</li>
+</ul>
+
+<p>3) Visual Question Answering : RNN with Attention</p>
+
+<h3 id="vanilla-rnn-gradient-flow">vanilla RNN gradient flow</h3>
+
+<p><img src="/assets/img/2018-10-09/cs231n-07.png" width="600" /></p>
+
+<p>computing gradient of h<sub>0</sub> involves many factors of W</p>
+<ul>
+  <li>exploding gradients -&gt; gradient clipping</li>
+  <li>vanishing gradients -&gt; change RNN architecture (LSTM)</li>
+</ul>
+
+<h3 id="lstm">LSTM</h3>
+
+<p><img src="/assets/img/2018-10-09/cs231n-08.png" width="600" /></p>
+
+<ul>
+  <li>i, f, o, g gate 
+forget gate : whether to erase cell
+input gate : whether to wirte to cell
+gate gate : how much to wirte to cell
+output gate : how much to reveal cell</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-09/cs231n-09.png" width="600" /></p>
+
+<p>backpropagation from c<sub>t</sub> to c<sub>t-1</sub> only elementwise multiplication by f, no matrix multiply by W</p>
+
+<p><img src="/assets/img/2018-10-09/cs231n-10.png" width="600" /></p>
 
         
       </section>

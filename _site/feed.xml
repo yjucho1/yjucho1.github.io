@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-09T18:59:50+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-10T00:45:44+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다.&lt;/li&gt;
@@ -271,14 +271,28 @@ _________________________________________________________________
 &lt;p&gt;이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.&lt;/p&gt;
 
-&lt;h3 id=&quot;sigmoid-outputs-are-not-zero-centered&quot;&gt;Sigmoid outputs are not zero-centered.&lt;/h3&gt;
+&lt;h3 id=&quot;activation-functions&quot;&gt;activation functions&lt;/h3&gt;
+&lt;p&gt;sigmoid&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;saturated neurons kill the gradient&lt;/li&gt;
+  &lt;li&gt;sigmoid outputs are not zero-centered
+tanh&lt;/li&gt;
+  &lt;li&gt;zero-cented but staturated neurons kill the gradient
+relu&lt;/li&gt;
+  &lt;li&gt;doest not saturate&lt;/li&gt;
+  &lt;li&gt;computationally efficient 
+leaky relu
+exponential Linear Units&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;sigmoid-outputs-are-not-zero-centered-why-is-it-problem&quot;&gt;Sigmoid outputs are not zero-centered. why is it problem?&lt;/h3&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-01.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data that is not zero-centered. This has implications on the dynamics during gradient descent, because if the data coming into a neuron is always positive (e.g. x&amp;gt;0 elementwise in f=wTx+b)), then the gradient on the weights w will during backpropagation become either all be positive, or all negative (depending on the gradient of the whole expression f). This could introduce undesirable zig-zagging dynamics in the gradient updates for the weights. However, notice that once these gradients are added up across a batch of data the final update for the weights can have variable signs, somewhat mitigating this issue. Therefore, this is an inconvenience but it has less severe consequences compared to the saturated activation problem above.&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{dL}{dw} =  \frac{dL}{df}\frac{df}{dw}\\
-\frac{df}{dw} =  x \ and \ x \ are \ all \ positive&lt;/script&gt;
+\frac{df}{dw} =  x \ and \ x \ are \ all \ positive,\ the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{df} \ (all \ positive \ or \ all \ negative )&lt;/script&gt;
 
 &lt;h3 id=&quot;nesterov-momentum&quot;&gt;Nesterov Momentum&lt;/h3&gt;
 
@@ -399,7 +413,7 @@ for t in range(num_iterations):
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h2 id=&quot;cnn-architectures&quot;&gt;CNN architectures&lt;/h2&gt;
+&lt;h3 id=&quot;cnn-architectures&quot;&gt;CNN architectures&lt;/h3&gt;
 
 &lt;p&gt;1) Lenet-5&lt;/p&gt;
 
@@ -455,7 +469,62 @@ for t in range(num_iterations):
   &lt;li&gt;each layer is connected to every other layer in feedforward fashion&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;rnn-architectures&quot;&gt;RNN architectures&lt;/h2&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">RNN for Quick drawing</title><link href="http://localhost:4000/tensorflow%20tutorial/quick-draw/" rel="alternate" type="text/html" title="RNN for Quick drawing " /><published>2018-10-05T00:00:00+09:00</published><updated>2018-10-05T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow%20tutorial/quick-draw</id><content type="html" xml:base="http://localhost:4000/tensorflow%20tutorial/quick-draw/">&lt;p&gt;Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw&lt;/p&gt;
+&lt;h3 id=&quot;rnn&quot;&gt;RNN&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;one to one - vanilla NN&lt;/li&gt;
+  &lt;li&gt;one to many - image captioning&lt;/li&gt;
+  &lt;li&gt;many to one - sentiment classification&lt;/li&gt;
+  &lt;li&gt;many to many - machine translation&lt;/li&gt;
+  &lt;li&gt;many to many - video classfiction on frame level&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;backpropagation through time is super slow! &lt;br /&gt;
+Truncated Backpropagation through time &lt;br /&gt;
+minibatch별로 나눠서 그래디언트 업데이트 &lt;br /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;1) Image captioning&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;input : image -&amp;gt; ConvNet -&amp;gt; FC 4096&lt;/li&gt;
+  &lt;li&gt;take FC 4096 as first hidden state vector&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2) Image captioning with Attention&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;이미지의 location 정보를 이용하도록 함&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3) Visual Question Answering : RNN with Attention&lt;/p&gt;
+
+&lt;h3 id=&quot;vanilla-rnn-gradient-flow&quot;&gt;vanilla RNN gradient flow&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-07.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;computing gradient of h&lt;sub&gt;0&lt;/sub&gt; involves many factors of W&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;exploding gradients -&amp;gt; gradient clipping&lt;/li&gt;
+  &lt;li&gt;vanishing gradients -&amp;gt; change RNN architecture (LSTM)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;lstm&quot;&gt;LSTM&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-08.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;i, f, o, g gate 
+forget gate : whether to erase cell
+input gate : whether to wirte to cell
+gate gate : how much to wirte to cell
+output gate : how much to reveal cell&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-09.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;backpropagation from c&lt;sub&gt;t&lt;/sub&gt; to c&lt;sub&gt;t-1&lt;/sub&gt; only elementwise multiplication by f, no matrix multiply by W&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-09/cs231n-10.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">RNN for Quick drawing</title><link href="http://localhost:4000/tensorflow%20tutorial/quick-draw/" rel="alternate" type="text/html" title="RNN for Quick drawing " /><published>2018-10-05T00:00:00+09:00</published><updated>2018-10-05T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow%20tutorial/quick-draw</id><content type="html" xml:base="http://localhost:4000/tensorflow%20tutorial/quick-draw/">&lt;p&gt;Tutorial : https://www.tensorflow.org/tutorials/sequences/recurrent_quickdraw&lt;/p&gt;
 
 &lt;p&gt;Code : https://github.com/tensorflow/models/blob/master/tutorials/rnn/quickdraw/train_model.py&lt;/p&gt;
 
