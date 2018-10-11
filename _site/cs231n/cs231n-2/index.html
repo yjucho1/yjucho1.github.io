@@ -9,16 +9,19 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>yjucho's blog</title>
-<meta name="description" content="DATA, Deep Learning, AI">
+<!-- begin _includes/seo.html --><title>cs231n - 이해하기 2 - yjucho’s blog</title>
+<meta name="description" content="cs231n  http://cs231n.stanford.edu/">
 
 
 
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="yjucho’s blog">
-<meta property="og:url" content="http://localhost:4000/">
+<meta property="og:title" content="cs231n - 이해하기 2">
+<meta property="og:url" content="http://localhost:4000/cs231n/cs231n-2/">
+
+
+  <meta property="og:description" content="cs231n  http://cs231n.stanford.edu/">
 
 
 
@@ -26,8 +29,11 @@
 
 
 
+  <meta property="article:published_time" content="2018-10-11T00:00:00+09:00">
 
 
+
+  <meta property="article:modified_time" content="2018-10-10T00:00:00+09:00">
 
 
 
@@ -36,11 +42,9 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/">
+<link rel="canonical" href="http://localhost:4000/cs231n/cs231n-2/">
 
 
-
-  <link rel="next" href="http://localhost:4000/page2/">
 
 
 
@@ -102,7 +106,7 @@
 
   </head>
 
-  <body class="layout--home">
+  <body class="layout--single">
 
     <!--[if lt IE 9]>
 <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
@@ -260,43 +264,130 @@
   </div>
 
 
-  <div class="archive">
-    
-      <h1 id="page-title" class="page__title"></h1>
-    
-    
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="cs231n - 이해하기 2">
+    <meta itemprop="description" content="cs231n  http://cs231n.stanford.edu/">
+    <meta itemprop="datePublished" content="October 11, 2018">
+    <meta itemprop="dateModified" content="October 10, 2018">
 
-<h3 class="archive__subtitle">Recent Posts</h3>
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">cs231n - 이해하기 2
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>cs231n</p>
+<ul>
+  <li>http://cs231n.stanford.edu/</li>
+</ul>
+
+<p>이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
+간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.</p>
+
+<h2 id="detection-and-segmentation">Detection and Segmentation</h2>
+
+<p>1) segmeatic segmentation :</p>
+<ul>
+  <li>sliding window</li>
+  <li>Fully convolutional : labeling class per every pixel
+    <ul>
+      <li>downsampling and upsampling : how to upsampling(unpooling)
+        <ul>
+          <li>nearest neighbor</li>
+          <li>bed of nails</li>
+          <li>max unpooling(remember which element was max)</li>
+          <li>Transpose Convolution</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-01.png" width="300" />
+<img src="/assets/img/2018-10-11/cs231n-02.png" width="300" /></p>
+
+<p><img src="/assets/img/2018-10-11/cs231n-03.png" width="300" />
+<img src="/assets/img/2018-10-11/cs231n-04.png" width="300" /></p>
+
+<p>2) classification + localization :</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
 
 
   
 
 
+  
+  
+  
 
-<div class="list__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
     
-    <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/cs231n/cs231n-2/" rel="permalink">cs231n - 이해하기 2
-</a>
       
-    </h2>
+      <a href="/categories/#cs231n" class="page__taxonomy-item" rel="tag">cs231n</a>
     
-    <p class="archive__item-excerpt" itemprop="description">cs231n
+    </span>
+  </p>
 
-  http://cs231n.stanford.edu/
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-10">October 10, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=cs231n+-+%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0+2%20http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n-2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n-2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n-2%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcs231n%2Fcs231n-2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
 
 
-</p>
+      
+  <nav class="pagination">
+    
+      <a href="/keras/visualizing%20filters/quick-drawing-exec/" class="pagination--pager" title="Quick drawing - dogs and cats
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
   </article>
-</div>
 
   
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
 
 
 
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
     
     <h2 class="archive__item-title" itemprop="headline">
@@ -311,12 +402,12 @@
 </p>
   </article>
 </div>
+        
+          
 
-  
 
 
-
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
     
     <h2 class="archive__item-title" itemprop="headline">
@@ -334,12 +425,12 @@
 </p>
   </article>
 </div>
+        
+          
 
-  
 
 
-
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
     
     <h2 class="archive__item-title" itemprop="headline">
@@ -354,12 +445,12 @@
 </p>
   </article>
 </div>
+        
+          
 
-  
 
 
-
-<div class="list__item">
+<div class="grid__item">
   <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
     
     <h2 class="archive__item-title" itemprop="headline">
@@ -374,48 +465,11 @@
   Visualizing ...</p>
   </article>
 </div>
-
-
-
-<nav class="pagination">
+        
+      </div>
+    </div>
   
-  <ul>
-    
-    
-    <li><a href="#" class="disabled"><span aria-hidden="true">Previous</span></a></li>
-    
-
-    
-    
-      <li><a href="#" class="disabled current">1</a></li>
-    
-
-    
-    
-
-    
-    
-    
-
-    
-
-    
-    
-
-    
-      <li><a href="/page2/">2</a></li>
-    
-
-    
-    
-      <li><a href="/page2/">Next</a></li>
-    
-  </ul>
-</nav>
-
-
-
-  </div>
+  
 </div>
     </div>
 
@@ -465,6 +519,29 @@
 
 
 
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/cs231n/cs231n-2/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/cs231n/cs231n-2"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 
 
 

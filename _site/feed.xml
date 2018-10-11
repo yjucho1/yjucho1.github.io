@@ -1,4 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-10T00:48:59+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-11T23:09:40+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;http://cs231n.stanford.edu/&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
+간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;detection-and-segmentation&quot;&gt;Detection and Segmentation&lt;/h2&gt;
+
+&lt;p&gt;1) segmeatic segmentation :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;sliding window&lt;/li&gt;
+  &lt;li&gt;Fully convolutional : labeling class per every pixel
+    &lt;ul&gt;
+      &lt;li&gt;downsampling and upsampling : how to upsampling(unpooling)
+        &lt;ul&gt;
+          &lt;li&gt;nearest neighbor&lt;/li&gt;
+          &lt;li&gt;bed of nails&lt;/li&gt;
+          &lt;li&gt;max unpooling(remember which element was max)&lt;/li&gt;
+          &lt;li&gt;Transpose Convolution&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-01.png&quot; width=&quot;300&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-10-11/cs231n-02.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-03.png&quot; width=&quot;300&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-10-11/cs231n-04.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2) classification + localization :&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다.&lt;/li&gt;
@@ -300,7 +333,8 @@ _________________________________________________________________
 &lt;p&gt;Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data that is not zero-centered. This has implications on the dynamics during gradient descent, because if the data coming into a neuron is always positive (e.g. x&amp;gt;0 elementwise in f=wTx+b)), then the gradient on the weights w will during backpropagation become either all be positive, or all negative (depending on the gradient of the whole expression f). This could introduce undesirable zig-zagging dynamics in the gradient updates for the weights. However, notice that once these gradients are added up across a batch of data the final update for the weights can have variable signs, somewhat mitigating this issue. Therefore, this is an inconvenience but it has less severe consequences compared to the saturated activation problem above.&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\frac{dL}{dw} =  \frac{dL}{df}\frac{df}{dw}\\
-\frac{df}{dw} =  x \ and \ x \ are \ all \ positive,\ the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{df} \ (all \ positive \ or \ all \ negative )&lt;/script&gt;
+\frac{df}{dw} =  x \ and \ x \ are \ all \ positive,\\ 
+the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{df} \ (all \ positive \ or \ all \ negative )&lt;/script&gt;
 
 &lt;h3 id=&quot;nesterov-momentum&quot;&gt;Nesterov Momentum&lt;/h3&gt;
 
