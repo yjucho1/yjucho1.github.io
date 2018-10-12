@@ -35,7 +35,7 @@ var store = [{
         "url": "http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/",
         "teaser":null},{
         "title": "cs231n - 이해하기 2",
-        "excerpt":"cs231n http://cs231n.stanford.edu/이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다. Detection and Segmentation 1) segmeatic segmentation : sliding window Fully convolutional : labeling class per every pixel downsampling and upsampling : how to upsampling(unpooling) nearest neighbor bed of nails max unpooling(remember which...","categories": ["cs231n"],
+        "excerpt":"cs231n http://cs231n.stanford.edu/이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다. Detection and Segmentation 1) semantic segmentation : sliding window Fully convolutional : labeling class per every pixel downsampling and upsampling : how to upsampling(unpooling) nearest neighbor bed of nails max unpooling(remember which...","categories": ["cs231n"],
         "tags": [],
         "url": "http://localhost:4000/cs231n/cs231n-2/",
         "teaser":null}]

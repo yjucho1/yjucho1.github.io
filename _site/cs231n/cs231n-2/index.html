@@ -291,7 +291,7 @@
 
 <h2 id="detection-and-segmentation">Detection and Segmentation</h2>
 
-<p>1) segmeatic segmentation :</p>
+<p>1) semantic segmentation :</p>
 <ul>
   <li>sliding window</li>
   <li>Fully convolutional : labeling class per every pixel
@@ -315,6 +315,115 @@
 <img src="/assets/img/2018-10-11/cs231n-04.png" width="300" /></p>
 
 <p>2) classification + localization :</p>
+<ul>
+  <li>class score : softmax loss</li>
+  <li>box coordiantes(x, y, w, h) : L2 loss
+    <ul>
+      <li>treat localization as a regression problem</li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>multimodal - how to determine weight of two different loss function?
+loss값 외에 다른 지표를 참고</p>
+</blockquote>
+
+<ul>
+  <li>aside : Human pose estimation</li>
+</ul>
+
+<p>3) Object Detection</p>
+<ul>
+  <li>fixed set of categories and draw box location</li>
+  <li>benchmark dataset : PASCAL VOC</li>
+  <li>each image needs a different number of outputs - not easy to solve with regression</li>
+  <li>sliding window : crops of the image, CNN classifies each crop as object or background
+    <ul>
+      <li>how to choose crop? need to apply CNN to huge number of locations and scales very expensive</li>
+    </ul>
+  </li>
+  <li>region proposals : selective search gives 1000 region proposal -&gt; brute force but high recall</li>
+  <li>R-CNN
+    <ul>
+      <li>region of interest(RoI) from a proposal method (~2k)</li>
+      <li>Warped image regions</li>
+      <li>forward each region through convNet</li>
+      <li>classify regions with SVMs</li>
+      <li>Box regression
+        <blockquote>
+          <p>slow train and inference</p>
+        </blockquote>
+      </li>
+    </ul>
+  </li>
+  <li>fast R-CNN
+    <ul>
+      <li>Forward whole image through ConvNet</li>
+      <li>RoIs from proposal method on convnet feature map of image</li>
+      <li>RoI pooling layer</li>
+      <li>fully connected</li>
+      <li>classification and regression</li>
+    </ul>
+  </li>
+  <li>faster R-CNN
+    <ul>
+      <li>make CNN do proposals</li>
+      <li>insert <em>region proposal network(RPN)</em> to predict proposals from features</li>
+      <li>jointly train with 4 lossess</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-05.png" width="400" /></p>
+
+<ul>
+  <li>detection without proposals : YOLO / SSD</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-06.png" width="400" /></p>
+
+<p>4) Instance Segmentation</p>
+<ul>
+  <li>Mask R-CNN - similar to faster R-CNN
+    <ul>
+      <li>can also does pose : add joint coordinates</li>
+    </ul>
+  </li>
+  <li>bechmark data : microsoft coco data</li>
+</ul>
+
+<h2 id="visualizing-and-understanding">Visualizing and Understanding</h2>
+
+<blockquote>
+  <p>what’s going on inside ConvNets?
+What are the intermediate features looking for?</p>
+</blockquote>
+
+<ul>
+  <li>visualize the filters : raw weights
+    <ul>
+      <li>not that interesting</li>
+    </ul>
+  </li>
+  <li>Last Layer :
+    <ul>
+      <li>check Nearest Neighbors in faeture space(last fc layer)</li>
+      <li>dimensionality reduction : PCA, t-SNE</li>
+    </ul>
+  </li>
+  <li>Occlusion Experiments : 부분적으로 마스크함
+    <ul>
+      <li>mask한 영역으로 인해 확률이 극격히 변화면 해당 영역은 크리티컬하다고 가정</li>
+    </ul>
+  </li>
+  <li>saliency maps : 이미지의 각 픽셀들에 대해서 클래스 스코어의 그래디언트를 구함. compute gradient of class score with respect to image pixels
+    <ul>
+      <li>intermediate feature via guided backprop</li>
+    </ul>
+  </li>
+</ul>
+
 
         
       </section>

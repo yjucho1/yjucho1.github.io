@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-11T23:09:40+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-12T18:34:43+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;http://cs231n.stanford.edu/&lt;/li&gt;
 &lt;/ul&gt;
@@ -8,7 +8,7 @@
 
 &lt;h2 id=&quot;detection-and-segmentation&quot;&gt;Detection and Segmentation&lt;/h2&gt;
 
-&lt;p&gt;1) segmeatic segmentation :&lt;/p&gt;
+&lt;p&gt;1) semantic segmentation :&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;sliding window&lt;/li&gt;
   &lt;li&gt;Fully convolutional : labeling class per every pixel
@@ -31,7 +31,115 @@
 &lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-03.png&quot; width=&quot;300&quot; /&gt;
 &lt;img src=&quot;/assets/img/2018-10-11/cs231n-04.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;2) classification + localization :&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
+&lt;p&gt;2) classification + localization :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;class score : softmax loss&lt;/li&gt;
+  &lt;li&gt;box coordiantes(x, y, w, h) : L2 loss
+    &lt;ul&gt;
+      &lt;li&gt;treat localization as a regression problem&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;multimodal - how to determine weight of two different loss function?
+loss값 외에 다른 지표를 참고&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;aside : Human pose estimation&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3) Object Detection&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;fixed set of categories and draw box location&lt;/li&gt;
+  &lt;li&gt;benchmark dataset : PASCAL VOC&lt;/li&gt;
+  &lt;li&gt;each image needs a different number of outputs - not easy to solve with regression&lt;/li&gt;
+  &lt;li&gt;sliding window : crops of the image, CNN classifies each crop as object or background
+    &lt;ul&gt;
+      &lt;li&gt;how to choose crop? need to apply CNN to huge number of locations and scales very expensive&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;region proposals : selective search gives 1000 region proposal -&amp;gt; brute force but high recall&lt;/li&gt;
+  &lt;li&gt;R-CNN
+    &lt;ul&gt;
+      &lt;li&gt;region of interest(RoI) from a proposal method (~2k)&lt;/li&gt;
+      &lt;li&gt;Warped image regions&lt;/li&gt;
+      &lt;li&gt;forward each region through convNet&lt;/li&gt;
+      &lt;li&gt;classify regions with SVMs&lt;/li&gt;
+      &lt;li&gt;Box regression
+        &lt;blockquote&gt;
+          &lt;p&gt;slow train and inference&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;fast R-CNN
+    &lt;ul&gt;
+      &lt;li&gt;Forward whole image through ConvNet&lt;/li&gt;
+      &lt;li&gt;RoIs from proposal method on convnet feature map of image&lt;/li&gt;
+      &lt;li&gt;RoI pooling layer&lt;/li&gt;
+      &lt;li&gt;fully connected&lt;/li&gt;
+      &lt;li&gt;classification and regression&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;faster R-CNN
+    &lt;ul&gt;
+      &lt;li&gt;make CNN do proposals&lt;/li&gt;
+      &lt;li&gt;insert &lt;em&gt;region proposal network(RPN)&lt;/em&gt; to predict proposals from features&lt;/li&gt;
+      &lt;li&gt;jointly train with 4 lossess&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-05.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;detection without proposals : YOLO / SSD&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-06.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;4) Instance Segmentation&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Mask R-CNN - similar to faster R-CNN
+    &lt;ul&gt;
+      &lt;li&gt;can also does pose : add joint coordinates&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;bechmark data : microsoft coco data&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;visualizing-and-understanding&quot;&gt;Visualizing and Understanding&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;what’s going on inside ConvNets?
+What are the intermediate features looking for?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;visualize the filters : raw weights
+    &lt;ul&gt;
+      &lt;li&gt;not that interesting&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Last Layer :
+    &lt;ul&gt;
+      &lt;li&gt;check Nearest Neighbors in faeture space(last fc layer)&lt;/li&gt;
+      &lt;li&gt;dimensionality reduction : PCA, t-SNE&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Occlusion Experiments : 부분적으로 마스크함
+    &lt;ul&gt;
+      &lt;li&gt;mask한 영역으로 인해 확률이 극격히 변화면 해당 영역은 크리티컬하다고 가정&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;saliency maps : 이미지의 각 픽셀들에 대해서 클래스 스코어의 그래디언트를 구함. compute gradient of class score with respect to image pixels
+    &lt;ul&gt;
+      &lt;li&gt;intermediate feature via guided backprop&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다.&lt;/li&gt;
