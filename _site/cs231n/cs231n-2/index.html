@@ -286,8 +286,7 @@
   <li>http://cs231n.stanford.edu/</li>
 </ul>
 
-<p>이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
-간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.</p>
+<p>이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.</p>
 
 <h2 id="detection-and-segmentation">Detection and Segmentation</h2>
 
@@ -419,10 +418,98 @@ What are the intermediate features looking for?</p>
   </li>
   <li>saliency maps : 이미지의 각 픽셀들에 대해서 클래스 스코어의 그래디언트를 구함. compute gradient of class score with respect to image pixels
     <ul>
-      <li>intermediate feature via guided backprop</li>
+      <li>intermediate feature via guided backprop : which part of image impact to intermediate activation value</li>
+      <li>relu : positive gradient만 이용하면 더 나이스 이미지를 얻을수 있다</li>
+    </ul>
+  </li>
+  <li>gradient ascent : 지금까지는 보통의 백프로파게이션을 통해 이미지의 어떤 부분이 뉴련에 영향을 주는지 알아봤다면(고정된 입력 이미지 값), 그래디언트 어센트는 뉴런의 액티베이션을 최대화하는 방향으로 이미지를 만들어내는 것임(입력 이미지 값을 생성하는 것)
+    <ul>
+      <li>generate a synthetic image that maximally activates a neuron</li>
+      <li>better regrularizer (image prior regualarization)</li>
+      <li>optimize in FC6 latent space instead of pixel space</li>
+    </ul>
+  </li>
+  <li>Fooling Image
+    <ul>
+      <li>엘리퍼튼 이미지를 고르고</li>
+      <li>코알라 클래스 스코어를 골라</li>
+      <li>코알라 클래스 스코어를 최대화하도록 이미지를 모디파이</li>
+      <li>네트워크가 코알라로 분류할때까지 반복</li>
     </ul>
   </li>
 </ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-07.png" width="400" /></p>
+
+<ul>
+  <li>DeepDream
+    <ul>
+      <li>choose an image and a layer in a CNN : repeat:
+        <ul>
+          <li>Forward : compute activations at chosen layer</li>
+          <li>set gradient of chosen layer equal to its activation</li>
+          <li>backward : compute gradient on image</li>
+          <li>update image</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Feature Inversion : 피쳐벡터를 뽑고, 그 피쳐벡터에 매칭되는 다른 입풋 이미지를 만들어냄</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-08.png" width="400" /></p>
+
+<ul>
+  <li>Texture sythesis : given a sample patch of some texture, can we genrate a bigger image of the same texture?
+    <ul>
+      <li>classical approch : nearest</li>
+      <li>neural texture synthesis : gram matrix</li>
+    </ul>
+  </li>
+  <li>Style Transfer</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-09.png" width="400" /></p>
+
+<ul>
+  <li>slow  : train another model to transfer style</li>
+  <li>fast style transfer</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-10.png" width="400" /></p>
+
+<h2 id="generative-models">Generative Models</h2>
+<ul>
+  <li>addresses density estimation</li>
+  <li>
+    <p>generative models of time-series data can be used for simulation and planning</p>
+  </li>
+  <li>Fully visible belief network</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-11.png" width="300" /></p>
+
+<ul>
+  <li>
+    <p>픽셀의 오더를 어떻게 결정하지? –&gt; pixelRNN</p>
+  </li>
+  <li>pixelRNN
+    <ul>
+      <li>코너에 있는 픽셀부터 다이어고날 방향으로 시퀄셜로 학습 using RNN (LSTM)</li>
+      <li>sequtional is slow</li>
+    </ul>
+  </li>
+  <li>pixelCNN
+    <ul>
+      <li>코너에 있는 픽샐부터 시작하는 것은 같으나</li>
+      <li>context region(previous pixels)으로부터 모델링되는 것</li>
+      <li>training is faster but generation must still process sequentially</li>
+    </ul>
+  </li>
+  <li>Variational auto-encoder</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-12.png" width="300" /></p>
 
 
         

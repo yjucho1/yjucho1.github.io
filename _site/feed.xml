@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-12T18:34:43+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-13T19:29:05+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;http://cs231n.stanford.edu/&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 
-간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.&lt;/p&gt;
+&lt;p&gt;이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;detection-and-segmentation&quot;&gt;Detection and Segmentation&lt;/h2&gt;
 
@@ -136,10 +135,98 @@ What are the intermediate features looking for?&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;saliency maps : 이미지의 각 픽셀들에 대해서 클래스 스코어의 그래디언트를 구함. compute gradient of class score with respect to image pixels
     &lt;ul&gt;
-      &lt;li&gt;intermediate feature via guided backprop&lt;/li&gt;
+      &lt;li&gt;intermediate feature via guided backprop : which part of image impact to intermediate activation value&lt;/li&gt;
+      &lt;li&gt;relu : positive gradient만 이용하면 더 나이스 이미지를 얻을수 있다&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
+  &lt;li&gt;gradient ascent : 지금까지는 보통의 백프로파게이션을 통해 이미지의 어떤 부분이 뉴련에 영향을 주는지 알아봤다면(고정된 입력 이미지 값), 그래디언트 어센트는 뉴런의 액티베이션을 최대화하는 방향으로 이미지를 만들어내는 것임(입력 이미지 값을 생성하는 것)
+    &lt;ul&gt;
+      &lt;li&gt;generate a synthetic image that maximally activates a neuron&lt;/li&gt;
+      &lt;li&gt;better regrularizer (image prior regualarization)&lt;/li&gt;
+      &lt;li&gt;optimize in FC6 latent space instead of pixel space&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fooling Image
+    &lt;ul&gt;
+      &lt;li&gt;엘리퍼튼 이미지를 고르고&lt;/li&gt;
+      &lt;li&gt;코알라 클래스 스코어를 골라&lt;/li&gt;
+      &lt;li&gt;코알라 클래스 스코어를 최대화하도록 이미지를 모디파이&lt;/li&gt;
+      &lt;li&gt;네트워크가 코알라로 분류할때까지 반복&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-07.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;DeepDream
+    &lt;ul&gt;
+      &lt;li&gt;choose an image and a layer in a CNN : repeat:
+        &lt;ul&gt;
+          &lt;li&gt;Forward : compute activations at chosen layer&lt;/li&gt;
+          &lt;li&gt;set gradient of chosen layer equal to its activation&lt;/li&gt;
+          &lt;li&gt;backward : compute gradient on image&lt;/li&gt;
+          &lt;li&gt;update image&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Feature Inversion : 피쳐벡터를 뽑고, 그 피쳐벡터에 매칭되는 다른 입풋 이미지를 만들어냄&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-08.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Texture sythesis : given a sample patch of some texture, can we genrate a bigger image of the same texture?
+    &lt;ul&gt;
+      &lt;li&gt;classical approch : nearest&lt;/li&gt;
+      &lt;li&gt;neural texture synthesis : gram matrix&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Style Transfer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-09.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;slow  : train another model to transfer style&lt;/li&gt;
+  &lt;li&gt;fast style transfer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-10.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;generative-models&quot;&gt;Generative Models&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;addresses density estimation&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;generative models of time-series data can be used for simulation and planning&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fully visible belief network&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-11.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;픽셀의 오더를 어떻게 결정하지? –&amp;gt; pixelRNN&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;pixelRNN
+    &lt;ul&gt;
+      &lt;li&gt;코너에 있는 픽셀부터 다이어고날 방향으로 시퀄셜로 학습 using RNN (LSTM)&lt;/li&gt;
+      &lt;li&gt;sequtional is slow&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;pixelCNN
+    &lt;ul&gt;
+      &lt;li&gt;코너에 있는 픽샐부터 시작하는 것은 같으나&lt;/li&gt;
+      &lt;li&gt;context region(previous pixels)으로부터 모델링되는 것&lt;/li&gt;
+      &lt;li&gt;training is faster but generation must still process sequentially&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Variational auto-encoder&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-12.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry><entry><title type="html">Quick drawing - dogs and cats</title><link href="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/" rel="alternate" type="text/html" title="Quick drawing - dogs and cats" /><published>2018-10-09T00:00:00+09:00</published><updated>2018-10-09T00:00:00+09:00</updated><id>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec</id><content type="html" xml:base="http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/">&lt;h3 id=&quot;개와-고양이는-어떻게-구분되는가&quot;&gt;개와 고양이는 어떻게 구분되는가&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;quick drawing은 구글에서 공개하는 오픈소스 데이터셋입니다.&lt;/li&gt;
