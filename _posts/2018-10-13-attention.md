@@ -10,7 +10,7 @@ published: true
 
 *작성중입니다.*
 
-original post : https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html
+[lilianweng's original post](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html)
 
 > Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.
 
@@ -94,7 +94,7 @@ $$
 \mathbf{h_i} = [\mathbf{\overrightarrow{h_i}}^\top; \mathbf{\overrightarrow{h_i}}^\top]^\top, \ i=1, ..., n
 $$ 
 
-디코더의 히든 스테이는 t번째 아웃풋 단어에 대해서 $$s_t = f(s_{t-1}, y_{t-1}, c_t)$$ 로 나타냅니다. 이때, c_t는 입력 시퀀스의 히든스테이트에 대해서 정렬 스코어로 가중된 합계로 계산된 의미벡터(context vector)입니다. 
+디코더의 히든 스테이는 t번째 아웃풋 단어에 대해서 $$s_t = f(s_{t-1}, y_{t-1}, c_t)$$ 로 나타냅니다. 이때, $$c_t$$는 입력 시퀀스의 히든스테이트에 대해서 정렬 스코어로 가중된 합계로 계산된 의미벡터(context vector)입니다. 
 
 $$
 \begin{align}
@@ -104,19 +104,19 @@ $$
 \end{align}
 $$
 
-alignment model은 i번째 입력과 t번째 결과값이 얼마나 잘 매치되는지 확인 한 후  스코어 $$\alpha_{t, i}$$를 이 쌍 $$(y_t, x_i)$$에 할당합니다. $${\alpha_{t,i}}$$의 집합은 각 소스의 히든 스테이트가 결과값에 어느정도 연관되어 있는지를 정의하는 가중치 입니다. Bahdanau의 논문은 alignment score \alpha는 한개의 히든 레이어를 가진 <b>feed-forward network</b>로 파라미터라이즈됩니다. 그리고 이 네트워크는 모델의 다른 부분들과 함께 학습된다. 스코어 함수는 아래와 같은 형태이고, tanh는 비선형 활성함수로 사용되었습니다. 
+alignment model은 i번째 입력과 t번째 결과값이 얼마나 잘 매치되는지 확인 한 후  스코어 $$\alpha_{t, i}$$를 이 쌍 $$(y_t, x_i)$$에 할당합니다. $${\alpha_{t,i}}$$의 집합은 각 소스의 히든 스테이트가 결과값에 어느정도 연관되어 있는지를 정의하는 가중치 입니다. Bahdanau의 논문은 alignment score $$\alpha$$는 한개의 히든 레이어를 가진 <b>feed-forward network</b>로 파라미터라이즈됩니다. 그리고 이 네트워크는 모델의 다른 부분들과 함께 학습된다. 스코어 함수는 아래와 같은 형태이고, tanh는 비선형 활성함수로 사용되었습니다. 
 
 $$
 score(\mathbf{s_t}, \mathbf{h_i}) = \mathbf{v_a^\top} tanh(\mathbf{W_a}[\mathbf{s_t} ; \mathbf{h_i}])
 $$
 
-\mathbf{V_a} 와 \mathbf{W_a}는 alignment model에서 학습되는 가중치 메트릭스입니다. 
+$$\mathbf{v_a}$$ 와 $$\mathbf{W_a}$$는 alignment model에서 학습되는 가중치 메트릭스입니다. 
 
 alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 사이의 상관관계를 명시적으로 보여주는 좋은 시각화 방법입니다. 
 
 <img src = "/assets/img/2018-10-13/bahdanau-fig3.png" width="500">
 
-*그림5. 프랑스어 "L’accord sur l’Espace économique européen a été signé en août 1992"와 영어 "The agreement on the European Economic Area was signed in August 1992"의 기계번역 모델의 Alignment matrix입니다. (출저 : Fig 3 in [Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf))
+<small>*그림5. 프랑스어 "L’accord sur l’Espace économique européen a été signé en août 1992"와 영어 "The agreement on the European Economic Area was signed in August 1992"의 기계번역 모델의 Alignment matrix입니다. (출저 : Fig 3 in [Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf))*</small>
 
 구현 방법은 텐서플로우팀의 [튜토리얼](https://www.tensorflow.org/versions/master/tutorials/seq2seq)을 확인하세요. 
 
