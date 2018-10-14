@@ -38,4 +38,9 @@ var store = [{
         "excerpt":"cs231n http://cs231n.stanford.edu/이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다. Detection and Segmentation 1) semantic segmentation : sliding window Fully convolutional : labeling class per every pixel downsampling and upsampling : how to upsampling(unpooling) nearest neighbor bed of nails max unpooling(remember which...","categories": ["cs231n"],
         "tags": [],
         "url": "http://localhost:4000/cs231n/cs231n-2/",
+        "teaser":null},{
+        "title": "[번역] Attention? Attention!",
+        "excerpt":"작성중입니다. original post : https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다. What’s Wrong with Seq2Seq Model? Born for Translation Definition A Family of Attention Mechanisms Summary Self-Attention Soft vs Hard Attention Global...","categories": ["Attention"],
+        "tags": [],
+        "url": "http://localhost:4000/attention/attention/",
         "teaser":null}]

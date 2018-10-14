@@ -487,7 +487,7 @@ What are the intermediate features looking for?</p>
   <li>Fully visible belief network</li>
 </ul>
 
-<p><img src="/assets/img/2018-10-11/cs231n-11.png" width="300" /></p>
+<p><img src="/assets/img/2018-10-11/cs231n-11.png" width="400" /></p>
 
 <ul>
   <li>
@@ -506,11 +506,33 @@ What are the intermediate features looking for?</p>
       <li>training is faster but generation must still process sequentially</li>
     </ul>
   </li>
-  <li>Variational auto-encoder</li>
+  <li>Variational auto-encoder
+    <ul>
+      <li>intractible to compute p(x|z) for every z</li>
+      <li>in addition to decoder p<sub>θ</sub>(x|z), define additional encoder q<sub>φ</sub>(z|x) that approximates p<sub>θ</sub>(z|x)</li>
+    </ul>
+  </li>
 </ul>
 
-<p><img src="/assets/img/2018-10-11/cs231n-12.png" width="300" /></p>
+<p><img src="/assets/img/2018-10-11/cs231n-12.png" width="300" /> 
+<img src="/assets/img/2018-10-11/cs231n-13.png" width="300" /></p>
 
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+log p_\theta(x^{(i)}) & =  E_z[log p_\theta(x^{(i)}|z)] - D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) + D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z|x^{(i)}))) \\ \\
+E_z[log p_\theta(x^{(i)}|z)] & \  reconstruct \ the \ input \ data \\ \\
+D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) & \  make \ approximate \ posterior \ distribution \ close \ to \ prior \\
+\end{align} %]]></script>
+
+<ul>
+  <li>GAN</li>
+</ul>
+
+<p><img src="/assets/img/2018-10-11/cs231n-14.png" width="400" /> <img src="/assets/img/2018-10-11/cs231n-15.png" width="300" /></p>
+
+<p><img src="/assets/img/2018-10-11/cs231n-16.png" width="500" /></p>
+
+<h2 id="reinforce-learning">reinforce learning</h2>
 
         
       </section>
@@ -564,7 +586,8 @@ What are the intermediate features looking for?</p>
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/attention/attention/" class="pagination--pager" title="[번역] Attention? Attention!
+">Next</a>
     
   </nav>
 
