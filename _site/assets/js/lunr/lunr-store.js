@@ -45,7 +45,7 @@ var store = [{
         "url": "http://localhost:4000/attention/attention/",
         "teaser":null},{
         "title": "recommender system",
-        "excerpt":"problem formulation Movie Alice(1) Bob(2) Carol(3) Dave(4) Love at last 5 5 0 0 Romance forever 5 ? ? 0 Cute puppies of love ? 4 0 ? Nonstop car chases 0 0 5 4 Swords vs. karete 0 0 5 ? = number of users = number of movies...","categories": ["recommender system"],
+        "excerpt":"추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다. problem formulation Movie Alice(1) Bob(2) Carol(3) Dave(4) Love at last 5 5 0 0 Romance forever 5 ? ? 0 Cute puppies of love ? 4 0 ? Nonstop car chases 0 0 5 4 Swords vs. karete 0...","categories": ["recommender system"],
         "tags": [],
         "url": "http://localhost:4000/recommender%20system/recommendation/",
         "teaser":null}]

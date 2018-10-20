@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>recommender system - yjucho’s blog</title>
-<meta name="description" content="problem formulation">
+<meta name="description" content="추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.">
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://localhost:4000/recommender%20system/recommendation/">
 
 
-  <meta property="og:description" content="problem formulation">
+  <meta property="og:description" content="추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.">
 
 
 
@@ -264,7 +264,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="recommender system">
-    <meta itemprop="description" content="problem formulation">
+    <meta itemprop="description" content="추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.">
     <meta itemprop="datePublished" content="October 20, 2018">
     
 
@@ -279,7 +279,9 @@
 
       <section class="page__content" itemprop="text">
         
-        <h2 id="problem-formulation">problem formulation</h2>
+        <p>추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.</p>
+
+<h2 id="problem-formulation">problem formulation</h2>
 
 <table>
   <thead>
@@ -302,16 +304,16 @@
     <tr>
       <td>Romance forever</td>
       <td>5</td>
-      <td>?</td>
-      <td>?</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
       <td>0</td>
     </tr>
     <tr>
       <td>Cute puppies of love</td>
-      <td>?</td>
+      <td><b>?</b></td>
       <td>4</td>
       <td>0</td>
-      <td>?</td>
+      <td><b>?</b></td>
     </tr>
     <tr>
       <td>Nonstop car chases</td>
@@ -325,7 +327,7 @@
       <td>0</td>
       <td>0</td>
       <td>5</td>
-      <td>?</td>
+      <td><b>?</b></td>
     </tr>
   </tbody>
 </table>
@@ -366,18 +368,18 @@
     <tr>
       <td>Romance forever</td>
       <td>5</td>
-      <td>?</td>
-      <td>?</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
       <td>0</td>
       <td>1.0</td>
       <td>0.01</td>
     </tr>
     <tr>
       <td>Cute puppies of love</td>
-      <td>?</td>
+      <td><b>?</b></td>
       <td>4</td>
       <td>0</td>
-      <td>?</td>
+      <td><b>?</b></td>
       <td>0.99</td>
       <td>0</td>
     </tr>
@@ -395,7 +397,7 @@
       <td>0</td>
       <td>0</td>
       <td>5</td>
-      <td>?</td>
+      <td><b>?</b></td>
       <td>0</td>
       <td>0.9</td>
     </tr>
@@ -405,7 +407,7 @@
 <p>For each user j, learn a prarameter <script type="math/tex">\theta ^{(j)} \in \mathbb{R}^{n+1}</script> ( n is the number of features. In above example, n = 2 because of <script type="math/tex">x_1,\ x_2</script> ). 
 Predict user <script type="math/tex">j</script> as rating movie <script type="math/tex">i</script> with <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script> stars. ( <script type="math/tex">x^{(i)}</script> = feature vector of movie <script type="math/tex">i</script> )</p>
 
-<p><em>example of Alice’s rating of Cute pupples of love</em> <small>(Assumed <script type="math/tex">\theta ^{(1)}</script> learned by ML) </small></p>
+<p><b><em>example of Alice’s rating of “Cute pupples of love”</em></b> <small>(Assumed <script type="math/tex">\theta ^{(1)}</script> learned by model) </small></p>
 
 <script type="math/tex; mode=display">x^{(3)} = 
 \begin{bmatrix}
@@ -426,17 +428,18 @@ Predict user <script type="math/tex">j</script> as rating movie <script type="ma
 <script type="math/tex">x ^{(i)}</script> = feature vector for movie <script type="math/tex">i</script> <br />
 For user <script type="math/tex">j</script>, movie <script type="math/tex">i</script>, predicted rating : <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script></p>
 
-<p><script type="math/tex">m^{(j)}</script> = no. of movies rated by user <script type="math/tex">j</script>\</p>
-
-<p>To learn <script type="math/tex">\theta ^{(j)}</script> (parameter for user <script type="math/tex">j</script>):</p>
+<p><b>To learn <script type="math/tex">\theta ^{(j)}</script> (parameter for user <script type="math/tex">j</script>)</b>:</p>
 
 <script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
 
-<p>To learn  <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script> :</p>
+<p><b>To learn  <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script> </b>:</p>
 
 <script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
 
-<p><img src="/assets/img/2018-10-20/gradient_descent_update.png" width="500" /></p>
+<p><b>Gradient descent update</b> :</p>
+
+<script type="math/tex; mode=display">\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} \ \ (for \ k=0) \\
+\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right) \ \ (for \ k \neq 0)</script>
 
 <h2 id="collaborative-filtering">Collaborative Filtering</h2>
 

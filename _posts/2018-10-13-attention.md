@@ -133,3 +133,4 @@ alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 �
 |---------|---------|----|
 |Additive(*) | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$) = $$\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]$$) | [Bahdanau2015](https://arxiv.org/pdf/1409.0473.pdf) |
 |Location-Base| $$\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)$$ <br> Note : This simplifies the softmax alignment max to only depend on the target position. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf)|
+|General | 

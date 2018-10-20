@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-20T19:35:05+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">recommender system</title><link href="http://localhost:4000/recommender%20system/recommendation/" rel="alternate" type="text/html" title="recommender system" /><published>2018-10-20T00:00:00+09:00</published><updated>2018-10-20T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20system/recommendation</id><content type="html" xml:base="http://localhost:4000/recommender%20system/recommendation/">&lt;h2 id=&quot;problem-formulation&quot;&gt;problem formulation&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-20T19:51:39+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">recommender system</title><link href="http://localhost:4000/recommender%20system/recommendation/" rel="alternate" type="text/html" title="recommender system" /><published>2018-10-20T00:00:00+09:00</published><updated>2018-10-20T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20system/recommendation</id><content type="html" xml:base="http://localhost:4000/recommender%20system/recommendation/">&lt;p&gt;추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;problem-formulation&quot;&gt;problem formulation&lt;/h2&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
@@ -21,16 +23,16 @@
     &lt;tr&gt;
       &lt;td&gt;Romance forever&lt;/td&gt;
       &lt;td&gt;5&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Cute puppies of love&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
       &lt;td&gt;4&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Nonstop car chases&lt;/td&gt;
@@ -44,7 +46,7 @@
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;5&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
@@ -85,18 +87,18 @@
     &lt;tr&gt;
       &lt;td&gt;Romance forever&lt;/td&gt;
       &lt;td&gt;5&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;1.0&lt;/td&gt;
       &lt;td&gt;0.01&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Cute puppies of love&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
       &lt;td&gt;4&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
       &lt;td&gt;0.99&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
     &lt;/tr&gt;
@@ -114,7 +116,7 @@
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;5&lt;/td&gt;
-      &lt;td&gt;?&lt;/td&gt;
+      &lt;td&gt;&lt;b&gt;?&lt;/b&gt;&lt;/td&gt;
       &lt;td&gt;0&lt;/td&gt;
       &lt;td&gt;0.9&lt;/td&gt;
     &lt;/tr&gt;
@@ -124,7 +126,7 @@
 &lt;p&gt;For each user j, learn a prarameter &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(j)} \in \mathbb{R}^{n+1}&lt;/script&gt; ( n is the number of features. In above example, n = 2 because of &lt;script type=&quot;math/tex&quot;&gt;x_1,\ x_2&lt;/script&gt; ). 
 Predict user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt; as rating movie &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt; with &lt;script type=&quot;math/tex&quot;&gt;(\theta ^{(j)})^T x^{(i)}&lt;/script&gt; stars. ( &lt;script type=&quot;math/tex&quot;&gt;x^{(i)}&lt;/script&gt; = feature vector of movie &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt; )&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;example of Alice’s rating of Cute pupples of love&lt;/em&gt; &lt;small&gt;(Assumed &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(1)}&lt;/script&gt; learned by ML) &lt;/small&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;&lt;em&gt;example of Alice’s rating of “Cute pupples of love”&lt;/em&gt;&lt;/b&gt; &lt;small&gt;(Assumed &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(1)}&lt;/script&gt; learned by model) &lt;/small&gt;&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;x^{(3)} = 
 \begin{bmatrix}
@@ -145,21 +147,22 @@ Predict user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt; as rating 
 &lt;script type=&quot;math/tex&quot;&gt;x ^{(i)}&lt;/script&gt; = feature vector for movie &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt; &lt;br /&gt;
 For user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;, movie &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;, predicted rating : &lt;script type=&quot;math/tex&quot;&gt;(\theta ^{(j)})^T x^{(i)}&lt;/script&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;m^{(j)}&lt;/script&gt; = no. of movies rated by user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;\&lt;/p&gt;
-
-&lt;p&gt;To learn &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(j)}&lt;/script&gt; (parameter for user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;To learn &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(j)}&lt;/script&gt; (parameter for user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;)&lt;/b&gt;:&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\min_{\theta ^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(\theta_k^{(j)})^2&lt;/script&gt;
 
-&lt;p&gt;To learn  &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}&lt;/script&gt; :&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;To learn  &lt;script type=&quot;math/tex&quot;&gt;\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}&lt;/script&gt; &lt;/b&gt;:&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\min_{\theta ^{(j)}} \frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2&lt;/script&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-20/gradient_descent_update.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Gradient descent update&lt;/b&gt; :&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} \ \ (for \ k=0) \\
+\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right) \ \ (for \ k \neq 0)&lt;/script&gt;
 
 &lt;h2 id=&quot;collaborative-filtering&quot;&gt;Collaborative Filtering&lt;/h2&gt;
 
-&lt;h2 id=&quot;reference-&quot;&gt;Reference :&lt;/h2&gt;</content><author><name>yjucho</name></author><summary type="html">problem formulation</summary></entry><entry><title type="html">[번역] Attention? Attention!</title><link href="http://localhost:4000/attention/attention/" rel="alternate" type="text/html" title="[번역] Attention? Attention!" /><published>2018-10-13T00:00:00+09:00</published><updated>2018-10-13T00:00:00+09:00</updated><id>http://localhost:4000/attention/attention</id><content type="html" xml:base="http://localhost:4000/attention/attention/">&lt;p&gt;&lt;em&gt;작성중입니다.&lt;/em&gt;&lt;/p&gt;
+&lt;h2 id=&quot;reference-&quot;&gt;Reference :&lt;/h2&gt;</content><author><name>yjucho</name></author><summary type="html">추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.</summary></entry><entry><title type="html">[번역] Attention? Attention!</title><link href="http://localhost:4000/attention/attention/" rel="alternate" type="text/html" title="[번역] Attention? Attention!" /><published>2018-10-13T00:00:00+09:00</published><updated>2018-10-13T00:00:00+09:00</updated><id>http://localhost:4000/attention/attention</id><content type="html" xml:base="http://localhost:4000/attention/attention/">&lt;p&gt;&lt;em&gt;작성중입니다.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html&quot;&gt;lilianweng’s original post&lt;/a&gt;&lt;/p&gt;
 
@@ -307,6 +310,11 @@ For user &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;, movie &lt;scr
       &lt;td&gt;Location-Base&lt;/td&gt;
       &lt;td&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)&lt;/script&gt; &lt;br /&gt; Note : This simplifies the softmax alignment max to only depend on the target position.&lt;/td&gt;
       &lt;td&gt;&lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;Luong2015&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;General&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;</content><author><name>yjucho</name></author><summary type="html">작성중입니다.</summary></entry><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
