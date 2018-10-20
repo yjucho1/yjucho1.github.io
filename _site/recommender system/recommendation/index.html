@@ -1,0 +1,584 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>recommender system - yjucho’s blog</title>
+<meta name="description" content="problem formulation">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="recommender system">
+<meta property="og:url" content="http://localhost:4000/recommender%20system/recommendation/">
+
+
+  <meta property="og:description" content="problem formulation">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-10-20T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/recommender%20system/recommendation/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="recommender system">
+    <meta itemprop="description" content="problem formulation">
+    <meta itemprop="datePublished" content="October 20, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">recommender system
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="problem-formulation">problem formulation</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td>?</td>
+      <td>?</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td>?</td>
+      <td>4</td>
+      <td>0</td>
+      <td>?</td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>?</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><script type="math/tex">n_u</script> = number of users <br />
+<script type="math/tex">n_m</script> = number of movies <br />
+<script type="math/tex">r(i, j)</script> = 1 if user <script type="math/tex">j</script> has rated movie <script type="math/tex">i</script> <br />
+<script type="math/tex">y^{(i, j)}</script> = rating given by user <script type="math/tex">j</script> to movie <script type="math/tex">i</script> (defined only if <script type="math/tex">r(i, j) = 1</script> )</p>
+
+<blockquote>
+  <p>given <script type="math/tex">r(i, j)</script> and <script type="math/tex">y^{(i, j)}</script>, we try to predict what these values of the question mark should be</p>
+</blockquote>
+
+<h2 id="content-based-recommendations">Content Based Recommendations</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+      <th><script type="math/tex">x_1 \\ (romance)</script></th>
+      <th><script type="math/tex">x_2 \\ (action)</script></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td>?</td>
+      <td>?</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td>?</td>
+      <td>4</td>
+      <td>0</td>
+      <td>?</td>
+      <td>0.99</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0.1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>?</td>
+      <td>0</td>
+      <td>0.9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For each user j, learn a prarameter <script type="math/tex">\theta ^{(j)} \in \mathbb{R}^{n+1}</script> ( n is the number of features. In above example, n = 2 because of <script type="math/tex">x_1,\ x_2</script> ). 
+Predict user <script type="math/tex">j</script> as rating movie <script type="math/tex">i</script> with <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script> stars. ( <script type="math/tex">x^{(i)}</script> = feature vector of movie <script type="math/tex">i</script> )</p>
+
+<p><em>example of Alice’s rating of Cute pupples of love</em> <small>(Assumed <script type="math/tex">\theta ^{(1)}</script> learned by ML) </small></p>
+
+<script type="math/tex; mode=display">x^{(3)} = 
+\begin{bmatrix}
+1  \\
+0.99 \\
+0 
+\end{bmatrix} \ \ \ 
+\theta^{(1)} = 
+\begin{bmatrix}
+0  \\
+5 \\
+0 
+\end{bmatrix}
+\\
+(\theta ^{(1)})^T x^{(3)} = 5 * 0.99 = 4.95</script>
+
+<p><script type="math/tex">\theta ^{(j)}</script> = parameter vector of user <script type="math/tex">j</script> <br />
+<script type="math/tex">x ^{(i)}</script> = feature vector for movie <script type="math/tex">i</script> <br />
+For user <script type="math/tex">j</script>, movie <script type="math/tex">i</script>, predicted rating : <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script></p>
+
+<p><script type="math/tex">m^{(j)}</script> = no. of movies rated by user <script type="math/tex">j</script>\</p>
+
+<p>To learn <script type="math/tex">\theta ^{(j)}</script> (parameter for user <script type="math/tex">j</script>):</p>
+
+<script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+
+<p>To learn  <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script> :</p>
+
+<script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+
+<p><img src="/assets/img/2018-10-20/gradient_descent_update.png" width="500" /></p>
+
+<h2 id="collaborative-filtering">Collaborative Filtering</h2>
+
+<h2 id="reference-">Reference :</h2>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#recommender-system" class="page__taxonomy-item" rel="tag">recommender system</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-20T00:00:00+09:00">October 20, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=recommender+system%20http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520system%2Frecommendation%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520system%2Frecommendation%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520system%2Frecommendation%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520system%2Frecommendation%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/attention/attention/" class="pagination--pager" title="[번역] Attention? Attention!
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/recommender%20system/recommendation/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/recommender%20system/recommendation"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>

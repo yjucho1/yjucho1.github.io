@@ -121,3 +121,15 @@ alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 �
 구현 방법은 텐서플로우팀의 [튜토리얼](https://www.tensorflow.org/versions/master/tutorials/seq2seq)을 확인하세요. 
 
 ## A Family of Attention Mechanisms
+
+어텐션으로 인해서 소스와 타겟 시퀀스간의 의존성은 더이상 둘 간의 거리에 의해 제한되지 않습니다. 어텐션은 기계 번역에서 큰 성과를 보였고, 곧 컴퓨터 비전 분야로 확대되었으며([Xu et al. 2015](http://proceedings.mlr.press/v37/xuc15.pdf)) 다양한 어텐션 메카니즘이 연구되기 시작했습니다.([Luong, et al., 2015](https://arxiv.org/pdf/1508.04025.pdf);[Britz et al., 2017](https://arxiv.org/abs/1703.03906);[Vaswani, et al., 2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf))
+
+### Summary
+
+아래는 인기있는 여러 어텐션 메카니즘의 요약 정보입니다(또는 어텐션 매커니즘의 대분류). 
+
+
+| Name | Aligment socre function | citation|
+|---------|---------|----|
+|Additive(*) | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$) = $$\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]$$) | [Bahdanau2015](https://arxiv.org/pdf/1409.0473.pdf) |
+|Location-Base| $$\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)$$ <br> Note : This simplifies the softmax alignment max to only depend on the target position. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf)|

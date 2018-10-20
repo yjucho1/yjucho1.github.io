@@ -43,4 +43,9 @@ var store = [{
         "excerpt":"작성중입니다. lilianweng’s original post Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다. What’s Wrong with Seq2Seq Model? Born for Translation Definition A Family of Attention Mechanisms Summary Self-Attention Soft vs Hard Attention Global vs...","categories": ["Attention"],
         "tags": [],
         "url": "http://localhost:4000/attention/attention/",
+        "teaser":null},{
+        "title": "recommender system",
+        "excerpt":"problem formulation Movie Alice(1) Bob(2) Carol(3) Dave(4) Love at last 5 5 0 0 Romance forever 5 ? ? 0 Cute puppies of love ? 4 0 ? Nonstop car chases 0 0 5 4 Swords vs. karete 0 0 5 ? = number of users = number of movies...","categories": ["recommender system"],
+        "tags": [],
+        "url": "http://localhost:4000/recommender%20system/recommendation/",
         "teaser":null}]

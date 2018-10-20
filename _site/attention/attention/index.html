@@ -403,6 +403,34 @@
 
 <h2 id="a-family-of-attention-mechanisms">A Family of Attention Mechanisms</h2>
 
+<p>어텐션으로 인해서 소스와 타겟 시퀀스간의 의존성은 더이상 둘 간의 거리에 의해 제한되지 않습니다. 어텐션은 기계 번역에서 큰 성과를 보였고, 곧 컴퓨터 비전 분야로 확대되었으며(<a href="http://proceedings.mlr.press/v37/xuc15.pdf">Xu et al. 2015</a>) 다양한 어텐션 메카니즘이 연구되기 시작했습니다.(<a href="https://arxiv.org/pdf/1508.04025.pdf">Luong, et al., 2015</a>;<a href="https://arxiv.org/abs/1703.03906">Britz et al., 2017</a>;<a href="http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf">Vaswani, et al., 2017</a>)</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>아래는 인기있는 여러 어텐션 메카니즘의 요약 정보입니다(또는 어텐션 매커니즘의 대분류).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Aligment socre function</th>
+      <th>citation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Additive(*)</td>
+      <td><script type="math/tex">score(\mathbf{s}_t</script>, <script type="math/tex">\mathbf{h}_i</script>) = <script type="math/tex">\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]</script>)</td>
+      <td><a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau2015</a></td>
+    </tr>
+    <tr>
+      <td>Location-Base</td>
+      <td><script type="math/tex">\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)</script> <br /> Note : This simplifies the softmax alignment max to only depend on the target position.</td>
+      <td><a href="https://arxiv.org/pdf/1508.04025.pdf">Luong2015</a></td>
+    </tr>
+  </tbody>
+</table>
+
         
       </section>
 
@@ -455,7 +483,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/recommender%20system/recommendation/" class="pagination--pager" title="recommender system
+">Next</a>
     
   </nav>
 
