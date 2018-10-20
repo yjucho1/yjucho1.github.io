@@ -44,8 +44,8 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/attention/attention/",
         "teaser":null},{
-        "title": "recommender system",
-        "excerpt":"추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다. problem formulation Movie Alice(1) Bob(2) Carol(3) Dave(4) Love at last 5 5 0 0 Romance forever 5 ? ? 0 Cute puppies of love ? 4 0 ? Nonstop car chases 0 0 5 4 Swords vs. karete 0...","categories": ["recommender system"],
+        "title": "recommender systems",
+        "excerpt":"추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다. problem formulation 아래와 같이 4명의 유저가 5개 영화를 평가한 데이터가 있다고 하겠습니다. 추천시스템은 이와 같은 평점 데이터를 이용해, 유저가 아직 평가하지 않은 영화를 몇점으로 평가할지 예측하는 문제로 생각할 수 있습니다. Movie Alice(1) Bob(2) Carol(3) Dave(4) Love at last 5...","categories": ["recommender systems"],
         "tags": [],
-        "url": "http://localhost:4000/recommender%20system/recommendation/",
+        "url": "http://localhost:4000/recommender%20systems/recommendation/",
         "teaser":null}]

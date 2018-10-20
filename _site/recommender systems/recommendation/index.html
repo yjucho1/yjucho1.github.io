@@ -1,0 +1,942 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>recommender systems - yjucho’s blog</title>
+<meta name="description" content="추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="recommender systems">
+<meta property="og:url" content="http://localhost:4000/recommender%20systems/recommendation/">
+
+
+  <meta property="og:description" content="추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-10-20T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/recommender%20systems/recommendation/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="recommender systems">
+    <meta itemprop="description" content="추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.">
+    <meta itemprop="datePublished" content="October 20, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">recommender systems
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.</p>
+
+<h2 id="problem-formulation">problem formulation</h2>
+
+<p>아래와 같이 4명의 유저가 5개 영화를 평가한 데이터가 있다고 하겠습니다. 추천시스템은 이와 같은 평점 데이터를 이용해, 유저가 아직 평가하지 않은 영화를 몇점으로 평가할지 예측하는 문제로 생각할 수 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td><b>?</b></td>
+      <td>4</td>
+      <td>0</td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td><b>?</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><script type="math/tex">n_u</script> = number of users <br />
+<script type="math/tex">n_m</script> = number of movies <br />
+<script type="math/tex">r(i, j)</script> = 1 if user <script type="math/tex">j</script> has rated movie <script type="math/tex">i</script> <br />
+<script type="math/tex">y^{(i, j)}</script> = rating given by user <script type="math/tex">j</script> to movie <script type="math/tex">i</script> (defined only if <script type="math/tex">r(i, j) = 1</script> )</p>
+
+<blockquote>
+  <p>given <script type="math/tex">r(i, j)</script> and <script type="math/tex">y^{(i, j)}</script>, we try to predict what these values of the question mark should be</p>
+</blockquote>
+
+<h2 id="content-based-recommendations">Content Based Recommendations</h2>
+
+<p>우선 모든 영화가 로맨스인지, 액션인지 평가된 특징 정보가 있다고 가정하겠습니다. 아래 테이블은 각 영화의 특징에 해당하는 정보(피쳐 벡터), <script type="math/tex">x_1</script>과 <script type="math/tex">x_2</script>를 추가한 것입니다. 이 경우, 각 사용자의 평점은 피쳐벡서를 입력으로 하는 회귀 문제가 됩니다. 회귀문제에서 가중치 <script type="math/tex">\theta</script>는 사용자마다 다르며, 이미 평가한 데이터와 예측값의 오차를 최소화하는 방향으로 회귀식의 가중치을 학습할 수 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+      <th><script type="math/tex">x_1 \\ (romance)</script></th>
+      <th><script type="math/tex">x_2 \\ (action)</script></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td><b>?</b></td>
+      <td>4</td>
+      <td>0</td>
+      <td><b>?</b></td>
+      <td>0.99</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+      <td>0.1</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td>0</td>
+      <td>0.9</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For each user <script type="math/tex">j</script>, learn a prarameter <script type="math/tex">\theta ^{(j)} \in \mathbb{R}^{n+1}</script> <br />
+( n is the number of features. In above example, n = 2 because of <script type="math/tex">x_1,\ x_2</script>. By default <script type="math/tex">x_0</script>=0 )</p>
+
+<p>Predict user <script type="math/tex">j</script> as rating movie <script type="math/tex">i</script> with <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script> <br />
+( <script type="math/tex">x^{(i)}</script> = feature vector of movie <script type="math/tex">i</script> )</p>
+
+<p><b><em>example of Alice’s rating of “Cute pupples of love”</em></b> <br />
+<small>(Assumed <script type="math/tex">\theta ^{(1)}</script> learned by model) </small></p>
+
+<script type="math/tex; mode=display">x^{(3)} = 
+\begin{bmatrix}
+1  \\
+0.99 \\
+0 
+\end{bmatrix} \ \ \ 
+\theta^{(1)} = 
+\begin{bmatrix}
+0  \\
+5 \\
+0 
+\end{bmatrix}
+\\
+(\theta ^{(1)})^T x^{(3)} = 5 * 0.99 = 4.95</script>
+
+<p><script type="math/tex">\theta ^{(j)}</script> = parameter vector of user <script type="math/tex">j</script> <br />
+<script type="math/tex">x ^{(i)}</script> = feature vector for movie <script type="math/tex">i</script> <br />
+For user <script type="math/tex">j</script>, movie <script type="math/tex">i</script>, predicted rating : <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script></p>
+
+<p><b>To learn <script type="math/tex">\theta ^{(j)}</script> (parameter for user <script type="math/tex">j</script>)</b>:</p>
+
+<script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+
+<p><b>To learn  <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script> </b>:</p>
+
+<script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+
+<p><b>Gradient descent update</b> :</p>
+
+<script type="math/tex; mode=display">\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} \ \ (for \ k=0) \\
+\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right) \ \ (for \ k \neq 0)</script>
+
+<h2 id="collaborative-filtering">Collaborative Filtering</h2>
+<p>이제까지는 모든 영화가 로맨스인지, 액션인지 평가된 피쳐벡터가 존재한다는 가정을 하였습니다. 하지만 모든 영화를 보고 특징 정보를 정리하는 것은 매우 비용이 많이 드는 작업입니다. 이를 극복하기 위해서 반대로 사용자에게 로맨스 영화를 얼마나 좋아하는지, 액션 영화를 얼마나 좋아하는지를 조사하고, 이 값을 토대로 피쳐 벡터를 추정하는 방법을 택할 수 있습니다. 사용자 <script type="math/tex">i</script>가 응답한 정보를 <script type="math/tex">\theta^{(i)}</script>로 이용하여 아래와 같이 계산할 수 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+      <th><script type="math/tex">x_1 \\ (romance)</script></th>
+      <th><script type="math/tex">x_2 \\ (action)</script></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td>0</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td><b>?</b></td>
+      <td>4</td>
+      <td>0</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<script type="math/tex; mode=display">\theta^{(1)} = 
+\begin{bmatrix}
+0  \\
+5 \\
+0 
+\end{bmatrix} \ \ \ 
+\theta^{(2)} = 
+\begin{bmatrix}
+0  \\
+5 \\
+0 
+\end{bmatrix} \ \ \ 
+\theta^{(3)} = 
+\begin{bmatrix}
+0  \\
+0 \\
+5 
+\end{bmatrix} \ \ \ 
+\theta^{(4)} = 
+\begin{bmatrix}
+0  \\
+0 \\
+5 
+\end{bmatrix} \ \ \</script>
+
+<p><b> Given <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script>, to learn <script type="math/tex">x^{(i)}</script> </b> :</p>
+
+<script type="math/tex; mode=display">\min_{x^{(i)}} \frac{1}{2} \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(x_k^{(i)})^2</script>
+
+<p><b> Given <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script>, to learn <script type="math/tex">x^{(1)}, ..., x^{(n_m)}</script> </b> :</p>
+
+<script type="math/tex; mode=display">\min_{x^{(1)},...,x^{(n_m)}} \frac{1}{2} \sum_{i=1}^{n_m} \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^{n}(x_k^{(i)})^2</script>
+
+<blockquote>
+  <p>Collaborative filtering refers to the observation that when you run this algorithm with a large set of users, all of these users are effectively doing collaboratively to get better movie ratings for everyone. because with every user rating, some subset of the movies, every user is helping the algorithm a little bit to learn better features. By rating a few movies myself, I would be hoping the systerm learn better features and then these features can be used by the system to make better movies predictions for everyone else. <u>So there's a sense of collaboration where every user is helping the system learn better features for the common good.</u></p>
+</blockquote>
+
+<p>Content based 방법은 영화별 특징 정보가 존재할 때, 유저별 가중치를 추정하는 것이고, Collaborative filtering은 유저별 가중치가 존재할 때 영화별 특징 정보를 추정하는 것입니다. 따라서 우리는 이 두가지를 결합하여, forward and backward 방식으로 초기값 <script type="math/tex">\theta^{(i)}</script>를 랜덤하게 설정한 후 피쳐벡터를 추정하고, 추정된 피쳐벡터로 다시 유저 가중치를 구할수 있습니다. 더 간단하게는 <script type="math/tex">\theta^{(i)}</script>와 <script type="math/tex">x^{j}</script>를 동시에 추정할 수 있습니다.</p>
+
+<p>if we are given <script type="math/tex">x^{(i)}</script>, we can estimate <script type="math/tex">\theta^{(i)}</script>. Likewise if we are given <script type="math/tex">\theta^{(i)}</script>, we can estimate <script type="math/tex">x^{(i)}</script>.</p>
+
+<p>So we can initialize <script type="math/tex">\theta^{(i)}</script> randomly, then estimate <script type="math/tex">x^{(i)}</script>. After that, we update  <script type="math/tex">\theta^{(i)}</script> and repeat.</p>
+
+<p>Putting togeter, we can solve for theta and x simultaneously.</p>
+
+<script type="math/tex; mode=display">\min_{x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}} J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) \\
+J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) = \frac{1}{2} \sum_{(i, j):r(i,j)=1}  ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^{n}(x_k^{(i)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+
+<p>note : in this version, <script type="math/tex">x \in \mathbb{R}^{n}, \theta \in \mathbb{R}^{n}</script></p>
+
+<ol>
+  <li>Initialize <script type="math/tex">x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}</script> to small random values</li>
+  <li>Minimize <script type="math/tex">J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)})</script> using gradient descent(or an advanced optimization algorithm). E.g. for every <script type="math/tex">j=1, ..., n_u, i=1,...,n_m</script> :
+<script type="math/tex">x_k^{(i)} := x_k^{(i)} -  \alpha \left( \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})\theta_k^{(j)} + \lambda x_k^{(i)} \right) \\
+\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right)</script></li>
+  <li>For a user with parameters <script type="math/tex">\theta</script> and a movie with (learned) features <script type="math/tex">x</script>, predict a star rating of <script type="math/tex">\theta^Tx</script>.</li>
+</ol>
+
+<h2 id="vectorization--low-rank-matrix-factorization">Vectorization : Low Rank Matrix Factorization</h2>
+<p>위에서 설명한 것을 각 element별로 구하는 것이 아니라 matrix 형태로 vectorization하여 계산할 수도 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td><b>?</b></td>
+      <td>4</td>
+      <td>0</td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td><b>?</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<script type="math/tex; mode=display">% <![CDATA[
+Y = 
+\begin{bmatrix}
+5 & 5 & 0 & 0 \\
+5 & ? & ? & 0 \\
+? & 4 & 0 & ? \\
+0 & 0 & 5 & 4 \\
+0 & 0 & 5 & 0 \\
+\end{bmatrix} \ \ \ \
+
+predicted \ ratings : 
+\begin{bmatrix}
+(\theta ^{(1)})^T x^{(1)} & (\theta ^{(2)})^T x^{(1)} & \cdots & (\theta ^{(n_u)})^T x^{(1)} \\
+(\theta ^{(1)})^T x^{(2)} & (\theta ^{(2)})^T x^{(2)} & \cdots & (\theta ^{(n_u)})^T x^{(2)} \\
+\vdots & \vdots & \vdots & \vdots \\
+(\theta ^{(1)})^T x^{(n_m)} & (\theta ^{(2)})^T x^{(n_m)} & \cdots & (\theta ^{(n_u)})^T x^{(n_m)} 
+\end{bmatrix} %]]></script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+X = 
+\begin{bmatrix}
+-(x^{(1)})^T- \\
+-(x^{(2)})^T- \\
+\cdots\\
+-(x^{(n_m)})^T- \\
+\end{bmatrix} \ \ \ 
+
+\Theta = 
+\begin{bmatrix}
+| & | & \ & | \\
+(\Theta^{(1)})^T & (\Theta^{(2)})^T & \cdots &(\Theta^{(n_u)})^T \\
+| & | & \ & | \\
+\end{bmatrix} 
+\\
+then, \\
+predicted \ ratings = X\Theta %]]></script>
+
+<blockquote>
+  <p><script type="math/tex">X\Theta</script> has mathematical property of low rank matrix</p>
+</blockquote>
+
+<p><b> How to find movies <script type="math/tex">j</script> related to movie <script type="math/tex">i</script> </b></p>
+<ul>
+  <li>small <script type="math/tex">\parallel x^{(i)} - x^{(j)} \parallel</script> \to moving <script type="math/tex">j</script> and <script type="math/tex">i</script> are “similar”</li>
+</ul>
+
+<h2 id="implementation-detail-mean-normalization">Implementation Detail Mean Normalization</h2>
+<p>지금까지 설명한 collaborative filtering은 평점 데이터가 없은 유저에 대해서는 항상 0값을 예측한다는 단점이 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Alice(1)</th>
+      <th>Bob(2)</th>
+      <th>Carol(3)</th>
+      <th>Dave(4)</th>
+      <th>Eve(5)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Love at last</td>
+      <td>5</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Romance forever</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+      <td>0</td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Cute puppies of love</td>
+      <td><b>?</b></td>
+      <td>4</td>
+      <td>0</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Nonstop car chases</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>4</td>
+      <td><b>?</b></td>
+    </tr>
+    <tr>
+      <td>Swords vs. karete</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td><b>?</b></td>
+      <td><b>?</b></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><b>For Eve</b>, compute <script type="math/tex">\theta^{(5)}</script> : 
+let’s say that n is equal to 2.</p>
+
+<p>Since Eve rated no movies, there are no movies for which r(i, j) is equal to one. So the first term of the objective plays no role at all in determining <script type="math/tex">\theta^{(5)}</script>.</p>
+
+<p>the only term that affects  <script type="math/tex">\theta^{(5)}</script> is the last term</p>
+
+<script type="math/tex; mode=display">\min \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2 = \frac{\lambda}{2} 
+\begin{bmatrix}
+(\Theta_1^{(5)})^2 + (\Theta_2^{(5)})^2
+\end{bmatrix}</script>
+
+<p>Minimizing above term, we’re going to end up with <script type="math/tex">(\theta^{(5)})^T =[0 \ \ 0]</script>. So all predicted ratings for Eve(<script type="math/tex">(\theta^{(5)})^T x^{(i)}</script>) is equal to zero.</p>
+
+<blockquote>
+  <p>This approach is not useful. The idea of mean normalization will let us fix this problem.</p>
+</blockquote>
+
+<p>이를 해결하기 위해 일반적으로 mean normalization이라는 전처리 과정을 추가합니다. 직관적으로 평점데이터가 없는 유저의 경우, 영화별 평균 평점으로 예측하도록 하는 방법입니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+Y = 
+\begin{bmatrix}
+5 & 5 & 0 & 0 & ? \\
+5 & ? & ? & 0 & ? \\
+? & 4 & 0 & ? & ? \\
+0 & 0 & 5 & 4 & ? \\
+0 & 0 & 5 & 0 & ? \\
+\end{bmatrix} \ \ \ \
+
+\mu = 
+\begin{bmatrix}
+2.5\\
+2.5\\
+2\\
+2.25\\
+1.25\\
+\end{bmatrix} \ \ \ \
+\to
+Y = 
+\begin{bmatrix}
+2.5 & 2.5 & -2.5 & -2.5 & ? \\
+2.5 & ? & ? & -2.5 & ? \\
+? & 2 & -2 & ? & ? \\
+-2.25 & -2.25 & 2.75 & 1.75 & ? \\
+-1.25 & -1.25 & 3.75 & -1.25 & ? \\
+\end{bmatrix} \ \ \ \ %]]></script>
+
+<p><b>For user <script type="math/tex">j</script>, on movie <script type="math/tex">i</script> predict :
+<script type="math/tex">(\theta^{(j)})^T(x^{i}) + \mu_i</script></b></p>
+
+<p><b>For Eve :
+<script type="math/tex">(\theta^{(j)})^T(x^{i}) + \mu_i = 0 + \mu_i = \mu_i</script></b></p>
+
+<blockquote>
+  <p>Mean normalization as a solid pre-processing step for collaborative filtering.</p>
+</blockquote>
+
+<p>감사합니다!</p>
+
+<h2 id="reference-">Reference :</h2>
+<p><a href="https://www.youtube.com/watch?v=giIXNoiqO_U">Recommender Systems - Problem Formulation</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=9siFuMMHNIA">Recommender Systems - Content Based Recommendations</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=9AP-DgFBNP4">Recommender Systems - Collaborative Filtering_1</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=YW2b8La2ICo">Recommender Systems - Collaborative Filtering_2</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=5R1xOJOFRzs">Recommender Systems - Vectorization Low Rank Matrix Factorization</a></p>
+
+<p><a href="https://www.youtube.com/watch?v=Am9fhp2Q91o">Recommender Systems - Implementational Detail Mean Normalization</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#recommender-systems" class="page__taxonomy-item" rel="tag">recommender systems</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-10-20T00:00:00+09:00">October 20, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=recommender+systems%20http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520systems%2Frecommendation%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520systems%2Frecommendation%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520systems%2Frecommendation%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Frecommender%2520systems%2Frecommendation%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/attention/attention/" class="pagination--pager" title="[번역] Attention? Attention!
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/recommender%20systems/recommendation/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/recommender%20systems/recommendation"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>
