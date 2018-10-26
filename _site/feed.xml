@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-20T23:51:59+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">recommender systems</title><link href="http://localhost:4000/recommender%20systems/recommendation/" rel="alternate" type="text/html" title="recommender systems" /><published>2018-10-20T00:00:00+09:00</published><updated>2018-10-20T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20systems/recommendation</id><content type="html" xml:base="http://localhost:4000/recommender%20systems/recommendation/">&lt;p&gt;추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-26T15:31:02+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">recommender systems</title><link href="http://localhost:4000/recommender%20systems/recommendation/" rel="alternate" type="text/html" title="recommender systems" /><published>2018-10-20T00:00:00+09:00</published><updated>2018-10-20T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20systems/recommendation</id><content type="html" xml:base="http://localhost:4000/recommender%20systems/recommendation/">&lt;p&gt;추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;problem-formulation&quot;&gt;problem formulation&lt;/h2&gt;
 
@@ -668,11 +668,67 @@ Y =
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;General&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;&lt;script type=&quot;math/tex&quot;&gt;score(\mathbf{s}_t&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\mathbf{h}_i&lt;/script&gt;)&lt;script type=&quot;math/tex&quot;&gt;=&lt;/script&gt;\mathbf{s}_t^\top \mathbf{W}_a \mathbf{h}_i]&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+&lt;br&gt; where %]]&gt;&lt;/script&gt;\mathbf{W}_a $$ is a trainable weight matrix in the attention layer.&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;Luong2015&lt;/a&gt;&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
-&lt;/table&gt;</content><author><name>yjucho</name></author><summary type="html">작성중입니다.</summary></entry><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
+&lt;/table&gt;
+
+&lt;p&gt;(*) 이 방식은 Luong, et al., 2015 에서는 “concat”이라고 언급되었으며, Vaswani, et al., 2017에서는 “additive attention”이라고 언급되었습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;self-attention&quot;&gt;Self-Attention&lt;/h3&gt;
+
+&lt;p&gt;&lt;b&gt;Self-attetion, 또는 intra-attention &lt;/b&gt;으로 알려진 어텐션 메카니즘은 시퀀스의 representation을 계산하기 위해 시퀀스의 서로 다른 포지션과 연관된 방법입니다. 기계 판독, 추상 요약 또는 이미지 설명 생성에 매우 유용합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://arxiv.org/pdf/1601.06733.pdf&quot;&gt;long short-term memory network&lt;/a&gt; 논문에서 기계판독 문제를 해결하기위해 셀프어텐션 기법을 사용하였습니다. 아래 예제와 같이 셀프 어텐션 메카니즘을 통해 현재 단어와 이전 단어들간의 상관관계를 학습할수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/cheng2016-fig1.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림6. 현재 단어는 빨간색으로 표시하였고, 파란색 그림자의 크기는 엑티베이션 정도를 나타남(출저 : &lt;a href=&quot;https://arxiv.org/pdf/1601.06733.pdf&quot;&gt;Cheng et al., 2016&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://proceedings.mlr.press/v37/xuc15.pdf&quot;&gt;show, attend and tell&lt;/a&gt; 논문에서는 셀프어텐션을 이밎에 적용하여 적절한 설명 문구을 생성하였습니다. 이미지는 먼저 컨볼루션 뉴럴 넷을 이용해 인코딩되었고, 인코딩된 피쳐 멥을 인풋으로하는 리커런트 네트워크(셀프 어텐션이 적용된)를 이용해 묘사하는 단어를 하나 하나 생성하였습니다. 어텐션 가중치를 시각화한 결과, 모델이 특정 단어를 생성할 때 이미지에서 어떤 영역을 보는지 명확히 나타냅니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/xu2015-fig6b.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림7. “A woman is throwing a frisbee in a park.” (Image source: Fig. 6(b) in &lt;a href=&quot;http://proceedings.mlr.press/v37/xuc15.pdf&quot;&gt;Xu et al. 2015&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;soft-vs-hard-attention&quot;&gt;Soft vs Hard Attention&lt;/h3&gt;
+&lt;p&gt;어텐션의 또 다른 정의 방식은 soft와 hard 어텐션입니다. 기본적인 아이디어는 &lt;a href=&quot;http://proceedings.mlr.press/v37/xuc15.pdf&quot;&gt;show, attend and tell&lt;/a&gt; 논문에서 제안되었습니다. 어텐션이 전체 이미지를 대상으로하는지 혹은 일부 패치 영역을 대상으로 하는지에 따라 :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;soft attention : 가중치가 학습되어, 소스 이미지의 모든 패치에 “소프트하게” 맵핑됨; 근본적으로 &lt;a href=&quot;https://arxiv.org/pdf/1409.0473.pdf&quot;&gt;Bahdanau et al., 2015&lt;/a&gt;와 유사함
+    &lt;ul&gt;
+      &lt;li&gt;장점 : 모델이 스무스하고 미분가능함&lt;/li&gt;
+      &lt;li&gt;단점 : 소스 이미지가 클 때 계산비용이 큼&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;hard attention : 이미지의 일부 패치영역이 한번에 하나씩 선택되는 방식
+    &lt;ul&gt;
+      &lt;li&gt;장점 : 인퍼런스에서 더 적은 계산 비용&lt;/li&gt;
+      &lt;li&gt;단점 : 모델이 미분불가능하고, 학습 시 variance reduction이나 reinforcement learning같은 더 복잡한 기법들이 필요함 (&lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;Luong et al., 2015&lt;/a&gt;)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;global-vs-local-attention&quot;&gt;Global vs Local Attention&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;Luong et al., 2015&lt;/a&gt;)에서는 global과 local 어텐션을 제안하였습니다. 글로벌 어텐션은 소프트 어텐션과 유사하고, 로컬 어텐션은 하드와 소프트 개념이 모두 이용해 미분가능하도록 만든 하드 어텐션이라고 생각할수 있습니다. 현재 타겟 단어를 위해 한개의 포지션을 예측하고 소스 포지션 주위로 센터된 윈도우을 이용해 컨텍스트 벡터를 계산합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/luong2015-fig2-3.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림8. “글로벌 vs 로컬 어텐션” (Image source: Fig 2 &amp;amp; 3 in &lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;Luong et al., 2015&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;transformer&quot;&gt;Transformer&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&quot;&gt;“Attention is All you Need”&lt;/a&gt;(Vaswani, et al., 2017), 는 2017년 논문중에서 가장 임팩트있고 흥미로운 논문입니다. 기존 소프트 어텐션 방식을 대폭 개선시키고 &lt;em&gt;recurrent network units없이&lt;/em&gt; seq2seq를 모델링할수 있다는 것을 보였습니다. &lt;b&gt;transformer&lt;/b&gt;라는 것을 제안하여 순차적인 계산 구조 없이 셀프 어텐션 메커니즘을 구현할수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;핵심적인 요소는 모델 구조에 있습니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;key-value-and-query&quot;&gt;key, Value and Query&lt;/h3&gt;
+&lt;p&gt;가장 중요한 부분은 &lt;em&gt;multi-head self-attention mechanism&lt;/em&gt;입니다. 트랜스포머는 인풋의 인코딩된 representation을 &lt;b&gt;key-value&lt;/b&gt; 쌍, &lt;script type=&quot;math/tex&quot;&gt;(\mathbf{K, V})&lt;/script&gt;의 집합체로 보았습니다; 둘다 n(인풋 시퀀스 길이)차원 벡터로 인코더의 히든 스테이트에 해당. 디코더에서 이전 결과값들은 &lt;b&gt;query&lt;/b&gt;(&lt;script type=&quot;math/tex&quot;&gt;\mathbf{Q}&lt;/script&gt; of dimension m)로 압축되고, 다음 아웃풋은 이 쿼리와 키-벨류 셋트를 맵핑함으로써 계산됩니다.&lt;/p&gt;
+
+&lt;p&gt;트렌스포머는 &lt;a href=&quot;&quot;&gt;scaled dot-product attention&lt;/a&gt;을 사용하였습니다: 아웃풋은 가중합산된 값이고, 가중치들은 쿼리와 키값들의 dot-product로 결정됩니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Attention(\mathbf{Q, K, V}) = softmax( {\mathbf{Q}\mathbf{K}^\top \over {\sqrt{n}}} )\mathbf{V}&lt;/script&gt;</content><author><name>yjucho</name></author><summary type="html">작성중입니다.</summary></entry><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;http://cs231n.stanford.edu/&lt;/li&gt;
 &lt;/ul&gt;

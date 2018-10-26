@@ -133,4 +133,76 @@ alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 �
 |---------|---------|----|
 |Additive(*) | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$) = $$\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]$$) | [Bahdanau2015](https://arxiv.org/pdf/1409.0473.pdf) |
 |Location-Base| $$\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)$$ <br> Note : This simplifies the softmax alignment max to only depend on the target position. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf)|
-|General | 
+|General | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$)$$ = $$\mathbf{s}_t^\top \mathbf{W}_a \mathbf{h}_i]$$ <br> where $$\mathbf{W}_a $$ is a trainable weight matrix in the attention layer. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) |
+
+(\*) 이 방식은 Luong, et al., 2015 에서는 "concat"이라고 언급되었으며, Vaswani, et al., 2017에서는 "additive attention"이라고 언급되었습니다. 
+
+### Self-Attention
+
+<b>Self-attetion, 또는 intra-attention </b>으로 알려진 어텐션 메카니즘은 시퀀스의 representation을 계산하기 위해 시퀀스의 서로 다른 포지션과 연관된 방법입니다. 기계 판독, 추상 요약 또는 이미지 설명 생성에 매우 유용합니다.
+
+[long short-term memory network](https://arxiv.org/pdf/1601.06733.pdf) 논문에서 기계판독 문제를 해결하기위해 셀프어텐션 기법을 사용하였습니다. 아래 예제와 같이 셀프 어텐션 메카니즘을 통해 현재 단어와 이전 단어들간의 상관관계를 학습할수 있습니다. 
+
+<img src = "/assets/img/2018-10-13/cheng2016-fig1.png" width="500">
+
+<small>*그림6. 현재 단어는 빨간색으로 표시하였고, 파란색 그림자의 크기는 엑티베이션 정도를 나타남(출저 : [Cheng et al., 2016](https://arxiv.org/pdf/1601.06733.pdf))*</small>
+
+[show, attend and tell](http://proceedings.mlr.press/v37/xuc15.pdf) 논문에서는 셀프어텐션을 이밎에 적용하여 적절한 설명 문구을 생성하였습니다. 이미지는 먼저 컨볼루션 뉴럴 넷을 이용해 인코딩되었고, 인코딩된 피쳐 멥을 인풋으로하는 리커런트 네트워크(셀프 어텐션이 적용된)를 이용해 묘사하는 단어를 하나 하나 생성하였습니다. 어텐션 가중치를 시각화한 결과, 모델이 특정 단어를 생성할 때 이미지에서 어떤 영역을 보는지 명확히 나타냅니다. 
+
+<img src = "/assets/img/2018-10-13/xu2015-fig6b.png" width="500">
+
+<small>*그림7. “A woman is throwing a frisbee in a park.” (Image source: Fig. 6(b) in [Xu et al. 2015](http://proceedings.mlr.press/v37/xuc15.pdf))*</small>
+
+### Soft vs Hard Attention
+어텐션의 또 다른 정의 방식은 soft와 hard 어텐션입니다. 기본적인 아이디어는 [show, attend and tell](http://proceedings.mlr.press/v37/xuc15.pdf) 논문에서 제안되었습니다. 어텐션이 전체 이미지를 대상으로하는지 혹은 일부 패치 영역을 대상으로 하는지에 따라 :
+
+* soft attention : 가중치가 학습되어, 소스 이미지의 모든 패치에 "소프트하게" 맵핑됨; 근본적으로 [Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf)와 유사함
+    * 장점 : 모델이 스무스하고 미분가능함
+    * 단점 : 소스 이미지가 클 때 계산비용이 큼
+* hard attention : 이미지의 일부 패치영역이 한번에 하나씩 선택되는 방식
+    * 장점 : 인퍼런스에서 더 적은 계산 비용
+    * 단점 : 모델이 미분불가능하고, 학습 시 variance reduction이나 reinforcement learning같은 더 복잡한 기법들이 필요함 ([Luong et al., 2015](https://arxiv.org/pdf/1508.04025.pdf))
+
+
+### Global vs Local Attention 
+[Luong et al., 2015](https://arxiv.org/pdf/1508.04025.pdf))에서는 global과 local 어텐션을 제안하였습니다. 글로벌 어텐션은 소프트 어텐션과 유사하고, 로컬 어텐션은 하드와 소프트 개념이 모두 이용해 미분가능하도록 만든 하드 어텐션이라고 생각할수 있습니다. 현재 타겟 단어를 위해 한개의 포지션을 예측하고 소스 포지션 주위로 센터된 윈도우을 이용해 컨텍스트 벡터를 계산합니다. 
+
+<img src = "/assets/img/2018-10-13/luong2015-fig2-3.png" width="500">
+
+<small>*그림8. “글로벌 vs 로컬 어텐션” (Image source: Fig 2 & 3 in [Luong et al., 2015](https://arxiv.org/pdf/1508.04025.pdf))*</small>
+
+
+### Transformer 
+[“Attention is All you Need”](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf)(Vaswani, et al., 2017), 는 2017년 논문중에서 가장 임팩트있고 흥미로운 논문입니다. 기존 소프트 어텐션 방식을 대폭 개선시키고 *recurrent network units없이* seq2seq를 모델링할수 있다는 것을 보였습니다. <b>transformer</b>라는 것을 제안하여 순차적인 계산 구조 없이 셀프 어텐션 메커니즘을 구현할수 있습니다. 
+
+핵심적인 요소는 모델 구조에 있습니다. 
+
+### key, Value and Query
+가장 중요한 부분은 *multi-head self-attention mechanism*입니다. 트랜스포머는 인풋의 인코딩된 representation을 <b>key-value</b> 쌍, $$(\mathbf{K, V})$$의 집합체로 보았습니다; 둘다 n(인풋 시퀀스 길이)차원 벡터로 인코더의 히든 스테이트에 해당. 디코더에서 이전 결과값들은 <b>query</b>($$\mathbf{Q}$$ of dimension m)로 압축되고, 다음 아웃풋은 이 쿼리와 키-벨류 셋트를 맵핑함으로써 계산됩니다. 
+
+트렌스포머는 [scaled dot-product attention]()을 사용하였습니다: 아웃풋은 가중합산된 값이고, 가중치들은 쿼리와 키값들의 dot-product로 결정됩니다. 
+
+$$
+
+Attention(\mathbf{Q, K, V}) = softmax( {\mathbf{Q}\mathbf{K}^\top \over {\sqrt{n}}} )\mathbf{V}
+
+$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
