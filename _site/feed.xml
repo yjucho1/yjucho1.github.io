@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-26T15:31:02+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">recommender systems</title><link href="http://localhost:4000/recommender%20systems/recommendation/" rel="alternate" type="text/html" title="recommender systems" /><published>2018-10-20T00:00:00+09:00</published><updated>2018-10-20T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20systems/recommendation</id><content type="html" xml:base="http://localhost:4000/recommender%20systems/recommendation/">&lt;p&gt;추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-27T00:57:09+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">recommender systems</title><link href="http://localhost:4000/recommender%20systems/recommendation/" rel="alternate" type="text/html" title="recommender systems" /><published>2018-10-20T00:00:00+09:00</published><updated>2018-10-20T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20systems/recommendation</id><content type="html" xml:base="http://localhost:4000/recommender%20systems/recommendation/">&lt;p&gt;추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;problem-formulation&quot;&gt;problem formulation&lt;/h2&gt;
 
@@ -517,41 +517,37 @@ Y =
 
 &lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=5R1xOJOFRzs&quot;&gt;Recommender Systems - Vectorization Low Rank Matrix Factorization&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Am9fhp2Q91o&quot;&gt;Recommender Systems - Implementational Detail Mean Normalization&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.</summary></entry><entry><title type="html">[번역] Attention? Attention!</title><link href="http://localhost:4000/attention/attention/" rel="alternate" type="text/html" title="[번역] Attention? Attention!" /><published>2018-10-13T00:00:00+09:00</published><updated>2018-10-13T00:00:00+09:00</updated><id>http://localhost:4000/attention/attention</id><content type="html" xml:base="http://localhost:4000/attention/attention/">&lt;p&gt;&lt;em&gt;작성중입니다.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html&quot;&gt;lilianweng’s original post&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=Am9fhp2Q91o&quot;&gt;Recommender Systems - Implementational Detail Mean Normalization&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다.</summary></entry><entry><title type="html">[번역] Attention? Attention!</title><link href="http://localhost:4000/attention/attention/" rel="alternate" type="text/html" title="[번역] Attention? Attention!" /><published>2018-10-13T00:00:00+09:00</published><updated>2018-10-13T00:00:00+09:00</updated><id>http://localhost:4000/attention/attention</id><content type="html" xml:base="http://localhost:4000/attention/attention/">&lt;blockquote&gt;
+  &lt;p&gt;이 글은 &lt;a href=&quot;https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html&quot;&gt;lilianweng의 Attention? Attention! 포스팅&lt;/a&gt;을 번역한 글입니다.&lt;br /&gt;&lt;br /&gt;Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;What’s Wrong with Seq2Seq Model?&lt;/li&gt;
-  &lt;li&gt;Born for Translation
+  &lt;li&gt;&lt;a href=&quot;#whats-wrong-with-seq2seq-model&quot;&gt;What’s Wrong with Seq2Seq Model?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#born-for-translation&quot;&gt;Born for Translation&lt;/a&gt;
     &lt;ul&gt;
-      &lt;li&gt;Definition&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#definition&quot;&gt;Definition&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;A Family of Attention Mechanisms
+  &lt;li&gt;&lt;a href=&quot;#a-family-of-attention-mechanisms&quot;&gt;A Family of Attention Mechanisms&lt;/a&gt;
     &lt;ul&gt;
-      &lt;li&gt;Summary&lt;/li&gt;
-      &lt;li&gt;Self-Attention&lt;/li&gt;
-      &lt;li&gt;Soft vs Hard Attention&lt;/li&gt;
-      &lt;li&gt;Global vs Local Attention&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#self-attention&quot;&gt;Self-Attention&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#soft-vs-hard-attention&quot;&gt;Soft vs Hard Attention&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#global-vs-local-attention&quot;&gt;Global vs Local Attention&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Transformer
+  &lt;li&gt;&lt;a href=&quot;#transformer&quot;&gt;Transformer&lt;/a&gt;
     &lt;ul&gt;
-      &lt;li&gt;Key, Value and Query&lt;/li&gt;
-      &lt;li&gt;Multi-Head Self-Attention&lt;/li&gt;
-      &lt;li&gt;Encoder&lt;/li&gt;
-      &lt;li&gt;Decoder&lt;/li&gt;
-      &lt;li&gt;Full Architecture&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#key-value-and-query&quot;&gt;Key, Value and Query&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#multi-head-self-attention&quot;&gt;Multi-Head Self-Attention&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#encoder&quot;&gt;Encoder&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#decoder&quot;&gt;Decoder&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#full-architecture&quot;&gt;Full Architecture&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;SNAIL&lt;/li&gt;
-  &lt;li&gt;Self-Attention GAN&lt;/li&gt;
-  &lt;li&gt;References&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#SNAIL&quot;&gt;SNAIL&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;&quot;&gt;Self-Attention GAN&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#Reference&quot;&gt;References&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Attention은 우리가 이미지에서 어떤 영역을 주목하는지, 한 문장에서 연관된 단어는 무엇인지를 찾는데서 유래하였습니다. 그림1에 있는 시바견을 살펴보세요.&lt;/p&gt;
@@ -718,17 +714,153 @@ Y =
 
 &lt;p&gt;&lt;small&gt;&lt;em&gt;그림8. “글로벌 vs 로컬 어텐션” (Image source: Fig 2 &amp;amp; 3 in &lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;Luong et al., 2015&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;transformer&quot;&gt;Transformer&lt;/h3&gt;
+&lt;h2 id=&quot;transformer&quot;&gt;Transformer&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&quot;&gt;“Attention is All you Need”&lt;/a&gt;(Vaswani, et al., 2017), 는 2017년 논문중에서 가장 임팩트있고 흥미로운 논문입니다. 기존 소프트 어텐션 방식을 대폭 개선시키고 &lt;em&gt;recurrent network units없이&lt;/em&gt; seq2seq를 모델링할수 있다는 것을 보였습니다. &lt;b&gt;transformer&lt;/b&gt;라는 것을 제안하여 순차적인 계산 구조 없이 셀프 어텐션 메커니즘을 구현할수 있습니다.&lt;/p&gt;
 
-&lt;p&gt;핵심적인 요소는 모델 구조에 있습니다.&lt;/p&gt;
+&lt;p&gt;핵심은 바로 모델 구조에 있습니다.&lt;/p&gt;
 
 &lt;h3 id=&quot;key-value-and-query&quot;&gt;key, Value and Query&lt;/h3&gt;
 &lt;p&gt;가장 중요한 부분은 &lt;em&gt;multi-head self-attention mechanism&lt;/em&gt;입니다. 트랜스포머는 인풋의 인코딩된 representation을 &lt;b&gt;key-value&lt;/b&gt; 쌍, &lt;script type=&quot;math/tex&quot;&gt;(\mathbf{K, V})&lt;/script&gt;의 집합체로 보았습니다; 둘다 n(인풋 시퀀스 길이)차원 벡터로 인코더의 히든 스테이트에 해당. 디코더에서 이전 결과값들은 &lt;b&gt;query&lt;/b&gt;(&lt;script type=&quot;math/tex&quot;&gt;\mathbf{Q}&lt;/script&gt; of dimension m)로 압축되고, 다음 아웃풋은 이 쿼리와 키-벨류 셋트를 맵핑함으로써 계산됩니다.&lt;/p&gt;
 
 &lt;p&gt;트렌스포머는 &lt;a href=&quot;&quot;&gt;scaled dot-product attention&lt;/a&gt;을 사용하였습니다: 아웃풋은 가중합산된 값이고, 가중치들은 쿼리와 키값들의 dot-product로 결정됩니다.&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;Attention(\mathbf{Q, K, V}) = softmax( {\mathbf{Q}\mathbf{K}^\top \over {\sqrt{n}}} )\mathbf{V}&lt;/script&gt;</content><author><name>yjucho</name></author><summary type="html">작성중입니다.</summary></entry><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Attention(\mathbf{Q, K, V}) = softmax( {\mathbf{Q}\mathbf{K}^\top \over {\sqrt{n}}} )\mathbf{V}&lt;/script&gt;
+
+&lt;h3 id=&quot;multi-head-self-attention&quot;&gt;multi-Head Self-Attention&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/multi-head-attention.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림9. 멀티-헤드 스케일드 닷-프로덕트 어텐션 매카니즘 (Image source: Fig 2 in &lt;a href=&quot;http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&quot;&gt;Vaswani, et al., 2017&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;어텐션을 한번만 계산하는 것보다 멀티-헤드 매카니즘은 스케일 닷-프로덕트 어텐션을 병렬로 여러번 계산된다. 독립적인 어텐션 아웃풋은 단순히 concatenated되며, 선형으로 예상되는 차원으로 변형됩니다. 이렇게 하는 이유는 앙상블은 항상 도움이 되기 때문이 아닐까요? 논문에 따르면 “multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this (멀티-헤드 어텐션은 서로 다른 representation 공간에 있는 포지션 정보를 결합하여 이용할수 있게 해줍니다. 싱글 어텐션 헤드를 이용하면 이런 정보들이 서로 평균화되어 버립니다.)&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;MultiHead(\mathbf{Q, K, V}) = [head_1; ... ; head_h]\mathbf{W}^O \\
+where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\mathbf{W}_i^Q, \mathbf{W}_i^K, \mathbf{W}_i^V&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\mathbf{W}^O&lt;/script&gt; are parameter matrics to be learned.&lt;/p&gt;
+
+&lt;h3 id=&quot;encoder&quot;&gt;Encoder&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/transformer-encoder.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림10. 트랜스포머의 인코더 (Image source: &lt;a href=&quot;http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&quot;&gt;Vaswani, et al., 2017&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;인코더는 무한히 클수있는 문백에서 특정 정보 조각을 찾을수 있도록 어텐션 기반의 representation을 생성합니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;동일한 6개의 레이어를 쌓습니다.&lt;/li&gt;
+  &lt;li&gt;각 레이어는 멀티-헤드 셀프어텐션 레이어와 포지션-와이즈 풀리 커넥티드 피드-포워드 네트워크를 서브 레이어로 갖습니다.&lt;/li&gt;
+  &lt;li&gt;각 서브 레이어는 &lt;a href=&quot;https://arxiv.org/pdf/1512.03385.pdf&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;residual&lt;/code&gt;&lt;/a&gt; 커넥션과 &lt;code class=&quot;highlighter-rouge&quot;&gt;layer normalization&lt;/code&gt; 이 적용됩니다. 모든 서브 레이어는 &lt;script type=&quot;math/tex&quot;&gt;d_{model}=512&lt;/script&gt;로 동일한 차원의 아웃풋을 갖습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;decoder&quot;&gt;Decoder&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/transformer-decoder.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림11. 트랜스포머의 디코더 (Image source: &lt;a href=&quot;http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&quot;&gt;Vaswani, et al., 2017&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;디코더는 인코딩된 representation으로부터 정보를 다시 되돌리는 역할을 합니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;동일한 6개의 레이어를 쌓습니다.&lt;/li&gt;
+  &lt;li&gt;각 레이어는 멀티-헤드 셀프어텐션 레이어와 포지션-와이즈 풀리 커넥티드 피드-포워드 네트워크를 서브 레이어로 갖습니다.&lt;/li&gt;
+  &lt;li&gt;인코더와 유사하게 각 서브 레이어는 residual 커넥션과 레이어 노말리제이션이 적용됩니다.&lt;/li&gt;
+  &lt;li&gt;첫번째 서브레이어의 멀티-헤드 어텐션은 타겟 시퀀스의 미래을 보는 것은 관심이 없으므로, 현재 위치 이후의 포지션 정보는 이용하지 않도록 변형됩니다. (현재 포지션의 이전 정보만 이용하도록)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;full-architecture&quot;&gt;Full Architecture&lt;/h3&gt;
+
+&lt;p&gt;트렌스포머의 전체적인 구조는 다음과 같습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;먼저 소스와 타겟 시퀀스 모두 동일한 디멘션 &lt;script type=&quot;math/tex&quot;&gt;d_{model} = 512&lt;/script&gt;을 갖도록 임베딩 레이어를 거칩니다.&lt;/li&gt;
+  &lt;li&gt;포지션 정보를 유지하기 위해 sinusoid-wave-based positional encoding을 적용한 후 임베딩 아웃풋과 합칩니다.&lt;/li&gt;
+  &lt;li&gt;마지막 디코더 아웃풋에 소프트맥스와 선형 레이어가 추가됩니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/transformer.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림12. 트랜스포머의 전체 모델 구조 (Image source: Fig 1&amp;amp; 2 in &lt;a href=&quot;http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&quot;&gt;Vaswani, et al., 2017&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&amp;gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;snail&quot;&gt;SNAIL&lt;/h2&gt;
+
+&lt;p&gt;트랜스포머는 리커런트 또는 컨볼루션 구조를 사용하지 않고, 임베딩 벡터에 포지션 인코딩이 더해지긴 하지만 시퀀스의 순서는 약하게 통합되는 수준입니다. &lt;a href=&quot;https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html&quot;&gt;강화 학습&lt;/a&gt;과 같이 위치 종속성에 민감한 경우, 큰 문제가 될 수 있습니다. 
+&lt;b&gt;Simple Neural Attention &lt;a href=&quot;http://bair.berkeley.edu/blog/2017/07/18/learning-to-learn/&quot;&gt;Meta-Learner&lt;/a&gt;(SNAIL)&lt;/b&gt;&lt;a href=&quot;http://metalearning.ml/papers/metalearn17_mishra.pdf&quot;&gt;Mishra et al., 2017&lt;/a&gt;는 트랜스포머의 셀프-어텐션 메카니즘과 &lt;a href=&quot;https://deepmind.com/blog/wavenet-generative-model-raw-audio/&quot;&gt;시간적 컨볼루션&lt;/a&gt;을 결합하여 &lt;a href=&quot;#full-architecture&quot;&gt;포지션 문제&lt;/a&gt;를 부분적으로 개선하기 위해 제안되었습니다. SNAIL은 지도학습과 강화학습 모두에서 좋은 결과를 보입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/snail.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;em&gt;그림13. SNAIL 모델 구조 (Image source: &lt;a href=&quot;http://metalearning.ml/papers/metalearn17_mishra.pdf&quot;&gt;Mishra et al., 2017&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;SNAIL은 그 자체만으로도 중요한 토픽인 메타-러닝 분야에서 최초 제안되었습니다. 간단히 말해서 메타 러닝 모델은 비슷한 분포에서 nevel, unseen tasks들에 일반화할수 있습니다. 더 자세한 정보는 &lt;a href=&quot;http://bair.berkeley.edu/blog/2017/07/18/learning-to-learn/&quot;&gt;이 글&lt;/a&gt;을 확인하세요.&lt;/p&gt;
+
+&lt;h2 id=&quot;self-attention-gan&quot;&gt;Self-Attention GAN&lt;/h2&gt;
+&lt;p&gt;마지막으로 &lt;a href=&quot;https://lilianweng.github.io/lil-log/2017/08/20/from-GAN-to-WGAN.html&quot;&gt;Generative Adversarial Network (GAN)&lt;/a&gt;타입의 모델인, `self-attention GAN(SAGAN; &lt;a href=&quot;https://arxiv.org/pdf/1805.08318.pdf&quot;&gt;Zhang et al., 2018&lt;/a&gt;)을 통해서 어텐션이 생성이미지의 퀄리티를 향상시키는지 설명하도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://arxiv.org/abs/1511.06434&quot;&gt;DCGAN&lt;/a&gt;(Deep Convolutional GAN)에서 discriminator와 generator은 멀티-레이어 컨볼루션 네트워크입니다. 하지만 하나의 픽셀은 작은 로컬 영역으로 제한되기 때무네, 네트워크의 representation capacity는 필터 사이즈에 의해 제한됩니다. 멀리 떨어진 영역을 연결하기 위해서 피쳐들이 컨볼루션 오퍼레이션을 통해 희석되어야하여 종속성이 유지되는 것이 보장되지 않습니다.&lt;/p&gt;
+
+&lt;p&gt;비전 컨텍스트에서 (소프트) 셀프-어텐션은 한 픽셀과 다른 포지션의 픽셀들간에 관계를 명시적으로 학습하도록 설계되어 있습니다. 멀리 떨어진 영역이더라도 쉽게 글로벌 디펜던시를 학습할수 있습니다. 따라서 셀프-어텐션이 적용된 GAN은 디테일한 정보를 더 잘 처리할수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/conv-vs-self-attention.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;*그림14. 컨볼루션 오퍼레이션과 셀프-어텐션은 서로 다른 사이즈의 영역을 다룹니다. *&lt;/small&gt;&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;SAGAN은 어텐션 계산을 위해서 &lt;a href=&quot;https://arxiv.org/pdf/1711.07971.pdf&quot;&gt;non-local neural network&lt;/a&gt;를 도입하였습니다. 컨볼루셔널 이미지 피쳐맵 &lt;script type=&quot;math/tex&quot;&gt;x&lt;/script&gt;는 3개로 복제되어 나눠지며, 이는 트랜스포머에서 각 각 &lt;a href=&quot;#key-value-and-query&quot;&gt;key, value, and query&lt;/a&gt; 개념에 대응됩니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Key : &lt;script type=&quot;math/tex&quot;&gt;f(x)=W_fx&lt;/script&gt;&lt;/li&gt;
+  &lt;li&gt;Query : &lt;script type=&quot;math/tex&quot;&gt;g(x)=W_gx&lt;/script&gt;&lt;/li&gt;
+  &lt;li&gt;Value : &lt;script type=&quot;math/tex&quot;&gt;h(x)=W_hx&lt;/script&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;그리고 나서 dot-product 어텐션을 셀프-어텐션 피쳐맵에 적용합니다 :&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\alpha_{i, j} = softmax(f(\mathbf{x}_i)^{\top}g(\mathbf{x}_j))\\
+\mathbf{o}_j = \sum_{i=1}^{N} \alpha_{i,j}h(\mathbf{x}_i)&lt;/script&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/self-attention-gan-network.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;*그림15. SAGAN에서 셀프-어텐션 메카니즘 (Image source : Fig 2 in &lt;a href=&quot;https://arxiv.org/pdf/1805.08318.pdf&quot;&gt;Zhang et al., 2018&lt;/a&gt;) *&lt;/small&gt;&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\alpha_{i,j}&lt;/script&gt;는 j번째 위치를 합성할 때 모델이 i번째 위치에 얼마나 많은 주의를 기울여야하는지를 나타내는 어텐션 맵의 엔트리입니다. &lt;script type=&quot;math/tex&quot;&gt;\mathbf{W}_f, \mathbf{W}_g, \mathbf{W}_h&lt;/script&gt;는 1x1 컨볼루션 필터입니다. 만약 1x1 conv가 이상하다고 생각되면(단순히 피쳐맵 전체 값에 한개 값을 곱하는 것 아니냐?라고 생각한다면) 앤드류 응의 &lt;a href=&quot;https://www.youtube.com/watch?v=9EZVpLTPGz8&quot;&gt;튜토리얼&lt;/a&gt;을 보세요. 아웃풋 &lt;script type=&quot;math/tex&quot;&gt;\mathbf{o}_j&lt;/script&gt;는 마지막 아웃풋 $$\mathbf{o} = (\mathbf{o}_1, \mathbf{o}_2, …, \mathbf{o}_j, …, \mathbf{o}_N)의 컬럼 벡터입니다.&lt;/p&gt;
+
+&lt;p&gt;추가로 어텐션 레이어의 아웃풋에 스케일 파라미터를 곱하고, 오리지날 인풋 피쳐맵을 더해줍니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbf{y} = \mathbf{x}_i + \rho \mathbf{o}_i&lt;/script&gt;
+
+&lt;p&gt;스케일링 파라미터 &lt;script type=&quot;math/tex&quot;&gt;\rho&lt;/script&gt;는 학습과정에서 0에서 점차 증가하고, 네트워크는 처음에는 로컬 영역에만 의존하다가 점차 멀리있는 영역에 더 많은 가중치를 주는 방법을 배우도록 구성됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-13/SAGAN-examples.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;*그림16. SAGAN에 의해 생성된 이미지(128x128) 예들 (Image source : partial Fig 6 in &lt;a href=&quot;https://arxiv.org/pdf/1805.08318.pdf&quot;&gt;Zhang et al., 2018&lt;/a&gt;) *&lt;/small&gt;&amp;gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;p&gt;[0] &lt;a href=&quot;https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html&quot;&gt;lilianweng의 Attention? Attention!&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[1] &lt;a href=&quot;http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/&quot;&gt;“Attention and Memory in Deep Learning and NLP.”&lt;/a&gt; - Jan 3, 2016 by Denny Britz&lt;/p&gt;
+
+&lt;p&gt;[2] &lt;a href=&quot;https://www.tensorflow.org/versions/master/tutorials/seq2seq&quot;&gt;“Neural Machine Translation (seq2seq) Tutorial”&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[3] Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua Bengio. &lt;a href=&quot;https://arxiv.org/pdf/1409.0473.pdf&quot;&gt;“Neural machine translation by jointly learning to align and translate.”&lt;/a&gt; ICLR 2015.&lt;/p&gt;
+
+&lt;p&gt;[4] Kelvin Xu, Jimmy Ba, Ryan Kiros, Kyunghyun Cho, Aaron Courville, Ruslan Salakhudinov, Rich Zemel, and Yoshua Bengio. &lt;a href=&quot;http://proceedings.mlr.press/v37/xuc15.pdf&quot;&gt;“Show, attend and tell: Neural image caption generation with visual attention.”&lt;/a&gt; ICML, 2015.&lt;/p&gt;
+
+&lt;p&gt;[5] Ilya Sutskever, Oriol Vinyals, and Quoc V. Le. &lt;a href=&quot;https://papers.nips.cc/paper/5346-sequence-to-sequence-learning-with-neural-networks.pdf&quot;&gt;“Sequence to sequence learning with neural networks.”&lt;/a&gt;NIPS 2014.&lt;/p&gt;
+
+&lt;p&gt;[6] Thang Luong, Hieu Pham, Christopher D. Manning. &lt;a href=&quot;https://arxiv.org/pdf/1508.04025.pdf&quot;&gt;“Effective Approaches to Attention-based Neural Machine Translation.”&lt;/a&gt; EMNLP 2015.&lt;/p&gt;
+
+&lt;p&gt;[7] Denny Britz, Anna Goldie, Thang Luong, and Quoc Le. &lt;a href=&quot;https://arxiv.org/abs/1703.03906&quot;&gt;“Massive exploration of neural machine translation architectures.”&lt;/a&gt; ACL 2017.&lt;/p&gt;
+
+&lt;p&gt;[8] Ashish Vaswani, et al. “Attention is all you need.” NIPS 2017. http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf&lt;/p&gt;
+
+&lt;p&gt;[9] Jianpeng Cheng, Li Dong, and Mirella Lapata. &lt;a href=&quot;https://arxiv.org/pdf/1601.06733.pdf&quot;&gt;“Long short-term memory-networks for machine reading.”&lt;/a&gt; EMNLP 2016.&lt;/p&gt;
+
+&lt;p&gt;[10] Xiaolong Wang, et al. &lt;a href=&quot;https://arxiv.org/pdf/1711.07971.pdf&quot;&gt;“Non-local Neural Networks.”&lt;/a&gt; CVPR 2018&lt;/p&gt;
+
+&lt;p&gt;[11] Han Zhang, Ian Goodfellow, Dimitris Metaxas, and Augustus Odena. &lt;a href=&quot;https://arxiv.org/pdf/1805.08318.pdf&quot;&gt;“Self-Attention Generative Adversarial Networks.”&lt;/a&gt; arXiv preprint arXiv:1805.08318 (2018).&lt;/p&gt;
+
+&lt;p&gt;[12] Nikhil Mishra, Mostafa Rohaninejad, Xi Chen, and Pieter Abbeel. &lt;a href=&quot;http://metalearning.ml/papers/metalearn17_mishra.pdf&quot;&gt;“A simple neural attentive meta-learner.”&lt;/a&gt; NIPS Workshop on Meta-Learning. 2017.&lt;/p&gt;
+
+&lt;p&gt;[13] &lt;a href=&quot;https://deepmind.com/blog/wavenet-generative-model-raw-audio/&quot;&gt;“WaveNet: A Generative Model for Raw Audio”&lt;/a&gt; - Sep 8, 2016 by DeepMind.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">이 글은 lilianweng의 Attention? Attention! 포스팅을 번역한 글입니다.Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.</summary></entry><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;http://cs231n.stanford.edu/&lt;/li&gt;
 &lt;/ul&gt;
