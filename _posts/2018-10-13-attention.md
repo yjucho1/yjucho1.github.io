@@ -274,7 +274,7 @@ $$
 
 <small>*그림15. SAGAN에서 셀프-어텐션 메카니즘 (Image source : Fig 2 in [Zhang et al., 2018](https://arxiv.org/pdf/1805.08318.pdf)) *</small>>
 
-$$\alpha_{i,j}$$는 j번째 위치를 합성할 때 모델이 i번째 위치에 얼마나 많은 주의를 기울여야하는지를 나타내는 어텐션 맵의 엔트리입니다. $$\mathbf{W}_f, \mathbf{W}_g, \mathbf{W}_h$$는 1x1 컨볼루션 필터입니다. 만약 1x1 conv가 이상하다고 생각되면(단순히 피쳐맵 전체 값에 한개 값을 곱하는 것 아니냐?라고 생각한다면) 앤드류 응의 [튜토리얼](https://www.youtube.com/watch?v=9EZVpLTPGz8)을 보세요. 아웃풋 $$\mathbf{o}_j$$는 마지막 아웃풋 $$\mathbf{o} = (\mathbf{o}_1, \mathbf{o}_2, ..., \mathbf{o}_j, ..., \mathbf{o}_N)의 컬럼 벡터입니다. 
+$$\alpha_{i,j}$$는 j번째 위치를 합성할 때 모델이 i번째 위치에 얼마나 많은 주의를 기울여야하는지를 나타내는 어텐션 맵의 엔트리입니다. $$\mathbf{W}_f, \mathbf{W}_g, \mathbf{W}_h$$는 1x1 컨볼루션 필터입니다. 만약 1x1 conv가 이상하다고 생각되면(단순히 피쳐맵 전체 값에 한개 값을 곱하는 것 아니냐?라고 생각한다면) 앤드류 응의 [튜토리얼](https://www.youtube.com/watch?v=9EZVpLTPGz8)을 보세요. 아웃풋 $$\mathbf{o}_j$$는 마지막 아웃풋 $$\mathbf{o} = (\mathbf{o}_1, \mathbf{o}_2, ..., \mathbf{o}_j, ..., \mathbf{o}_N)$$의 컬럼 벡터입니다. 
 
 추가로 어텐션 레이어의 아웃풋에 스케일 파라미터를 곱하고, 오리지날 인풋 피쳐맵을 더해줍니다. 
 
