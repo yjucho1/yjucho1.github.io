@@ -24,9 +24,9 @@ published: true
     - [Encoder](#encoder)
     - [Decoder](#decoder)
     - [Full Architecture](#full-architecture)
-- [SNAIL](#SNAIL)
-- [Self-Attention GAN]()
-- [References](#Reference)
+- [SNAIL](#snail)
+- [Self-Attention GAN](#self-attention-gan)
+- [References](#references)
 
 Attention은 우리가 이미지에서 어떤 영역을 주목하는지, 한 문장에서 연관된 단어는 무엇인지를 찾는데서 유래하였습니다. 그림1에 있는 시바견을 살펴보세요. 
 
