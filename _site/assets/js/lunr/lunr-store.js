@@ -49,8 +49,8 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/recommender%20systems/recommendation/",
         "teaser":null},{
-        "title": "recommender systems - matrix factorization",
-        "excerpt":"추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다. Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2가지 접근 방식이 있습니다. neighborhood method와 latent factor models 입니다. ` Neighborhood method neighborhood method`는 아이템간 혹은 유저간 관계를 계산하는...","categories": ["recommender systems"],
+        "title": "recommender systems 2",
+        "excerpt":"추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다. Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2가지 접근 방식이 있습니다. neighborhood method와 latent factor models 입니다. Neighborhood method neighborhood method는 아이템간 혹은 유저간 관계를 계산하는 것에...","categories": ["recommender systems"],
         "tags": [],
         "url": "http://localhost:4000/recommender%20systems/recommendation2/",
         "teaser":null}]
