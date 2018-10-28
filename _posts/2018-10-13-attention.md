@@ -129,15 +129,19 @@ alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 �
 |---------|---------|----|
 |Additive(*) | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$) = $$\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]$$) | [Bahdanau2015](https://arxiv.org/pdf/1409.0473.pdf) |
 |Location-Base| $$\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)$$ <br> Note : This simplifies the softmax alignment max to only depend on the target position. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf)|
-|General | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$)$$ = $$\mathbf{s}_t^\top \mathbf{W}_a \mathbf{h}_i]$$ <br> where $$\mathbf{W}_a $$ is a trainable weight matrix in the attention layer. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) |
-|Dot-Product | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$)$$ = $$\mathbf{s}_t^\top \mathbf{h}_i]$$ | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) |
-|Scaled Dot-Product(^) | $$score(\mathbf{s}_t$$, $$\mathbf{h}_i$$)$$ = $$ {\mathbf{s}_t^\top \mathbf{h}_i]} \over {\sqrt{n}}$$ <br> Note: very similar to dot-product attention except for a scaling factor; where n is the dimension of the source hidden state.| [Vaswani2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf) |
+|General | $$score(\mathbf{s}_t, \mathbf{h}_i)=\mathbf{s}_t^\top \mathbf{W}_a \mathbf{h}_i$$ <br> where $$\mathbf{W}_a $$ is a trainable weight matrix in the attention layer. | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) |
+|Dot-Product | $$score(\mathbf{s}_t, \mathbf{h}_i) = \mathbf{s}_t^\top \mathbf{h}_i$$ | [Luong2015](https://arxiv.org/pdf/1508.04025.pdf) |
+|Scaled Dot-Product(^) | $$score(\mathbf{s}_t, \mathbf{h}_i) =$$  $${\mathbf{s}_t^\top \mathbf{h}_i}\over{\sqrt{n}}$$ <br> Note: very similar to dot-product attention except for a scaling factor; where n is the dimension of the source hidden state.| [Vaswani2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf) |
 |Self-Attention(&) | Retating different position of the same input sequence. Theoretically the self-attention can adopt any score functions above, but just replace the target sequence with the same input sequence.| [Cheng2016](https://arxiv.org/pdf/1601.06733.pdf) |
 |Global/Soft | Attending to the entire input state space. | [Xu2015](http://proceedings.mlr.press/v37/xuc15.pdf) |
 |Local/Hard | Attending to the part of input state space; i.e. a patch of the input image. | [Xu2015](http://proceedings.mlr.press/v37/xuc15.pdf);[Luong2015](https://arxiv.org/pdf/1508.04025.pdf) |
+
 (\*) 이 방식은 Luong, et al., 2015 에서는 "concat"이라고 언급되었으며, Vaswani, et al., 2017에서는 "additive attention"이라고 언급되었습니다. 
+
 (^)인풋이 매우 길어서 소프트맥스 함수의 그래디언트가 아주 작아져 학습이 어려운 경우를 보완하기 위해서 스케일링 펙터, $$1/\sqrt{n}$$,가 더해진 것입니다. 
+
 (&) Cheng et al., 2016 등 다른 논문들에서는 intra-attention이라고도 불리웁니다. 
+
 ### Self-Attention
 
 <b>Self-attetion, 또는 intra-attention </b>으로 알려진 어텐션 메카니즘은 시퀀스의 representation을 계산하기 위해 시퀀스의 서로 다른 포지션과 연관된 방법입니다. 기계 판독, 추상 요약 또는 이미지 설명 생성에 매우 유용합니다.
