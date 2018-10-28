@@ -22,8 +22,16 @@ Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2�
 
 아이템 기반의 방법은 해당 유저가 좋아하는 아이템과 유사한 아이템을 추천하는 방식입니다. 유사한 아이템은 해당 유저에게 동일한 평가를 받을 가능성이 크기 때문입니다. 예를 들어, Saving Private Ryan와 유사한 영화는 전쟁 영화거나, 톰행크스가 나오거나, 스필버그 감동의 다른 영화일 수 있습니다. 만약 누군가가 Saving Private Ryan를 어떻게 평가할지 궁금하다면, 그 사람이 실제로 본 영화 중에서 Saving Private Ryan와 유사한 영화를 어떻게 평가했는지 찾는 것과 같은 맥락입니다. 
 
-## similarity : pearson correlation vs. cosine similarity 
+### similarity : pearson correlation vs. cosine similarity 
 
 ## Matrix Factorization
 
-## SGD vs. ALS
+### SGD vs. ALS
+
+## Reference 
+
+https://en.wikipedia.org/wiki/Collaborative_filtering
+https://medium.com/@cfpinela/recommender-systems-user-based-and-item-based-collaborative-filtering-5d5f375a127f
+https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf
+http://jeongchul.tistory.com/553
+http://nicolas-hug.com/blog/matrix_facto_2
