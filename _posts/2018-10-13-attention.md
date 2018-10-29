@@ -8,7 +8,7 @@ published: true
 
 ---
 
-> 이 글은 [lilianweng의 Attention? Attention! 포스팅](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html)을 번역한 글입니다.<br><br>Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.
+> 이 글은 [lilianweng의 Attention? Attention! 포스팅](https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html)을 번역한 글입니다.<br><br>Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 메커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.
 
 - [What’s Wrong with Seq2Seq Model?](#whats-wrong-with-seq2seq-model)
 - [Born for Translation](#born-for-translation)
@@ -50,7 +50,7 @@ seq2seq 모델은 언어 모델링에서 유래되었습니다. 간단히 말해
 
 seq2seq 모델은 보통 인코더-디코더 구조로 이루어져있습니다 :
 
-* 인코더는 입력 시퀀스를 처리하여 고정된 길이의 컨텍스트 벡터(context vector, sentence embedding 또는 thought vector로도 알려진)로 정보를 압축합니다. 이러한 축소 표현은 소스 시퀀스의 문맥적인 요약 정보로 간주할수 있습니다. 
+* 인코더는 입력 시퀀스를 처리하여 고정된 길이의 컨텍스트 벡터(context vector, sentence embedding 또는 thought vector로도 알려진)로 정보를 압축합니다. 이러한 차원 축소된 벡터 표현은 소스 시퀀스의 문맥적인 요약 정보로 간주할수 있습니다. 
 * 디코더는 컨텍스트 벡터를 다시 처리하여 결과값을 만들어 냅니다. 인코더 네트워크의 결과값을 입력으로 받아 변형을 수행합니다. 
 
 인코더와 디코더 모두 [LSTM이나 GRU](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) 같은 Recurrent Neural Networks 구조를 사용합니다. 
@@ -59,23 +59,23 @@ seq2seq 모델은 보통 인코더-디코더 구조로 이루어져있습니다 
 
 <small>*그림3. 인코더-디코더 모델, she is eating a green apple 이란 문장을 중국어로 변형함. 순차적인 방식으로 풀어서 시각화함*</small>
 
-고정된 길이의 컨텍스트 벡터로 디자인하는 것의 문제점은 아주 긴 문장의 경우, 모든 정보를 다 기억하지 못한다 것입니다. 일단 전체 문장을 모두 처리하고 나면 종종 앞 부분을 잊어버리곤 합니다. 어텐션 매커니즘은 이 문제점을 해결하기 위해 제안되었습니다. ([Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf))
+고정된 길이의 컨텍스트 벡터로 디자인하는 것의 문제점은 아주 긴 문장의 경우, 모든 정보를 다 기억하지 못한다 것입니다. 일단 전체 문장을 모두 처리하고 나면 종종 앞 부분을 잊어버리곤 합니다. 어텐션 메커니즘은 이 문제점을 해결하기 위해 제안되었습니다. ([Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf))
 
 ## Born for Translation
-어텐션 매카니즘은 딥러닝 기반의 기계번역([NMT](https://arxiv.org/pdf/1409.0473.pdf))에서 긴 소스 문장을 기억하기 위해서 만들어졌습니다. 인코더의 마지막 히든 스테이트의 컨텍스트 벡터뿐만아니라, 어텐션을 이용해 컨텍스트 벡터와 전체 소스 문장 사이에 지름길(shortcuts)을 만들어 사용하는 것입니다. 이 지름길의 가중치들은 각 아웃풋 요소들에 맞게 정의할 수 있습니다. 
+어텐션 메커니즘은 딥러닝 기반의 기계번역([NMT](https://arxiv.org/pdf/1409.0473.pdf))에서 긴 소스 문장을 기억하기 위해서 만들어졌습니다. 인코더의 마지막 히든 스테이트의 컨텍스트 벡터뿐만아니라, 어텐션을 이용해 컨텍스트 벡터와 전체 소스 문장 사이에 지름길(shortcuts)을 만들어 사용하는 것입니다. 이 지름길의 가중치들은 각 아웃풋 요소들에 맞게 정의할 수 있습니다. 
 
-컨텍스트벡터는 전체 입력 시퀀스에 접근할수 있고, 잊어 버릴 염려가 없습니다. 소스와 타겟 간의 정렬은 컨텍스트 벡터에 의해 학습되고 제어됩니다. 기본적으로 컨텍스트 벡터는 세가지 정보를 사용합니다. 
+컨텍스트 벡터는 전체 입력 시퀀스에 접근할수 있고, 잊어 버릴 염려가 없습니다. 소스와 타겟 간의 관계은 컨텍스트 벡터에 의해 학습되고 제어됩니다. 기본적으로 컨텍스트 벡터는 세가지 정보를 사용합니다. 
 
 - 인코더 히든 스테이트
 - 디코더 히든 스테이트
-- 소스와 타겟 사이의 정렬
+- 소스와 타겟 사이의 순차적 정보(alignment)
 
 <img src = "/assets/img/2018-10-13/encoder-decoder-attention.png" width="500">
 
 <small>*그림4. additive attention mechanism이 있는 인코더-디코더 모델 [Bahdanau et al., 2015](https://arxiv.org/pdf/1409.0473.pdf)*</small>
 
 ### Definition
-조금 더 명료하게 NMT에서 사용되는 어텐션 매카니즘을 정의해보도록 하겠습니다. 길이가 $$n$$인 소스 문장 $$x$$를 이용해 길이가 $$m$$인 타겟 문장 $$y$$을 만들어보도록 하겠습니다. 
+NMT에서 사용되는 어텐션 메커니즘을 과학적으로 정의해보도록 하겠습니다. 우리는 길이가 $$n$$인 소스 문장 $$x$$를 이용해 길이가 $$m$$인 타겟 문장 $$y$$을 만든다고 해봅시다.
 
 $$
 \mathbf{x} = [x_1, x_2, ..., x_n] \\
@@ -90,7 +90,7 @@ $$
 \mathbf{h_i} = [\mathbf{\overrightarrow{h_i}}^\top; \mathbf{\overrightarrow{h_i}}^\top]^\top, \ i=1, ..., n
 $$ 
 
-디코더의 히든 스테이는 t번째 아웃풋 단어에 대해서 $$s_t = f(s_{t-1}, y_{t-1}, c_t)$$ 로 나타냅니다. 이때, $$c_t$$는 입력 시퀀스의 히든스테이트에 대해서 정렬 스코어로 가중된 합계로 계산된 의미벡터(context vector)입니다. 
+디코더의 히든 스테이트는 t번째 아웃풋 단어를 만들기 위해 $$s_t = f(s_{t-1}, y_{t-1}, c_t)$$ 로 정의됩니다. 이때, $$c_t$$(context vector)는 어라인먼트 스코어를 가중치로 갖는 인코더 히든스테이트의 가중 합계입니다. 
 
 $$
 \begin{align}
@@ -100,7 +100,7 @@ $$
 \end{align}
 $$
 
-alignment model은 i번째 입력과 t번째 결과값이 얼마나 잘 매치되는지 확인 한 후  스코어 $$\alpha_{t, i}$$를 이 쌍 $$(y_t, x_i)$$에 할당합니다. $${\alpha_{t,i}}$$의 집합은 각 소스의 히든 스테이트가 결과값에 어느정도 연관되어 있는지를 정의하는 가중치 입니다. Bahdanau의 논문은 alignment score $$\alpha$$는 한개의 히든 레이어를 가진 <b>feed-forward network</b>로 파라미터라이즈됩니다. 그리고 이 네트워크는 모델의 다른 부분들과 함께 학습된다. 스코어 함수는 아래와 같은 형태이고, tanh는 비선형 활성함수로 사용되었습니다. 
+alignment model은 i번째 입력과 t번째 결과값이 얼마나 잘 매치되는지 확인 한 후  스코어 $$\alpha_{t, i}$$를 이 쌍 $$(y_t, x_i)$$에 할당합니다. $${\alpha_{t,i}}$$의 집합은 각 소스의 히든 스테이트가 결과값에 어느정도 연관되어 있는지를 정의하는 가중치 입니다. Bahdanau의 논문은 alignment score $$\alpha$$는 한개의 히든 레이어를 가진 <b>feed-forward network</b>로 파라미터라이즈됩니다. 그리고 이 네트워크는 모델의 다른 부분들과 함께 학습됩니다. 스코어 함수는 아래와 같은 형태이고, tanh는 비선형 활성함수로 사용되었습니다. 
 
 $$
 score(\mathbf{s_t}, \mathbf{h_i}) = \mathbf{v_a^\top} tanh(\mathbf{W_a}[\mathbf{s_t} ; \mathbf{h_i}])
@@ -108,7 +108,7 @@ $$
 
 $$\mathbf{v_a}$$ 와 $$\mathbf{W_a}$$는 alignment model에서 학습되는 가중치 메트릭스입니다. 
 
-alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 사이의 상관관계를 명시적으로 보여주는 좋은 시각화 방법입니다. 
+alignment score를 메트릭스로 표시하여 시각적으로 소스 단어와 타겟 단어 사이의 상관관계를 명시적으로 확인할수 있습니다. 
 
 <img src = "/assets/img/2018-10-13/bahdanau-fig3.png" width="500">
 
@@ -118,11 +118,11 @@ alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 �
 
 ## A Family of Attention Mechanisms
 
-어텐션으로 인해서 소스와 타겟 시퀀스간의 의존성은 더이상 둘 간의 거리에 의해 제한되지 않습니다. 어텐션은 기계 번역에서 큰 성과를 보였고, 곧 컴퓨터 비전 분야로 확대되었으며([Xu et al. 2015](http://proceedings.mlr.press/v37/xuc15.pdf)) 다양한 어텐션 메카니즘이 연구되기 시작했습니다.([Luong, et al., 2015](https://arxiv.org/pdf/1508.04025.pdf);[Britz et al., 2017](https://arxiv.org/abs/1703.03906);[Vaswani, et al., 2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf))
+어텐션으로 인해서 소스와 타겟 시퀀스간의 의존성은 더이상 둘 간의 거리에 의해 제한되지 않습니다. 어텐션은 기계 번역에서 큰 성과를 보였고, 곧 컴퓨터 비전 분야로 확대되었으며([Xu et al. 2015](http://proceedings.mlr.press/v37/xuc15.pdf)) 다양한 어텐션 메커니즘이 연구되기 시작했습니다.([Luong, et al., 2015](https://arxiv.org/pdf/1508.04025.pdf);[Britz et al., 2017](https://arxiv.org/abs/1703.03906);[Vaswani, et al., 2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf))
 
 ### Summary
 
-아래는 인기있는 여러 어텐션 메카니즘의 요약 정보입니다(또는 어텐션 매커니즘의 대분류). 
+아래는 대표적인 어텐션 메커니즘의 요약 정보입니다(또는 어텐션 메커니즘의 대략적인 분류). 
 
 
 | Name | Aligment socre function | citation|
@@ -144,15 +144,15 @@ alignment score를 메트릭스로 표시하면 소스 단어와 타겟 단어 �
 
 ### Self-Attention
 
-<b>Self-attetion, 또는 intra-attention </b>으로 알려진 어텐션 메카니즘은 시퀀스의 representation을 계산하기 위해 시퀀스의 서로 다른 포지션과 연관된 방법입니다. 기계 판독, 추상 요약 또는 이미지 설명 생성에 매우 유용합니다.
+<b>Self-attetion</b>, 또는 <b>intra-attention </b>으로 알려진 어텐션 메커니즘은 시퀀스의 representation을 계산하기 위해 시퀀스의 서로 다른 포지션과 연관된 방법입니다. 기계 판독, 추상 요약 또는 이미지 설명 생성에 매우 유용합니다.
 
-[long short-term memory network](https://arxiv.org/pdf/1601.06733.pdf) 논문에서 기계판독 문제를 해결하기위해 셀프어텐션 기법을 사용하였습니다. 아래 예제와 같이 셀프 어텐션 메카니즘을 통해 현재 단어와 이전 단어들간의 상관관계를 학습할수 있습니다. 
+[long short-term memory network](https://arxiv.org/pdf/1601.06733.pdf) 논문에서 기계판독 문제를 해결하기위해 셀프어텐션 기법을 사용하였습니다. 아래 예제와 같이 셀프 어텐션 메커니즘을 통해 현재 단어와 이전 단어들간의 상관관계를 학습할수 있습니다. 
 
 <img src = "/assets/img/2018-10-13/cheng2016-fig1.png" width="500">
 
 <small>*그림6. 현재 단어는 빨간색으로 표시하였고, 파란색 그림자의 크기는 엑티베이션 정도를 나타남(출저 : [Cheng et al., 2016](https://arxiv.org/pdf/1601.06733.pdf))*</small>
 
-[show, attend and tell](http://proceedings.mlr.press/v37/xuc15.pdf) 논문에서는 셀프어텐션을 이밎에 적용하여 적절한 설명 문구을 생성하였습니다. 이미지는 먼저 컨볼루션 뉴럴 넷을 이용해 인코딩되었고, 인코딩된 피쳐 멥을 인풋으로하는 리커런트 네트워크(셀프 어텐션이 적용된)를 이용해 묘사하는 단어를 하나 하나 생성하였습니다. 어텐션 가중치를 시각화한 결과, 모델이 특정 단어를 생성할 때 이미지에서 어떤 영역을 보는지 명확히 나타냅니다. 
+[show, attend and tell](http://proceedings.mlr.press/v37/xuc15.pdf) 논문에서는 셀프어텐션을 이미지에 적용하여 적절한 설명 문구을 생성하였습니다. 이미지는 먼저 컨볼루션 뉴럴 넷을 이용해 인코딩되었고, 인코딩된 피쳐 멥을 인풋으로하는 리커런트 네트워크(셀프 어텐션이 적용된)를 이용해 묘사하는 단어를 하나 하나 생성하였습니다. 어텐션 가중치를 시각화한 결과, 모델이 특정 단어를 생성할 때 이미지에서 어떤 영역을 중점으로 반영하는지 확인할 수 있습니다. 
 
 <img src = "/assets/img/2018-10-13/xu2015-fig6b.png" width="500">
 
@@ -195,9 +195,9 @@ $$
 
 <img src = "/assets/img/2018-10-13/multi-head-attention.png" width="300">
 
-<small>*그림9. 멀티-헤드 스케일드 닷-프로덕트 어텐션 매카니즘 (Image source: Fig 2 in [Vaswani, et al., 2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf))*</small>
+<small>*그림9. 멀티-헤드 스케일드 닷-프로덕트 어텐션 메커니즘 (Image source: Fig 2 in [Vaswani, et al., 2017](http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf))*</small>
 
-어텐션을 한번만 계산하는 것보다 멀티-헤드 매카니즘은 스케일 닷-프로덕트 어텐션을 병렬로 여러번 계산된다. 독립적인 어텐션 아웃풋은 단순히 concatenated되며, 선형으로 예상되는 차원으로 변형됩니다. 이렇게 하는 이유는 앙상블은 항상 도움이 되기 때문이 아닐까요? 논문에 따르면 "multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this (멀티-헤드 어텐션은 서로 다른 representation 공간에 있는 포지션 정보를 결합하여 이용할수 있게 해줍니다. 싱글 어텐션 헤드를 이용하면 이런 정보들이 서로 평균화되어 버립니다.)
+어텐션을 한번만 계산하는 것보다 멀티-헤드 메커니즘은 스케일 닷-프로덕트 어텐션을 병렬로 여러번 계산된다. 독립적인 어텐션 아웃풋은 단순히 concatenated되며, 선형으로 예상되는 차원으로 변형됩니다. 이렇게 하는 이유는 앙상블은 항상 도움이 되기 때문이 아닐까요? 논문에 따르면 "multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this (멀티-헤드 어텐션은 서로 다른 representation 공간에 있는 포지션 정보를 결합하여 이용할수 있게 해줍니다. 싱글 어텐션 헤드를 이용하면 이런 정보들이 서로 평균화되어 버립니다.)
 
 $$
 MultiHead(\mathbf{Q, K, V}) = [head_1; ... ; head_h]\mathbf{W}^O \\
@@ -246,7 +246,7 @@ where $$\mathbf{W}_i^Q, \mathbf{W}_i^K, \mathbf{W}_i^V$$ and $$\mathbf{W}^O$$ ar
 ## SNAIL
 
 트랜스포머는 리커런트 또는 컨볼루션 구조를 사용하지 않고, 임베딩 벡터에 포지션 인코딩이 더해지긴 하지만 시퀀스의 순서는 약하게 통합되는 수준입니다. [강화 학습](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html)과 같이 위치 종속성에 민감한 경우, 큰 문제가 될 수 있습니다. 
-<b>Simple Neural Attention [Meta-Learner](http://bair.berkeley.edu/blog/2017/07/18/learning-to-learn/)(SNAIL)</b>[Mishra et al., 2017](http://metalearning.ml/papers/metalearn17_mishra.pdf)는 트랜스포머의 셀프-어텐션 메카니즘과 [시간적 컨볼루션](https://deepmind.com/blog/wavenet-generative-model-raw-audio/)을 결합하여 [포지션 문제](#full-architecture)를 부분적으로 개선하기 위해 제안되었습니다. SNAIL은 지도학습과 강화학습 모두에서 좋은 결과를 보입니다.
+<b>Simple Neural Attention [Meta-Learner](http://bair.berkeley.edu/blog/2017/07/18/learning-to-learn/)(SNAIL)</b>[Mishra et al., 2017](http://metalearning.ml/papers/metalearn17_mishra.pdf)는 트랜스포머의 셀프-어텐션 메커니즘과 [시간적 컨볼루션](https://deepmind.com/blog/wavenet-generative-model-raw-audio/)을 결합하여 [포지션 문제](#full-architecture)를 부분적으로 개선하기 위해 제안되었습니다. SNAIL은 지도학습과 강화학습 모두에서 좋은 결과를 보입니다.
 
 
 <img src = "/assets/img/2018-10-13/snail.png" width="600">
@@ -281,7 +281,7 @@ $$
 
 <img src = "/assets/img/2018-10-13/self-attention-gan-network.png" width="600">
 
-<small>*그림15. SAGAN에서 셀프-어텐션 메카니즘 (Image source : Fig 2 in [Zhang et al., 2018](https://arxiv.org/pdf/1805.08318.pdf)) *</small>>
+<small>*그림15. SAGAN에서 셀프-어텐션 메커니즘 (Image source : Fig 2 in [Zhang et al., 2018](https://arxiv.org/pdf/1805.08318.pdf)) *</small>>
 
 $$\alpha_{i,j}$$는 j번째 위치를 합성할 때 모델이 i번째 위치에 얼마나 많은 주의를 기울여야하는지를 나타내는 어텐션 맵의 엔트리입니다. $$\mathbf{W}_f, \mathbf{W}_g, \mathbf{W}_h$$는 1x1 컨볼루션 필터입니다. 만약 1x1 conv가 이상하다고 생각되면(단순히 피쳐맵 전체 값에 한개 값을 곱하는 것 아니냐?라고 생각한다면) 앤드류 응의 [튜토리얼](https://www.youtube.com/watch?v=9EZVpLTPGz8)을 보세요. 아웃풋 $$\mathbf{o}_j$$는 마지막 아웃풋 $$\mathbf{o} = (\mathbf{o}_1, \mathbf{o}_2, ..., \mathbf{o}_j, ..., \mathbf{o}_N)$$의 컬럼 벡터입니다. 
 

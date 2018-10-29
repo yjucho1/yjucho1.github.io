@@ -40,7 +40,7 @@ var store = [{
         "url": "http://localhost:4000/cs231n/cs231n-2/",
         "teaser":null},{
         "title": "[번역] Attention? Attention!",
-        "excerpt":"이 글은 lilianweng의 Attention? Attention! 포스팅을 번역한 글입니다.Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 매커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다. What’s Wrong with Seq2Seq Model? Born for Translation Definition A Family of Attention Mechanisms Summary Self-Attention Soft vs Hard...","categories": ["Attention"],
+        "excerpt":"이 글은 lilianweng의 Attention? Attention! 포스팅을 번역한 글입니다.Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 메커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다. What’s Wrong with Seq2Seq Model? Born for Translation Definition A Family of Attention Mechanisms Summary Self-Attention Soft vs Hard...","categories": ["Attention"],
         "tags": [],
         "url": "http://localhost:4000/attention/attention/",
         "teaser":null},{
