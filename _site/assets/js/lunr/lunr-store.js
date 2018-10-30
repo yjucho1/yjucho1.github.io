@@ -48,4 +48,9 @@ var store = [{
         "excerpt":"추천시스템에 대해서 알아보자! 앤드류응의 머신러닝 강의 중 추천시스템 부분에 대해서 정리하였습니다. problem formulation 아래와 같이 4명의 유저가 5개 영화를 평가한 데이터가 있다고 하겠습니다. 추천시스템은 이와 같은 평점 데이터를 이용해, 유저가 아직 평가하지 않은 영화를 몇점으로 평가할지 예측하는 문제로 생각할 수 있습니다. Movie Alice(1) Bob(2) Carol(3) Dave(4) Love at last 5...","categories": ["recommender systems"],
         "tags": [],
         "url": "http://localhost:4000/recommender%20systems/recommendation/",
+        "teaser":null},{
+        "title": "Attention is All You Need",
+        "excerpt":"Attention Is All You Need Ashish Vaswani et al. (Google Brain), 2017 Tensorflow implementtation : https://github.com/Kyubyong/transformerPyTorch implementation : https://github.com/jadore801120/attention-is-all-you-need-pytorch Introduction 언어 모델링과 기계 번역과 같은 시퀀스 모델링에서 RNN, LSTM, GRU는 최신 기법으로 확고하게 자리잡고 있습니다. 인코더-디코더 구조를 활용하는 등 향상된 성능을 얻기 위해 많은 시도들이 있어왔습니다. recurrent models에서 hidden state...","categories": ["Attention"],
+        "tags": [],
+        "url": "http://localhost:4000/attention/attention-is-all-you-need/",
         "teaser":null}]
