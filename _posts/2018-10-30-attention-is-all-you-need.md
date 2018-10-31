@@ -11,8 +11,12 @@ published: true
 ## Attention Is All You Need
 <b> Ashish Vaswani et al. (Google Brain), 2017 </b>
 
-Tensorflow implementtation : [https://github.com/Kyubyong/transformer](https://github.com/Kyubyong/transformer)
-PyTorch implementation : [https://github.com/jadore801120/attention-is-all-you-need-pytorch](https://github.com/jadore801120/attention-is-all-you-need-pytorch)
+Tensorflow implementtation : 
+* [https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py](https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py)
+* [https://github.com/Kyubyong/transformer](https://github.com/Kyubyong/transformer)
+
+PyTorch implementation : 
+[https://github.com/jadore801120/attention-is-all-you-need-pytorch](https://github.com/jadore801120/attention-is-all-you-need-pytorch)
 
 ## Introduction
 
