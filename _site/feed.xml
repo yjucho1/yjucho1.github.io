@@ -1,8 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-10-30T23:17:09+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Attention is All You Need</title><link href="http://localhost:4000/attention/attention-is-all-you-need/" rel="alternate" type="text/html" title="Attention is All You Need" /><published>2018-10-30T00:00:00+09:00</published><updated>2018-10-30T00:00:00+09:00</updated><id>http://localhost:4000/attention/attention-is-all-you-need</id><content type="html" xml:base="http://localhost:4000/attention/attention-is-all-you-need/">&lt;h2 id=&quot;attention-is-all-you-need&quot;&gt;Attention Is All You Need&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-11-07T17:15:49+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Attention is All You Need</title><link href="http://localhost:4000/attention/attention-is-all-you-need/" rel="alternate" type="text/html" title="Attention is All You Need" /><published>2018-10-30T00:00:00+09:00</published><updated>2018-10-30T00:00:00+09:00</updated><id>http://localhost:4000/attention/attention-is-all-you-need</id><content type="html" xml:base="http://localhost:4000/attention/attention-is-all-you-need/">&lt;h2 id=&quot;attention-is-all-you-need&quot;&gt;Attention Is All You Need&lt;/h2&gt;
 &lt;p&gt;&lt;b&gt; Ashish Vaswani et al. (Google Brain), 2017 &lt;/b&gt;&lt;/p&gt;
 
-&lt;p&gt;Tensorflow implementtation : &lt;a href=&quot;https://github.com/Kyubyong/transformer&quot;&gt;https://github.com/Kyubyong/transformer&lt;/a&gt;
-PyTorch implementation : &lt;a href=&quot;https://github.com/jadore801120/attention-is-all-you-need-pytorch&quot;&gt;https://github.com/jadore801120/attention-is-all-you-need-pytorch&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Tensorflow implementtation :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py&quot;&gt;https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/Kyubyong/transformer&quot;&gt;https://github.com/Kyubyong/transformer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;PyTorch implementation : 
+&lt;a href=&quot;https://github.com/jadore801120/attention-is-all-you-need-pytorch&quot;&gt;https://github.com/jadore801120/attention-is-all-you-need-pytorch&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
 

@@ -15,7 +15,7 @@ Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2�
 ## Neighborhood method
 `neighborhood method`는 아이템간 혹은 유저간 관계를 계산하는 것에 중점을 둡니다. 
 
-유저 기반의 방법은 해당 유저와 유사한 다른 유저를 찾은 후, 비슷한 유저가 좋아하는 아이템을 추천하는 방식입니다. 그림1에서처럼, 세가지 영화를 좋아하는 Joe를 위해서, 세가지 영화를 동일하게 좋아하는 비슷한 유저를 찾습니다. 이들이 좋아하는 영화 중에서 가장 인기있는 영화인 Saving Private Ryan(라이언 일병 구하기, denoted #1)를 추천할 수 있습니다. 
+유저 기반의 방법은 해당 유저와 유사한 다른 유저를 찾은 후, 비슷한 유저가 좋아하는 아이템을 추천하는 방식입니다. 그림1에서처럼, 세가지 영화를 좋아하는 Joe를 위해서, 세가지 영화를 동일하게 좋아하는 비슷한 유저를 찾습니다. 이들이 좋아하는 영화 중에서 가장 인기있는 영화인 Saving Private Ryan(라이언 일병 구하기, denoted #1)를 Joe에게 추천할 수 있습니다. 
 
 <img src = "/assets/img/2018-10-28/user-based-CF.png" width="400">
 
@@ -51,6 +51,36 @@ $$
 
 <b> (2) Cosine Similarity </b>
 
+코사인 유사도는 두 non-zero vector간의 코사인 각을 측정하는 것입니다. 
+두 벡터 A와 B의 코사인 유사도는 두 벡터의 내적을 이용해 정의됩니다. 각도 $$\theta$$가 0도이면 코사인 유사도는 1이 되고, $$\theta$$가 90도이면 코사인 유사도는 0이 됩니다. 
+
+$$
+\begin{align}
+A \cdot B & = |A| |B| cos \theta \\ \\
+similarity  =  cos \theta & = \frac{A \cdot B}{|A||B|} \\
+& =  \frac{\sum_{i=1}^{n}A_i \cdot B_i}{\sqrt{\sum_{i=1}^{n}(A_i)^2}{\sqrt{\sum_{i=1}^{n}(B_i)^2}}}
+\end{align}
+$$
+
+유저 $$u$$와 유저 $$v$$의 유사도를 $$s(u, v)$$로 나타내면,
+
+$$
+s(u, v) = \frac{\sum_{i \in I_{uv}} r_{ui} \cdot r_{vi} }{ \sqrt{\sum_{i \in I_{uv}}r_{ui}^2} \sqrt{\sum_{i \in I_{uv}}r_{vi}^2} }
+$$
+
+* $$r_{ui}$$는 사용자 u가 아이템 i에 대해서 평가한 평점
+* $$I_{uv}$$는 유저 $$u$$ 와 유저 $$v$$ 모두에 의해 평가된 아이템의 집합
+
+마찬가지로 아이템 $$i$$와 아이템 $$j$$의 유사도를 $$s(i, j)$$로 나타내면,
+
+$$
+s(i, j) = \frac{\sum_{u \in U_{ij}} r_{ui} \cdot r_{uj} }{ \sqrt{\sum_{u \in U_{ij}}r_{ui}^2} \sqrt{\sum_{u \in U_{ij}}r_{uj}^2} }
+$$
+
+* $$U_{ij}$$는 아이템 $$i$$ 와 아이템 $$j$$를 모두 평가한 유저들의 집합
+
+pearson correlation coefficient와 비교하여 평균 평점에 대한 교정이 포함되지 않은 것을 볼수 있습니다. 
+
 ## Matrix Factorization
 
 ### SGD vs. ALS
@@ -58,8 +88,13 @@ $$
 ## Reference 
 
 https://en.wikipedia.org/wiki/Collaborative_filtering
+
 https://medium.com/@cfpinela/recommender-systems-user-based-and-item-based-collaborative-filtering-5d5f375a127f
+
 https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf
+
 http://jeongchul.tistory.com/553
+
 http://nicolas-hug.com/blog/matrix_facto_2
+
 https://datascienceschool.net/view-notebook/fcd3550f11ac4537acec8d18136f2066/

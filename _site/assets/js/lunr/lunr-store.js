@@ -50,7 +50,7 @@ var store = [{
         "url": "http://localhost:4000/recommender%20systems/recommendation/",
         "teaser":null},{
         "title": "Attention is All You Need",
-        "excerpt":"Attention Is All You Need Ashish Vaswani et al. (Google Brain), 2017 Tensorflow implementtation : https://github.com/Kyubyong/transformerPyTorch implementation : https://github.com/jadore801120/attention-is-all-you-need-pytorch Introduction 언어 모델링과 기계 번역과 같은 시퀀스 모델링에서 RNN, LSTM, GRU는 최신 기법으로 확고하게 자리잡고 있습니다. 인코더-디코더 구조를 활용하는 등 향상된 성능을 얻기 위해 많은 시도들이 있어왔습니다. recurrent models에서 hidden state...","categories": ["Attention"],
+        "excerpt":"Attention Is All You Need Ashish Vaswani et al. (Google Brain), 2017 Tensorflow implementtation : https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py https://github.com/Kyubyong/transformerPyTorch implementation : https://github.com/jadore801120/attention-is-all-you-need-pytorch Introduction 언어 모델링과 기계 번역과 같은 시퀀스 모델링에서 RNN, LSTM, GRU는 최신 기법으로 확고하게 자리잡고 있습니다. 인코더-디코더 구조를 활용하는 등 향상된 성능을 얻기 위해 많은 시도들이 있어왔습니다. recurrent models에서 hidden...","categories": ["Attention"],
         "tags": [],
         "url": "http://localhost:4000/attention/attention-is-all-you-need/",
         "teaser":null}]
