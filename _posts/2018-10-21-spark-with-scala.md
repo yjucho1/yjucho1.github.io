@@ -83,3 +83,41 @@ join(inner join) return a new RDD containing combined pairs whose keys are prese
 
 `Shuffling은 무엇인가요? 이것은 어떤 distributed data paraellism의 성능에 어떤 영향을 가져오나요?`
 
+we typically have to move data from one node to another to be "grouped with" its key. Doing this is called "shuffling". 인메모리 대비 노드간 네트워크 통신이 필요함으로 되도록이면 최소화하는 것이 좋음
+
+`셔플링은 무엇이고 언제 발생하나요?`
+
+데이터를 키값을 기준으로 그룹핑하여 한 노드에서 다른 노드로 이동시키기는 것. groupByKey()를 수행할 때 발생.
+
+`파티션은 무엇인가요? 파티션의 특징을 2가지 알려주세요.`
+
+pair-RDD를 키값을 중심으로 여러 노드에 나눠 저장하는 것
+- 동일한 파티션에 있는 데이터들은 반드시 같은 머신에 존재한다.
+- 클러스터 안에 한개의 머신에는 적어도 하나 이상의 파티션이 존재할수 있다. 
+- 파티션의 수는 설정할수 있다. 기본적으로는 executor node의 코어 수와 같다. 
+
+
+`스파크에서 제공하는 partitioning 의 종류 두가지를 각각 설명해주세요.`
+
+Hash partitioning :튜플(k, v)마다 p=k.hashCode()%numPartitions 해서 p가 같은 데이터끼리 모아 파티셔닝하는 것. <br>
+Range partitionin :ordering이 있는 key일 경우, 범위별로 데이터를 나누는 것
+
+`파티셔닝은 어떻게 퍼포먼스를 높여주나요?`
+
+키값을 중심으로 데이터가 어떤 머신에 있는지 알기 때문에 데이터가 셔플링되는 것을 최소화할수 있음
+
+`rdd 의 toDebugString 의 결과값은 무엇을 보여주나요?`
+
+RDD's lineage를 시각적으로 보여줌
+
+`파티션 된 rdd에 map 을 실행하면 결과물의 파티션은 어떻게 될까요? mapValues의 경우는 어떤가요?`
+
+map을 실행하면 파티션이 없어짐. map은 키를 바꿀수 있는 오퍼레이션 이기때문임. mapValues는 키값을 유지하기때문에 파티션도 유지됨.
+
+`Narrow Dependency 와 Wide Dependency를 설명해주세요. 각 Dependency를 만드는 operation은 무엇이 있을까요?`
+
+Narrow Dependency - 1개의 부모RDD는 최대 1개의 자식RDD에만 영향을 줌. map, filter, union, join with co-partitioned inputs <br>
+Wide Dependency - 1개의 부모RDD가 여러개의 자식RDD에 영향을 줌. groupByKey, join with inputs not co-partitioned 
+
+`Lineage 는 어떻게 Fault Tolerance를 가능하게 하나요?`
+RDD는 immutable하고, 우리가 higher-order function을 사용하고, 그 function 역시 RDD를 리턴하기 때문에 lineage graphs를 통해서 dependency information을 추적하여 잃어버린 파티션을 다시 계산하여 failure로부터 회복할수 있다. 
