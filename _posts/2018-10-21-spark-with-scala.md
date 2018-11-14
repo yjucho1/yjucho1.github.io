@@ -58,7 +58,8 @@ Action을 수행할때마다 RDD를 다시 계산하는 것은 시간적 비용�
 `Lazy Execution이 Eager Execution 보다 더 빠를 수 있는 예를 얘기해주세요.`
 
 logistic regression처럼 Iterative algoritm의 경우, 값(weight)이 업데이트될때마다 데이터를 평가하하는 경우 매 iteration마다 반복 계산되는 것은 계산 비용이 큼. 따라서 RDD를 persist()나 cache()를 이용해 메모리에 저장하는 방법이 효과적임
-
+other's best answer : RDD에서 transformation 이 수행 된 데이터를 재사용하는 경우 Lazy Execution이 Eager Excution보다 더 빠르다. 예를 들어 로그파일에서 "ERROR"가 포함된 로그만 필터링하기 위해 filter를 예약한 뒤 캐싱 기능을 호출한다. 이후 take를 이용하여 10개의 에러로그를 획득하는데, 액션이 호출되어 필터링이 수행되면서 필터링된 로그를 메모리에 캐싱을 하게 된다. 이처럼 캐싱된 에러 로그는 이후 총 개수를 구한다던가 하는 다른 actino이 호출될 때 메모리에 적재된 데이터를 이용하여 성능이 향상된다. 최초로 호출되는 action은 disk에서 읽어오는 것보다 조금 느릴 수 있다.
+참고 - http://knight76.tistory.com/entry/%ED%8E%8C-lazy-evaluation%EB%8A%90%EA%B8%8B%ED%95%9C-%EA%B3%84%EC%82%B0%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A2%8B%EC%9D%80-%EC%84%A4%EB%AA%85-%EA%B7%B8%EB%A6%BC-%EC%9E%90%EB%A3%8C
 
 `foldLft 와 aggregate 둘다 inputType과 outputType이 다른데 왜 aggregate 만 병렬 처리가 가능한지 설명해주세요.`
 
@@ -66,10 +67,9 @@ foldLeft는 시퀀셜하게 처리되기 때문에 병렬처리가 불가능함.
 
 `pairRDD는 어떤 데이터 구조에 적합한지 설명해주세요. 또 pairRDD는 어떻게 만드나요?`
 
-Key-value 형태로 구조화된 데이터를 다룰 때 유용함.
-이미 존재하는 RDD에서 map을 이용해서 아래와 같이 만들수 있음
+Key-value 형태로 구조화된 데이터를 다룰 때 유용함. 이미 존재하는 RDD에서 map을 이용해서 아래와 같이 만들수 있음
 val rdd: RDD[WikipediaPage] = … 
-val pairRdd = red.map(page => (page.title, page.text))
+val pairRdd = rdd.map(page => (page.title, page.text))
 
 `groupByKey()와 mapValues()를 통해 나온 결과를 reduceByKey()를 사용해서도 똑같이 만들 수 있습니다. 그렇지만 reduceByKey를 쓰는 것이 더 효율적인 이유는 무엇일까요?`
 

@@ -17,6 +17,8 @@ Tensorflow implementtation :
 
 PyTorch implementation : 
 [https://github.com/jadore801120/attention-is-all-you-need-pytorch](https://github.com/jadore801120/attention-is-all-you-need-pytorch)
+[guide annotating the paper with PyTorch implementation]
+(http://nlp.seas.harvard.edu/2018/04/03/attention.html)
 
 ## Introduction
 
