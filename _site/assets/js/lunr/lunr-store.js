@@ -49,8 +49,23 @@ var store = [{
         "tags": [],
         "url": "http://localhost:4000/recommender%20systems/recommendation/",
         "teaser":null},{
+        "title": "Big Data Analysis with Scala and Spark ",
+        "excerpt":"https://www.coursera.org/learn/scala-spark-big-data/home/welcome Shared Memory Data Parallelism (SDP)와 Distributed Data Parallelism (DDP)의 공통점과 차이점을 얘기해주세요. 공통점 : 데이터를 나눠서, 병렬로 데이터를 처리한 후 결과를 합침(data-parallel programming). Collection abstraction을 처리할 수 있음. 차이점 : SDP의 경우 한 머신 내 메모리 상에서 데이터가 나눠져 처리가 일어나지만, DDP는 여러개의 노드(머신)에서 처리가 됨. DDP는 노드간의 통신이...","categories": ["spark","scala"],
+        "tags": [],
+        "url": "http://localhost:4000/spark/scala/spark-with-scala/",
+        "teaser":null},{
+        "title": "recommender systems 2",
+        "excerpt":"추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다. Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2가지 접근 방식이 있습니다. neighborhood method와 latent factor models 입니다. Neighborhood method neighborhood method는 아이템간 혹은 유저간 관계를 계산하는 것에...","categories": ["recommender systems"],
+        "tags": [],
+        "url": "http://localhost:4000/recommender%20systems/recommendation2/",
+        "teaser":null},{
         "title": "Attention is All You Need",
-        "excerpt":"Attention Is All You Need Ashish Vaswani et al. (Google Brain), 2017 Tensorflow implementtation : https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py https://github.com/Kyubyong/transformerPyTorch implementation : https://github.com/jadore801120/attention-is-all-you-need-pytorch Introduction 언어 모델링과 기계 번역과 같은 시퀀스 모델링에서 RNN, LSTM, GRU는 최신 기법으로 확고하게 자리잡고 있습니다. 인코더-디코더 구조를 활용하는 등 향상된 성능을 얻기 위해 많은 시도들이 있어왔습니다. recurrent models에서 hidden...","categories": ["Attention"],
+        "excerpt":"Ashish Vaswani et al. (Google Brain), 2017 Tensorflow implementtation : https://github.com/tensorflow/tensor2tensor/blob/master/tensor2tensor/models/transformer.py https://github.com/Kyubyong/transformerPyTorch implementation : https://github.com/jadore801120/attention-is-all-you-need-pytorch[guide annotating the paper with PyTorch implementation](http://nlp.seas.harvard.edu/2018/04/03/attention.html) Introduction 언어 모델링과 기계 번역과 같은 시퀀스 모델링에서 RNN, LSTM, GRU는 최신 기법으로 확고하게 자리잡고 있습니다. 인코더-디코더 구조를 활용하는 등 향상된 성능을 얻기 위해 많은 시도들이 있어왔습니다. recurrent models에서...","categories": ["Attention"],
         "tags": [],
         "url": "http://localhost:4000/attention/attention-is-all-you-need/",
+        "teaser":null},{
+        "title": "Clustering and Unsupervised Anomaly Detection with l2 Normalized Deep Auto-Encoder Representations",
+        "excerpt":"Caglar Aytekin, Xingyang Ni, Francesco Cricri and Emre Aksu (Nokia) 2017 Introduction Recently, there are many works on learning deep unsupervised representations for clustering analysis. Works rely on variants of auto-encoders and use encoder outputs as representation/features for cluster. In this paper, l2 normalization constraint during auto-encoder training makes the...","categories": ["Clustering"],
+        "tags": [],
+        "url": "http://localhost:4000/clustering/clustering-with-l2-norm/",
         "teaser":null}]

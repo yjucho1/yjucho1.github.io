@@ -8,7 +8,6 @@ published: true
 
 ---
 
-## Attention Is All You Need
 <b> Ashish Vaswani et al. (Google Brain), 2017 </b>
 
 Tensorflow implementtation : 
