@@ -4,7 +4,7 @@ categories:
   - spark
   - scala
 comments: true
-published: false
+published: true
 
 ---
 https://www.coursera.org/learn/scala-spark-big-data/home/welcome
