@@ -68,4 +68,9 @@ var store = [{
         "excerpt":"Caglar Aytekin, Xingyang Ni, Francesco Cricri and Emre Aksu (Nokia) 2017 Introduction Recently, there are many works on learning deep unsupervised representations for clustering analysis. Works rely on variants of auto-encoders and use encoder outputs as representation/features for cluster. In this paper, l2 normalization constraint during auto-encoder training makes the...","categories": ["Clustering"],
         "tags": [],
         "url": "http://localhost:4000/clustering/clustering-with-l2-norm/",
+        "teaser":null},{
+        "title": "django를 이용한 대시보드 만들기",
+        "excerpt":"django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다. Missions 데이터를 통한 인사이트 서비스를 제공하고 세상이 더 효율적으로 돌아가는데 기여하자눈에 보이는 유형의 서비스로 만들자 빠르게 만들고, 피드백을 받아 수정하자 Live demo...","categories": ["developement"],
+        "tags": [],
+        "url": "http://localhost:4000/developement/django/",
         "teaser":null}]

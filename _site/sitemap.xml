@@ -57,6 +57,10 @@
 <lastmod>2018-11-22T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/developement/django/</loc>
+<lastmod>2018-12-12T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/about/</loc>
 <lastmod>2018-10-05T00:00:00+09:00</lastmod>
 </url>
@@ -74,6 +78,6 @@
 </url>
 <url>
 <loc>http://localhost:4000/assets/test.html</loc>
-<lastmod>2018-10-25T15:40:45+09:00</lastmod>
+<lastmod>2018-10-13T17:21:50+09:00</lastmod>
 </url>
 </urlset>
