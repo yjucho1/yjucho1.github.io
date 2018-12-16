@@ -462,8 +462,14 @@
 
 <p><small><i>table : airkorea_data</i></small></p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## database : db.sqlite3</span>
-<span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">"db.sqlite3"</span><span class="p">)</span>
+<p>airkorea_stations에 있는 위경도를 기상청 격자 좌표로 변경하여 <code class="highlighter-rouge">gridx</code> 와 <code class="highlighter-rouge">gridy</code>로 저장합니다.</p>
+
+<p>이때, 주의할점은 격자 (1,1)에 대칭되는 점은 그리드의 좌하단이기때문에 실제 어레이의 포지션은 <code class="highlighter-rouge">grid_array[253+1-data.gridy, data.gridx]</code>로 되어야합니다.</p>
+
+<p>시각화 예제 코드는 아래와 같습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## read data</span>
+<span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">"MyDataBase"</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s">"select * from airkorea_data a join airkorea_stations b on a.station=b.station;"</span><span class="p">,</span> <span class="n">con</span><span class="p">)</span>
 
 <span class="n">gridx</span><span class="p">,</span> <span class="n">gridy</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -493,6 +499,7 @@
 <p><img src="/assets/img/2018-12-15/background.png" width="230" /> ►►
 <img src="/assets/img/2018-12-15/fine-dust.png" width="300" /></p>
 
+<p>Good Bye ~ !</p>
 
         
       </section>
@@ -546,7 +553,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/spatio-temporal%20data/ST-resnet/" class="pagination--pager" title="Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction
+">Next</a>
     
   </nav>
 

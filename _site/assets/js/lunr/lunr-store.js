@@ -78,4 +78,9 @@ var store = [{
         "excerpt":"기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다. 위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할...","categories": ["visualization"],
         "tags": [],
         "url": "http://localhost:4000/visualization/latlon-to-grid/",
+        "teaser":null},{
+        "title": "Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction",
+        "excerpt":"Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 Keras implementation : https://github.com/lucktroy/DeepST Introduction Forecating the flow of crowds In this paper, we predict two types fo crowd flows : inflow and outflow Inflow and outflow of crowds are affected by the following Spatial dependencies Temporal dependencies External influence :...","categories": ["Spatio-Temporal Data"],
+        "tags": [],
+        "url": "http://localhost:4000/spatio-temporal%20data/ST-resnet/",
         "teaser":null}]

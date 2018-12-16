@@ -1,0 +1,530 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction - yjucho’s blog</title>
+<meta name="description" content=" Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 ">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction">
+<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/ST-resnet/">
+
+
+  <meta property="og:description" content=" Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 ">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-12-16T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/ST-resnet/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction">
+    <meta itemprop="description" content=" Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 ">
+    <meta itemprop="datePublished" content="December 16, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><b> Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 </b></p>
+
+<p><b> Keras implementation </b> : <a href="https://github.com/lucktroy/DeepST">https://github.com/lucktroy/DeepST</a></p>
+
+<h2 id="introduction">Introduction</h2>
+<ul>
+  <li>Forecating the flow of crowds</li>
+  <li>
+    <p>In this paper, we predict two types fo crowd flows : inflow and outflow</p>
+  </li>
+  <li>Inflow and outflow of crowds are affected by the following
+    <ul>
+      <li>Spatial dependencies</li>
+      <li>Temporal dependencies</li>
+      <li>External influence : such as weather, events</li>
+    </ul>
+  </li>
+  <li>Contributions
+    <ul>
+      <li>ST-ResNet employs convolution-based residual networks to model nearby and distance spatial dependencies between any two regions</li>
+      <li>three categories of temporal properties : temporal closeness, period, and trend. ST-ResNet use three residual netowrks to model these, respectively</li>
+      <li>ST-ResNet dynamically aggregates the output of the three aforementioned networks.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="formulation-of-crowd-flows-problem">Formulation of Crowd Flows Problem</h2>
+
+<ul>
+  <li>Region : we partition a city into an I*J grid map</li>
+  <li>Inflow/outflow : Let P be a collection of trajectories at the t<sup>th</sup> time interval. For a grid (i, j) that lies at the i<sup>th</sup> row and j<sup>th</sup> column, the inflow and outflow of the crowds at the tiem interval t are defined respectively as
+  <script type="math/tex">x_t^{in, i, j} = \sum_{T_r \in P} |{k > 1 |g_{k-1} \notin (i, j) \land g_k \in (i, j)}| \\
+  x_t^{out, i, j} = \sum_{T_r \in P} |{k \ge 1 |g_{k-1} \in (i, j) \land g_{k+1} \notin (i, j)}|</script>
+  where
+    <ul>
+      <li><script type="math/tex">T_r : g_1 \to g_2 \to ... \to g_{\left\vert T_r \right\vert}</script> is a trajectory in P</li>
+      <li><script type="math/tex">g_k</script> is the geospatial coordinate</li>
+      <li><script type="math/tex">g_k \in (i, j)</script> means the point <script type="math/tex">g_k</script> lies within grid (i, j), and vice versa</li>
+      <li><script type="math/tex">\left\vert \cdot \right\vert</script> denotes the cardinality of a set</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="deep-spatio-temporal-residual-networks">Deep Spatio-Temporal Residual Networks</h2>
+
+<p><img src="/assets/img/2018-12-16/ST-ResNet architecture.png" width="400" /></p>
+<ul>
+  <li>
+    <p>comprised of four major components modeling <i>temporal closeness, period, trend, and external influence,</i> respectively.</p>
+  </li>
+  <li>
+    <p>First, we turn inflow and outflow throughout a city at each time interval into a 2-channel image-like matrix.</p>
+  </li>
+  <li>Then, we divide the time axis into three fragments, denoting recent time, near history and distant history. The 2-channel flow matrics of intervals in each time fragment are the fed into the first three components seperately to model the aforementioned three temporal properties: <i>closeness, period, and trend</i>
+    <ul>
+      <li>three components share the same network structure(Regisudal Unit sequence)</li>
+      <li>The output of the three components are fused as <script type="math/tex">X_{Res}</script> based on parameter metrics, which assign different weights to the results of different components in different regions.</li>
+    </ul>
+  </li>
+  <li>
+    <p>In the <i>external</i> component, we manually extract some feature form external datasets, such as weather conditions and events, feeding them into a two-layer fully-connected neural network.</p>
+  </li>
+  <li><script type="math/tex">X_{Res}</script> and <script type="math/tex">X_{Ext}</script> are integrated together. Then, the final output is mapped into [-1, 1] using Tanh function.</li>
+</ul>
+
+<h3 id="structures-of-the-first-three-components">Structures of the First Three Components</h3>
+<p><img src="/assets/img/2018-12-16/residual unit.png" width="400" /></p>
+
+<ul>
+  <li>Do not user subsampling, but only convolutions</li>
+  <li>closeness component
+    <ul>
+      <li><script type="math/tex">[X_{t-l_c}, X_{t-l_c-1}, ..., X_{t-1}]</script> : concatnate them along with the first axis</li>
+      <li><script type="math/tex">X_c^{(0)} \in R^{2l_c \times I \times J}</script> is followed by <code class="highlighter-rouge">conv1</code></li>
+      <li><code class="highlighter-rouge">Residual Unit</code> : stack <script type="math/tex">L</script> residual units to capture very large citywide dependencies</li>
+      <li><code class="highlighter-rouge">Residual Unit</code> combinations fo “ReLu + Convolution” and “BatchNormalization” is added before ReLu.</li>
+      <li>On top of the <script type="math/tex">L^{th}</script> residual unit, we append a convolutional layer <code class="highlighter-rouge">conv2</code></li>
+      <li>output of the closeness componet is <script type="math/tex">X_c^{(L+2)}</script></li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/assets/img/2018-12-16/component.png" width="300" /></p>
+
+<ul>
+  <li>period component
+    <ul>
+      <li>Assume that there are <script type="math/tex">l_p</script> time intervals from the period fragment and the period is <script type="math/tex">p</script> ;<script type="math/tex">[X_{t-l_p \cdot p}, X_{t-(l_p-1) \cdot p}, ..., X_{t-p}]</script></li>
+      <li>output : <script type="math/tex">X_p^{(L+2)}</script></li>
+      <li>in implementation, p is equal to one-day (daily periodicity)</li>
+    </ul>
+  </li>
+  <li>trend component
+    <ul>
+      <li><script type="math/tex">l_q</script> is the length of the trend dependent sequence and q is the trend span</li>
+      <li>input : <script type="math/tex">[X_{t-l_q \cdot q}, X_{t-(l_q-1) \cdot q}, ..., X_{t-q}]</script></li>
+      <li>output : <script type="math/tex">X_q^{(L+2)}</script></li>
+      <li>in implementation, q is equal to one-week(week trend)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="the-structure-of-the-external-component">The Structure of the External Component</h3>
+<h3 id="fusion">Fusion</h3>
+
+<h2 id="experiments">Experiments</h2>
+
+<h2 id="conclusion">Conclusion</h2>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-12-16T00:00:00+09:00">December 16, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Deep+Spatio-Temporal+Residual+Networks+for+Citywide+Crowd+Flows+Prediction%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2FST-resnet%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2FST-resnet%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2FST-resnet%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2FST-resnet%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/visualization/latlon-to-grid/" class="pagination--pager" title="위경도 - 기상청 격자 맵핑
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/spatio-temporal%20data/ST-resnet/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/spatio-temporal%20data/ST-resnet"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>

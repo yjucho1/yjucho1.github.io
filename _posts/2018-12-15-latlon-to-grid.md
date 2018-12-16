@@ -135,9 +135,15 @@ print(gridToMap(53, 38))
 
 <small><i>table : airkorea_data</i></small> 
 
+airkorea_stations에 있는 위경도를 기상청 격자 좌표로 변경하여 `gridx` 와 `gridy`로 저장합니다. 
+
+이때, 주의할점은 격자 (1,1)에 대칭되는 점은 그리드의 좌하단이기때문에 실제 어레이의 포지션은 `grid_array[253+1-data.gridy, data.gridx]`로 되어야합니다.
+
+시각화 예제 코드는 아래와 같습니다.
+
 ```python
-## database : db.sqlite3
-con = sqlite3.connect("db.sqlite3")
+## read data
+con = sqlite3.connect("MyDataBase")
 df = pd.read_sql("select * from airkorea_data a join airkorea_stations b on a.station=b.station;", con)
 
 gridx, gridy = [], []
@@ -167,3 +173,4 @@ plt.show()
 <img src = "/assets/img/2018-12-15/background.png" width="230"> ►►
 <img src = "/assets/img/2018-12-15/fine-dust.png" width="300">
 
+Good Bye ~ !
