@@ -1,0 +1,632 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>위경도 - 기상청 격자 맵핑 - yjucho’s blog</title>
+<meta name="description" content="기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="위경도 - 기상청 격자 맵핑">
+<meta property="og:url" content="http://localhost:4000/visualization/latlon-to-grid/">
+
+
+  <meta property="og:description" content="기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2018-12-15T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/visualization/latlon-to-grid/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="위경도 - 기상청 격자 맵핑">
+    <meta itemprop="description" content="기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.">
+    <meta itemprop="datePublished" content="December 15, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">위경도 - 기상청 격자 맵핑
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.</p>
+
+<p>위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할 수 있습니다.</p>
+
+<p>위경도 좌표를 기상청 격자로 변환하는 프로그램은 아래 오픈API의 활용가이드 문서 내에 공개되어 있습니다.</p>
+<ul>
+  <li>https://www.data.go.kr/dataset/15000099/openapi.do</li>
+</ul>
+
+<p>C로 구현된 프로그램을 파이썬 버전으로 변경한 것은 아래와 같습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">math</span>
+<span class="n">NX</span> <span class="o">=</span> <span class="mi">149</span>            <span class="c">## X축 격자점 수</span>
+<span class="n">NY</span> <span class="o">=</span> <span class="mi">253</span>            <span class="c">## Y축 격자점 수</span>
+
+<span class="n">Re</span> <span class="o">=</span> <span class="mf">6371.00877</span>     <span class="c">##  지도반경</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="mf">5.0</span>          <span class="c">##  격자간격 (km)</span>
+<span class="n">slat1</span> <span class="o">=</span> <span class="mf">30.0</span>        <span class="c">##  표준위도 1</span>
+<span class="n">slat2</span> <span class="o">=</span> <span class="mf">60.0</span>        <span class="c">##  표준위도 2</span>
+<span class="n">olon</span> <span class="o">=</span> <span class="mf">126.0</span>        <span class="c">##  기준점 경도</span>
+<span class="n">olat</span> <span class="o">=</span> <span class="mf">38.0</span>         <span class="c">##  기준점 위도</span>
+<span class="n">xo</span> <span class="o">=</span> <span class="mi">210</span> <span class="o">/</span> <span class="n">grid</span>     <span class="c">##  기준점 X좌표</span>
+<span class="n">yo</span> <span class="o">=</span> <span class="mi">675</span> <span class="o">/</span> <span class="n">grid</span>     <span class="c">##  기준점 Y좌표</span>
+<span class="n">first</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">if</span> <span class="n">first</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">:</span>
+    <span class="n">PI</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span>
+    <span class="n">DEGRAD</span> <span class="o">=</span> <span class="n">PI</span><span class="o">/</span> <span class="mf">180.0</span>
+    <span class="n">RADDEG</span> <span class="o">=</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">PI</span>
+
+
+    <span class="n">re</span> <span class="o">=</span> <span class="n">Re</span> <span class="o">/</span> <span class="n">grid</span>
+    <span class="n">slat1</span> <span class="o">=</span> <span class="n">slat1</span> <span class="o">*</span> <span class="n">DEGRAD</span>
+    <span class="n">slat2</span> <span class="o">=</span> <span class="n">slat2</span> <span class="o">*</span> <span class="n">DEGRAD</span>
+    <span class="n">olon</span> <span class="o">=</span> <span class="n">olon</span> <span class="o">*</span> <span class="n">DEGRAD</span>
+    <span class="n">olat</span> <span class="o">=</span> <span class="n">olat</span> <span class="o">*</span> <span class="n">DEGRAD</span>
+
+    <span class="n">sn</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">PI</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">slat2</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">PI</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">slat1</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">sn</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">slat1</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">slat2</span><span class="p">))</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sn</span><span class="p">)</span>
+    <span class="n">sf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">PI</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">slat1</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">sf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="nb">pow</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">sn</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">slat1</span><span class="p">)</span> <span class="o">/</span> <span class="n">sn</span>
+    <span class="n">ro</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">PI</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">olat</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ro</span> <span class="o">=</span> <span class="n">re</span> <span class="o">*</span> <span class="n">sf</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="nb">pow</span><span class="p">(</span><span class="n">ro</span><span class="p">,</span> <span class="n">sn</span><span class="p">)</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">mapToGrid</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+    <span class="n">ra</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">PI</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">+</span> <span class="n">lat</span> <span class="o">*</span> <span class="n">DEGRAD</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ra</span> <span class="o">=</span> <span class="n">re</span> <span class="o">*</span> <span class="n">sf</span> <span class="o">/</span> <span class="nb">pow</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">sn</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">lon</span> <span class="o">*</span> <span class="n">DEGRAD</span> <span class="o">-</span> <span class="n">olon</span>
+    <span class="k">if</span> <span class="n">theta</span> <span class="o">&gt;</span> <span class="n">PI</span> <span class="p">:</span>
+        <span class="n">theta</span> <span class="o">-=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">PI</span>
+    <span class="k">if</span> <span class="n">theta</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">PI</span> <span class="p">:</span>
+        <span class="n">theta</span> <span class="o">+=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">PI</span>
+    <span class="n">theta</span> <span class="o">*=</span> <span class="n">sn</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">ra</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="o">+</span> <span class="n">xo</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">ro</span> <span class="o">-</span> <span class="n">ra</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="o">+</span> <span class="n">yo</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">gridToMap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">code</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">xn</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">xo</span>
+    <span class="n">yn</span> <span class="o">=</span> <span class="n">ro</span> <span class="o">-</span> <span class="n">y</span> <span class="o">+</span> <span class="n">yo</span>
+    <span class="n">ra</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">xn</span> <span class="o">*</span> <span class="n">xn</span> <span class="o">+</span> <span class="n">yn</span> <span class="o">*</span> <span class="n">yn</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">sn</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="p">:</span>
+        <span class="n">ra</span> <span class="o">=</span> <span class="o">-</span><span class="n">ra</span>
+    <span class="n">alat</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="nb">pow</span><span class="p">((</span><span class="n">re</span> <span class="o">*</span> <span class="n">sf</span> <span class="o">/</span> <span class="n">ra</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">sn</span><span class="p">))</span>
+    <span class="n">alat</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">atan</span><span class="p">(</span><span class="n">alat</span><span class="p">)</span> <span class="o">-</span> <span class="n">PI</span> <span class="o">*</span> <span class="mf">0.5</span>
+    <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">xn</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">yn</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">PI</span> <span class="o">*</span> <span class="mf">0.5</span>
+            <span class="k">if</span> <span class="n">xn</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="p">:</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="o">-</span><span class="n">theta</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">xn</span><span class="p">,</span> <span class="n">yn</span><span class="p">)</span>
+    <span class="n">alon</span> <span class="o">=</span> <span class="n">theta</span> <span class="o">/</span> <span class="n">sn</span> <span class="o">+</span> <span class="n">olon</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">alat</span> <span class="o">*</span> <span class="n">RADDEG</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="n">alon</span> <span class="o">*</span> <span class="n">RADDEG</span>
+
+    <span class="k">return</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">mapToGrid</span><span class="p">(</span><span class="mf">37.579871128849334</span><span class="p">,</span> <span class="mf">126.98935225645432</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mapToGrid</span><span class="p">(</span><span class="mf">35.101148844565955</span><span class="p">,</span> <span class="mf">129.02478725562108</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mapToGrid</span><span class="p">(</span><span class="mf">33.500946412305076</span><span class="p">,</span> <span class="mf">126.54663058817043</span><span class="p">))</span>
+<span class="c">### result :</span>
+<span class="c">#(60, 127)</span>
+<span class="c">#(97, 74)</span>
+<span class="c">#(53, 38)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">gridToMap</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">127</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">gridToMap</span><span class="p">(</span><span class="mi">97</span><span class="p">,</span> <span class="mi">74</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">gridToMap</span><span class="p">(</span><span class="mi">53</span><span class="p">,</span> <span class="mi">38</span><span class="p">))</span>
+<span class="c">### result</span>
+<span class="c"># 37.579871128849334, 126.98935225645432</span>
+<span class="c"># 35.101148844565955, 129.02478725562108</span>
+<span class="c"># 33.500946412305076, 126.54663058817043</span>
+</code></pre></div></div>
+
+<p>위 알고리즘을 이용해 환경공단 제공의 초미세먼지 데이터를 시각화 예시 입니다.</p>
+
+<p><img src="/assets/img/2018-12-15/fine-dust.png" width="400" /></p>
+
+<p>미세먼지 측정소 리스트를 조회할수 있는 OPEN API를 이용하면 아래와 같은 형태로 397개의 측정소 위치를 얻을 수 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>station</th>
+      <th>lat</th>
+      <th>lon</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>빛가람동</td>
+      <td>35.02174</td>
+      <td>126.790413</td>
+    </tr>
+    <tr>
+      <td>장성읍</td>
+      <td>35.303241</td>
+      <td>126.785419</td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td>….</td>
+      <td>…..</td>
+    </tr>
+    <tr>
+      <td>송파구</td>
+      <td>37.521597</td>
+      <td>127.124264</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><small><i>table : airkorea_stations</i></small></p>
+
+<p>또한 대기오염 정보 조회 OPEN API를 이용하면 측정소별 실시간(1시간 단위) 대기오염 데이터를 얻을 수 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>station</th>
+      <th>datatime</th>
+      <th>PM2.5</th>
+      <th>PM10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>빛가람동</td>
+      <td>2018-12-13 14:00</td>
+      <td>24</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <td>장성읍</td>
+      <td>2018-12-13 14:00</td>
+      <td>37</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td>….</td>
+      <td>…..</td>
+      <td>….</td>
+    </tr>
+    <tr>
+      <td>송파구</td>
+      <td>2018-12-13 14:00</td>
+      <td>45</td>
+      <td>35</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><small><i>table : airkorea_data</i></small></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## database : db.sqlite3</span>
+<span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">"db.sqlite3"</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s">"select * from airkorea_data a join airkorea_stations b on a.station=b.station;"</span><span class="p">,</span> <span class="n">con</span><span class="p">)</span>
+
+<span class="n">gridx</span><span class="p">,</span> <span class="n">gridy</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mapToGrid</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+    <span class="n">gridx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">gridy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">gridx</span> <span class="o">=</span> <span class="n">gridx</span><span class="p">,</span> <span class="n">gridy</span> <span class="o">=</span> <span class="n">gridy</span><span class="p">)</span>
+
+<span class="n">startdate</span><span class="o">=</span><span class="n">dt</span><span class="p">(</span><span class="mi">2018</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">background</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s">'background.png'</span><span class="p">)</span>
+
+<span class="n">grid_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">253</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">149</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">try</span> <span class="p">:</span>
+        <span class="n">grid_array</span><span class="p">[</span><span class="mi">253</span><span class="o">+</span><span class="mi">1</span><span class="o">-</span><span class="n">data</span><span class="o">.</span><span class="n">gridy</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">gridx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">pm10Value</span><span class="p">)</span> 
+    <span class="k">except</span> <span class="p">:</span>
+        <span class="k">pass</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+<span class="n">masked_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_where</span><span class="p">(</span><span class="n">grid_array</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">grid_array</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">background</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">masked_data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'jet'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">"2018-12-13 14:00"</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/2018-12-15/background.png" width="230" /> ►►
+<img src="/assets/img/2018-12-15/fine-dust.png" width="300" /></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#visualization" class="page__taxonomy-item" rel="tag">visualization</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-12-15T00:00:00+09:00">December 15, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%9C%84%EA%B2%BD%EB%8F%84+-+%EA%B8%B0%EC%83%81%EC%B2%AD+%EA%B2%A9%EC%9E%90+%EB%A7%B5%ED%95%91%20http%3A%2F%2Flocalhost%3A4000%2Fvisualization%2Flatlon-to-grid%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fvisualization%2Flatlon-to-grid%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fvisualization%2Flatlon-to-grid%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fvisualization%2Flatlon-to-grid%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/developement/django/" class="pagination--pager" title="django를 이용한 대시보드 만들기
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2018 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/visualization/latlon-to-grid/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/visualization/latlon-to-grid"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

@@ -70,7 +70,12 @@ var store = [{
         "url": "http://localhost:4000/clustering/clustering-with-l2-norm/",
         "teaser":null},{
         "title": "django를 이용한 대시보드 만들기",
-        "excerpt":"django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다. Missions 데이터를 통한 인사이트 서비스를 제공하고 세상이 더 효율적으로 돌아가는데 기여하자눈에 보이는 유형의 서비스로 만들자 빠르게 만들고, 피드백을 받아 수정하자 Live demo...","categories": ["developement"],
+        "excerpt":"django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다. Missions 데이터를 통한 인사이트 서비스를 제공하고 세상이 더 효율적으로 돌아가는데 기여하자눈에 보이는 유형의 서비스로 만들자 빠르게 만들고, 피드백을 받아 수정하자 Demo :...","categories": ["developement"],
         "tags": [],
         "url": "http://localhost:4000/developement/django/",
+        "teaser":null},{
+        "title": "위경도 - 기상청 격자 맵핑",
+        "excerpt":"기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다. 위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할...","categories": ["visualization"],
+        "tags": [],
+        "url": "http://localhost:4000/visualization/latlon-to-grid/",
         "teaser":null}]

@@ -8,14 +8,14 @@ published: true
 
 ---
 
-기상청은 날씨 예보를 위해 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 예보를 위해 한반도를 가로로 149개 수평선, 세로로 253개 수직선을 그어 그리드형태로 관리하기 때문에, 위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할 수 있습니다. 
+기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다. 
+
+위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할 수 있습니다.
 
 위경도 좌표를 기상청 격자로 변환하는 프로그램은 아래 오픈API의 활용가이드 문서 내에 공개되어 있습니다. 
-(c로 구현됨)
-
 * https://www.data.go.kr/dataset/15000099/openapi.do
 
-파이썬 버전으로 변경한 알고리즘은 아래와 같습니다.
+C로 구현된 프로그램을 파이썬 버전으로 변경한 것은 아래와 같습니다.
 
 ```python
 import math
@@ -113,4 +113,57 @@ print(gridToMap(53, 38))
 
 <img src = "/assets/img/2018-12-15/fine-dust.png" width="400">
 
+미세먼지 측정소 리스트를 조회할수 있는 OPEN API를 이용하면 아래와 같은 형태로 397개의 측정소 위치를 얻을 수 있습니다.
+
+| station | lat | lon |
+|---------|-----|-----|
+|빛가람동|35.02174|126.790413|
+|장성읍|35.303241|126.785419|
+| ... | ....| .....|
+|송파구|37.521597|127.124264|
+
+<small><i>table : airkorea_stations</i></small> 
+
+또한 대기오염 정보 조회 OPEN API를 이용하면 측정소별 실시간(1시간 단위) 대기오염 데이터를 얻을 수 있습니다.
+
+| station | datatime  | PM2.5 | PM10 | 
+|---------|-----|-----|-----|
+|빛가람동|2018-12-13 14:00 |24|28|
+|장성읍|2018-12-13 14:00 |37|31|
+| ... | ....| .....| ....|
+|송파구|2018-12-13 14:00 |45|35|
+
+<small><i>table : airkorea_data</i></small> 
+
+```python
+## database : db.sqlite3
+con = sqlite3.connect("db.sqlite3")
+df = pd.read_sql("select * from airkorea_data a join airkorea_stations b on a.station=b.station;", con)
+
+gridx, gridy = [], []
+for idx, data in df.iterrows():
+    x, y = mapToGrid(data.lat, data.lon)
+    gridx.append(x), gridy.append(y)
+df = df.assign(gridx = gridx, gridy = gridy)
+
+startdate=dt(2018, 12, 13, 9, 0, 0)
+background = plt.imread('background.png')
+
+grid_array = np.empty((253+1, 149+1))
+for idx, data in df.iterrows():
+    try :
+        grid_array[253+1-data.gridy, data.gridx] = int(data.pm10Value) 
+    except :
+        pass
+fig = plt.figure(figsize=(10, 15))
+masked_data = np.ma.masked_where(grid_array < 0.5, grid_array)
+plt.imshow(background)
+plt.imshow(masked_data, cmap='jet', vmin=0, vmax=100, alpha=1)
+plt.colorbar()
+plt.title(now.strftime("2018-12-13 14:00"))
+plt.show()
+```
+
+<img src = "/assets/img/2018-12-15/background.png" width="230"> ►►
+<img src = "/assets/img/2018-12-15/fine-dust.png" width="300">
 
