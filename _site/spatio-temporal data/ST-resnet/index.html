@@ -382,11 +382,71 @@
 </ul>
 
 <h3 id="the-structure-of-the-external-component">The Structure of the External Component</h3>
+
+<ul>
+  <li>
+    <p>mainly consider weather, holiday event, and metadata(DayOfWeek, Weekday/Weekend)</p>
+  </li>
+  <li>
+    <p>stack two fully-connected layers upon <script type="math/tex">E_t</script></p>
+    <ul>
+      <li>first layer : embedding layer</li>
+      <li>second layer : to map low to high dimensions that have the same shape with <script type="math/tex">X_t</script></li>
+    </ul>
+  </li>
+</ul>
+
 <h3 id="fusion">Fusion</h3>
+
+<ul>
+  <li>flows of two regions are all affected by closeness, period, and trend, but the degrees of influence may be very different ; parametric-matrix-based fusion</li>
+</ul>
+
+<script type="math/tex; mode=display">X_{Res} = W_c \circ X_c^{L+2} + W_p \circ X_p^{L+2} + W_q \circ X_q^{L+2}</script>
+
+<ul>
+  <li><script type="math/tex">\circ</script> is Hadamard product (i.e., element-wise multiplication)</li>
+  <li>
+    <p><script type="math/tex">W_c, W_p, W_q</script> are learnable parameters</p>
+  </li>
+  <li>fusing the external component</li>
+</ul>
+
+<script type="math/tex; mode=display">\hat{X_t} = tanh(X_{Res} + X_{Ext})</script>
+
+<ul>
+  <li>objectives : minimizing mean squared error between the predicted flow matrix and the true flow matrix.</li>
+</ul>
 
 <h2 id="experiments">Experiments</h2>
 
-<h2 id="conclusion">Conclusion</h2>
+<ul>
+  <li>Datasets</li>
+</ul>
+
+<p><img src="/assets/img/2018-12-16/datasets.png" width="500" /></p>
+
+<ul>
+  <li>Baselines
+    <ul>
+      <li>HA : historical data (previous week, same time)</li>
+      <li>ARIMA, SARIMA, VAR</li>
+      <li>ST-ANN : It first extracts spatial (nearby 8 regions’ values) and temporal (8 previous time intervals) features, then fed into an artificial neural network.</li>
+      <li>DeepST : (Zhang et al. 2016)</li>
+    </ul>
+  </li>
+  <li>Preprocessing
+    <ul>
+      <li>min-max normalization : [-1, 1] (tanh)</li>
+      <li>one-hot encoding for external data</li>
+    </ul>
+  </li>
+  <li>Result</li>
+</ul>
+
+<p><img src="/assets/img/2018-12-16/result1.png" width="300" />
+<img src="/assets/img/2018-12-16/result2.png" width="300" /></p>
+
 
         
       </section>
@@ -440,7 +500,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/time%20series/arima/" class="pagination--pager" title="시계열 분석 - part1
+">Next</a>
     
   </nav>
 

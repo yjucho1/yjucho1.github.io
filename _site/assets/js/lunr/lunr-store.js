@@ -83,4 +83,9 @@ var store = [{
         "excerpt":"Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 Keras implementation : https://github.com/lucktroy/DeepST Introduction Forecating the flow of crowds In this paper, we predict two types fo crowd flows : inflow and outflow Inflow and outflow of crowds are affected by the following Spatial dependencies Temporal dependencies External influence :...","categories": ["Spatio-Temporal Data"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/ST-resnet/",
+        "teaser":null},{
+        "title": "시계열 분석 - part1",
+        "excerpt":"시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고...","categories": ["time series"],
+        "tags": [],
+        "url": "http://localhost:4000/time%20series/arima/",
         "teaser":null}]

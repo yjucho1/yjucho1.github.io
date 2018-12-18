@@ -1,4 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-17T00:21:06+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction</title><link href="http://localhost:4000/spatio-temporal%20data/ST-resnet/" rel="alternate" type="text/html" title="Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction" /><published>2018-12-16T00:00:00+09:00</published><updated>2018-12-16T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/ST-resnet</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/ST-resnet/">&lt;p&gt;&lt;b&gt; Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 &lt;/b&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-18T19:43:48+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part1</title><link href="http://localhost:4000/time%20series/arima/" rel="alternate" type="text/html" title="시계열 분석 - part1" /><published>2018-12-18T00:00:00+09:00</published><updated>2018-12-18T00:00:00+09:00</updated><id>http://localhost:4000/time%20series/arima</id><content type="html" xml:base="http://localhost:4000/time%20series/arima/">&lt;p&gt;시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;일반적인 시계열분석의 과정은 아래와 같습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Plot the series and examine the main features of the graph, checking in particular whether there is
+    &lt;ul&gt;
+      &lt;li&gt;A trend&lt;/li&gt;
+      &lt;li&gt;A seasonal component&lt;/li&gt;
+      &lt;li&gt;Any apparent sharp changes in behavior&lt;/li&gt;
+      &lt;li&gt;Any outlying observations&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Remove the trend and seasonal components to get stationary residuals
+    &lt;ul&gt;
+      &lt;li&gt;To achieve goal, you may need to apply a preliminary transformation like taking logarithms&lt;/li&gt;
+      &lt;li&gt;Estimate the trend and seasonal components using classical decomposition model&lt;/li&gt;
+      &lt;li&gt;Or Eliminate the trend and seasonal components using differencing&lt;/li&gt;
+      &lt;li&gt;Anyway, the goal is to get stationary residuals&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Choose a model to fit the residuals&lt;/li&gt;
+  &lt;li&gt;Forecasting the residuals and then inverting the transformations for original series&lt;/li&gt;
+  &lt;li&gt;Alternative approach is to express the series in terms of its Fourier components. But it will not be discussed in here.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;시계열 분석은 시간의 경과에 따라 변하지 않는 어떤 특성을 가진 프로세스를 분석하는 것입니다. 만약 시계열 데이터를 예측하고자 한다면, 우리는 시간에 따라 변하지 않는 무언가가 있다는 것을 반드시 가정해야합니다. 시간에 상관없이 deterministic function을 이용해 미래값을 예측할때(extrapolating, 외삽하는 행위) 보통은 함수 그자체가 변하지 않거나, 그 미분값이 상수(즉 기울기가 일정)라는 가정을 합니다. 1차 미분값이 상수라는 것은 선형 외샵을 사용하겠다는 것을 의미합니다.&lt;/p&gt;
+
+&lt;p&gt;여기서의 시계열 분석은 deterministic뿐만 아니라, 랜덤한 컴포넌트가 포함된 시리즈를 예측하고자 하는 것입니다. 이 때 이 랜덤한 컴포넌트가 stationary하다는 가정을 하면, 우리는 다양한 기법들을 활용할수 있습니다. 앞으로의 포스팅에서는 이러한 기법들이 무엇인지 소개하려고 합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;stationary-auto-covariance-function-and-auto-correlation-function&quot;&gt;Stationary, Auto-Covariance Function and Auto-Correlation Function&lt;/h3&gt;
+
+&lt;p&gt;시계열 &lt;script type=&quot;math/tex&quot;&gt;\{X_t, t=0, \pm 1, ...\}&lt;/script&gt; 가 stationary하다는 것은 h lag만큼 time-shifted 된 시계열 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t+h}, t=0, \pm 1, ...\}&lt;/script&gt;와 통계적인 속성이 유사하다는 것을 의미합니다. 이 때 통계적인 속성을 first and second order moments(mean and covariance)로만 제한하면, 아래와 같이 수식적 정의를 할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Definition&lt;/code&gt;
+Let &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; be a time series with &lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+E(X_t^2) &lt; \infty %]]&gt;&lt;/script&gt;. The mean function of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is 
+&lt;script type=&quot;math/tex&quot;&gt;\mu_X(t) = E(X_t)&lt;/script&gt;
+The covariance function of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is 
+&lt;script type=&quot;math/tex&quot;&gt;\rho_X(r, s) = Cov(X_r, X_s) = E[(X_r - \mu_X(r))(X_s - \mu_X(s))]&lt;/script&gt;
+for all integers r and s.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Definition&lt;/code&gt;
+&lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is (weakly) stationary if 
+1) &lt;script type=&quot;math/tex&quot;&gt;\mu_X(t)&lt;/script&gt; is independent of t,
+and 
+2) &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(t+h, t)&lt;/script&gt; is independent of t for each h. Strictly stationary is also
+3) &lt;script type=&quot;math/tex&quot;&gt;(X_1, ..., Xn)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;(X_{1+h}, ..., X_{n+h})&lt;/script&gt; have the same joint distributions for all h and n &amp;gt;0&lt;/p&gt;
+
+&lt;p&gt;2)에서의 정의를 이용해 stationary한 타임시리즈의 &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(t+h, t)&lt;/script&gt;는 t에 대해서 무관하기 때문에 &lt;script type=&quot;math/tex&quot;&gt;\gamma(\cdot)&lt;/script&gt;는 “autocovariance function”으로 부르며, &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(h)&lt;/script&gt;는 h lag에서의 값을 지칭하는 것으로 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Definition&lt;/code&gt;
+Let &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; be a stationary time series.&lt;/p&gt;
+
+&lt;p&gt;The autocovariance function (ACVF) of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; at lag h is &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(h) = Cov(X_{t+h}, X_t)&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;The autocorrelation function (ACF) of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; at lag h is &lt;script type=&quot;math/tex&quot;&gt;\rho_X(h) \equiv \frac{\gamma_X(h)}{\gamma_X(0)} = Cor(X_{t+h}, X_t)&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;주어진 시계열 데이터의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Definition&lt;/code&gt;
+Let &lt;script type=&quot;math/tex&quot;&gt;x_1, ..., x_n&lt;/script&gt; be observations of a time series.&lt;/p&gt;
+
+&lt;p&gt;The sample mean of &lt;script type=&quot;math/tex&quot;&gt;x_1, ..., x_n&lt;/script&gt; is
+&lt;script type=&quot;math/tex&quot;&gt;\bar{x} = \frac{1}{n} \sum_{t=1}^n x_t&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;The sample autocovariance function is
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\hat{\gamma} := n^{-1} \sum_{t=1}^{n-|h|}(x_{t+|h|} - \bar{x})(x_{t} - \bar{x}), -n &lt; h &lt; n %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;The sample autocorrelation function is
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\hat{\rho} := \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}, -n &lt; h &lt; n %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;실제-데이터---초미세먼지-농도&quot;&gt;실제 데이터 - 초미세먼지 농도&lt;/h3&gt;
+&lt;p&gt;데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도 
+기간 : 	2018-11-18 19:00 ~ 2018-12-18 17:00 (1시간 단위)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/df.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/pm25.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;statmodels 패키지를 이용해 ACF를 바로 구할수 있습니다.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;statsmodels.graphics.tsaplots&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot_acf&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplots&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plot_acf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/acf.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;acf 그래프를 보면 lag h(가로축)가 증가할수록 값이 점차 감소하며, 일정시간 양의 상관관계를 보이다가 음의 상관관계로 변화하는 패턴이 반복되는 것이 나타납니다. 이는 시계열 데이터가 stationary하지 않고 시간에 의존되는 성질을 가지고 있다는 것을 의미합니다.&lt;/p&gt;
+
+&lt;p&gt;시계열 데이터에서 trend와 seasonality 성분을 추정하는 것을 decompose라고 합니다. 이론적인 내용은 다음 포스팅에서 다루도록하고, 여기서는 결과값만 확인하도록 하겠습니다. statsmodels라는 패키지에서 seasonal_decompose를 사용할수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;statsmodels.tsa.seasonal&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;seasonal_decompose&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;seasonal_decompose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/decompose.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;trend와 seasonality를 제거하고 남은 값(residual)만 가지고 다시 acf를 그려보면 아래와 같습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;plot_acf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropna&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; 
+&lt;span class=&quot;n&quot;&gt;plot_acf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropna&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/residual_acf_all.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/residual_acf.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;original data의 ACF에서 나타났던 주기적인 변화는 거의 없어졌지만, lag=50 구간을 보면 h=4까지는 높은 상관계수를 보이고, 시간에 따른 주기적 변화 패턴이 남아있는 것을 볼수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;TBU&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;reference&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;[1] &lt;a href=&quot;https://www.springer.com/us/book/9781475777505&quot;&gt;Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[2] &lt;a href=&quot;https://www.statsmodels.org/dev/index.html&quot;&gt;Statsmodel’s Documentation&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[3]&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고 있습니다.</summary></entry><entry><title type="html">Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction</title><link href="http://localhost:4000/spatio-temporal%20data/ST-resnet/" rel="alternate" type="text/html" title="Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction" /><published>2018-12-16T00:00:00+09:00</published><updated>2018-12-16T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/ST-resnet</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/ST-resnet/">&lt;p&gt;&lt;b&gt; Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 &lt;/b&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;b&gt; Keras implementation &lt;/b&gt; : &lt;a href=&quot;https://github.com/lucktroy/DeepST&quot;&gt;https://github.com/lucktroy/DeepST&lt;/a&gt;&lt;/p&gt;
 
@@ -101,11 +221,70 @@
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;the-structure-of-the-external-component&quot;&gt;The Structure of the External Component&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;mainly consider weather, holiday event, and metadata(DayOfWeek, Weekday/Weekend)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;stack two fully-connected layers upon &lt;script type=&quot;math/tex&quot;&gt;E_t&lt;/script&gt;&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;first layer : embedding layer&lt;/li&gt;
+      &lt;li&gt;second layer : to map low to high dimensions that have the same shape with &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h3 id=&quot;fusion&quot;&gt;Fusion&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;flows of two regions are all affected by closeness, period, and trend, but the degrees of influence may be very different ; parametric-matrix-based fusion&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_{Res} = W_c \circ X_c^{L+2} + W_p \circ X_p^{L+2} + W_q \circ X_q^{L+2}&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\circ&lt;/script&gt; is Hadamard product (i.e., element-wise multiplication)&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;W_c, W_p, W_q&lt;/script&gt; are learnable parameters&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;fusing the external component&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\hat{X_t} = tanh(X_{Res} + X_{Ext})&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;objectives : minimizing mean squared error between the predicted flow matrix and the true flow matrix.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&quot;experiments&quot;&gt;Experiments&lt;/h2&gt;
 
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;</content><author><name>yjucho</name></author><summary type="html">Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017</summary></entry><entry><title type="html">위경도 - 기상청 격자 맵핑</title><link href="http://localhost:4000/visualization/latlon-to-grid/" rel="alternate" type="text/html" title="위경도 - 기상청 격자 맵핑" /><published>2018-12-15T00:00:00+09:00</published><updated>2018-12-15T00:00:00+09:00</updated><id>http://localhost:4000/visualization/latlon-to-grid</id><content type="html" xml:base="http://localhost:4000/visualization/latlon-to-grid/">&lt;p&gt;기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Datasets&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/datasets.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Baselines
+    &lt;ul&gt;
+      &lt;li&gt;HA : historical data (previous week, same time)&lt;/li&gt;
+      &lt;li&gt;ARIMA, SARIMA, VAR&lt;/li&gt;
+      &lt;li&gt;ST-ANN : It first extracts spatial (nearby 8 regions’ values) and temporal (8 previous time intervals) features, then fed into an artificial neural network.&lt;/li&gt;
+      &lt;li&gt;DeepST : (Zhang et al. 2016)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Preprocessing
+    &lt;ul&gt;
+      &lt;li&gt;min-max normalization : [-1, 1] (tanh)&lt;/li&gt;
+      &lt;li&gt;one-hot encoding for external data&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Result&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/result1.png&quot; width=&quot;300&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-12-16/result2.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017</summary></entry><entry><title type="html">위경도 - 기상청 격자 맵핑</title><link href="http://localhost:4000/visualization/latlon-to-grid/" rel="alternate" type="text/html" title="위경도 - 기상청 격자 맵핑" /><published>2018-12-15T00:00:00+09:00</published><updated>2018-12-15T00:00:00+09:00</updated><id>http://localhost:4000/visualization/latlon-to-grid</id><content type="html" xml:base="http://localhost:4000/visualization/latlon-to-grid/">&lt;p&gt;기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.&lt;/p&gt;
 
 &lt;p&gt;위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할 수 있습니다.&lt;/p&gt;
 
@@ -1728,255 +1907,4 @@ where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)&lt;
 
 &lt;p&gt;[12] Nikhil Mishra, Mostafa Rohaninejad, Xi Chen, and Pieter Abbeel. &lt;a href=&quot;http://metalearning.ml/papers/metalearn17_mishra.pdf&quot;&gt;“A simple neural attentive meta-learner.”&lt;/a&gt; NIPS Workshop on Meta-Learning. 2017.&lt;/p&gt;
 
-&lt;p&gt;[13] &lt;a href=&quot;https://deepmind.com/blog/wavenet-generative-model-raw-audio/&quot;&gt;“WaveNet: A Generative Model for Raw Audio”&lt;/a&gt; - Sep 8, 2016 by DeepMind.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">이 글은 lilianweng의 Attention? Attention! 포스팅을 번역한 글입니다.Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 메커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.</summary></entry><entry><title type="html">cs231n - 이해하기 2</title><link href="http://localhost:4000/cs231n/cs231n-2/" rel="alternate" type="text/html" title="cs231n - 이해하기 2" /><published>2018-10-11T00:00:00+09:00</published><updated>2018-10-10T00:00:00+09:00</updated><id>http://localhost:4000/cs231n/cs231n-2</id><content type="html" xml:base="http://localhost:4000/cs231n/cs231n-2/">&lt;p&gt;cs231n&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;http://cs231n.stanford.edu/&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;이 포스팅은 딥러닝에 대한 기본 지식을 상세히 전달하기보다는 간략한 핵심과 실제 모델 개발에 유용한 팁을 위주로 정리하였습니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;detection-and-segmentation&quot;&gt;Detection and Segmentation&lt;/h2&gt;
-
-&lt;p&gt;1) semantic segmentation :&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;sliding window&lt;/li&gt;
-  &lt;li&gt;Fully convolutional : labeling class per every pixel
-    &lt;ul&gt;
-      &lt;li&gt;downsampling and upsampling : how to upsampling(unpooling)
-        &lt;ul&gt;
-          &lt;li&gt;nearest neighbor&lt;/li&gt;
-          &lt;li&gt;bed of nails&lt;/li&gt;
-          &lt;li&gt;max unpooling(remember which element was max)&lt;/li&gt;
-          &lt;li&gt;Transpose Convolution&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-01.png&quot; width=&quot;300&quot; /&gt;
-&lt;img src=&quot;/assets/img/2018-10-11/cs231n-02.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-03.png&quot; width=&quot;300&quot; /&gt;
-&lt;img src=&quot;/assets/img/2018-10-11/cs231n-04.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;2) classification + localization :&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;class score : softmax loss&lt;/li&gt;
-  &lt;li&gt;box coordiantes(x, y, w, h) : L2 loss
-    &lt;ul&gt;
-      &lt;li&gt;treat localization as a regression problem&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;multimodal - how to determine weight of two different loss function?
-loss값 외에 다른 지표를 참고&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;aside : Human pose estimation&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;3) Object Detection&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;fixed set of categories and draw box location&lt;/li&gt;
-  &lt;li&gt;benchmark dataset : PASCAL VOC&lt;/li&gt;
-  &lt;li&gt;each image needs a different number of outputs - not easy to solve with regression&lt;/li&gt;
-  &lt;li&gt;sliding window : crops of the image, CNN classifies each crop as object or background
-    &lt;ul&gt;
-      &lt;li&gt;how to choose crop? need to apply CNN to huge number of locations and scales very expensive&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;region proposals : selective search gives 1000 region proposal -&amp;gt; brute force but high recall&lt;/li&gt;
-  &lt;li&gt;R-CNN
-    &lt;ul&gt;
-      &lt;li&gt;region of interest(RoI) from a proposal method (~2k)&lt;/li&gt;
-      &lt;li&gt;Warped image regions&lt;/li&gt;
-      &lt;li&gt;forward each region through convNet&lt;/li&gt;
-      &lt;li&gt;classify regions with SVMs&lt;/li&gt;
-      &lt;li&gt;Box regression
-        &lt;blockquote&gt;
-          &lt;p&gt;slow train and inference&lt;/p&gt;
-        &lt;/blockquote&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;fast R-CNN
-    &lt;ul&gt;
-      &lt;li&gt;Forward whole image through ConvNet&lt;/li&gt;
-      &lt;li&gt;RoIs from proposal method on convnet feature map of image&lt;/li&gt;
-      &lt;li&gt;RoI pooling layer&lt;/li&gt;
-      &lt;li&gt;fully connected&lt;/li&gt;
-      &lt;li&gt;classification and regression&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;faster R-CNN
-    &lt;ul&gt;
-      &lt;li&gt;make CNN do proposals&lt;/li&gt;
-      &lt;li&gt;insert &lt;em&gt;region proposal network(RPN)&lt;/em&gt; to predict proposals from features&lt;/li&gt;
-      &lt;li&gt;jointly train with 4 lossess&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-05.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;detection without proposals : YOLO / SSD&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-06.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;4) Instance Segmentation&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Mask R-CNN - similar to faster R-CNN
-    &lt;ul&gt;
-      &lt;li&gt;can also does pose : add joint coordinates&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;bechmark data : microsoft coco data&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;visualizing-and-understanding&quot;&gt;Visualizing and Understanding&lt;/h2&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;what’s going on inside ConvNets?
-What are the intermediate features looking for?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;visualize the filters : raw weights
-    &lt;ul&gt;
-      &lt;li&gt;not that interesting&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Last Layer :
-    &lt;ul&gt;
-      &lt;li&gt;check Nearest Neighbors in faeture space(last fc layer)&lt;/li&gt;
-      &lt;li&gt;dimensionality reduction : PCA, t-SNE&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Occlusion Experiments : 부분적으로 마스크함
-    &lt;ul&gt;
-      &lt;li&gt;mask한 영역으로 인해 확률이 극격히 변화면 해당 영역은 크리티컬하다고 가정&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;saliency maps : 이미지의 각 픽셀들에 대해서 클래스 스코어의 그래디언트를 구함. compute gradient of class score with respect to image pixels
-    &lt;ul&gt;
-      &lt;li&gt;intermediate feature via guided backprop : which part of image impact to intermediate activation value&lt;/li&gt;
-      &lt;li&gt;relu : positive gradient만 이용하면 더 나이스 이미지를 얻을수 있다&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;gradient ascent : 지금까지는 보통의 백프로파게이션을 통해 이미지의 어떤 부분이 뉴련에 영향을 주는지 알아봤다면(고정된 입력 이미지 값), 그래디언트 어센트는 뉴런의 액티베이션을 최대화하는 방향으로 이미지를 만들어내는 것임(입력 이미지 값을 생성하는 것)
-    &lt;ul&gt;
-      &lt;li&gt;generate a synthetic image that maximally activates a neuron&lt;/li&gt;
-      &lt;li&gt;better regrularizer (image prior regualarization)&lt;/li&gt;
-      &lt;li&gt;optimize in FC6 latent space instead of pixel space&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Fooling Image
-    &lt;ul&gt;
-      &lt;li&gt;엘리퍼튼 이미지를 고르고&lt;/li&gt;
-      &lt;li&gt;코알라 클래스 스코어를 골라&lt;/li&gt;
-      &lt;li&gt;코알라 클래스 스코어를 최대화하도록 이미지를 모디파이&lt;/li&gt;
-      &lt;li&gt;네트워크가 코알라로 분류할때까지 반복&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-07.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;DeepDream
-    &lt;ul&gt;
-      &lt;li&gt;choose an image and a layer in a CNN : repeat:
-        &lt;ul&gt;
-          &lt;li&gt;Forward : compute activations at chosen layer&lt;/li&gt;
-          &lt;li&gt;set gradient of chosen layer equal to its activation&lt;/li&gt;
-          &lt;li&gt;backward : compute gradient on image&lt;/li&gt;
-          &lt;li&gt;update image&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Feature Inversion : 피쳐벡터를 뽑고, 그 피쳐벡터에 매칭되는 다른 입풋 이미지를 만들어냄&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-08.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Texture sythesis : given a sample patch of some texture, can we genrate a bigger image of the same texture?
-    &lt;ul&gt;
-      &lt;li&gt;classical approch : nearest&lt;/li&gt;
-      &lt;li&gt;neural texture synthesis : gram matrix&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Style Transfer&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-09.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;slow  : train another model to transfer style&lt;/li&gt;
-  &lt;li&gt;fast style transfer&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-10.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;generative-models&quot;&gt;Generative Models&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;addresses density estimation&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;generative models of time-series data can be used for simulation and planning&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Fully visible belief network&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-11.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;픽셀의 오더를 어떻게 결정하지? –&amp;gt; pixelRNN&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;pixelRNN
-    &lt;ul&gt;
-      &lt;li&gt;코너에 있는 픽셀부터 다이어고날 방향으로 시퀄셜로 학습 using RNN (LSTM)&lt;/li&gt;
-      &lt;li&gt;sequtional is slow&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;pixelCNN
-    &lt;ul&gt;
-      &lt;li&gt;코너에 있는 픽샐부터 시작하는 것은 같으나&lt;/li&gt;
-      &lt;li&gt;context region(previous pixels)으로부터 모델링되는 것&lt;/li&gt;
-      &lt;li&gt;training is faster but generation must still process sequentially&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Variational auto-encoder
-    &lt;ul&gt;
-      &lt;li&gt;intractible to compute p(x|z) for every z&lt;/li&gt;
-      &lt;li&gt;in addition to decoder p&lt;sub&gt;θ&lt;/sub&gt;(x|z), define additional encoder q&lt;sub&gt;φ&lt;/sub&gt;(z|x) that approximates p&lt;sub&gt;θ&lt;/sub&gt;(z|x)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-12.png&quot; width=&quot;300&quot; /&gt; 
-&lt;img src=&quot;/assets/img/2018-10-11/cs231n-13.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-log p_\theta(x^{(i)}) &amp; =  E_z[log p_\theta(x^{(i)}|z)] - D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) + D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z|x^{(i)}))) \\ \\
-E_z[log p_\theta(x^{(i)}|z)] &amp; \  reconstruct \ the \ input \ data \\ \\
-D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) &amp; \  make \ approximate \ posterior \ distribution \ close \ to \ prior \\
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;GAN&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-14.png&quot; width=&quot;400&quot; /&gt; &lt;img src=&quot;/assets/img/2018-10-11/cs231n-15.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-11/cs231n-16.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;reinforce-learning&quot;&gt;reinforce learning&lt;/h2&gt;</content><author><name>yjucho</name></author><summary type="html">cs231n http://cs231n.stanford.edu/</summary></entry></feed>
+&lt;p&gt;[13] &lt;a href=&quot;https://deepmind.com/blog/wavenet-generative-model-raw-audio/&quot;&gt;“WaveNet: A Generative Model for Raw Audio”&lt;/a&gt; - Sep 8, 2016 by DeepMind.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">이 글은 lilianweng의 Attention? Attention! 포스팅을 번역한 글입니다.Attention은 최근 딥러닝 커뮤니티에서 자주 언급되는 유용한 툴입니다. 이 포스트에서는 어떻게 어텐션 개념과 다양한 어텐션 메커니즘을 설명하고 transformer와 SNAIL과 같은 모델들에 대해서 알아보고자 합니다.</summary></entry></feed>
