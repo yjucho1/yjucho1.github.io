@@ -85,7 +85,7 @@ var store = [{
         "url": "http://localhost:4000/spatio-temporal%20data/ST-resnet/",
         "teaser":null},{
         "title": "시계열 분석 - part1",
-        "excerpt":"시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고...","categories": ["time series"],
+        "excerpt":"시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서...","categories": ["time series"],
         "tags": [],
-        "url": "http://localhost:4000/time%20series/arima/",
+        "url": "http://localhost:4000/time%20series/time-series-part1/",
         "teaser":null}]

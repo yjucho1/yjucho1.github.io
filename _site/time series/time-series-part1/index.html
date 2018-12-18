@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>시계열 분석 - part1 - yjucho’s blog</title>
-<meta name="description" content="시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고 있습니다.">
+<meta name="description" content="시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.">
 
 
 
@@ -18,10 +18,10 @@
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
 <meta property="og:title" content="시계열 분석 - part1">
-<meta property="og:url" content="http://localhost:4000/time%20series/arima/">
+<meta property="og:url" content="http://localhost:4000/time%20series/time-series-part1/">
 
 
-  <meta property="og:description" content="시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고 있습니다.">
+  <meta property="og:description" content="시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.">
 
 
 
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/time%20series/arima/">
+<link rel="canonical" href="http://localhost:4000/time%20series/time-series-part1/">
 
 
 
@@ -264,7 +264,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="시계열 분석 - part1">
-    <meta itemprop="description" content="시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고 있습니다.">
+    <meta itemprop="description" content="시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.">
     <meta itemprop="datePublished" content="December 18, 2018">
     
 
@@ -279,7 +279,7 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>시계열 데이터는 시간에 의존하는 일련의 시리즈 데이터로, 분석을 통해 시계열데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 등의 업무를 수행할 수 있습니다. 시계열 데이터의 사례는 다양합니다. 아래 예제는 초미세먼지 농도 데이터입니다. 날씨, 주가 등등 대부분의 현실 세계의 시계열 데이터는 trend와 seasonality 속성을 가지고 있습니다.</p>
+        <p>시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.</p>
 
 <p>일반적인 시계열분석의 과정은 아래와 같습니다.</p>
 
@@ -305,33 +305,38 @@
   <li>Alternative approach is to express the series in terms of its Fourier components. But it will not be discussed in here.</li>
 </ul>
 
-<p>시계열 분석은 시간의 경과에 따라 변하지 않는 어떤 특성을 가진 프로세스를 분석하는 것입니다. 만약 시계열 데이터를 예측하고자 한다면, 우리는 시간에 따라 변하지 않는 무언가가 있다는 것을 반드시 가정해야합니다. 시간에 상관없이 deterministic function을 이용해 미래값을 예측할때(extrapolating, 외삽하는 행위) 보통은 함수 그자체가 변하지 않거나, 그 미분값이 상수(즉 기울기가 일정)라는 가정을 합니다. 1차 미분값이 상수라는 것은 선형 외샵을 사용하겠다는 것을 의미합니다.</p>
-
-<p>여기서의 시계열 분석은 deterministic뿐만 아니라, 랜덤한 컴포넌트가 포함된 시리즈를 예측하고자 하는 것입니다. 이 때 이 랜덤한 컴포넌트가 stationary하다는 가정을 하면, 우리는 다양한 기법들을 활용할수 있습니다. 앞으로의 포스팅에서는 이러한 기법들이 무엇인지 소개하려고 합니다.</p>
+<p>시계열 분석은 시간의 경과에 따라 변하지 않는 어떤 특성을 가진 프로세스를 분석하는 것입니다. 만약 시계열 데이터를 예측하고자 한다면, 우리는 시간에 따라 변하지 않는 무언가가 있다는 것을 반드시 가정해야합니다. 예를 들면 평균이 변하지 않는것(no trend), 분산이 변하지 않고, 주기적인 패턴이 없는 데이터를 가정합니다. 이러한 속성을 “stationary”하다고 합니다. 어떤 시계열 데이터가 stationary하다는 가정을 하면, 우리는 다양한 기법들을 활용할수 있습니다. 앞으로의 포스팅에서는 이러한 기법들이 무엇인지 소개하려고 합니다.</p>
 
 <h3 id="stationary-auto-covariance-function-and-auto-correlation-function">Stationary, Auto-Covariance Function and Auto-Correlation Function</h3>
 
 <p>시계열 <script type="math/tex">\{X_t, t=0, \pm 1, ...\}</script> 가 stationary하다는 것은 h lag만큼 time-shifted 된 시계열 <script type="math/tex">\{X_{t+h}, t=0, \pm 1, ...\}</script>와 통계적인 속성이 유사하다는 것을 의미합니다. 이 때 통계적인 속성을 first and second order moments(mean and covariance)로만 제한하면, 아래와 같이 수식적 정의를 할 수 있습니다.</p>
 
-<p><code class="highlighter-rouge">Definition</code>
-Let <script type="math/tex">{X_t}</script> be a time series with <script type="math/tex">% <![CDATA[
-E(X_t^2) < \infty %]]></script>. The mean function of <script type="math/tex">{X_t}</script> is 
-<script type="math/tex">\mu_X(t) = E(X_t)</script>
-The covariance function of <script type="math/tex">{X_t}</script> is 
-<script type="math/tex">\rho_X(r, s) = Cov(X_r, X_s) = E[(X_r - \mu_X(r))(X_s - \mu_X(s))]</script>
-for all integers r and s.</p>
+<p><b>Definition<b></b></b></p>
 
-<p><code class="highlighter-rouge">Definition</code>
-<script type="math/tex">{X_t}</script> is (weakly) stationary if 
-1) <script type="math/tex">\mu_X(t)</script> is independent of t,
-and 
-2) <script type="math/tex">\gamma_X(t+h, t)</script> is independent of t for each h. Strictly stationary is also
-3) <script type="math/tex">(X_1, ..., Xn)</script> and <script type="math/tex">(X_{1+h}, ..., X_{n+h})</script> have the same joint distributions for all h and n &gt;0</p>
+<p>Let <script type="math/tex">{X_t}</script> be a time series with <script type="math/tex">% <![CDATA[
+E(X_t^2) < \infty %]]></script>.</p>
+
+<p>The mean function of <script type="math/tex">{X_t}</script> is <script type="math/tex">\mu_X(t) = E(X_t)</script>.</p>
+
+<p>The covariance function of <script type="math/tex">{X_t}</script> is <script type="math/tex">\rho_X(r, s) = Cov(X_r, X_s) = E[(X_r - \mu_X(r))(X_s - \mu_X(s))]</script> for all integers r and s.</p>
+
+<p><b>Definition</b></p>
+
+<p><script type="math/tex">{X_t}</script> is (weakly) stationary if</p>
+
+<p>1) <script type="math/tex">\mu_X(t)</script> is independent of t.</p>
+
+<p>2) <script type="math/tex">\gamma_X(t+h, t)</script> is independent of t for each h.</p>
+
+<p>Strictly stationary is also</p>
+
+<p>3) <script type="math/tex">(X_1, ..., Xn)</script> and <script type="math/tex">(X_{1+h}, ..., X_{n+h})</script> have the same joint distributions for all h and n &gt;0</p>
 
 <p>2)에서의 정의를 이용해 stationary한 타임시리즈의 <script type="math/tex">\gamma_X(t+h, t)</script>는 t에 대해서 무관하기 때문에 <script type="math/tex">\gamma(\cdot)</script>는 “autocovariance function”으로 부르며, <script type="math/tex">\gamma_X(h)</script>는 h lag에서의 값을 지칭하는 것으로 하겠습니다.</p>
 
-<p><code class="highlighter-rouge">Definition</code>
-Let <script type="math/tex">{X_t}</script> be a stationary time series.</p>
+<p><b>Definition</b></p>
+
+<p>Let <script type="math/tex">{X_t}</script> be a stationary time series.</p>
 
 <p>The autocovariance function (ACVF) of <script type="math/tex">{X_t}</script> at lag h is <script type="math/tex">\gamma_X(h) = Cov(X_{t+h}, X_t)</script>.</p>
 
@@ -339,8 +344,9 @@ Let <script type="math/tex">{X_t}</script> be a stationary time series.</p>
 
 <p>주어진 시계열 데이터의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.</p>
 
-<p><code class="highlighter-rouge">Definition</code>
-Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time series.</p>
+<p><b>Definition</b></p>
+
+<p>Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time series.</p>
 
 <p>The sample mean of <script type="math/tex">x_1, ..., x_n</script> is
 <script type="math/tex">\bar{x} = \frac{1}{n} \sum_{t=1}^n x_t</script></p>
@@ -354,14 +360,18 @@ Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time ser
 \hat{\rho} := \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}, -n < h < n %]]></script></p>
 
 <h3 id="실제-데이터---초미세먼지-농도">실제 데이터 - 초미세먼지 농도</h3>
-<p>데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도 
-기간 : 	2018-11-18 19:00 ~ 2018-12-18 17:00 (1시간 단위)</p>
+
+<ul>
+  <li>데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도</li>
+  <li>기간 : 	2018-11-18 19:00 ~ 2018-12-18 17:00 (1시간 단위)</li>
+</ul>
 
 <p><img src="/assets/img/2018-12-18/df.png" width="300" /></p>
 
 <p><img src="/assets/img/2018-12-18/pm25.png" width="500" /></p>
 
 <p>statmodels 패키지를 이용해 ACF를 바로 구할수 있습니다.</p>
+
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_acf</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">plot_acf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pm25Value</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
@@ -369,7 +379,7 @@ Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time ser
 </code></pre></div></div>
 <p><img src="/assets/img/2018-12-18/acf.png" width="500" /></p>
 
-<p>acf 그래프를 보면 lag h(가로축)가 증가할수록 값이 점차 감소하며, 일정시간 양의 상관관계를 보이다가 음의 상관관계로 변화하는 패턴이 반복되는 것이 나타납니다. 이는 시계열 데이터가 stationary하지 않고 시간에 의존되는 성질을 가지고 있다는 것을 의미합니다.</p>
+<p>acf 그래프를 보면 lag h(가로축)가 증가할수록 값이 점차 감소하며, 일정시간 양의 상관관계를 보이다가 음의 상관관계로 변화하는 패턴이 반복되는 것이 나타납니다(periodic). 이는 시계열 데이터가 stationary하지 않고 시간에 의존되는 성질을 가지고 있다는 것을 의미합니다.</p>
 
 <p>시계열 데이터에서 trend와 seasonality 성분을 추정하는 것을 decompose라고 합니다. 이론적인 내용은 다음 포스팅에서 다루도록하고, 여기서는 결과값만 확인하도록 하겠습니다. statsmodels라는 패키지에서 seasonal_decompose를 사용할수 있습니다.</p>
 
@@ -387,19 +397,39 @@ Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time ser
 </code></pre></div></div>
 <p><img src="/assets/img/2018-12-18/residual_acf_all.png" width="500" /></p>
 
+<p>original data의 ACF에서 나타났던 주기적인 변화는 거의 없어진 것을 볼수 있습니다.</p>
+
 <p><img src="/assets/img/2018-12-18/residual_acf.png" width="500" /></p>
 
-<p>original data의 ACF에서 나타났던 주기적인 변화는 거의 없어졌지만, lag=50 구간을 보면 h=4까지는 높은 상관계수를 보이고, 시간에 따른 주기적 변화 패턴이 남아있는 것을 볼수 있습니다.</p>
+<p>하지만 lags=50 이전 부분을 살펴보면 여전히 lags=3까지 강한 상관계수를 갖고 반복적인 변화패턴을 보이는 것을 알수 있습니다. 이는 residual에 남아있는 패턴이 여전히 미래 값을 예측하는데 도움이 되는 것을 의미합니다.</p>
 
-<p>TBU</p>
+<h3 id="moving-average-and-auto-regressive-process">Moving Average and Auto Regressive process</h3>
+
+<p>The MA(q) process:<br />
+<script type="math/tex">\{X_t\}</script> is a moving-average process of order q if
+<script type="math/tex">X_t = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q}</script> <br />
+where <script type="math/tex">\{Z_t\} ~ White Noise(0, \theta^2)</script> and <script type="math/tex">\theta_1, ..., \theta_q</script> are constants.</p>
+
+<p>The AR(q) process:<br />
+<script type="math/tex">\{X_t\}</script> is a auto-regressive process of order q if
+<script type="math/tex">X_t = Z_t + \theta_1 X_{t-1} + ... + \theta_q X_{t-q}</script> <br />
+where <script type="math/tex">\{Z_t\} ~ White Noise(0, \theta^2)</script> and <script type="math/tex">\theta_1, ..., \theta_q</script> are constants.</p>
+
+<p>I can do it!</p>
+
+<h3 id="arma">ARMA</h3>
+
+<h3 id="particial-acf">Particial ACF</h3>
+
+<h3 id="arima">ARIMA</h3>
+
+<h3 id="다시-미세먼지">다시 미세먼지</h3>
 
 <p><b>reference</b></p>
 
 <p>[1] <a href="https://www.springer.com/us/book/9781475777505">Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,</a></p>
 
 <p>[2] <a href="https://www.statsmodels.org/dev/index.html">Statsmodel’s Documentation</a></p>
-
-<p>[3]</p>
 
         
       </section>
@@ -436,13 +466,13 @@ Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time ser
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+-+part1%20http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Farima%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+-+part1%20http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Ftime-series-part1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Farima%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Ftime-series-part1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Farima%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Ftime-series-part1%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Farima%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftime%2520series%2Ftime-series-part1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
@@ -516,8 +546,8 @@ Let <script type="math/tex">x_1, ..., x_n</script> be observations of a time ser
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/time%20series/arima/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/time%20series/arima"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/time%20series/time-series-part1/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/time%20series/time-series-part1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');
