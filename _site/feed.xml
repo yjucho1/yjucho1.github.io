@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-20T15:31:15+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part1</title><link href="http://localhost:4000/time%20series/time-series-part1/" rel="alternate" type="text/html" title="시계열 분석 - part1" /><published>2018-12-18T00:00:00+09:00</published><updated>2018-12-18T00:00:00+09:00</updated><id>http://localhost:4000/time%20series/time-series-part1</id><content type="html" xml:base="http://localhost:4000/time%20series/time-series-part1/">&lt;p&gt;시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-20T23:00:21+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part1</title><link href="http://localhost:4000/time%20series/time-series-part1/" rel="alternate" type="text/html" title="시계열 분석 - part1" /><published>2018-12-18T00:00:00+09:00</published><updated>2018-12-18T00:00:00+09:00</updated><id>http://localhost:4000/time%20series/time-series-part1</id><content type="html" xml:base="http://localhost:4000/time%20series/time-series-part1/">&lt;p&gt;시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.&lt;/p&gt;
 
 &lt;p&gt;일반적인 시계열분석의 과정은 아래와 같습니다.&lt;/p&gt;
 
@@ -158,11 +158,9 @@ Z_t &amp; = X_t - \beta Z_{t-1} \\
     &amp; = X_t - \beta X_{t-1} + \beta^2 X_{t-2} - \beta^3 X_{t-3} + ... + (-\beta)^n Z_{t-n}, &amp;
 when \left\vert \beta \right\vert \lt 1, (-\beta)^n Z_{t-n} \approx 0 \\
     &amp; = \sum_{n=0}^{\infty} (-\beta)^nX_{t-n} \\
-i.e \\
-X_t &amp; = Z_t + \beta X_{t-1} - \beta^2 X_{t-2} + \beta^3 X_{t-3} - ... \\
 \end{align} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다. white noise인 &lt;script type=&quot;math/tex&quot;&gt;Z_t&lt;/script&gt;를 &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;의 무한등비급수의 형태(단, &lt;script type=&quot;math/tex&quot;&gt;\left\vert \beta \right\vert \lt 1&lt;/script&gt;)로 표현할수 있다면, 주어진 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;는 invertible하다고 정의합니다. 이 때 수렴하는 조건을 invertibility condition이라고 하고 합니다.&lt;/p&gt;
+&lt;p&gt;이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 &lt;script type=&quot;math/tex&quot;&gt;Z_t&lt;/script&gt;를 &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;의 무한등비급수의 형태로 표현할수 있다면, 주어진 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;는 invertible하다고 정의합니다. 이 때 수렴 조건(MA(1)에서의 &lt;script type=&quot;math/tex&quot;&gt;\left\vert \beta \right\vert \lt 1&lt;/script&gt;)을 invertibility condition이라고 하고 합니다.&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 \begin{align}
@@ -176,14 +174,14 @@ Z_t &amp; = \beta(B)X_t, \ &amp; where \ \beta(\cdot) \ are \ the \ q-th \ degre
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\beta(z) = 1+ \beta_1 z + ... + \beta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
 
-&lt;p&gt;invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process를 unique하게 결정할수 있다는 것을 보장하기 때문입니다;invertibility condition guarantee unique MA process corresponding to observed ACF&lt;/p&gt;
+&lt;p&gt;invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.&lt;/p&gt;
 
 &lt;p&gt;두번재 모델은 Auto-Regressive Process입니다. &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 이전 시점의 자기 자신 값 &lt;script type=&quot;math/tex&quot;&gt;\{X_s\}&lt;/script&gt;(s &lt;script type=&quot;math/tex&quot;&gt;\le&lt;/script&gt; t)와 t 시점의 white noise &lt;script type=&quot;math/tex&quot;&gt;\{Z_x\}&lt;/script&gt;로 표현되는 프로세스를 Auto-Regress process라고 합니다. 기억해야할 점은 MA process와 달리 AR process는 항상 stationary한 것은 아니라는 점입니다.&lt;/p&gt;
 
 &lt;p&gt;The AR(q) process:&lt;br /&gt;
 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is a auto-regressive process of order q if
 &lt;script type=&quot;math/tex&quot;&gt;X_t = Z_t + \theta_1 X_{t-1} + ... + \theta_q X_{t-q}&lt;/script&gt; &lt;br /&gt;
-where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt;, iid and &lt;script type=&quot;math/tex&quot;&gt;\theta_1, ..., \theta_q&lt;/script&gt; are constants&lt;/p&gt;
+where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\theta_1, ..., \theta_q&lt;/script&gt; are constants&lt;/p&gt;
 
 &lt;p&gt;MA process의 invertibility 와 유사한 개념으로 AR process에 casuality 개념을 도입할수 있습니다. 아래는 AR(1) process를 MA(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;)로 변환하는 예시입니다.&lt;/p&gt;
 
@@ -198,9 +196,9 @@ when \left\vert \phi \right\vert \lt 1, \phi^n X_{t-n} \approx 0 \\
     &amp; = \sum_{n=0}^{\infty} (\phi)^n Z_{t-n} \\
 \end{align} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;를 white noise인 &lt;script type=&quot;math/tex&quot;&gt;Z_x&lt;/script&gt;(단, s &lt;script type=&quot;math/tex&quot;&gt;\le&lt;/script&gt; t)의 linear combination 형태로 표현된다면, 주어진 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;는 causal하다고 정의합니다. 위의 예시인 AR(1) process &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;가 causal하기 위해서는 \left\vert \phi \right\vert \lt 1 입니다.&lt;/p&gt;
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;를 white noise인 &lt;script type=&quot;math/tex&quot;&gt;Z_x&lt;/script&gt;(단, s &lt;script type=&quot;math/tex&quot;&gt;\le&lt;/script&gt; t)의 linear combination 형태로 표현된다면, 주어진 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;는 causal하다고 정의합니다. 위의 예시인 AR(1) process &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 causal하기 위해서는 &lt;script type=&quot;math/tex&quot;&gt;\left\vert \phi \right\vert \lt 1&lt;/script&gt; 입니다.&lt;/p&gt;
 
-&lt;p&gt;이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다.&lt;/p&gt;
+&lt;p&gt;이러한 성질을 일반적인 AR(p) process에 대해서도 이야기할수 있습니다.&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 \begin{align}
@@ -212,9 +210,61 @@ X_t &amp; = \phi(B)X_t, \ &amp; where \ \phi(\cdot) \ are \ the \ p-th \ degree 
 
 &lt;p&gt;Causality is equivalent to the condition&lt;/p&gt;
 
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\phi(z) = 1 - \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
 
-&lt;h3 id=&quot;arma&quot;&gt;ARMA&lt;/h3&gt;
+&lt;p&gt;중요한 것은 causality를 만족하는 AR(p) process는 항상 stationary하고, stationary AR(p) process는 항상 causality를 만족합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;armap-q&quot;&gt;ARMA(p, q)&lt;/h3&gt;
+
+&lt;p&gt;AR(p)와 MA(q)가 합쳐진 process를 ARMA(p, q)로 표기하고 ARMA(p,q) process가 유일한 stationary solution &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;를 갖는 조건은 causality condition을 만족할 때이며, 그 역도 성립합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is an ARMA(p, q) process if &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is stationary and if for every t,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t - \phi_1 X_{t-1} - ... - \phi_p X_{t-p} = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q}&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt; and the polynomials &lt;script type=&quot;math/tex&quot;&gt;( 1 - \phi z - ... - \phi_p z^p)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;(1+\theta_1 z + ... + \theta_q z^q )&lt;/script&gt; have no common factors.&lt;/p&gt;
+
+&lt;p&gt;Existence and Uniqueness :&lt;/p&gt;
+
+&lt;p&gt;A stationary solution &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; of equation ARMA(p, q) exists (and is also the unique stationary solution) if and only if&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
+
+&lt;p&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;아래와 같은 조건을 만족하는 ARMA(1, 1) process &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;를 생각해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t - 0.5 X_{t-1} = Z_t + 0.4 Z_{t-1}, \ \ \ {Z_t} \sim WN(0, \sigma^2)&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\phi(z) = 1 - 0.5 z&lt;/script&gt;는 z=2 일때 0이 되고, 이는 unit circle밖에 위치하기 때문에 이는 causality 조건을 만족합니다. 즉, 유니크한 솔루션이 존재합니다. causal하기때문에 &lt;script type=&quot;math/tex&quot;&gt;X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}&lt;/script&gt;로 표현되는 constant &lt;script type=&quot;math/tex&quot;&gt;\{\psi\}&lt;/script&gt;가 존재합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}&lt;/script&gt;를 &lt;script type=&quot;math/tex&quot;&gt;X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}&lt;/script&gt;에 대입하면 아래와 같은 식이 성립해야합니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1-\phi z - ... - \phi_p z^p)(\psi_0 +\psi_1 z + ...) = 1 +\theta_1z + ... + \theta_qz^q&lt;/script&gt;
+
+&lt;p&gt;양변의 &lt;script type=&quot;math/tex&quot;&gt;z^j, j=0,1,...&lt;/script&gt; 계수가 동일해야하므로,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+1 &amp; = \psi_0 \\
+\theta_1 &amp; = \psi_1 - \psi_0 \phi_1 \\
+\theta_2 &amp; = \psi_2 - \psi_1 \phi_1 - \psi_0 \phi_2 \\
+\vdots
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\psi_j - \sum_{k=1}^p \phi_k \psi_{j-k} = \theta_j, j=0,1, ...&lt;/script&gt;
+
+&lt;p&gt;예제의 계수를 대입하면,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+\psi_0 &amp; = 1\\
+\psi_1 &amp; = 0.4 + 1 * 0.5   \\
+\psi_2 &amp; = 0.5 (0.4 + 0.5) \\
+\psi_j &amp; = 0.5^{j-1} (0.4 + 0.5)
+\end{align} %]]&gt;&lt;/script&gt;
 
 &lt;h3 id=&quot;particial-acf&quot;&gt;Particial ACF&lt;/h3&gt;
 

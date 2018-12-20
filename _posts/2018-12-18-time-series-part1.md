@@ -165,7 +165,7 @@ when \left\vert \beta \right\vert \lt 1, (-\beta)^n Z_{t-n} \approx 0 \\
 \end{align}
 $$
 
-이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 $$Z_t$$를 $$X_t$$의 무한등비급수의 형태로 표현할수 있다면, 주어진 $$\{X_t\}$$는 invertible하다고 정의합니다. 이 때 수렴 조건((MA(1)에서의 $$\left\vert \beta \right\vert \lt 1$$)을 invertibility condition이라고 하고 합니다. 
+이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 $$Z_t$$를 $$X_t$$의 무한등비급수의 형태로 표현할수 있다면, 주어진 $$\{X_t\}$$는 invertible하다고 정의합니다. 이 때 수렴 조건(MA(1)에서의 $$\left\vert \beta \right\vert \lt 1$$)을 invertibility condition이라고 하고 합니다. 
 
 $$
 \begin{align}
@@ -180,7 +180,7 @@ Invertibility is equivalent to the condition
 
 $$\beta(z) = 1+ \beta_1 z + ... + \beta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
 
-invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.i
+invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.
 
 
 두번재 모델은 Auto-Regressive Process입니다. $$\{X_t\}$$가 이전 시점의 자기 자신 값 $$\{X_s\}$$(s $$\le$$ t)와 t 시점의 white noise $$\{Z_x\}$$로 표현되는 프로세스를 Auto-Regress process라고 합니다. 기억해야할 점은 MA process와 달리 AR process는 항상 stationary한 것은 아니라는 점입니다. 
@@ -204,9 +204,9 @@ when \left\vert \phi \right\vert \lt 1, \phi^n X_{t-n} \approx 0 \\
 \end{align}
 $$
 
-$$X_t$$를 white noise인 $$Z_x$$(단, s $$\le$$ t)의 linear combination 형태로 표현된다면, 주어진 $$\{X_t\}$$는 causal하다고 정의합니다. 위의 예시인 AR(1) process $$X_t$$가 causal하기 위해서는 $$\left\vert \phi \right\vert \lt 1 $$ 입니다. 
+$$X_t$$를 white noise인 $$Z_x$$(단, s $$\le$$ t)의 linear combination 형태로 표현된다면, 주어진 $$\{X_t\}$$는 causal하다고 정의합니다. 위의 예시인 AR(1) process $$\{X_t\}$$가 causal하기 위해서는 $$\left\vert \phi \right\vert \lt 1 $$ 입니다. 
 
-이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다.
+이러한 성질을 일반적인 AR(p) process에 대해서도 이야기할수 있습니다.
 
 $$
 \begin{align}
@@ -221,9 +221,61 @@ Causality is equivalent to the condition
 
 $$\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
 
+중요한 것은 causality를 만족하는 AR(p) process는 항상 stationary하고, stationary AR(p) process는 항상 causality를 만족합니다. 
 
+### ARMA(p, q)
 
-### ARMA
+AR(p)와 MA(q)가 합쳐진 process를 ARMA(p, q)로 표기하고 ARMA(p,q) process가 유일한 stationary solution $$\{X_t\}$$를 갖는 조건은 causality condition을 만족할 때이며, 그 역도 성립합니다. 
+
+<b>Definition</b>
+
+$$\{X_t\}$$ is an ARMA(p, q) process if $$\{X_t\}$$ is stationary and if for every t, 
+
+$$X_t - \phi_1 X_{t-1} - ... - \phi_p X_{t-p} = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q}$$
+
+where $$\{Z_t\} \sim WN(0, \sigma^2)$$ and the polynomials $$( 1 - \phi z - ... - \phi_p z^p)$$ and $$(1+\theta_1 z + ... + \theta_q z^q )$$ have no common factors.
+
+Existence and Uniqueness : 
+
+A stationary solution $$\{X_t\}$$ of equation ARMA(p, q) exists (and is also the unique stationary solution) if and only if
+
+$$\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
+
+<b>Example</b>
+
+아래와 같은 조건을 만족하는 ARMA(1, 1) process $$\{X_t\}$$를 생각해보도록 하겠습니다.
+
+$$X_t - 0.5 X_{t-1} = Z_t + 0.4 Z_{t-1}, \ \ \ {Z_t} \sim WN(0, \sigma^2)$$
+
+$$\phi(z) = 1 - 0.5 z$$는 z=2 일때 0이 되고, 이는 unit circle밖에 위치하기 때문에 이는 causality 조건을 만족합니다. 즉, 유니크한 솔루션이 존재합니다. causal하기때문에 $$X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}$$로 표현되는 constant $$\{\psi\}$$가 존재합니다. 
+
+$$X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}$$를 $$X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}$$에 대입하면 아래와 같은 식이 성립해야합니다. 
+
+$$(1-\phi z - ... - \phi_p z^p)(\psi_0 +\psi_1 z + ...) = 1 +\theta_1z + ... + \theta_qz^q$$
+
+양변의 $$z^j, j=0,1,...$$ 계수가 동일해야하므로,
+
+$$
+\begin{align}
+1 & = \psi_0 \\
+\theta_1 & = \psi_1 - \psi_0 \phi_1 \\
+\theta_2 & = \psi_2 - \psi_1 \phi_1 - \psi_0 \phi_2 \\
+\vdots
+\end{align}
+$$
+
+$$\psi_j - \sum_{k=1}^p \phi_k \psi_{j-k} = \theta_j, j=0,1, ...$$
+
+예제의 계수를 대입하면,
+
+$$
+\begin{align}
+\psi_0 & = 1\\
+\psi_1 & = 0.4 + 1 * 0.5   \\
+\psi_2 & = 0.5 (0.4 + 0.5) \\
+\psi_j & = 0.5^{j-1} (0.4 + 0.5)
+\end{align}
+$$
 
 
 

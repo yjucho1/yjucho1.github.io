@@ -439,11 +439,9 @@ Z_t & = X_t - \beta Z_{t-1} \\
     & = X_t - \beta X_{t-1} + \beta^2 X_{t-2} - \beta^3 X_{t-3} + ... + (-\beta)^n Z_{t-n}, &
 when \left\vert \beta \right\vert \lt 1, (-\beta)^n Z_{t-n} \approx 0 \\
     & = \sum_{n=0}^{\infty} (-\beta)^nX_{t-n} \\
-i.e \\
-X_t & = Z_t + \beta X_{t-1} - \beta^2 X_{t-2} + \beta^3 X_{t-3} - ... \\
 \end{align} %]]></script>
 
-<p>이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다. white noise인 <script type="math/tex">Z_t</script>를 <script type="math/tex">X_t</script>의 무한등비급수의 형태(단, <script type="math/tex">\left\vert \beta \right\vert \lt 1</script>)로 표현할수 있다면, 주어진 <script type="math/tex">\{X_t\}</script>는 invertible하다고 정의합니다. 이 때 수렴하는 조건을 invertibility condition이라고 하고 합니다.</p>
+<p>이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 <script type="math/tex">Z_t</script>를 <script type="math/tex">X_t</script>의 무한등비급수의 형태로 표현할수 있다면, 주어진 <script type="math/tex">\{X_t\}</script>는 invertible하다고 정의합니다. 이 때 수렴 조건(MA(1)에서의 <script type="math/tex">\left\vert \beta \right\vert \lt 1</script>)을 invertibility condition이라고 하고 합니다.</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
@@ -457,14 +455,14 @@ Z_t & = \beta(B)X_t, \ & where \ \beta(\cdot) \ are \ the \ q-th \ degree \ poly
 
 <script type="math/tex; mode=display">\beta(z) = 1+ \beta_1 z + ... + \beta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1</script>
 
-<p>invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process를 unique하게 결정할수 있다는 것을 보장하기 때문입니다;invertibility condition guarantee unique MA process corresponding to observed ACF</p>
+<p>invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.</p>
 
 <p>두번재 모델은 Auto-Regressive Process입니다. <script type="math/tex">\{X_t\}</script>가 이전 시점의 자기 자신 값 <script type="math/tex">\{X_s\}</script>(s <script type="math/tex">\le</script> t)와 t 시점의 white noise <script type="math/tex">\{Z_x\}</script>로 표현되는 프로세스를 Auto-Regress process라고 합니다. 기억해야할 점은 MA process와 달리 AR process는 항상 stationary한 것은 아니라는 점입니다.</p>
 
 <p>The AR(q) process:<br />
 <script type="math/tex">\{X_t\}</script> is a auto-regressive process of order q if
 <script type="math/tex">X_t = Z_t + \theta_1 X_{t-1} + ... + \theta_q X_{t-q}</script> <br />
-where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script>, iid and <script type="math/tex">\theta_1, ..., \theta_q</script> are constants</p>
+where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script> and <script type="math/tex">\theta_1, ..., \theta_q</script> are constants</p>
 
 <p>MA process의 invertibility 와 유사한 개념으로 AR process에 casuality 개념을 도입할수 있습니다. 아래는 AR(1) process를 MA(<script type="math/tex">\infty</script>)로 변환하는 예시입니다.</p>
 
@@ -479,9 +477,9 @@ when \left\vert \phi \right\vert \lt 1, \phi^n X_{t-n} \approx 0 \\
     & = \sum_{n=0}^{\infty} (\phi)^n Z_{t-n} \\
 \end{align} %]]></script>
 
-<p><script type="math/tex">X_t</script>를 white noise인 <script type="math/tex">Z_x</script>(단, s <script type="math/tex">\le</script> t)의 linear combination 형태로 표현된다면, 주어진 <script type="math/tex">\{X_t\}</script>는 causal하다고 정의합니다. 위의 예시인 AR(1) process <script type="math/tex">X_t</script>가 causal하기 위해서는 \left\vert \phi \right\vert \lt 1 입니다.</p>
+<p><script type="math/tex">X_t</script>를 white noise인 <script type="math/tex">Z_x</script>(단, s <script type="math/tex">\le</script> t)의 linear combination 형태로 표현된다면, 주어진 <script type="math/tex">\{X_t\}</script>는 causal하다고 정의합니다. 위의 예시인 AR(1) process <script type="math/tex">\{X_t\}</script>가 causal하기 위해서는 <script type="math/tex">\left\vert \phi \right\vert \lt 1</script> 입니다.</p>
 
-<p>이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다.</p>
+<p>이러한 성질을 일반적인 AR(p) process에 대해서도 이야기할수 있습니다.</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
@@ -493,9 +491,61 @@ X_t & = \phi(B)X_t, \ & where \ \phi(\cdot) \ are \ the \ p-th \ degree \ polyno
 
 <p>Causality is equivalent to the condition</p>
 
-<script type="math/tex; mode=display">\phi(z) = 1 - \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1</script>
+<script type="math/tex; mode=display">\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1</script>
 
-<h3 id="arma">ARMA</h3>
+<p>중요한 것은 causality를 만족하는 AR(p) process는 항상 stationary하고, stationary AR(p) process는 항상 causality를 만족합니다.</p>
+
+<h3 id="armap-q">ARMA(p, q)</h3>
+
+<p>AR(p)와 MA(q)가 합쳐진 process를 ARMA(p, q)로 표기하고 ARMA(p,q) process가 유일한 stationary solution <script type="math/tex">\{X_t\}</script>를 갖는 조건은 causality condition을 만족할 때이며, 그 역도 성립합니다.</p>
+
+<p><b>Definition</b></p>
+
+<p><script type="math/tex">\{X_t\}</script> is an ARMA(p, q) process if <script type="math/tex">\{X_t\}</script> is stationary and if for every t,</p>
+
+<script type="math/tex; mode=display">X_t - \phi_1 X_{t-1} - ... - \phi_p X_{t-p} = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q}</script>
+
+<p>where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script> and the polynomials <script type="math/tex">( 1 - \phi z - ... - \phi_p z^p)</script> and <script type="math/tex">(1+\theta_1 z + ... + \theta_q z^q )</script> have no common factors.</p>
+
+<p>Existence and Uniqueness :</p>
+
+<p>A stationary solution <script type="math/tex">\{X_t\}</script> of equation ARMA(p, q) exists (and is also the unique stationary solution) if and only if</p>
+
+<script type="math/tex; mode=display">\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1</script>
+
+<p><b>Example</b></p>
+
+<p>아래와 같은 조건을 만족하는 ARMA(1, 1) process <script type="math/tex">\{X_t\}</script>를 생각해보도록 하겠습니다.</p>
+
+<script type="math/tex; mode=display">X_t - 0.5 X_{t-1} = Z_t + 0.4 Z_{t-1}, \ \ \ {Z_t} \sim WN(0, \sigma^2)</script>
+
+<p><script type="math/tex">\phi(z) = 1 - 0.5 z</script>는 z=2 일때 0이 되고, 이는 unit circle밖에 위치하기 때문에 이는 causality 조건을 만족합니다. 즉, 유니크한 솔루션이 존재합니다. causal하기때문에 <script type="math/tex">X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}</script>로 표현되는 constant <script type="math/tex">\{\psi\}</script>가 존재합니다.</p>
+
+<p><script type="math/tex">X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}</script>를 <script type="math/tex">X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}</script>에 대입하면 아래와 같은 식이 성립해야합니다.</p>
+
+<script type="math/tex; mode=display">(1-\phi z - ... - \phi_p z^p)(\psi_0 +\psi_1 z + ...) = 1 +\theta_1z + ... + \theta_qz^q</script>
+
+<p>양변의 <script type="math/tex">z^j, j=0,1,...</script> 계수가 동일해야하므로,</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+1 & = \psi_0 \\
+\theta_1 & = \psi_1 - \psi_0 \phi_1 \\
+\theta_2 & = \psi_2 - \psi_1 \phi_1 - \psi_0 \phi_2 \\
+\vdots
+\end{align} %]]></script>
+
+<script type="math/tex; mode=display">\psi_j - \sum_{k=1}^p \phi_k \psi_{j-k} = \theta_j, j=0,1, ...</script>
+
+<p>예제의 계수를 대입하면,</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\psi_0 & = 1\\
+\psi_1 & = 0.4 + 1 * 0.5   \\
+\psi_2 & = 0.5 (0.4 + 0.5) \\
+\psi_j & = 0.5^{j-1} (0.4 + 0.5)
+\end{align} %]]></script>
 
 <h3 id="particial-acf">Particial ACF</h3>
 
