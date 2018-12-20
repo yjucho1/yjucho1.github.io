@@ -136,7 +136,7 @@ original data의 ACF에서 나타났던 주기적인 변화는 거의 없어진 
 
 하지만 lags=50 이전 부분을 살펴보면 여전히 lags=3까지 강한 상관계수를 갖고 반복적인 변화패턴을 보이는 것을 알수 있습니다. 이는 residual에 남아있는 패턴이 여전히 미래 값을 예측하는데 도움이 되는 것을 의미합니다. 
 
-### Moving Average and Auto Regressive process, Duality
+### Moving Average and Auto Regressive process
 
 시계열 분석의 문제는 stocastic process의 realization인 시계열 데이터 $$\{X_t\}$$가 주어졌을때(그리고 $$\{X_t\}$$가 stationary할때), 우리는 이 데이터가 생성된 본래의 stocastic process를 모델링하고 싶다는 겁니다. 데이터가 주어져있기때문에 우리는 (sample) mean과 lag에 따른 covariance과 correlation은 쉽게 구할수 있는 상황입니다.(auto covariance function과 auto correlation function) 
 
@@ -162,12 +162,10 @@ Z_t & = X_t - \beta Z_{t-1} \\
     & = X_t - \beta X_{t-1} + \beta^2 X_{t-2} - \beta^3 X_{t-3} + ... + (-\beta)^n Z_{t-n}, &
 when \left\vert \beta \right\vert \lt 1, (-\beta)^n Z_{t-n} \approx 0 \\
     & = \sum_{n=0}^{\infty} (-\beta)^nX_{t-n} \\
-i.e \\
-X_t & = Z_t + \beta X_{t-1} - \beta^2 X_{t-2} + \beta^3 X_{t-3} - ... \\
 \end{align}
 $$
 
-이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다. white noise인 $$Z_t$$를 $$X_t$$의 무한등비급수의 형태(단, $$\left\vert \beta \right\vert \lt 1$$)로 표현할수 있다면, 주어진 $$\{X_t\}$$는 invertible하다고 정의합니다. 이 때 수렴하는 조건을 invertibility condition이라고 하고 합니다. 
+이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 $$Z_t$$를 $$X_t$$의 무한등비급수의 형태로 표현할수 있다면, 주어진 $$\{X_t\}$$는 invertible하다고 정의합니다. 이 때 수렴 조건((MA(1)에서의 $$\left\vert \beta \right\vert \lt 1$$)을 invertibility condition이라고 하고 합니다. 
 
 $$
 \begin{align}
@@ -182,14 +180,15 @@ Invertibility is equivalent to the condition
 
 $$\beta(z) = 1+ \beta_1 z + ... + \beta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
 
-invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process를 unique하게 결정할수 있다는 것을 보장하기 때문입니다;invertibility condition guarantee unique MA process corresponding to observed ACF
+invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.i
+
 
 두번재 모델은 Auto-Regressive Process입니다. $$\{X_t\}$$가 이전 시점의 자기 자신 값 $$\{X_s\}$$(s $$\le$$ t)와 t 시점의 white noise $$\{Z_x\}$$로 표현되는 프로세스를 Auto-Regress process라고 합니다. 기억해야할 점은 MA process와 달리 AR process는 항상 stationary한 것은 아니라는 점입니다. 
 
 The AR(q) process:<br>
 $$\{X_t\}$$ is a auto-regressive process of order q if
 $$ X_t = Z_t + \theta_1 X_{t-1} + ... + \theta_q X_{t-q} $$ <br>
-where $$\{Z_t\} \sim WN(0, \sigma^2)$$, iid and $$\theta_1, ..., \theta_q$$ are constants
+where $$\{Z_t\} \sim WN(0, \sigma^2)$$ and $$\theta_1, ..., \theta_q$$ are constants
 
 MA process의 invertibility 와 유사한 개념으로 AR process에 casuality 개념을 도입할수 있습니다. 아래는 AR(1) process를 MA($$\infty$$)로 변환하는 예시입니다.
 
@@ -205,7 +204,7 @@ when \left\vert \phi \right\vert \lt 1, \phi^n X_{t-n} \approx 0 \\
 \end{align}
 $$
 
-$$X_t$$를 white noise인 $$Z_x$$(단, s $$\le$$ t)의 linear combination 형태로 표현된다면, 주어진 $$\{X_t\}$$는 causal하다고 정의합니다. 위의 예시인 AR(1) process $$X_t$$가 causal하기 위해서는 \left\vert \phi \right\vert \lt 1 입니다. 
+$$X_t$$를 white noise인 $$Z_x$$(단, s $$\le$$ t)의 linear combination 형태로 표현된다면, 주어진 $$\{X_t\}$$는 causal하다고 정의합니다. 위의 예시인 AR(1) process $$X_t$$가 causal하기 위해서는 $$\left\vert \phi \right\vert \lt 1 $$ 입니다. 
 
 이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다.
 
@@ -220,7 +219,7 @@ $$
 
 Causality is equivalent to the condition
 
-$$\phi(z) = 1 - \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
+$$\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
 
 
 
