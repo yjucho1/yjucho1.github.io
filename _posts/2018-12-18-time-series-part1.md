@@ -53,7 +53,7 @@ Strictly stationary is also
 
 3) $$(X_1, ..., Xn)$$ and $$(X_{1+h}, ..., X_{n+h})$$ have the same joint distributions for all h and n >0
 
-2)에서의 정의를 이용해 stationary한 타임시리즈의 $$\gamma_X(t+h, t)$$는 t에 대해서 무관하기 때문에 $$\gamma(\cdot)$$는 "autocovariance function"으로 부르며, $$\gamma_X(h)$$는 h lag에서의 값을 지칭하는 것으로 하겠습니다.
+2)에서의 정의를 이용해 stationary한 타임시리즈의 $$\gamma_X(t+h, t)$$는 t에 대해서 무관하기 때문에 $$\gamma(\cdot)$$는 "autocovariance function"으로 부르며, $$\gamma_X(h)$$는 h lag에서의 값을 지칭하는 것으로 하겠습니다. 또한 covariance를 normalization하여 correlation을 함께 정의할수 있습니다. 
 
 <b>Definition</b>
 
@@ -64,7 +64,18 @@ The autocovariance function (ACVF) of $${X_t}$$ at lag h is $$\gamma_X(h) = Cov(
 The autocorrelation function (ACF) of $${X_t}$$ at lag h is $$\rho_X(h) \equiv \frac{\gamma_X(h)}{\gamma_X(0)} = Cor(X_{t+h}, X_t)$$
 
 
-주어진 시계열 데이터의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.  
+stationary time series의 대표적인 예는 iid noise와 white noise가 있습니다. iid noise는 $$\{X_t\}$$가 동일하고(identically) 서로 독립적인(independent) 분포를 따르며, 평균이 0인 확률변수로 정의됩니다. t에 상관없이 평균이 0이고, $$\gamma_X(\cdot)$$도 0이기때문에 stationary 조건을 만족합니다. 
+
+$$
+\begin{align}
+\gamma_X(t+h, t) & = \sigma^2, \ & if \ h=0 \\ 
+                 & = 0, \ & if \ h \ne 0
+\end{align}
+$$
+
+마찬가지로 white noise with zero mean and variance $$\sigma^2$$도 (weak) staionary 조건을 만족합니다. (참고로 iid noise와 white noise는 다릅니다. 모든 iid noise는 white noise이지만, 그 역은 성립하지 않습니다. [참고] (https://www.researchgate.net/post/What_is_the_difference_between_white_noise_and_iid_noise))
+
+시계열 데이터(realization)가 주어졌을때, 이 프로세스의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.  
 
 <b>Definition</b>
 
@@ -101,7 +112,7 @@ plt.show()
 
 acf 그래프를 보면 lag h(가로축)가 증가할수록 값이 점차 감소하며, 일정시간 양의 상관관계를 보이다가 음의 상관관계로 변화하는 패턴이 반복되는 것이 나타납니다(periodic). 이는 시계열 데이터가 stationary하지 않고 시간에 의존되는 성질을 가지고 있다는 것을 의미합니다. 
 
-시계열 데이터에서 trend와 seasonality 성분을 추정하는 것을 decompose라고 합니다. 이론적인 내용은 다음 포스팅에서 다루도록하고, 여기서는 결과값만 확인하도록 하겠습니다. statsmodels라는 패키지에서 seasonal_decompose를 사용할수 있습니다.  
+시계열 데이터에서 trend와 seasonality 성분을 추정하는 것을 decompose라고 합니다. 이론적인 내용은 다음 포스팅에서 다루도록하고, 여기서는 결과값만 확인하도록 하겠습니다. statsmodels라는 패키지에서 seasonal_decompose를 사용할수 있습니다. 참고로 seasonal_decompose의 trend estimation은 moving window 방식을 이용합니다. 
 
 ```python
 from statsmodels.tsa.seasonal import seasonal_decompose
@@ -125,25 +136,103 @@ original data의 ACF에서 나타났던 주기적인 변화는 거의 없어진 
 
 하지만 lags=50 이전 부분을 살펴보면 여전히 lags=3까지 강한 상관계수를 갖고 반복적인 변화패턴을 보이는 것을 알수 있습니다. 이는 residual에 남아있는 패턴이 여전히 미래 값을 예측하는데 도움이 되는 것을 의미합니다. 
 
-### Moving Average and Auto Regressive process 
+### Moving Average and Auto Regressive process, Duality
+
+시계열 분석의 문제는 stocastic process의 realization인 시계열 데이터 $$\{X_t\}$$가 주어졌을때(그리고 $$\{X_t\}$$가 stationary할때), 우리는 이 데이터가 생성된 본래의 stocastic process를 모델링하고 싶다는 겁니다. 데이터가 주어져있기때문에 우리는 (sample) mean과 lag에 따른 covariance과 correlation은 쉽게 구할수 있는 상황입니다.(auto covariance function과 auto correlation function) 
+
+만약 ACF가 주어졌을때 이에 대응되는 stationary stochatic process가 unique하게 결정된다면 아주 쉬운 문제가 됩니다. analytic한 솔루션이 1개 존재하는 것이고, 그건 공식에 맞춰 계산하면 되는 문제가 되니까요. 그러한 특징과 관련된 2가지 모델을 살펴보도록 하겠습니다.
 
 The MA(q) process:<br>
 $$\{X_t\}$$ is a moving-average process of order q if
 $$ X_t = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q} $$ <br>
-where $$\{Z_t\} ~ White Noise(0, \theta^2)$$ and $$\theta_1, ..., \theta_q$$ are constants.
+where $$\{Z_t\} \sim WN(0, \sigma^2)$$ and $$\theta_1, ..., \theta_q$$ are constants.
+
+$$\{X_t\}$$가 t 이전 시점의 white noise $$\{Z_x\}$$(s $$\le$$ t)로 표현되는 프로세스를 Moving Average process라고 합니다.  앞서 본 "stationary" 정의에 따라, MA(q) process는 항상 (weakly) stationary합니다. 
+
+invertibility :
+
+흥미롭게도 MA(1)은 AR($$\infty$$)로 변환될수 있습니다. 아래 수식에서 볼수 있듯이 $$Z_t$$는 $$X_t$$의 과거값들의 linear combination로 표현될수 있습니다. 
+
+$$
+\begin{align}
+X_t & = Z_t + \beta Z_{t-1} \\
+Z_t & = X_t - \beta Z_{t-1} \\
+    & = X_t - \beta(X_{t-1} - \beta Z_{t-2}) \\
+    & = X_t - \beta X_{t-1} + \beta^2 (X_{t-2} - \beta Z_{t-3}) \\
+    & = X_t - \beta X_{t-1} + \beta^2 X_{t-2} - \beta^3 X_{t-3} + ... + (-\beta)^n Z_{t-n}, &
+when \left\vert \beta \right\vert \lt 1, (-\beta)^n Z_{t-n} \approx 0 \\
+    & = \sum_{n=0}^{\infty} (-\beta)^nX_{t-n} \\
+i.e \\
+X_t & = Z_t + \beta X_{t-1} - \beta^2 X_{t-2} + \beta^3 X_{t-3} - ... \\
+\end{align}
+$$
+
+이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다. white noise인 $$Z_t$$를 $$X_t$$의 무한등비급수의 형태(단, $$\left\vert \beta \right\vert \lt 1$$)로 표현할수 있다면, 주어진 $$\{X_t\}$$는 invertible하다고 정의합니다. 이 때 수렴하는 조건을 invertibility condition이라고 하고 합니다. 
+
+$$
+\begin{align}
+Z_t & = \beta(B)X_t, \ & where \ \beta(\cdot) \ are \ the \ q-th \ degree \ polynomials \\
+\beta(z) & = 1+ \beta_1 z + ... + \beta_q z^q
+\end{align}
+$$
+
+자세한 증명은 여기서 다루지 않지만, 결론적으로는 $$\beta(z)$$의 해가 unit circle 밖에 있는 경우 invertible 조건을 만족하게 됩니다. 
+
+Invertibility is equivalent to the condition
+
+$$\beta(z) = 1+ \beta_1 z + ... + \beta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
+
+invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process를 unique하게 결정할수 있다는 것을 보장하기 때문입니다;invertibility condition guarantee unique MA process corresponding to observed ACF
+
+두번재 모델은 Auto-Regressive Process입니다. $$\{X_t\}$$가 이전 시점의 자기 자신 값 $$\{X_s\}$$(s $$\le$$ t)와 t 시점의 white noise $$\{Z_x\}$$로 표현되는 프로세스를 Auto-Regress process라고 합니다. 기억해야할 점은 MA process와 달리 AR process는 항상 stationary한 것은 아니라는 점입니다. 
 
 The AR(q) process:<br>
 $$\{X_t\}$$ is a auto-regressive process of order q if
 $$ X_t = Z_t + \theta_1 X_{t-1} + ... + \theta_q X_{t-q} $$ <br>
-where $$\{Z_t\} ~ White Noise(0, \theta^2)$$ and $$\theta_1, ..., \theta_q$$ are constants.
+where $$\{Z_t\} \sim WN(0, \sigma^2)$$, iid and $$\theta_1, ..., \theta_q$$ are constants
 
-I can do it!
+MA process의 invertibility 와 유사한 개념으로 AR process에 casuality 개념을 도입할수 있습니다. 아래는 AR(1) process를 MA($$\infty$$)로 변환하는 예시입니다.
+
+$$
+\begin{align}
+X_t & = \phi X_{t-1} + Z_t \\
+    & = \phi (\phi X_{t-2} + Z_{t-1}) + Z_t \\
+    & = \phi^2 X_{t-2} + \phi Z_{t-1} + Z_t  \\
+    & = \phi^2 (\phi X_{t-3} + Z_{t-2}) + \phi Z_{t-1} + Z_t \\
+    & = Z_t + \phi Z_{t-1} + \phi^2 Z_{t-3} + ... + \phi^n X_{t-n}, &
+when \left\vert \phi \right\vert \lt 1, \phi^n X_{t-n} \approx 0 \\
+    & = \sum_{n=0}^{\infty} (\phi)^n Z_{t-n} \\
+\end{align}
+$$
+
+$$X_t$$를 white noise인 $$Z_x$$(단, s $$\le$$ t)의 linear combination 형태로 표현된다면, 주어진 $$\{X_t\}$$는 causal하다고 정의합니다. 위의 예시인 AR(1) process $$X_t$$가 causal하기 위해서는 \left\vert \phi \right\vert \lt 1 입니다. 
+
+이러한 성질을 일반적인 stocastic process에 대해서도 이야기할수 있습니다.
+
+$$
+\begin{align}
+X_t & = \phi(B)X_t, \ & where \ \phi(\cdot) \ are \ the \ p-th \ degree \ polynomials \\
+\phi(z) & = 1+ \phi z + ... + \phi_p z^p
+\end{align}
+$$
+
+자세한 증명은 여기서 다루지 않지만, 결론적으로는 $$\phi(z)$$의 해가 unit circle 밖에 있는 경우 causality 조건을 만족하게 됩니다. 
+
+Causality is equivalent to the condition
+
+$$\phi(z) = 1 - \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1 $$
+
+
 
 ### ARMA
 
+
+
 ### Particial ACF
 
+
 ### ARIMA
+
 
 ### 다시 미세먼지
 
@@ -152,3 +241,7 @@ I can do it!
 [1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
 
 [2] [Statsmodel's Documentation](https://www.statsmodels.org/dev/index.html)
+
+[3] [Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis/home/info)
+
+[4] [시계열분석 강의, 한양대학교(이기천)](http://www.kocw.net/home/search/kemView.do?kemId=977301)
