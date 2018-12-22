@@ -432,28 +432,28 @@ where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script> and <script 
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
-X_t & = Z_t + \beta Z_{t-1} \\
-Z_t & = X_t - \beta Z_{t-1} \\
-    & = X_t - \beta(X_{t-1} - \beta Z_{t-2}) \\
-    & = X_t - \beta X_{t-1} + \beta^2 (X_{t-2} - \beta Z_{t-3}) \\
-    & = X_t - \beta X_{t-1} + \beta^2 X_{t-2} - \beta^3 X_{t-3} + ... + (-\beta)^n Z_{t-n}, &
-when \left\vert \beta \right\vert \lt 1, (-\beta)^n Z_{t-n} \approx 0 \\
-    & = \sum_{n=0}^{\infty} (-\beta)^nX_{t-n} \\
+X_t & = Z_t + \theta Z_{t-1} \\
+Z_t & = X_t - \theta Z_{t-1} \\
+    & = X_t - \theta(X_{t-1} - \theta Z_{t-2}) \\
+    & = X_t - \theta X_{t-1} + \theta^2 (X_{t-2} - \theta Z_{t-3}) \\
+    & = X_t - \theta X_{t-1} + \theta^2 X_{t-2} - \theta^3 X_{t-3} + ... + (-\theta)^n Z_{t-n}, &
+when \left\vert \theta \right\vert \lt 1, (-\theta)^n Z_{t-n} \approx 0 \\
+    & = \sum_{n=0}^{\infty} (-\theta)^nX_{t-n} \\
 \end{align} %]]></script>
 
-<p>이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 <script type="math/tex">Z_t</script>를 <script type="math/tex">X_t</script>의 무한등비급수의 형태로 표현할수 있다면, 주어진 <script type="math/tex">\{X_t\}</script>는 invertible하다고 정의합니다. 이 때 수렴 조건(MA(1)에서의 <script type="math/tex">\left\vert \beta \right\vert \lt 1</script>)을 invertibility condition이라고 하고 합니다.</p>
+<p>이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 <script type="math/tex">Z_t</script>를 <script type="math/tex">X_t</script>의 무한등비급수의 형태로 표현할수 있다면, 주어진 <script type="math/tex">\{X_t\}</script>는 invertible하다고 정의합니다. 이 때 수렴 조건(MA(1)에서의 <script type="math/tex">\left\vert \theta \right\vert \lt 1</script>)을 invertibility condition이라고 하고 합니다.</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
-Z_t & = \beta(B)X_t, \ & where \ \beta(\cdot) \ are \ the \ q-th \ degree \ polynomials \\
-\beta(z) & = 1+ \beta_1 z + ... + \beta_q z^q
+Z_t & = \theta(B)X_t, \ & where \ \theta(\cdot) \ are \ the \ q-th \ degree \ polynomials \\
+\theta(z) & = 1 + \theta z + ... + \theta_q z^q
 \end{align} %]]></script>
 
-<p>자세한 증명은 여기서 다루지 않지만, 결론적으로는 <script type="math/tex">\beta(z)</script>의 해가 unit circle 밖에 있는 경우 invertible 조건을 만족하게 됩니다.</p>
+<p>자세한 증명은 여기서 다루지 않지만, 결론적으로는 <script type="math/tex">\theta(z)</script>의 해가 unit circle 밖에 있는 경우 invertible 조건을 만족하게 됩니다.</p>
 
 <p>Invertibility is equivalent to the condition</p>
 
-<script type="math/tex; mode=display">\beta(z) = 1+ \beta_1 z + ... + \beta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1</script>
+<script type="math/tex; mode=display">\theta(z) = 1+ \theta_1 z + ... + \theta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1</script>
 
 <p>invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.</p>
 
@@ -461,8 +461,8 @@ Z_t & = \beta(B)X_t, \ & where \ \beta(\cdot) \ are \ the \ q-th \ degree \ poly
 
 <p>The AR(q) process:<br />
 <script type="math/tex">\{X_t\}</script> is a auto-regressive process of order q if
-<script type="math/tex">X_t = Z_t + \theta_1 X_{t-1} + ... + \theta_q X_{t-q}</script> <br />
-where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script> and <script type="math/tex">\theta_1, ..., \theta_q</script> are constants</p>
+<script type="math/tex">X_t = Z_t + \phi_1 X_{t-1} + ... + \phi_q X_{t-q}</script> <br />
+where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script> and <script type="math/tex">\phi_1, ..., \phi_q</script> are constants</p>
 
 <p>MA process의 invertibility 와 유사한 개념으로 AR process에 casuality 개념을 도입할수 있습니다. 아래는 AR(1) process를 MA(<script type="math/tex">\infty</script>)로 변환하는 예시입니다.</p>
 
@@ -546,6 +546,8 @@ X_t & = \phi(B)X_t, \ & where \ \phi(\cdot) \ are \ the \ p-th \ degree \ polyno
 \psi_2 & = 0.5 (0.4 + 0.5) \\
 \psi_j & = 0.5^{j-1} (0.4 + 0.5)
 \end{align} %]]></script>
+
+<h3 id="yule-walker-equation">Yule-Walker Equation</h3>
 
 <h3 id="particial-acf">Particial ACF</h3>
 
