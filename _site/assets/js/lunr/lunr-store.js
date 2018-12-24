@@ -70,14 +70,14 @@ var store = [{
         "url": "http://localhost:4000/clustering/clustering-with-l2-norm/",
         "teaser":null},{
         "title": "django를 이용한 대시보드 만들기",
-        "excerpt":"django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다. Missions 데이터를 통한 인사이트 서비스를 제공하고 세상이 더 효율적으로 돌아가는데 기여하자눈에 보이는 유형의 서비스로 만들자 빠르게 만들고, 피드백을 받아 수정하자 Demo :...","categories": ["developement"],
+        "excerpt":"django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다. Missions 데이터를 통한 인사이트 서비스를 제공하고 세상이 더 효율적으로 돌아가는데 기여하자눈에 보이는 유형의 서비스로 만들자 빠르게 만들고, 피드백을 받아 수정하자 Demo :...","categories": ["django"],
         "tags": [],
-        "url": "http://localhost:4000/developement/django/",
+        "url": "http://localhost:4000/django/django/",
         "teaser":null},{
         "title": "위경도 - 기상청 격자 맵핑",
-        "excerpt":"기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다. 위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할...","categories": ["visualization"],
+        "excerpt":"기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다. 위경도 정보가 포함된 다양한 데이터를 기상청의 격자와 맵핑하면 날씨 데이터를 이용한 다양한 분석을 수행할...","categories": ["Spatio-Temporal Data"],
         "tags": [],
-        "url": "http://localhost:4000/visualization/latlon-to-grid/",
+        "url": "http://localhost:4000/spatio-temporal%20data/latlon-to-grid/",
         "teaser":null},{
         "title": "Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction",
         "excerpt":"Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 Keras implementation : https://github.com/lucktroy/DeepST Introduction Forecating the flow of crowds In this paper, we predict two types fo crowd flows : inflow and outflow Inflow and outflow of crowds are affected by the following Spatial dependencies Temporal dependencies External influence :...","categories": ["Spatio-Temporal Data"],
@@ -85,7 +85,7 @@ var store = [{
         "url": "http://localhost:4000/spatio-temporal%20data/ST-resnet/",
         "teaser":null},{
         "title": "시계열 분석 - part1",
-        "excerpt":"시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서...","categories": ["time series"],
+        "excerpt":"시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서...","categories": ["Spatio-Temporal Data"],
         "tags": [],
-        "url": "http://localhost:4000/time%20series/time-series-part1/",
+        "url": "http://localhost:4000/spatio-temporal%20data/time-series-part1/",
         "teaser":null}]

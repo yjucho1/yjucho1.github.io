@@ -1,7 +1,7 @@
 ---
 title: "시계열 분석 - part1"
 categories: 
-  - time series
+  - Spatio-Temporal Data
 comments: true
 mathjax : true
 published: true

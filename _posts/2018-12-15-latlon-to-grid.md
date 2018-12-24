@@ -1,7 +1,7 @@
 ---
 title: "위경도 - 기상청 격자 맵핑"
 categories: 
-  - visualization
+  - Spatio-Temporal Data
 comments: true
 mathjax : false
 published: true
