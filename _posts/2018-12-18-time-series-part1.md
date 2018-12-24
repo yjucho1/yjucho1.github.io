@@ -73,7 +73,7 @@ $$
 \end{align}
 $$
 
-마찬가지로 white noise with zero mean and variance $$\sigma^2$$도 (weak) staionary 조건을 만족합니다. (참고로 iid noise와 white noise는 다릅니다. 모든 iid noise는 white noise이지만, 그 역은 성립하지 않습니다. [참고] (https://www.researchgate.net/post/What_is_the_difference_between_white_noise_and_iid_noise))
+마찬가지로 white noise with zero mean and variance $$\sigma^2$$도 (weak) staionary 조건을 만족합니다. 참고로 iid noise와 white noise는 다릅니다. 모든 iid noise는 white noise이지만, 그 역은 성립하지 않습니다. [참고](https://www.researchgate.net/post/What_is_the_difference_between_white_noise_and_iid_noise)
 
 시계열 데이터(realization)가 주어졌을때, 이 프로세스의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.  
 
@@ -91,51 +91,6 @@ The sample autocorrelation function is
 $$\hat{\rho} := \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}, -n < h < n$$
 
  
-### 실제 데이터 - 초미세먼지 농도
-
-* 데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도 
-* 기간 : 	2018-11-18 19:00 ~ 2018-12-18 17:00 (1시간 단위)
-
-<img src="/assets/img/2018-12-18/df.png" width="300">
-
-<img src = "/assets/img/2018-12-18/pm25.png" width="500">
-
-statmodels 패키지를 이용해 ACF를 바로 구할수 있습니다.
-
-```python
-from statsmodels.graphics.tsaplots import plot_acf
-fig, ax = plt.subplots(figsize=(10, 4))
-plot_acf(df.pm25Value, ax=ax)
-plt.show()
-```
-<img src = "/assets/img/2018-12-18/acf.png" width="500">
-
-acf 그래프를 보면 lag h(가로축)가 증가할수록 값이 점차 감소하며, 일정시간 양의 상관관계를 보이다가 음의 상관관계로 변화하는 패턴이 반복되는 것이 나타납니다(periodic). 이는 시계열 데이터가 stationary하지 않고 시간에 의존되는 성질을 가지고 있다는 것을 의미합니다. 
-
-시계열 데이터에서 trend와 seasonality 성분을 추정하는 것을 decompose라고 합니다. 이론적인 내용은 다음 포스팅에서 다루도록하고, 여기서는 결과값만 확인하도록 하겠습니다. statsmodels라는 패키지에서 seasonal_decompose를 사용할수 있습니다. 참고로 seasonal_decompose의 trend estimation은 moving window 방식을 이용합니다. 
-
-```python
-from statsmodels.tsa.seasonal import seasonal_decompose
-
-result = seasonal_decompose(df.pm25Value)
-result.plot()
-```
-<img src = "/assets/img/2018-12-18/decompose.png" width="500">
-
-trend와 seasonality를 제거하고 남은 값(residual)만 가지고 다시 acf를 그려보면 아래와 같습니다.
-
-```python
-plot_acf(result.resid.dropna()) 
-plot_acf(result.resid.dropna(), lags=50) 
-```
-<img src = "/assets/img/2018-12-18/residual_acf_all.png" width="500">
-
-original data의 ACF에서 나타났던 주기적인 변화는 거의 없어진 것을 볼수 있습니다. 
-
-<img src = "/assets/img/2018-12-18/residual_acf.png" width="500">
-
-하지만 lags=50 이전 부분을 살펴보면 여전히 lags=3까지 강한 상관계수를 갖고 반복적인 변화패턴을 보이는 것을 알수 있습니다. 이는 residual에 남아있는 패턴이 여전히 미래 값을 예측하는데 도움이 되는 것을 의미합니다. 
-
 ### Moving Average and Auto Regressive process
 
 시계열 분석의 문제는 stocastic process의 realization인 시계열 데이터 $$\{X_t\}$$가 주어졌을때(그리고 $$\{X_t\}$$가 stationary할때), 우리는 이 데이터가 생성된 본래의 stocastic process를 모델링하고 싶다는 겁니다. 데이터가 주어져있기때문에 우리는 (sample) mean과 lag에 따른 covariance과 correlation은 쉽게 구할수 있는 상황입니다.(auto covariance function과 auto correlation function) 
@@ -280,13 +235,204 @@ $$
 
 ### Yule-Walker Equation
 
+cauality 조건을 만족하는 ARMA(p,q) process에 대해서 ACF를 이용해 모델 파라미터를 체계적으로 구할수 있는 방법을 알아보도록 하겠습니다. 
+
+설명의 편의성을 위해 AR(2)를 가정하도록 하겠습니다. 
+
+$$ X_t - \phi_1 X_{t-1} - \phi_2 X_{t-2} = Z_t$$
+
+위 양변에 $$X_{t-k}$$를 곱하고 Expectation을 취해보도록 하겠습니다. 
+$$ E[X_t X_{t-k}] - \phi_1 E[X_{t-1} X_{t-k}] - \phi_2 E[X_{t-2} X_{t-k}] = E[Z_t X{t-k}]$$
+
+k를 0부터 1, 2, ... 순차적으로 대입하면 아래와 같습니다.
+
+when k = 0,   $$ \gamma(0) -\phi_1 \gamma(1) -\phi_2 \gamma(2) = \sigma^2 $$ <br>
+when k = 1,   $$ \gamma(1) -\phi_1 \gamma(0) -\phi_2 \gamma(1) = 0 $$ <br>
+when k = 2,   $$ \gamma(2) -\phi_1 \gamma(1) -\phi_2 \gamma(0) = 0 $$ <br>
+... ...
+
+즉,
+
+$$
+\gamma(h) -\phi_1 \gamma(h-1) -\phi_2 \gamma(h-2)
+= \begin{cases} 
+\sigma^2, & \mbox{h=0} \\
+0, & \mbox{h=1}
+\end{cases}
+$$
+
+양변을 $$\gamma(0)$$로 나누어, Auto-correlation으로 나타내면
+
+$$
+\rho(h) -\phi_1 \rho(h-1) -\phi_2 \rho(h-2) 
+= \begin{cases} 
+1 & \mbox{h=0} \\
+0, & \mbox{h=1}
+\end{cases}
+$$
+
+위와 같은 식을 Yule-Walker equation 이라고 합니다. 
+Yule-walker equation을 이용해 AR(2)모델의 $$\phi_1, \phi_2$$를 구하는 방법은 h=1일때, h=2일때를 대입하여 연립방정식을 푸는 것과 같습니다.
+
+$$
+h = 1 , \rho(1) -\phi_1 \rho(0) -\phi_2 \rho(1) = 0 \\
+h = 2 , \rho(2) -\phi_1 \rho(1) -\phi_2 \rho(0) = 0
+$$
+
+$$\rho(0)=1$$이고, $$\rho(1)$$ 와 $$\rho(2)$$는 주어진 데이터를 이용해 sample ACF로 계산하고, 위의 식을 이용해 $$\phi_1$$과 $$\phi_2$$를 계산할수 있습니다. 
+
+지금까지 AR(2) 모델에 대해서 살펴본 과정을 AR(p) process에 대해서 일반화할 수 있습니다. AR(p) process에 대한 Yule-walker equation을 적으면 아래와 같습니다.
+
+$$
+\gamma(h) - \phi_1 \gamma(h-1) - ... - \phi_p \gamma(h-p) = \begin{cases} 
+\sigma^2 & \mbox{h=0} \\
+0, & \mbox{h >= 1}
+\end{cases}
+$$
+
+$$
+\rho(h) - \phi_1 \rho(h-1) - ... - \phi_p \rho(h-p) = \begin{cases} 
+1 & \mbox{h=0} \\
+0, & \mbox{h >= 1}
+\end{cases} 
+$$
+
+$$\rho(h) = \phi_1 \rho(h-1) + ... + \phi_p \rho(h-p), \ \ \ \ when \ h \ge 1$$ 이를 Matrix 형태로 적어보도록 하겠습니다. (메트릭스 형태는 다음에 설명한 Partial ACF와의 관계를 설명할 때 유용합니다)
+
+$$
+\begin{align}
+\rho(0) & = 1 \\
+\rho(1) & = \phi_1  + \phi_2 \rho(1) + \phi_3 \rho(2) + ... +\phi_p \rho(p-1) \\
+\rho(2) & = \phi_1 \rho(1) + \phi_2 +  \phi_3 \rho(1) + ... +\phi_p \rho(p-2) \\
+\rho(3) & = \phi_1 \rho(2) + \phi_2 \rho(1) +  \phi_3 + ... +\phi_p \rho(p-3) \\
+... \\
+\rho(p-1) & = \phi_1 \rho(p-2) + \phi_2 \rho(p-3) +  \phi_3 \rho(p-4) + ... +\phi_p \rho(1) \\
+\rho(p) & = \phi_1 \rho(p-1) + \phi_2 \rho(p-2) +  \phi_3 \rho(p-3) + ... +\phi_p 
+\end{align}
+$$
+
+$$
+\begin{bmatrix}
+\rho(1)\\ \rho(2)\\ \rho(3)\\ \vdots \\ \rho(p-1)\\\rho(p)
+\end{bmatrix} =
+\begin{bmatrix}
+1 & \rho(1) & \rho(2) & \cdots & \rho(p-1) \\ 
+\rho(1) & 1 & \rho(1) & \cdots & \rho(p-2) \\ 
+\rho(2) & \rho(1) & 1 & \cdots & \rho(p-3) \\ 
+ &  & \vdots & & \\
+\rho(p-2) & \rho(p-3) & \rho(p-4) & \cdots & \rho(1) \\ 
+\rho(p-1) & \rho(p-2) & \rho(p-3) & \cdots & 1 \\ 
+\end{bmatrix} 
+\begin{bmatrix}
+\phi(1)\\ \phi(2)\\ \phi(3)\\ \vdots \\ \phi(p-1)\\\phi(p)
+\end{bmatrix}
+$$
+
+여기까지 우리는 시계열 데이터가 주어졌을때, ARMA(p,q)의 파라미터를 추정하는 방법을 살펴보았습니다. 하지만 파라미터를 추정하기 전에 p와 q(모델의 order)를 결정하는 것이 우선되어야합니다. 
+
+MA(q)에 대해서는 간단합니다. MA process의 정의에 따라, MA(q)는 현재 시점의 데이터 $$X_t$$가 이전 q개의 noise로만 표현되기 때문에 q 이전의 데이터들과는 무관합니다. MA(q)의 ACF는 아래와 같이 q개의 유의미한 spike를 갖고 이후 값들은 모두 0에 가깝습니다(negligible)
+
+<img src = "/assets/img/2018-12-18/MA_acf.png" width="500">
+
+반면 AR(p)는 ACF만으로 p를 결정하기가 어렵습니다. AR process의 ACF는 lag가 증가할수록 decay한 모습을 보일뿐, p에 대한 힌트를 주지 못하기 때문입니다.  다음에서는 주어진 데이터로부터 어떻게 AR(p)모델의 order를 결정할 수 있는지 알아보도록 하겠습니다. 
+
+<img src = "/assets/img/2018-12-18/AR_acf.png" width="500">
+
+
+
 ### Particial ACF
 
+범죄(crime) 발생 수 와 교회의 수(church)의 상관계수는 양의 상관관계를 갖고 있다고 합니다. 정말로 범죄가 많은 지역에 교회의 수가 많고, 또는 교회의 수가 많은 지역에 범죄가 발생할 가능성도 높은 걸까요? 아닙니다. 이는 두 요인과 관련있는 다른 요인, 인구(population)에 대한 요인을 고려하지 못했기때문에 발생하는 잘못된 결과 해석입니다. 이처럼 두 변수 사이에 수치적 관계가 있는지 또는 어느 정도로 관련이 있는지를 찾을 때, 두 변수와 관련된 다른 변수가있을 경우 해당 상관 계수를 사용하면 잘못된 결과를 얻을 수 있습니다. 이런 경우, 부분 상관 계수(partical correlation)를 계산하여 혼동되는 변수를 제어할 수 있습니다. 범죄 발생 수(X)와 교회의 수(Y)를 각 각 인구(Z)를 독립변수로 하여 회귀 모형을 구한후, 두 회귀 모형의 residual 항만 사용하여 correlation을 구하는 것이 partial correlation입니다.
 
-### ARIMA
+$$
+Let \ X = number \ of \ crime, Y = number \ of \ church, Z = population \\
+\begin{align}
+X &= w_X  Z + e_{X} \\
+Y & = w_Y  Z + e_{Y} \\
+\\
+\rho_{XY \cdot Z} & = \frac{\rho_{XY}-\rho_{XZ}\rho_{YZ}}{\sqrt{1-\rho_{XZ}^2} \sqrt{1-\rho_{YZ}^2}}
+\end{align}
+$$
+
+Partial correlation의 개념을 시계열 데이터에 적용한 것이 Partial Auto-Correlation Function(PACF)입니다.
+
+$$
+\begin{align}
+\phi_{hh} & = Corr(X_t, X_{t-h} | X_{t-h+1}, X_{t-h+2}, ..., X_{t-1}) \\
+& = Corr(X_t - (\alpha_1 X_{t-h+1} + \alpha_2 X_{t-h+2} +  ... \alpha_h X_{t-1}), X_{t-h} - (\beta_1 X_{t-h+1} + \beta_2 X_{t-h+2} +  ... \beta_h X_{t-1}))
+\end{align}
+$$
+
+예를 들어 AR(1) 모델의 partial autocorrelation function 은 아래와 같이 계산됩니다.
+
+AR(1) :
+
+$$
+\begin{align}
+\phi_{11} &= Corr(X_t, X_{t-1}) = \rho(1) = \phi \\
+\phi_{22} &= Corr(X_t, X_{t-2} | X_{t-1}) = Corr(Z_t, Z_{t-1}) = 0 \\
+\phi_{33} &= Corr(X_t, X_{t-3} | X_{t-1}, X_{t-2}) =  Corr(Z_t, X_{t-2}...) = 0
+\end{align}
+$$
+
+(참고):
+
+$$
+\begin{align}
+\phi_{22} & = Corr(X_t, X_{t-2} | X_{t-1}) \\
+& = Corr(X_t - (\alpha X_{t-1}), X_{t-2} - (\beta X_{t-1})) \\
+& = Corr(Z_t, Z_{t-1}) & since, \ \alpha = corr(X_t, X_{t-1})  = \phi, \beta  = & corr(X_{t-1}, X_{t-2}) = \phi  \\
+& = 0
+\end{align}
+$$
+
+일반적으로 $$\phi_{hh}$$는 위의 메트릭스 형태의 Yule-Walker equation의 마지막 컴포턴트와 같습니다.
+
+$$
+\begin{bmatrix}
+\rho(1)\\ \rho(2)\\ \rho(3)\\ \vdots \\ \rho(h-1)\\\rho(h)
+\end{bmatrix} =
+\begin{bmatrix}
+1 & \rho(1) & \rho(2) & \cdots & \rho(h-1) \\ 
+\rho(1) & 1 & \rho(1) & \cdots & \rho(h-2) \\ 
+\rho(2) & \rho(1) & 1 & \cdots & \rho(h-3) \\ 
+ &  & \vdots & & \\
+\rho(h-2) & \rho(h-3) & \rho(h-4) & \cdots & \rho(1) \\ 
+\rho(h-1) & \rho(h-2) & \rho(h-3) & \cdots & 1 \\ 
+\end{bmatrix} 
+\begin{bmatrix}
+\phi_{h1}\\ \phi_{h2}\\ \phi_{h3}\\ \vdots \\ \phi_{h(h-1)}\\\phi_{hh}
+\end{bmatrix}
+$$
+
+AR(2)의 예시와 같이 주어진 데이터가 AR(p) process를 따를경우 PACF의 형태는 lag가 p일때까지는 constant 값을 갖고, 이후의 값은 모두 0에 가까운 값이 됩니다. 
+
+<img src = "/assets/img/2018-12-18/ar1_pacf.png" width="200">
+<img src = "/assets/img/2018-12-18/ar2_pacf.png" width="200">
+<img src = "/assets/img/2018-12-18/ar3_pacf.png" width="200">
 
 
-### 다시 미세먼지
+지금까지 알아본 것을 요약하여, 시계열 데이터가 주어졌을때 모델과 모델의 order를 결정하는 방법은 아래와 같습니다. 
+
+|      |AR(p) | MA(q) | ARMA(p, q)
+|---------|---------|----|---|
+|<b>ACF</b>  | tails off |  cuts off after lag q | tails off|
+|<b>PACF</b> | cuts off after lag p | tails off |tails off|
+
+
+Model Building <br>
+1) identify model <br>
+2) estimate unknowns <br>
+3) diagonstic checking <br>
+4) prediction <br>
+
+for 1), 3) use :
+* ACF, PACF
+* for large - n cases, Box-Ljung test, Sign test, Rank test, q-q plot .. => for the residuals after fitting the model
+* theoretical predictive power : AIC, BIC 
+* empirical predictive power : Cross validation
+
+
 
 <b>reference</b>
 
@@ -294,6 +440,8 @@ $$
 
 [2] [Statsmodel's Documentation](https://www.statsmodels.org/dev/index.html)
 
-[3] [Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis/home/info)
+[3] [Coursera - Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis/home/info)
 
 [4] [시계열분석 강의, 한양대학교(이기천)](http://www.kocw.net/home/search/kemView.do?kemId=977301)
+
+[5] [wikipedia - Partial correlation](https://en.wikipedia.org/wiki/Partial_correlation)

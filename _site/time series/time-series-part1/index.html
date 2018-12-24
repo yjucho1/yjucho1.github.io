@@ -350,7 +350,7 @@ E(X_t^2) < \infty %]]></script>.</p>
                  & = 0, \ & if \ h \ne 0
 \end{align} %]]></script>
 
-<p>마찬가지로 white noise with zero mean and variance <script type="math/tex">\sigma^2</script>도 (weak) staionary 조건을 만족합니다. (참고로 iid noise와 white noise는 다릅니다. 모든 iid noise는 white noise이지만, 그 역은 성립하지 않습니다. [참고] (https://www.researchgate.net/post/What_is_the_difference_between_white_noise_and_iid_noise))</p>
+<p>마찬가지로 white noise with zero mean and variance <script type="math/tex">\sigma^2</script>도 (weak) staionary 조건을 만족합니다. 참고로 iid noise와 white noise는 다릅니다. 모든 iid noise는 white noise이지만, 그 역은 성립하지 않습니다. <a href="https://www.researchgate.net/post/What_is_the_difference_between_white_noise_and_iid_noise">참고</a></p>
 
 <p>시계열 데이터(realization)가 주어졌을때, 이 프로세스의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.</p>
 
@@ -368,50 +368,6 @@ E(X_t^2) < \infty %]]></script>.</p>
 <p>The sample autocorrelation function is
 <script type="math/tex">% <![CDATA[
 \hat{\rho} := \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}, -n < h < n %]]></script></p>
-
-<h3 id="실제-데이터---초미세먼지-농도">실제 데이터 - 초미세먼지 농도</h3>
-
-<ul>
-  <li>데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도</li>
-  <li>기간 : 	2018-11-18 19:00 ~ 2018-12-18 17:00 (1시간 단위)</li>
-</ul>
-
-<p><img src="/assets/img/2018-12-18/df.png" width="300" /></p>
-
-<p><img src="/assets/img/2018-12-18/pm25.png" width="500" /></p>
-
-<p>statmodels 패키지를 이용해 ACF를 바로 구할수 있습니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_acf</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">plot_acf</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pm25Value</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</code></pre></div></div>
-<p><img src="/assets/img/2018-12-18/acf.png" width="500" /></p>
-
-<p>acf 그래프를 보면 lag h(가로축)가 증가할수록 값이 점차 감소하며, 일정시간 양의 상관관계를 보이다가 음의 상관관계로 변화하는 패턴이 반복되는 것이 나타납니다(periodic). 이는 시계열 데이터가 stationary하지 않고 시간에 의존되는 성질을 가지고 있다는 것을 의미합니다.</p>
-
-<p>시계열 데이터에서 trend와 seasonality 성분을 추정하는 것을 decompose라고 합니다. 이론적인 내용은 다음 포스팅에서 다루도록하고, 여기서는 결과값만 확인하도록 하겠습니다. statsmodels라는 패키지에서 seasonal_decompose를 사용할수 있습니다. 참고로 seasonal_decompose의 trend estimation은 moving window 방식을 이용합니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">statsmodels.tsa.seasonal</span> <span class="kn">import</span> <span class="n">seasonal_decompose</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">seasonal_decompose</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pm25Value</span><span class="p">)</span>
-<span class="n">result</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
-</code></pre></div></div>
-<p><img src="/assets/img/2018-12-18/decompose.png" width="500" /></p>
-
-<p>trend와 seasonality를 제거하고 남은 값(residual)만 가지고 다시 acf를 그려보면 아래와 같습니다.</p>
-
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot_acf</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">resid</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span> 
-<span class="n">plot_acf</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">resid</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> 
-</code></pre></div></div>
-<p><img src="/assets/img/2018-12-18/residual_acf_all.png" width="500" /></p>
-
-<p>original data의 ACF에서 나타났던 주기적인 변화는 거의 없어진 것을 볼수 있습니다.</p>
-
-<p><img src="/assets/img/2018-12-18/residual_acf.png" width="500" /></p>
-
-<p>하지만 lags=50 이전 부분을 살펴보면 여전히 lags=3까지 강한 상관계수를 갖고 반복적인 변화패턴을 보이는 것을 알수 있습니다. 이는 residual에 남아있는 패턴이 여전히 미래 값을 예측하는데 도움이 되는 것을 의미합니다.</p>
 
 <h3 id="moving-average-and-auto-regressive-process">Moving Average and Auto Regressive process</h3>
 
@@ -549,11 +505,207 @@ X_t & = \phi(B)X_t, \ & where \ \phi(\cdot) \ are \ the \ p-th \ degree \ polyno
 
 <h3 id="yule-walker-equation">Yule-Walker Equation</h3>
 
+<p>cauality 조건을 만족하는 ARMA(p,q) process에 대해서 ACF를 이용해 모델 파라미터를 체계적으로 구할수 있는 방법을 알아보도록 하겠습니다.</p>
+
+<p>설명의 편의성을 위해 AR(2)를 가정하도록 하겠습니다.</p>
+
+<script type="math/tex; mode=display">X_t - \phi_1 X_{t-1} - \phi_2 X_{t-2} = Z_t</script>
+
+<p>위 양변에 <script type="math/tex">X_{t-k}</script>를 곱하고 Expectation을 취해보도록 하겠습니다. 
+<script type="math/tex">E[X_t X_{t-k}] - \phi_1 E[X_{t-1} X_{t-k}] - \phi_2 E[X_{t-2} X_{t-k}] = E[Z_t X{t-k}]</script></p>
+
+<p>k를 0부터 1, 2, … 순차적으로 대입하면 아래와 같습니다.</p>
+
+<p>when k = 0,   <script type="math/tex">\gamma(0) -\phi_1 \gamma(1) -\phi_2 \gamma(2) = \sigma^2</script> <br />
+when k = 1,   <script type="math/tex">\gamma(1) -\phi_1 \gamma(0) -\phi_2 \gamma(1) = 0</script> <br />
+when k = 2,   <script type="math/tex">\gamma(2) -\phi_1 \gamma(1) -\phi_2 \gamma(0) = 0</script> <br />
+… …</p>
+
+<p>즉,</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\gamma(h) -\phi_1 \gamma(h-1) -\phi_2 \gamma(h-2)
+= \begin{cases} 
+\sigma^2, & \mbox{h=0} \\
+0, & \mbox{h=1}
+\end{cases} %]]></script>
+
+<p>양변을 <script type="math/tex">\gamma(0)</script>로 나누어, Auto-correlation으로 나타내면</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\rho(h) -\phi_1 \rho(h-1) -\phi_2 \rho(h-2) 
+= \begin{cases} 
+1 & \mbox{h=0} \\
+0, & \mbox{h=1}
+\end{cases} %]]></script>
+
+<p>위와 같은 식을 Yule-Walker equation 이라고 합니다. 
+Yule-walker equation을 이용해 AR(2)모델의 <script type="math/tex">\phi_1, \phi_2</script>를 구하는 방법은 h=1일때, h=2일때를 대입하여 연립방정식을 푸는 것과 같습니다.</p>
+
+<script type="math/tex; mode=display">h = 1 , \rho(1) -\phi_1 \rho(0) -\phi_2 \rho(1) = 0 \\
+h = 2 , \rho(2) -\phi_1 \rho(1) -\phi_2 \rho(0) = 0</script>
+
+<p><script type="math/tex">\rho(0)=1</script>이고, <script type="math/tex">\rho(1)</script> 와 <script type="math/tex">\rho(2)</script>는 주어진 데이터를 이용해 sample ACF로 계산하고, 위의 식을 이용해 <script type="math/tex">\phi_1</script>과 <script type="math/tex">\phi_2</script>를 계산할수 있습니다.</p>
+
+<p>지금까지 AR(2) 모델에 대해서 살펴본 과정을 AR(p) process에 대해서 일반화할 수 있습니다. AR(p) process에 대한 Yule-walker equation을 적으면 아래와 같습니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\gamma(h) - \phi_1 \gamma(h-1) - ... - \phi_p \gamma(h-p) = \begin{cases} 
+\sigma^2 & \mbox{h=0} \\
+0, & \mbox{h >= 1}
+\end{cases} %]]></script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\rho(h) - \phi_1 \rho(h-1) - ... - \phi_p \rho(h-p) = \begin{cases} 
+1 & \mbox{h=0} \\
+0, & \mbox{h >= 1}
+\end{cases} %]]></script>
+
+<p><script type="math/tex">\rho(h) = \phi_1 \rho(h-1) + ... + \phi_p \rho(h-p), \ \ \ \ when \ h \ge 1</script> 이를 Matrix 형태로 적어보도록 하겠습니다. (메트릭스 형태는 다음에 설명한 Partial ACF와의 관계를 설명할 때 유용합니다)</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\rho(0) & = 1 \\
+\rho(1) & = \phi_1  + \phi_2 \rho(1) + \phi_3 \rho(2) + ... +\phi_p \rho(p-1) \\
+\rho(2) & = \phi_1 \rho(1) + \phi_2 +  \phi_3 \rho(1) + ... +\phi_p \rho(p-2) \\
+\rho(3) & = \phi_1 \rho(2) + \phi_2 \rho(1) +  \phi_3 + ... +\phi_p \rho(p-3) \\
+... \\
+\rho(p-1) & = \phi_1 \rho(p-2) + \phi_2 \rho(p-3) +  \phi_3 \rho(p-4) + ... +\phi_p \rho(1) \\
+\rho(p) & = \phi_1 \rho(p-1) + \phi_2 \rho(p-2) +  \phi_3 \rho(p-3) + ... +\phi_p 
+\end{align} %]]></script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix}
+\rho(1)\\ \rho(2)\\ \rho(3)\\ \vdots \\ \rho(p-1)\\\rho(p)
+\end{bmatrix} =
+\begin{bmatrix}
+1 & \rho(1) & \rho(2) & \cdots & \rho(p-1) \\ 
+\rho(1) & 1 & \rho(1) & \cdots & \rho(p-2) \\ 
+\rho(2) & \rho(1) & 1 & \cdots & \rho(p-3) \\ 
+ &  & \vdots & & \\
+\rho(p-2) & \rho(p-3) & \rho(p-4) & \cdots & \rho(1) \\ 
+\rho(p-1) & \rho(p-2) & \rho(p-3) & \cdots & 1 \\ 
+\end{bmatrix} 
+\begin{bmatrix}
+\phi(1)\\ \phi(2)\\ \phi(3)\\ \vdots \\ \phi(p-1)\\\phi(p)
+\end{bmatrix} %]]></script>
+
+<p>여기까지 우리는 시계열 데이터가 주어졌을때, ARMA(p,q)의 파라미터를 추정하는 방법을 살펴보았습니다. 하지만 파라미터를 추정하기 전에 p와 q(모델의 order)를 결정하는 것이 우선되어야합니다.</p>
+
+<p>MA(q)에 대해서는 간단합니다. MA process의 정의에 따라, MA(q)는 현재 시점의 데이터 <script type="math/tex">X_t</script>가 이전 q개의 noise로만 표현되기 때문에 q 이전의 데이터들과는 무관합니다. MA(q)의 ACF는 아래와 같이 q개의 유의미한 spike를 갖고 이후 값들은 모두 0에 가깝습니다(negligible)</p>
+
+<p><img src="/assets/img/2018-12-18/MA_acf.png" width="500" /></p>
+
+<p>반면 AR(p)는 ACF만으로 p를 결정하기가 어렵습니다. AR process의 ACF는 lag가 증가할수록 decay한 모습을 보일뿐, p에 대한 힌트를 주지 못하기 때문입니다.  다음에서는 주어진 데이터로부터 어떻게 AR(p)모델의 order를 결정할 수 있는지 알아보도록 하겠습니다.</p>
+
+<p><img src="/assets/img/2018-12-18/AR_acf.png" width="500" /></p>
+
 <h3 id="particial-acf">Particial ACF</h3>
 
-<h3 id="arima">ARIMA</h3>
+<p>범죄(crime) 발생 수 와 교회의 수(church)의 상관계수는 양의 상관관계를 갖고 있다고 합니다. 정말로 범죄가 많은 지역에 교회의 수가 많고, 또는 교회의 수가 많은 지역에 범죄가 발생할 가능성도 높은 걸까요? 아닙니다. 이는 두 요인과 관련있는 다른 요인, 인구(population)에 대한 요인을 고려하지 못했기때문에 발생하는 잘못된 결과 해석입니다. 이처럼 두 변수 사이에 수치적 관계가 있는지 또는 어느 정도로 관련이 있는지를 찾을 때, 두 변수와 관련된 다른 변수가있을 경우 해당 상관 계수를 사용하면 잘못된 결과를 얻을 수 있습니다. 이런 경우, 부분 상관 계수(partical correlation)를 계산하여 혼동되는 변수를 제어할 수 있습니다. 범죄 발생 수(X)와 교회의 수(Y)를 각 각 인구(Z)를 독립변수로 하여 회귀 모형을 구한후, 두 회귀 모형의 residual 항만 사용하여 correlation을 구하는 것이 partial correlation입니다.</p>
 
-<h3 id="다시-미세먼지">다시 미세먼지</h3>
+<script type="math/tex; mode=display">% <![CDATA[
+Let \ X = number \ of \ crime, Y = number \ of \ church, Z = population \\
+\begin{align}
+X &= w_X  Z + e_{X} \\
+Y & = w_Y  Z + e_{Y} \\
+\\
+\rho_{XY \cdot Z} & = \frac{\rho_{XY}-\rho_{XZ}\rho_{YZ}}{\sqrt{1-\rho_{XZ}^2} \sqrt{1-\rho_{YZ}^2}}
+\end{align} %]]></script>
+
+<p>Partial correlation의 개념을 시계열 데이터에 적용한 것이 Partial Auto-Correlation Function(PACF)입니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\phi_{hh} & = Corr(X_t, X_{t-h} | X_{t-h+1}, X_{t-h+2}, ..., X_{t-1}) \\
+& = Corr(X_t - (\alpha_1 X_{t-h+1} + \alpha_2 X_{t-h+2} +  ... \alpha_h X_{t-1}), X_{t-h} - (\beta_1 X_{t-h+1} + \beta_2 X_{t-h+2} +  ... \beta_h X_{t-1}))
+\end{align} %]]></script>
+
+<p>예를 들어 AR(1) 모델의 partial autocorrelation function 은 아래와 같이 계산됩니다.</p>
+
+<p>AR(1) :</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\phi_{11} &= Corr(X_t, X_{t-1}) = \rho(1) = \phi \\
+\phi_{22} &= Corr(X_t, X_{t-2} | X_{t-1}) = Corr(Z_t, Z_{t-1}) = 0 \\
+\phi_{33} &= Corr(X_t, X_{t-3} | X_{t-1}, X_{t-2}) =  Corr(Z_t, X_{t-2}...) = 0
+\end{align} %]]></script>
+
+<p>(참고):</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\phi_{22} & = Corr(X_t, X_{t-2} | X_{t-1}) \\
+& = Corr(X_t - (\alpha X_{t-1}), X_{t-2} - (\beta X_{t-1})) \\
+& = Corr(Z_t, Z_{t-1}) & since, \ \alpha = corr(X_t, X_{t-1})  = \phi, \beta  = & corr(X_{t-1}, X_{t-2}) = \phi  \\
+& = 0
+\end{align} %]]></script>
+
+<p>일반적으로 <script type="math/tex">\phi_{hh}</script>는 위의 메트릭스 형태의 Yule-Walker equation의 마지막 컴포턴트와 같습니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{bmatrix}
+\rho(1)\\ \rho(2)\\ \rho(3)\\ \vdots \\ \rho(h-1)\\\rho(h)
+\end{bmatrix} =
+\begin{bmatrix}
+1 & \rho(1) & \rho(2) & \cdots & \rho(h-1) \\ 
+\rho(1) & 1 & \rho(1) & \cdots & \rho(h-2) \\ 
+\rho(2) & \rho(1) & 1 & \cdots & \rho(h-3) \\ 
+ &  & \vdots & & \\
+\rho(h-2) & \rho(h-3) & \rho(h-4) & \cdots & \rho(1) \\ 
+\rho(h-1) & \rho(h-2) & \rho(h-3) & \cdots & 1 \\ 
+\end{bmatrix} 
+\begin{bmatrix}
+\phi_{h1}\\ \phi_{h2}\\ \phi_{h3}\\ \vdots \\ \phi_{h(h-1)}\\\phi_{hh}
+\end{bmatrix} %]]></script>
+
+<p>AR(2)의 예시와 같이 주어진 데이터가 AR(p) process를 따를경우 PACF의 형태는 lag가 p일때까지는 constant 값을 갖고, 이후의 값은 모두 0에 가까운 값이 됩니다.</p>
+
+<p><img src="/assets/img/2018-12-18/ar1_pacf.png" width="200" />
+<img src="/assets/img/2018-12-18/ar2_pacf.png" width="200" />
+<img src="/assets/img/2018-12-18/ar3_pacf.png" width="200" /></p>
+
+<p>지금까지 알아본 것을 요약하여, 시계열 데이터가 주어졌을때 모델과 모델의 order를 결정하는 방법은 아래와 같습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>AR(p)</th>
+      <th>MA(q)</th>
+      <th>ARMA(p, q)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>ACF</b></td>
+      <td>tails off</td>
+      <td>cuts off after lag q</td>
+      <td>tails off</td>
+    </tr>
+    <tr>
+      <td><b>PACF</b></td>
+      <td>cuts off after lag p</td>
+      <td>tails off</td>
+      <td>tails off</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Model Building <br />
+1) identify model <br />
+2) estimate unknowns <br />
+3) diagonstic checking <br />
+4) prediction <br /></p>
+
+<p>for 1), 3) use :</p>
+<ul>
+  <li>ACF, PACF</li>
+  <li>for large - n cases, Box-Ljung test, Sign test, Rank test, q-q plot .. =&gt; for the residuals after fitting the model</li>
+  <li>theoretical predictive power : AIC, BIC</li>
+  <li>empirical predictive power : Cross validation</li>
+</ul>
 
 <p><b>reference</b></p>
 
@@ -561,9 +713,11 @@ X_t & = \phi(B)X_t, \ & where \ \phi(\cdot) \ are \ the \ p-th \ degree \ polyno
 
 <p>[2] <a href="https://www.statsmodels.org/dev/index.html">Statsmodel’s Documentation</a></p>
 
-<p>[3] <a href="https://www.coursera.org/learn/practical-time-series-analysis/home/info">Practical Time Series Analysis</a></p>
+<p>[3] <a href="https://www.coursera.org/learn/practical-time-series-analysis/home/info">Coursera - Practical Time Series Analysis</a></p>
 
 <p>[4] <a href="http://www.kocw.net/home/search/kemView.do?kemId=977301">시계열분석 강의, 한양대학교(이기천)</a></p>
+
+<p>[5] <a href="https://en.wikipedia.org/wiki/Partial_correlation">wikipedia - Partial correlation</a></p>
 
         
       </section>
