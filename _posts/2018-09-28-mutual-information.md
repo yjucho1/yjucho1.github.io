@@ -1,7 +1,7 @@
 ---
 title: "클러스터링을 평가하는 척도 - Mutual Information"
 categories: 
-  - Clustering Evaluation
+  - Clustering
 comments: true
 last_modified_at: 2018-09-28
 ---

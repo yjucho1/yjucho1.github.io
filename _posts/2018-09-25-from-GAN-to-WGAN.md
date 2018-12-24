@@ -2,7 +2,6 @@
 title: "[번역] from GAN to WGAN"
 categories: 
   - Generative Adversarial Network
-  - Wasserstein GAN
 comments: true
 last_modified_at: 2018-09-25
 ---

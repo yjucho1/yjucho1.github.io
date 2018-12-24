@@ -18,7 +18,7 @@
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
 <meta property="og:title" content="[번역] from GAN to WGAN">
-<meta property="og:url" content="http://localhost:4000/generative%20adversarial%20network/wasserstein%20gan/from-GAN-to-WGAN/">
+<meta property="og:url" content="http://localhost:4000/generative%20adversarial%20network/from-GAN-to-WGAN/">
 
 
   <meta property="og:description" content="  이 글은 lilianweng의 from GAN to WGAN 포스팅을 동의하에 번역한 글입니다.">
@@ -42,7 +42,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/generative%20adversarial%20network/wasserstein%20gan/from-GAN-to-WGAN/">
+<link rel="canonical" href="http://localhost:4000/generative%20adversarial%20network/from-GAN-to-WGAN/">
 
 
 
@@ -695,11 +695,7 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
     
       
       
-      <a href="/categories/#generative-adversarial-network" class="page__taxonomy-item" rel="tag">Generative Adversarial Network</a><span class="sep">, </span>
-    
-      
-      
-      <a href="/categories/#wasserstein-gan" class="page__taxonomy-item" rel="tag">Wasserstein GAN</a>
+      <a href="/categories/#generative-adversarial-network" class="page__taxonomy-item" rel="tag">Generative Adversarial Network</a>
     
     </span>
   </p>
@@ -713,13 +709,13 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=%5B%EB%B2%88%EC%97%AD%5D+from+GAN+to+WGAN%20http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Fwasserstein%2520gan%2Ffrom-GAN-to-WGAN%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%5B%EB%B2%88%EC%97%AD%5D+from+GAN+to+WGAN%20http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Ffrom-GAN-to-WGAN%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Fwasserstein%2520gan%2Ffrom-GAN-to-WGAN%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Ffrom-GAN-to-WGAN%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Fwasserstein%2520gan%2Ffrom-GAN-to-WGAN%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Ffrom-GAN-to-WGAN%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Fwasserstein%2520gan%2Ffrom-GAN-to-WGAN%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fgenerative%2520adversarial%2520network%2Ffrom-GAN-to-WGAN%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
@@ -729,7 +725,7 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
       <a href="#" class="pagination--pager disabled">Previous</a>
     
     
-      <a href="/clustering%20evaluation/mutual-information/" class="pagination--pager" title="클러스터링을 평가하는 척도 - Mutual Information
+      <a href="/clustering/mutual-information/" class="pagination--pager" title="클러스터링을 평가하는 척도 - Mutual Information
 ">Next</a>
     
   </nav>
@@ -793,8 +789,8 @@ discriminator를 학습할때 라벨링 정보로 0과 1을 사용하는게 아�
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/generative%20adversarial%20network/wasserstein%20gan/from-GAN-to-WGAN/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/generative%20adversarial%20network/wasserstein%20gan/from-GAN-to-WGAN"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/generative%20adversarial%20network/from-GAN-to-WGAN/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/generative%20adversarial%20network/from-GAN-to-WGAN"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');

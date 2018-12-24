@@ -2,7 +2,6 @@
 title: "Quick drawing - dogs and cats"
 categories: 
   - Keras
-  - Visualizing filters
 comments: true
 last_modified_at: 2018-10-09
 

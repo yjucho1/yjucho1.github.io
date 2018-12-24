@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://localhost:4000/generative%20adversarial%20network/wasserstein%20gan/from-GAN-to-WGAN/</loc>
+<loc>http://localhost:4000/generative%20adversarial%20network/from-GAN-to-WGAN/</loc>
 <lastmod>2018-09-25T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/clustering%20evaluation/mutual-information/</loc>
+<loc>http://localhost:4000/clustering/mutual-information/</loc>
 <lastmod>2018-09-28T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/clustering%20evaluation/rand-index/</loc>
+<loc>http://localhost:4000/clustering/rand-index/</loc>
 <lastmod>2018-10-02T00:00:00+09:00</lastmod>
 </url>
 <url>
@@ -25,7 +25,7 @@
 <lastmod>2018-10-09T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/keras/visualizing%20filters/quick-drawing-exec/</loc>
+<loc>http://localhost:4000/keras/quick-drawing-exec/</loc>
 <lastmod>2018-10-09T00:00:00+09:00</lastmod>
 </url>
 <url>
