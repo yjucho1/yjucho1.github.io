@@ -88,4 +88,9 @@ var store = [{
         "excerpt":"시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서...","categories": ["Spatio-Temporal Data"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part1/",
+        "teaser":null},{
+        "title": "시계열 분석 - part2",
+        "excerpt":"지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다. stationary하고 causal하다는 가정 하에서 Auto-Regressive 또는 Moving average, 또는 두가지가 섞인 ARMA 모델을 사용할 수 있고, 모델의 order를 결정하기 위해서 ACF와 PACF를 사용하는 방법을 학습하였습니다. 실제 분석 과정에서는 적합한 모델을 선택하기 위해서는 ACF, PACF 이외에 여러가지...","categories": ["Spatio-Temporal Data"],
+        "tags": [],
+        "url": "http://localhost:4000/spatio-temporal%20data/time-series-part2/",
         "teaser":null}]

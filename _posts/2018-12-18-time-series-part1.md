@@ -420,20 +420,6 @@ AR(2)의 예시와 같이 주어진 데이터가 AR(p) process를 따를경우 P
 |<b>PACF</b> | cuts off after lag p | tails off |tails off|
 
 
-Model Building <br>
-1) identify model <br>
-2) estimate unknowns <br>
-3) diagonstic checking <br>
-4) prediction <br>
-
-for 1), 3) use :
-* ACF, PACF
-* for large - n cases, Box-Ljung test, Sign test, Rank test, q-q plot .. => for the residuals after fitting the model
-* theoretical predictive power : AIC, BIC 
-* empirical predictive power : Cross validation
-
-
-
 <b>reference</b>
 
 [1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
