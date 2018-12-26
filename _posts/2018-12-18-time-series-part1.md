@@ -407,9 +407,9 @@ $$
 
 AR(2)의 예시와 같이 주어진 데이터가 AR(p) process를 따를경우 PACF의 형태는 lag가 p일때까지는 constant 값을 갖고, 이후의 값은 모두 0에 가까운 값이 됩니다. 
 
-<img src = "/assets/img/2018-12-18/ar1_pacf.png" width="200">
-<img src = "/assets/img/2018-12-18/ar2_pacf.png" width="200">
-<img src = "/assets/img/2018-12-18/ar3_pacf.png" width="200">
+<img src = "/assets/img/2018-12-18/ar1_pacf.png" width="250">
+<img src = "/assets/img/2018-12-18/ar2_pacf.png" width="250">
+<img src = "/assets/img/2018-12-18/ar3_pacf.png" width="250">
 
 
 지금까지 알아본 것을 요약하여, 시계열 데이터가 주어졌을때 모델과 모델의 order를 결정하는 방법은 아래와 같습니다. 

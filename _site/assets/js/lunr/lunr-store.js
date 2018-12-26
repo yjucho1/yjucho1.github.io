@@ -90,7 +90,7 @@ var store = [{
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part1/",
         "teaser":null},{
         "title": "시계열 분석 - part2",
-        "excerpt":"지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다. stationary하고 causal하다는 가정 하에서 Auto-Regressive 또는 Moving average, 또는 두가지가 섞인 ARMA 모델을 사용할 수 있고, 모델의 order를 결정하기 위해서 ACF와 PACF를 사용하는 방법을 학습하였습니다. 실제 분석 과정에서는 적합한 모델을 선택하기 위해서는 ACF, PACF 이외에 여러가지...","categories": ["Spatio-Temporal Data"],
+        "excerpt":"지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다. stationary하고 causal하다는 가정 하에서 Auto-Regressive 또는 Moving average, 또는 두가지가 섞인 ARMA 모델을 사용할 수 있고, 모델의 order를 결정하기 위해서 ACF와 PACF를 사용하는 방법을 학습하였습니다. 실제 분석 과정에서는 ACF, PACF 이외에 여러가지 방법을 복합적으로 사용하여 적합한...","categories": ["Spatio-Temporal Data"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part2/",
         "teaser":null}]
