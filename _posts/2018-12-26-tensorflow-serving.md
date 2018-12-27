@@ -524,7 +524,7 @@ dashboard/
     views.py
     urls.py
 ```
-`model.py`<br>
+> `model.py`<br>
 AirKoreaStation(측정소)와 AirKoreaData(측정데이터)로 두가지 모델이 있습니다. 여기서는 측정소를 지정하면 해당 측정소에서 측정된 초미세먼지 데이터(pm25value)를 이용해 미래값을 예측하는 것을 수행하고자 합니다.
 ```python 
 from django.db import models
@@ -541,7 +541,7 @@ class AirKoreaData(models.Model):
     pm25value = models.IntegerField(db_column='pm25Value', blank=True, null=True)  
     ...(생략)... 
 ```
-`view.py`<br>
+> `view.py`<br>
 AirKoreaData의 pm25value 입력값으로 전처리를 수행하고, 이를 tensorflow serving server에 전달하여 reponse값을 받습니다. 전달받은 predictions값을 template에 'forcast' 인자로 넘겨줍니다. 
 ```python 
 from django.shortcuts import render
@@ -573,12 +573,12 @@ def predict(request, station_name):
 
     return render(request, "predict.html", {'forecast': y_pred})
 ```
-`predict.html`<br>
+> `predict.html`<br>
 전달받은 forecast값을 화면에 표시해줍니다.
 ```
 {% for data in forecast %}'{{ data }}',{% endfor %}
 ```
-`urls.py`<br>
+> `urls.py`<br>
 urls.py를 생성하여 http://localhost:8000/predict에 접속하면 view.predict가 실행되도록 해줍니다.
 ```python
 from django.urls import path
@@ -588,12 +588,12 @@ urlpatterns = [
     path('predict/<str:station_name>/', views.predict, name='predict'),
 ]
 ```
-자, 이제 tensorflow serving server를 실행시킵니다. 그리고 django app도 실행시킵니다.
+> 자, 이제 tensorflow serving server를 실행시킵니다. 그리고 django app도 실행시킵니다.
 ```
  $ docker run -p 8501:8501 --mount type=bind,source=/Users/jyj0729/PycharmProjects/mysite/forcast_model,target=/models/lstm -e MODEL_NAME=lstm -t tensorflow/serving
  $ python manage.py runserver
 ```
-이제 `http://localhost:8000/predict/별양동/`으로 접속하면 모델 결과값이 출력되는 것을 볼 수 있습니다.
+> 이제 `http://localhost:8000/predict/별양동/`으로 접속하면 모델 결과값이 출력되는 것을 볼 수 있습니다.
 <img src = "/assets/img/2018-12-26/django-api.png"><br>
 
 ### Conclusion - 결론
