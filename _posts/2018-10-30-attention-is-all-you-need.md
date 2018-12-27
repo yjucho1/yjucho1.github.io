@@ -2,6 +2,7 @@
 title: "Attention is All You Need"
 categories: 
   - Attention
+  - Deep Learning paper
 comments: true
 mathjax : true
 published: true

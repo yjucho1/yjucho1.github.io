@@ -1,31 +1,39 @@
 ---
-title: "[번역] Deploying Keras models using TensorFlow Serving and Flask"
+title: "Deploying Keras models using TensorFlow Serving and Flask"
 categories: 
-  - Spatio-Temporal Data
+  - Tensorflow
 comments: true
 mathjax : true
-published: False
+published: true
 
 ---
 
-> 이 글은 [Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask](https://towardsdatascience.com/deploying-keras-models-using-tensorflow-serving-and-flask-508ba00f1037)을 번역한 글입니다.
 
-학습한 모델을 상용환경에 배포하거나, 사용하기 쉬운 API endpoints로 제공해야할 때가 있습니다. 예를 들어, 누구든지 기술적인 지식없이도 POST 리퀘스트를 생성해서 모델의 추정값을 JSON 형태로 반환된 결과값을 얻을수 있게 URL endpoint를 제공할수 있습니다. 
+> 이 글은 [Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask](https://towardsdatascience.com/deploying-keras-models-using-tensorflow-serving-and-flask-508ba00f1037)을 참고하여 작성한 글입니다.
 
-이 튜토리얼에서는 keras로 만들어진 이미지 분류를 위한 CNN 모델 중 하나인 InceptionV3를 배포하기 위해 Tensorflow serving server 생성하는 법을 이야기할 것입니다. 또한 POST 리퀘스트를 수락하기 위해서 간단한 Flask server를 만들어, 이미지를 전처리한 후 Tensorflow serving server에 전송한 후 JSON 형태의 결과값을 반환하도록 할 예정입니다. 
+* 원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다. 
+* 원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.
+django APP의 전체코드는 [이 깃헙 레포지토리](https://github.com/yjucho1/korea-air-pollution-dashboard)를 참고하십시요.
+* 추가된 부분은 Blockquotes 표시되어 있습니다.
 
-### What is TensorFlow Serving? - Tensorflow Servign이란?
+<img src = "/assets/img/2018-12-26/fig0.png">
+
+학습한 모델을 상용환경에 배포하거나, 사용하기 쉬운 API endpoints로 제공해야할 때가 있습니다. 예를 들어, 누구든지 전처리나, 딥러닝 알고리즘에 대한 기술적인 지식없이도 POST 리퀘스트를 생성해서 모델의 추정값을 JSON 형태로 반환된 결과값을 얻을수 있게 URL endpoint를 제공할수 있습니다. 
+
+이 튜토리얼에서는 keras로 만들어진 이미지 분류를 위한 CNN 모델 중 하나인 InceptionV3를 배포하기 위해 Tensorflow serving server 생성하는 법을 이야기할 것입니다. 또한 POST 리퀘스트를 수락하기 위해서 간단한 Flask server(또는 Django)를 만들어, 이미지를 전처리한 후 Tensorflow serving server에 전송한 후 JSON 형태의 결과값을 반환하도록 할 예정입니다. 
+
+## What is TensorFlow Serving? - Tensorflow Servign이란?
 
 Serving은 모델을 학습한 후 학습된 모델을 실제 서비스에 적용하는 것입니다. 
 
-<img src=>
-더 자세히 알고 있습다면, 여기를 참고하세요.
+<img src = "/assets/img/2018-12-26/fig1.png">
+<small>더 자세히 알고 싶다면, [여기](https://www.youtube.com/watch?v=q_IkJcPyNl0)를 참고하세요.</small>
 
 텐서플로우 서빙을 이용하면 모델을 상용환경에 쉽고 빠르게 적용할 수 있습니다. 새로운 모델을 안전하게 배포하고 동일한 서버 아키텍쳐와 API 환경을 유지하면서 또 다른 실험을 수행할수 있는 환경을 제공합니다. 기본적으로 TensorFlow와 호환되지만 다른 프레임워크에서 학습된 모델도 지원하고 확장할 수 있습니다. 
 
-### Installing TensorFlow Serving - 설치하기
+## Installing TensorFlow Serving - 설치하기
 
-사전 준비 : 파이썬 가상환경을 만든 후 텐서플로우 백엔드의 케라스를 설치하세요. 자세한 것은 이곳을 참고하세요.
+사전 준비 : 파이썬 가상환경을 만든 후 텐서플로우 백엔드의 케라스를 설치하세요. 자세한 것은 [이곳](https://keras.io/#installation)을 참고하세요.
 
 참고 : 이 튜토리얼의 모든 커멘드는 우분투 18.04.1 LTS에서의 파이썬 가상환경에서 실행되었습니다.
 
@@ -49,7 +57,16 @@ Python 3.6.6
 $ apt-get upgrade tensorflow-model-server
 ```
 
-Directory overview of what we are going to build - 디렉토리 구조
+> apt-get이 실행되지 않는 경우, 예를 들어 MAC OSX에서는 Docker를 이용할 수 있습니다. <br> <br>
+> **도커 다운로드** :[Docker for mac](- https://docs.docker.com/docker-for-mac/) <br>
+> 다운받은 도커를 실행시킨후 터미널에서 아래와 같은 명령어를 수행하면 tensorflow-serving이 설치된 이미지를 받을 수 있습니다. 텐서플루우나 케라스 패키지를 따로 설치할 필요가 없습니다.
+```
+$ docker pull tensorflow/serving
+```
+
+
+
+## Directory overview of what we are going to build 
 
 먼저, 디렉토리 구조를 이해하는 것이 조금 더 명확한 큰 그림을 이해하는데 도움이 됩니다. 
 
@@ -79,14 +96,15 @@ Directory overview of what we are going to build - 디렉토리 구조
 6 directories, 15 files
 ```
 
-모든 파일들은 [이 깃허브 레포지토리](github-repo)에서 다운로드할수 있습니다. 
+모든 파일들은 [이 깃허브 레포지토리](https://github.com/himanshurawlani/keras-and-tensorflow-serving)에서 다운로드할수 있습니다. 
 
+`https://github.com/himanshurawlani/keras-and-tensorflow-serving`
 
-### Exporting Keras model for Tensorflow Serving - 모델 내보내기
+## Exporting Keras model for Tensorflow Serving 
 
-이 튜토리얼에서는 InceptionV3 모델을 다운로드하여 h5파일로 저장하여 이용합니다. download_inceptionv3_model.py를 이용하세요. Karas.application 라이브러리에 있는 다른 모델들도 모두 가능합니다. 또는 이미 케라스로 학습한 커스텀 모델이 있다면 이 단계는 건너뛰어도 됩니다. 
+이 튜토리얼에서는 InceptionV3 모델을 다운로드하여 h5파일로 저장하여 이용합니다. download_inceptionv3_model.py를 이용하세요. Karas.application 라이브러리([here](https://github.com/keras-team/keras-applications))에 있는 다른 모델들도 모두 가능합니다. 또는 학습한 커스텀 모델(.h5)이 있다면 이 단계는 건너뛰어도 됩니다. 
 
-```
+```python
 from keras.applications.inception_v3 import InceptionV3
 from keras.layers import Input
 
@@ -105,9 +123,9 @@ Downloading data from https://github.com/fchollet/deep-learning-models/releases/
 
 이제 케라스 모델 형태로 저장된 CNN 모델이 로컬 파일에 있습니다. 우리는 텐서플로우 서버가 처리할수 있도록 이 모델을 내보내야합니다. 이 작업은 export_saved_model.py 스크립트를 이용하면 됩니다.  
 
-TensorFlow는 SavedModel 형식을 모델을 내보내기 위한 범용 형식으로 사용합니다. Keras 모델은 TensorFlow 객체의 관점에서 완벽하게 호환되기 때문에 Tensorflow 메서드를 사용하여 잘 내보낼 수 있습니다. TensorFlow는 tf.saved_model.simple_save () 함수를 제공하며, tf.saved_model.simple_save ()를 이용해  세부 정보 중 필요한 부분만 추출하여 사용가능하게 하며, 대부분의 사용 사례에서 잘 작동합니다.
+TensorFlow는 SavedModel 형식을 모델 내보내기 위한 범용 형식으로 사용합니다. Keras 모델은 TensorFlow 객체의 관점에서 완벽하게 호환되기 때문에 Tensorflow 메서드를 사용하여 아무 문제없이 잘 내보낼 수 있습니다. TensorFlow의 tf.saved_model.simple_save() 함수를 이용하면 되고, 대부분의 사용 사례에서 잘 작동합니다.
 
-```
+```python
 import tensorflow as tf
 
 # The export path contains the name and the version of the model
@@ -157,27 +175,34 @@ TensorFlow Serving은 자동으로 my_image_classifier 디렉토리 내에서 �
 로컬환경에서 서빙 서버를 시작하기 위해서 다음과 같은 커멘드를 실행하세요.
 
 ```
-$ tensorflow_model_server --model_base_path=/home/ubuntu/Desktop/Medium/keras-and-tensorflow-serving/my_image_classifier --rest_api_port=9000 --model_name=ImageClassifier
+$ tensorflow_model_server \
+ --model_base_path=/keras-and-tensorflow-serving/my_image_classifier \
+ --rest_api_port=9000 --model_name=ImageClassifier
 ```
 
-* -- model_base_path : 절대경로를 사용해야합니다. 그렇지 않으면 다음과 같은 에러 메세지가 나타납니다.
-```
-Failed to start server. Error: Invalid argument: Expected model ImageClassifier to have an absolute path or URI; got base_path()=./my_image_classifier
-```
+* --model_base_path : 절대경로를 사용해야합니다. 그렇지 않으면 다음과 같은 에러 메세지가 나타납니다.<br>
+`Failed to start server. Error: Invalid argument: Expected model ImageClassifier to have an absolute path or URI; got base_path()=./my_image_classifier`
 
-* -- rest_api_port : Tensorflow Serving은 gRPC ModelServer를 포트 8500에서 시작하고 REST API는 포트 9000에서 사용할 수 있습니다.
-```
-Failed to start server. Error: Invalid argument: Expected model ImageClassifier to have an absolute path or URI; got base_path()=./my_image_classifier
-```
+* --rest_api_port : Tensorflow Serving은 gRPC ModelServer를 포트 8500에서 시작하고 REST API는 포트 9000에서 사용할 수 있습니다.
 
 * --model_name : POST 리퀘스트를 보내게 될 서빙 서버의 이름입니다. 원하는 이름을 적으면 됩니다. 
 
+> 도커를 이용하는 경우 다음 명령어를 사용하세요. (도커에서는 forcast-lstm 디렉토리 내에 seq2seq모델인 lstm 모델을 저장하였습니다.)
+```
+$ docker run -p 8501:8501 \
+--mount type=bind,source=/your-path/forcast-lstm,\
+target=/models/lstm \
+ -e MODEL_NAME=lstm -t tensorflow/serving
+```
+> **type=bind부터 source,target까지 띄어쓰기가 없도록 주의하세요.**
 
 ### Testing our TensorFlow Serving server - 서빙 테스트하기
+<img src = "/assets/img/2018-12-26/fig2.jpeg">
+<small>raw data에서 production model까지</small>
 
 serving_sample_request.py 스크립트는 Tensorflow Serving server에 POST 리퀘스트를 생성합니다. 입력 이미지는 커멘드라인의 인자로 전달됩니다. 
 
-```
+```python
 import argparse
 import json
 
@@ -222,6 +247,19 @@ Using TensorFlow backend.
 
 TensorFlow Serving server의 첫번째 리퀘스트는 이후 리퀘스트에 비해서 다소 시간이 좀 더 걸릴 수 있습니다. 
 
+> 간단히 터미널에서도 테스트를 해볼수 있습니다.
+```
+$ curl -d '{"instances": 'your-input-data'}' -X POST \
+http://localhost:8501/v1/models/lstm:predict
+```
+> 결과 :
+```
+{
+    "predictions": [[0.208057, 0.199001, 0.195517, 0.197754, 0.203455, 0.211004]
+    ]
+}
+```
+
 
 ### Why do we need a Flask server? - Flask는 왜 필요한가
 
@@ -235,10 +273,10 @@ serving_sample_request.py(프로트엔드 콜러)에서는 이미지 전처리 �
 
 즉 우리는 TensorFlow Serving servers와 Frontend사이의 타이트한 커플링을 제거하기 위해 Flask를 백엔드 서버로 사용하고자 하는 것입니다. 
 
-<img src=>
-Flask server 뒤에 여러개의 TensorFlow Serving server를 숨길수 있음
+<img src = "/assets/img/2018-12-26/fig3.png"><br>
+<small>Flask server 뒤에 여러개의 TensorFlow Serving server를 숨길수 있음</small>
 
-이 튜토리얼에서는 TensorFlow Serving 이 설치된 동일한 머신의 가상환경 내에 Flask server를 생성하고 이미 설치된 라이브러리를 그대로 사용하고자 합니다. 이상적으로는 이 둘은 서로 분리된 머신에서 동작해야해야합니다. 리퀘스트의 수가 많아질수록 이미지 전처리를 수행하는 Flask server의 속도가 느려지기 때문입니다. 또한, 리퀘스트가 급격히 증가할 경우, 한대의 Flask server로는 충분하지 못할수 있습니다. 다중 프로트엔드 콜러를 사용할 경우, 큐잉시스템(queing system)을 사용해야할수도 있습니다. 그럼에도 불구하고, 이 튜토리얼에서 사용하는 방법이 Proof of concept으로는 충분할 것이라 생각됩니다. 
+이 튜토리얼에서는 TensorFlow Serving 이 설치된 동일한 머신의 가상환경 내에 Flask server를 생성하고 이미 설치된 라이브러리를 그대로 사용하고자 합니다. 이상적으로는 이 둘은 서로 분리된 머신에서 동작해야해야합니다. 리퀘스트의 수가 많아질수록 이미지 전처리를 수행하는 Flask server의 속도가 느려지기 때문입니다. 또한, 리퀘스트가 급격히 증가할 경우, 1대의 Flask server로는 충분하지 못할수 있습니다. 다중 프로트엔드 콜러를 사용할 경우, 큐잉시스템(queing system)을 사용해야할수도 있습니다. 그럼에도 불구하고, 이 튜토리얼에서 사용하는 방법이 Proof of concept으로는 충분할 것이라 생각됩니다. 
  
 
 ### Creating a Flask server - Flask server 만들기
@@ -247,7 +285,7 @@ Flask server 뒤에 여러개의 TensorFlow Serving server를 숨길수 있음
 
 Flask server를 만들기위해서는 app.py라는 파일 한개만 있으면 됩니다. 
 
-```
+```python
 import base64
 import json
 from io import BytesIO
@@ -323,7 +361,7 @@ $ tensorflow_model_server --model_base_path=/home/ubuntu/Desktop/Medium/keras-an
 
 수동으로 두 서버를 시작하는 것 대신에 auto_cmd.py를 이용해 서버 시작과 중단을 자동화 할 수 있습니다. 스크립트를 조금만 수정하면 2개 이상의 서버 동작을 처리할 수도 있습니다. 
 
-```
+```python
 import os
 import signal
 import subprocess
@@ -385,7 +423,7 @@ flask_sample_request.py 스크립트를 사용해서 간단한 리퀘스트를 �
 3. Flask server는 TensorFlow serving server에  POST request를 만들고, 반환된 결과값을 디코딩합니다. 
 4. 디코딩된 결과값은 포멧팅되어 프로트엔드로 전달됩니다. 
 
-```
+```python
 # importing the requests library
 import argparse
 import base64
@@ -459,7 +497,103 @@ Angular를 사용하여 POST 요청을하는 시나리오를 생각해보십시�
 * 웹 어플리케이션은 기존 출처와 다른 출처 (도메인, 프로토콜 및 포트)를 가진 리소스를 요청할 때 cross-origin HTTP 요청을 만듭니다.
 * CORS (Cross Origin Resource Sharing)는 추가 HTTP 헤더를 사용하여 브라우저에 한 원점 (도메인)에서 실행중인 웹 응용 프로그램을 알리는 메커니즘입니다. CORS에 대한 자세한 내용은 여기를 참조하십시오.
 
-따라서 Angular는 Flask 서버에서 어떤 응답도 받지 못하게 됩니다. 이 문제를 해결하기 위해서는 app.py에서 Flask-CORS를 활성화해야합니다. 더 자세한 사항은 여기를 참고하세요. 
+따라서 Angular는 Flask 서버에서 어떤 응답도 받지 못하게 됩니다. 이 문제를 해결하기 위해서는 app.py에서 Flask-CORS를 활성화해야합니다. 더 자세한 사항은 [여기](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)를 참고하세요. 
+
+
+
+> ### Django 버전의 api 만들기
+python 기반의 웹 프레임워크는 flask 이외에 django가 있습니다. 아마도 여러분의 어플리케이션이 이미 django로 작성되어 있다면, tf-servering에 리퀘스트를 보내는 역할을 django에서 수행할수 있습니다. 
+장고 프로젝트를 설치한후 새로운 앱을 생성합니다. 장고에 대한 자세한 내용은 이 포스팅의 범위를 넘어서기 때문에 자세한 부분은 [여기](https://docs.djangoproject.com/en/2.1/intro/tutorial01/)를 참
+고하세요.
+```
+$ python manage.py startapp dashboard
+```
+생성된 앱의 디렉토리 구조는 아래와 같습니다. 여기서는 `model.py`, `views.py`, `predict.html`, `urls.py`만 수정합니다. 
+```
+dashboard/
+    templates
+       dashboard
+            predict.html
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+    urls.py
+```
+`model.py`
+```python 
+from django.db import models
+
+class AirKoreaStations(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True, blank=True, null=False)
+    stationname = models.TextField(db_column='stationName', blank=True, null=True) 
+    ...(생략)... 
+
+class AirKoreaData(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True, blank=True, null=False)  
+    stnfk = models.ForeignKey(AirKoreaStations, on_delete=models.CASCADE)
+    pm10value = models.IntegerField(db_column='pm10Value', blank=True, null=True)  
+    pm25value = models.IntegerField(db_column='pm25Value', blank=True, null=True)  
+    ...(생략)... 
+```
+`view.py`
+AirKoreaData의 pm25value 입력값으로 전처리를 수행하고, 이를 tensorflow serving server에 전달하여 reponse값을 받습니다. 전달받은 predictions값을 template에 'forcast' 인자로 넘겨줍니다. 
+```python 
+from django.shortcuts import render
+from .models import AirKoreaData
+import datetime as dt
+import numpy as np
+import pandas as pd
+import requests
+import json
+
+def predict(request, station_name):
+    yesterday = dt.datetime.now().replace(microsecond=0, second=0, minute=0, hour=0)
+    recent_data = AirKoreaData.objects.filter(stnfk__stationname=station_name).\
+        filter(datatime__range=(yesterday - dt.timedelta(days=1), yesterday)).order_by('datatime')
+    
+    ## 전처리
+    x = list(recent_data.values_list('pm25value', flat=True))
+    x = pd.Series(x[-24:])
+    x = x.interpolate()
+    x = np.array(x)
+    x = x.reshape(-1, 24, 1)
+
+    ## tensorflow serving server에 request 
+    payload = {"instances": x.tolist()}
+    r = requests.post('http://localhost:8501/v1/models/lstm:predict', json=payload)
+    y_pred = json.loads(r.content.decode('utf-8'))
+    y_pred = y_pred['predictions'][0]
+    y_pred = [i * 200 for i in y_pred]
+
+    return render(request, "predict.html", {'forecast': y_pred})
+```
+`predict.html`
+전달받은 forecast값을 화면에 표시해줍니다.
+```python
+{% for data in forecast %}'{{ data }}',{% endfor %}
+```
+`urls.py`
+urls.py를 생성하여 'http://localhost:8000/predict'에 접속하면 view.predict가 실행되도록 해줍니다.
+```
+from django.urls import path
+import dashboard.views as views
+
+urlpatterns = [
+    path('predict/<str:station_name>/', views.predict, name='predict'),
+]
+```
+자, 이제 tensorflow serving server를 실행시킵니다. 그리고 django app도 실행시킵니다.
+```
+ $ docker run -p 8501:8501 --mount type=bind,source=/Users/jyj0729/PycharmProjects/mysite/forcast_model,target=/models/lstm -e MODEL_NAME=lstm -t tensorflow/serving
+ $ python manage.py runserver
+```
+이제 `http://localhost:8000/predict/별양동/`으로 접속하면 모델 결과값이 출력되는 것을 볼 수 있습니다.
+<img src = "/assets/img/2018-12-26/django-api.png"><br>
 
 ### Conclusion - 결론
 

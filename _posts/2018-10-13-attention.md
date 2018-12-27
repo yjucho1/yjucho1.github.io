@@ -1,5 +1,5 @@
 ---
-title: "[번역] Attention? Attention!"
+title: "Attention? Attention!"
 categories: 
   - Attention
 comments: true

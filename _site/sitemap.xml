@@ -13,11 +13,11 @@
 <lastmod>2018-10-02T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/migration/old-posts/</loc>
+<loc>http://localhost:4000/deep%20learning%20paper/old-posts/</loc>
 <lastmod>2018-10-03T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/tensorflow%20tutorial/quick-draw/</loc>
+<loc>http://localhost:4000/tensorflow/quick-draw/</loc>
 <lastmod>2018-10-05T00:00:00+09:00</lastmod>
 </url>
 <url>
@@ -41,7 +41,7 @@
 <lastmod>2018-10-20T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/spark/scala/spark-with-scala/</loc>
+<loc>http://localhost:4000/spark/spark-with-scala/</loc>
 <lastmod>2018-10-21T00:00:00+09:00</lastmod>
 </url>
 <url>
@@ -49,11 +49,11 @@
 <lastmod>2018-10-28T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/attention/attention-is-all-you-need/</loc>
+<loc>http://localhost:4000/attention/deep%20learning%20paper/attention-is-all-you-need/</loc>
 <lastmod>2018-10-30T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/clustering/clustering-with-l2-norm/</loc>
+<loc>http://localhost:4000/clustering/deep%20learning%20paper/clustering-with-l2-norm/</loc>
 <lastmod>2018-11-22T00:00:00+09:00</lastmod>
 </url>
 <url>
@@ -65,7 +65,7 @@
 <lastmod>2018-12-15T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/spatio-temporal%20data/ST-resnet/</loc>
+<loc>http://localhost:4000/spatio-temporal%20data/deep%20learning%20paper/ST-resnet/</loc>
 <lastmod>2018-12-16T00:00:00+09:00</lastmod>
 </url>
 <url>
@@ -75,6 +75,10 @@
 <url>
 <loc>http://localhost:4000/spatio-temporal%20data/time-series-part2/</loc>
 <lastmod>2018-12-25T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/tensorflow/tensorflow-serving/</loc>
+<lastmod>2018-12-26T00:00:00+09:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/about/</loc>

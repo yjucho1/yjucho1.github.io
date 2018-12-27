@@ -1,7 +1,7 @@
 ---
 title: "RNN for Quick drawing "
 categories: 
-  - Tensorflow Tutorial
+  - Tensorflow
 comments: true
 toc : true
 last_modified_at: 2018-10-05

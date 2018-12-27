@@ -1,5 +1,5 @@
 ---
-title: "[번역] from GAN to WGAN"
+title: "from GAN to WGAN"
 categories: 
   - Generative Adversarial Network
 comments: true

@@ -2,6 +2,7 @@
 title: "Clustering and Unsupervised Anomaly Detection with l2 Normalized Deep Auto-Encoder Representations"
 categories: 
   - Clustering
+  - Deep Learning paper
 comments: true
 mathjax : true
 published: true

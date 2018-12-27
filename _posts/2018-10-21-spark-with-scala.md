@@ -2,7 +2,6 @@
 title: "Big Data Analysis with Scala and Spark "
 categories: 
   - spark
-  - scala
 comments: true
 published: true
 
