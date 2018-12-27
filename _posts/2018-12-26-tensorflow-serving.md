@@ -525,6 +525,7 @@ dashboard/
     urls.py
 ```
 `model.py`
+AirKoreaStation(측정소)와 AirKoreaData(측정데이터)로 두가지 모델이 있습니다. 여기서는 측정소를 지정하면 해당 측정소에서 측정된 초미세먼지 데이터(pm25value)를 이용해 예측을 수행합니다.
 ```python 
 from django.db import models
 
@@ -574,12 +575,12 @@ def predict(request, station_name):
 ```
 `predict.html`
 전달받은 forecast값을 화면에 표시해줍니다.
-```python
+```
 {% for data in forecast %}'{{ data }}',{% endfor %}
 ```
 `urls.py`
-urls.py를 생성하여 'http://localhost:8000/predict'에 접속하면 view.predict가 실행되도록 해줍니다.
-```
+urls.py를 생성하여 http://localhost:8000/predict에 접속하면 view.predict가 실행되도록 해줍니다.
+```python
 from django.urls import path
 import dashboard.views as views
 
