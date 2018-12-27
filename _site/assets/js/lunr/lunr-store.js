@@ -95,7 +95,7 @@ var store = [{
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part2/",
         "teaser":null},{
         "title": "Deploying Keras models using TensorFlow Serving and Flask",
-        "excerpt":"이 글은 Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask을 참고하여 작성한 글입니다. 원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다. 원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.django application의 전체코드는 이 깃헙 레포지토리를...","categories": ["Tensorflow"],
+        "excerpt":"이 글은 Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask을 참고하여 작성한 글입니다. 원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다. 원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.django APP의 전체코드는 이 깃헙 레포지토리를...","categories": ["Tensorflow"],
         "tags": [],
         "url": "http://localhost:4000/tensorflow/tensorflow-serving/",
         "teaser":null}]

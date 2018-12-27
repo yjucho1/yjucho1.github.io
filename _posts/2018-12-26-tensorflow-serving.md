@@ -524,25 +524,29 @@ dashboard/
     views.py
     urls.py
 ```
+
 > `model.py`<br>
 AirKoreaStation(측정소)와 AirKoreaData(측정데이터)로 두가지 모델이 있습니다. 여기서는 측정소를 지정하면 해당 측정소에서 측정된 초미세먼지 데이터(pm25value)를 이용해 미래값을 예측하는 것을 수행하고자 합니다.
+
 ```python 
 from django.db import models
 
 class AirKoreaStations(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True, blank=True, null=False)
     stationname = models.TextField(db_column='stationName', blank=True, null=True) 
-    ...(생략)... 
+    #...(생략)... 
 
 class AirKoreaData(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True, blank=True, null=False)  
     stnfk = models.ForeignKey(AirKoreaStations, on_delete=models.CASCADE)
     pm10value = models.IntegerField(db_column='pm10Value', blank=True, null=True)  
     pm25value = models.IntegerField(db_column='pm25Value', blank=True, null=True)  
-    ...(생략)... 
+    #...(생략)... 
 ```
+
 > `view.py`<br>
-AirKoreaData의 pm25value 입력값으로 전처리를 수행하고, 이를 tensorflow serving server에 전달하여 reponse값을 받습니다. 전달받은 predictions값을 template에 'forcast' 인자로 넘겨줍니다. 
+AirKoreaData의 pm25value 입력값으로 전처리를 수행하고, 이를 tensorflow serving server에 전달하여 reponse값을 받습니다. 전달받은 predictions값을 template에 'forcast' 인자로 넘겨줍니다.
+
 ```python 
 from django.shortcuts import render
 from .models import AirKoreaData
@@ -575,11 +579,23 @@ def predict(request, station_name):
 ```
 > `predict.html`<br>
 전달받은 forecast값을 화면에 표시해줍니다.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{ % for data in forecast %} { { data }}{ % endfor %}
+</body>
+</html>
 ```
-{% for data in forecast %}'{{ data }}',{% endfor %}
-```
+
 > `urls.py`<br>
 urls.py를 생성하여 http://localhost:8000/predict에 접속하면 view.predict가 실행되도록 해줍니다.
+
 ```python
 from django.urls import path
 import dashboard.views as views
@@ -588,11 +604,14 @@ urlpatterns = [
     path('predict/<str:station_name>/', views.predict, name='predict'),
 ]
 ```
+
 > 자, 이제 tensorflow serving server를 실행시킵니다. 그리고 django app도 실행시킵니다.
+
 ```
  $ docker run -p 8501:8501 --mount type=bind,source=/Users/jyj0729/PycharmProjects/mysite/forcast_model,target=/models/lstm -e MODEL_NAME=lstm -t tensorflow/serving
  $ python manage.py runserver
 ```
+
 > 이제 `http://localhost:8000/predict/별양동/`으로 접속하면 모델 결과값이 출력되는 것을 볼 수 있습니다.
 <img src = "/assets/img/2018-12-26/django-api.png"><br>
 

@@ -286,7 +286,7 @@
 <ul>
   <li>원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다.</li>
   <li>원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.
-django application의 전체코드는 <a href="https://github.com/yjucho1/korea-air-pollution-dashboard">이 깃헙 레포지토리</a>를 참고하십시요.</li>
+django APP의 전체코드는 <a href="https://github.com/yjucho1/korea-air-pollution-dashboard">이 깃헙 레포지토리</a>를 참고하십시요.</li>
   <li>추가된 부분은 Blockquotes 표시되어 있습니다.</li>
 </ul>
 
@@ -770,28 +770,123 @@ Using TensorFlow backend.
 <blockquote>
   <h3 id="django-버전의-api-만들기">Django 버전의 api 만들기</h3>
   <p>python 기반의 웹 프레임워크는 flask 이외에 django가 있습니다. 아마도 여러분의 어플리케이션이 이미 django로 작성되어 있다면, tf-servering에 리퀘스트를 보내는 역할을 django에서 수행할수 있습니다. 
-아래는 <code class="highlighter-rouge">view.py</code>에서 django 모델의 객체 어트리뷰션을 입력값으로 전처리한 후 tf-serving에 전달하여 reponse값을 이용해 template에 ‘forcast’ 인자로 넘겨주는 예제 코드입니다.</p>
+장고 프로젝트를 설치한후 새로운 앱을 생성합니다. 장고에 대한 자세한 내용은 이 포스팅의 범위를 넘어서기 때문에 자세한 부분은 <a href="https://docs.djangoproject.com/en/2.1/intro/tutorial01/">여기</a>를 참
+고하세요.</p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ python manage.py startapp dashboard
+</code></pre></div>  </div>
+  <p>생성된 앱의 디렉토리 구조는 아래와 같습니다. 여기서는 <code class="highlighter-rouge">model.py</code>, <code class="highlighter-rouge">views.py</code>, <code class="highlighter-rouge">predict.html</code>, <code class="highlighter-rouge">urls.py</code>만 수정합니다.</p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dashboard/
+    templates
+       dashboard
+            predict.html
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+        __init__.py
+    models.py
+    tests.py
+    views.py
+    urls.py
+</code></pre></div>  </div>
 </blockquote>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">detail</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">station_name</span><span class="p">):</span>
+<blockquote>
+  <p><code class="highlighter-rouge">model.py</code><br />
+AirKoreaStation(측정소)와 AirKoreaData(측정데이터)로 두가지 모델이 있습니다. 여기서는 측정소를 지정하면 해당 측정소에서 측정된 초미세먼지 데이터(pm25value)를 이용해 미래값을 예측하는 것을 수행하고자 합니다.</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">AirKoreaStations</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">db_column</span><span class="o">=</span><span class="s">'ID'</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">stationname</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">db_column</span><span class="o">=</span><span class="s">'stationName'</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
+    <span class="c">#...(생략)... </span>
+
+<span class="k">class</span> <span class="nc">AirKoreaData</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">AutoField</span><span class="p">(</span><span class="n">db_column</span><span class="o">=</span><span class="s">'ID'</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>  
+    <span class="n">stnfk</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">AirKoreaStations</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">pm10value</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">db_column</span><span class="o">=</span><span class="s">'pm10Value'</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  
+    <span class="n">pm25value</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">db_column</span><span class="o">=</span><span class="s">'pm25Value'</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  
+    <span class="c">#...(생략)... </span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="highlighter-rouge">view.py</code><br />
+AirKoreaData의 pm25value 입력값으로 전처리를 수행하고, 이를 tensorflow serving server에 전달하여 reponse값을 받습니다. 전달받은 predictions값을 template에 ‘forcast’ 인자로 넘겨줍니다.</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">AirKoreaData</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">station_name</span><span class="p">):</span>
     <span class="n">yesterday</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">recent_data</span> <span class="o">=</span> <span class="n">AirKoreaData</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="nb">filter</span><span class="p">(</span><span class="n">stnfk__stationname</span><span class="o">=</span><span class="n">station_name</span><span class="p">)</span><span class="o">.</span>\
         <span class="nb">filter</span><span class="p">(</span><span class="n">datatime__range</span><span class="o">=</span><span class="p">(</span><span class="n">yesterday</span> <span class="o">-</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">yesterday</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">'datatime'</span><span class="p">)</span>
-
+    
+    <span class="c">## 전처리</span>
     <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">recent_data</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s">'pm25value'</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">24</span><span class="p">:])</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">interpolate</span><span class="p">()</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
+    <span class="c">## tensorflow serving server에 request </span>
     <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s">"instances"</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()}</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s">'http://localhost:8501/v1/models/lstm:predict'</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">))</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[</span><span class="s">'predictions'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">200</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y_pred</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">"dashboard/detail.html"</span><span class="p">,</span> <span class="p">{</span><span class="s">'recent_data'</span><span class="p">:</span> <span class="n">recent_data</span><span class="p">,</span> <span class="s">'forecast'</span><span class="p">:</span> <span class="n">y_pred</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">"predict.html"</span><span class="p">,</span> <span class="p">{</span><span class="s">'forecast'</span><span class="p">:</span> <span class="n">y_pred</span><span class="p">})</span>
 </code></pre></div></div>
+<blockquote>
+  <p><code class="highlighter-rouge">predict.html</code><br />
+전달받은 forecast값을 화면에 표시해줍니다.</p>
+</blockquote>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"en"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"UTF-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+{ % for data in forecast %} { { data }}{ % endfor %}
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="highlighter-rouge">urls.py</code><br />
+urls.py를 생성하여 http://localhost:8000/predict에 접속하면 view.predict가 실행되도록 해줍니다.</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">import</span> <span class="nn">dashboard.views</span> <span class="k">as</span> <span class="n">views</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">path</span><span class="p">(</span><span class="s">'predict/&lt;str:station_name&gt;/'</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">predict</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'predict'</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>자, 이제 tensorflow serving server를 실행시킵니다. 그리고 django app도 실행시킵니다.</p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> $ docker run -p 8501:8501 --mount type=bind,source=/Users/jyj0729/PycharmProjects/mysite/forcast_model,target=/models/lstm -e MODEL_NAME=lstm -t tensorflow/serving
+ $ python manage.py runserver
+</code></pre></div></div>
+
+<blockquote>
+  <p>이제 <code class="highlighter-rouge">http://localhost:8000/predict/별양동/</code>으로 접속하면 모델 결과값이 출력되는 것을 볼 수 있습니다.
+<img src="/assets/img/2018-12-26/django-api.png" /><br /></p>
+</blockquote>
 
 <h3 id="conclusion---결론">Conclusion - 결론</h3>
 
