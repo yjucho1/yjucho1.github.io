@@ -480,3 +480,6 @@ print("AR(8) model's RMSE: ", mean_forecast_err(df.pm25Value, predict_pm25))
 
 Happy new year!
 
+<b>reference</b>
+
+[1] [Statsmodel's Documentation](https://www.statsmodels.org/dev/index.html)

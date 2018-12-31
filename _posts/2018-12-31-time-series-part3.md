@@ -8,9 +8,11 @@ published: true
 
 ---
 
-Part1에서는 stationary를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서는 이해하고 있는 것이 좋습니다. Part2에서는 실제 데이터를 이용해 statonary 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델이 적합한지 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 것을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)한 결과를 시각화하고 MSE를 이용해 평가해보기도 하였습니다.
+Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.
 
-이번 Part3에서는 non-stationary 시게열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 $${x_1, …, x_n}$$에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다. 그렇지 않은 경우, 주어진 데이터를 변환시켜 (a)와 (b) 특정을 갖는 새로운 시계열 데이터를 생성하는 방법을 사용해야합니다. 이 때 주로 사용하는 방법은 “differencing(차분)”으로, differencing한 새로운 시리즈 $${y_1, … y_n}$$가 ARMA를 따를 때, ARIMA 프로세스를 따른다고 표현합니다. 
+이번 Part3에서는 non-stationary 시계열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 $${x_1, …, x_n}$$에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다. 
+
+그렇지 않았을 때는 주어진 데이터를 변환시켜 (a)와 (b) 특정을 갖는 새로운 시계열 데이터를 생성하는 방법을 사용해야합니다. 이 때 주로 사용하는 방법은 “difference(차분)”으로, difference를 통해 얻은 새로운 시리즈 $${y_1, … y_n}$$가 ARMA를 따를 때, ARIMA 프로세스를 따른다고 표현합니다. 
 
 A generalization of this class, which incorporates a wide range of nonstationary series, is provided by the ARIMA processes, i.e., processes that reduce to ARMA processes when differenced finitely many times
 
@@ -51,7 +53,7 @@ plt.show()
 <img src = "/assets/img/2018-12-31/output_1_0.png">
 <img src = "/assets/img/2018-12-31/output_1_1.png">
 
-위 그림에서도 알 수 있듯이 ARIMA 모델의 적합성을 나타내는 가장 큰 증거는 양의 sample ACF가 천천히 감쇠하는 모습을 띄는 것입니다. 시계열 데이터가 주어지고, 주어진 데이터에 적합한 모델을 찾기 위해서 가장 먼저 할일은 데이터가 ARMA 프로세스와 대응되도록(sample ACF가 급격히 감소하는 모습이 보일때까지)  $$\nabla = 1-B$$ 오퍼레이터를 적용하하는 것입니다. 실제로 위의 인공데이터에서 $$\nabla$$ 오퍼레이터를 한번 적용한 후 다시 시계열 차트와 sample ACF, sample PACF를 그려본 결과는 아래와 같습니다. (앞의 것에 비해서 ACF가 더 급격히 감소하는 것을 볼 수 있습니다)
+위 그림에서도 알 수 있듯이 ARIMA 모델의 적합성을 나타내는 가장 큰 증거는 양의 sample ACF가 천천히 감소하는 모습을 띄는 것입니다. 따라서 non-stationary로 진단되는 데이터의 경우에는, 데이터가 ARMA 프로세스로 표현될수 있게  $$\nabla = 1-B$$ 오퍼레이터를 적용해야합니다.  $$\nabla = 1-B$$ 오퍼레이터를 적용하는 것은 ACF가 현재보다 더 급격하게 감소하는 모습을 보일 때까지 반복할 수 있습니다. 실제로 위의 인공데이터에서 $$\nabla$$ 오퍼레이터를 한번 적용한 후 다시 시계열 차트와 sample ACF, sample PACF를 그려본 결과는 아래와 같습니다. (앞의 것에 비해서 ACF가 더 급격히 감소하는 것을 볼 수 있습니다)
 
 ```
 plt.plot(arma10)
@@ -97,13 +99,13 @@ $$(1-0.8085)(1-B)X_t = Z_t, \ \ \ \ \ \ \ \{Z_t\} \sim WN(0, 0.8798)$$
 * True generating Process : 
 $$(1-0.8)(1-B)X_t = Z_t, \ \ \ \ \ \ \ \ \ \ \ \ \{Z_t\} \sim WN(0, 1)$$
 
-위의 두 결과가 거의 비슷한 것을 볼 수 있습니다. 지금까지 예시에서 본 것처럼 ARIMA 모델을 추정하는 방법은 differencing을 적용하는 것을 제외하고는 ARMA와 비슷한 맥략을 유지합니다. 
+statsmodel의 ARIMA를 이용해 추정한 모델 파라미터와 실제 데이터를 생성할 때 사용한 파라미터가 거의 비슷한 것을 볼 수 있습니다. ARIMA 모델을 추정하는 방법은 difference을 적용하는 것을 제외하고는 이후 과정은 ARMA와 비슷한 맥략을 유지합니다. 
 
 
 ### Identification Techniques
 
 <b> (a) Preliminary Transformations </b> 
-ARMA 모델을 사용하기 전에 주어진 데이터가 stationarity 가정에 더 부합한 새로운 시리즈로 변환할 필요성이 있는지 검토해야합니다. 예를 들어 스케일에 대한 의존도가 있는 경우, 로그변환을 취해서 스케일에 대한 의존성을 제거해야합니다. 또한 시계열 차트에서 전체적으로 우상향/우하향하는 추세(trend)나 주기적으로 반복되는 패턴(seasonality)이 발견될 수 있습니다. 이런 경우 2가지 방법으로 처리할 수 있습니다.
+ARMA 모델을 사용하기 전에 주어진 데이터가 stationarity 가정에 더 부합한 새로운 시리즈로 변환할 필요성이 있는지 검토해야합니다. 예를 들어 스케일에 대해 의존도가 나타나는 경우, 로그변환을 취해서 의존성을 제거해야합니다.([Box-Cox transformation](https://en.wikipedia.org/wiki/Power_transform#Box%E2%80%93Cox_transformation)) 또한 시계열 차트에서 전체적으로 우상향/우하향하는 추세(trend)나 주기적으로 반복되는 패턴(seasonality)이 발견될 수 있습니다. 이런 경우 2가지 방법으로 처리할 수 있습니다.
 
 1) Classical decomposition - trend component, seasonal component, random residual component
 
@@ -176,3 +178,35 @@ print('variance :', wine_model.resid.var())
     MA.2            1.2582           +0.0000j            1.2582            0.0000
     -----------------------------------------------------------------------------
     variance : 0.019416898661637372
+
+### Seasonal ARIMA models
+
+앞선 설명에서 이미 차분을 통해서 seasonality를 제거하는 방법을 언급하였지만, 조금 더 포멀한 방식으로 seasonal ARIMA를 정의하면 다음과 같습니다. 
+
+<b>Definition</b>
+
+If d and D are nonnegative integers, then $$\{X_t\}$$ is a seasonal $$ARIMA(p, d, q) \times (P, D, Q)_s$$ process with period s if the differenced series $$Y_t=(1-B)^d(1-B^s)^D X_t$$ is a causal ARMA process defined by
+$$ \phi(B)\Phi(B^s)Y_t = \theta(B)\Theta(B^s)Z_t, \ \ \ \{Z_t\} \sim WN(0, \sigma^2)$$
+where $$\phi(z) = 1 - \phi_1z - ... - \phi_p z^p,  \Phi(z) = 1 -\Phi_1z - ... - \Phi_Pz^P, \\ \theta(z) = 1 + \theta_1z + ... + \theta_qz^q$$ and $$ \Theta(z) = 1+ \Theta_1z + ... + \Theta_Qz^Q.$$
+
+모델 order를 결정하기 위해서 총 7가지의 파라미터$$(p, d, q, P, D, Q)_s$$가 존재합니다. 예를 들어 살펴보도록 하겠습니다.
+
+<b>Example - $$SARIMA(1, 0, 0, 1, 0, 1)_{12}$$</b>
+$$ (1-\phi_1B)(1-\Phi_1B^{12})X_t = (1+\Theta_1B^{12})Z_t$$
+
+
+<b>Example - $$SARIMA(0, 1, 1, 0, 0, 1)_{4}$$</b>
+$$ (1-B)X_t = (1+\Theta_1B^{4})(1+\theta_1B)Z_t$$
+
+
+<b>reference</b>
+
+[1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
+
+[2] [Statsmodel's Documentation](https://www.statsmodels.org/dev/index.html)
+
+[3] [Coursera - Practical Time Series Analysis](https://www.coursera.org/learn/practical-time-series-analysis/home/info)
+
+[4] [시계열분석 강의, 한양대학교(이기천)](http://www.kocw.net/home/search/kemView.do?kemId=977301)
+
+[5] [wikipedia - Partial correlation](https://en.wikipedia.org/wiki/Partial_correlation)

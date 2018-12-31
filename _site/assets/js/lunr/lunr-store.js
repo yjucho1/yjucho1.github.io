@@ -100,7 +100,7 @@ var store = [{
         "url": "http://localhost:4000/tensorflow/tensorflow-serving/",
         "teaser":null},{
         "title": "시계열 분석 - part3",
-        "excerpt":"Part1에서는 stationary를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다. 또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서는 이해하고 있는 것이...","categories": ["Spatio-Temporal Data"],
+        "excerpt":"Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다. 또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로...","categories": ["Spatio-Temporal Data"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part3/",
         "teaser":null}]
