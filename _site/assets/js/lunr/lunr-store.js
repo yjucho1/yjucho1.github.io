@@ -98,4 +98,9 @@ var store = [{
         "excerpt":"이 글은 Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask을 참고하여 작성한 글입니다. 원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다. 원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.django APP의 전체코드는 이 깃헙 레포지토리를...","categories": ["Tensorflow"],
         "tags": [],
         "url": "http://localhost:4000/tensorflow/tensorflow-serving/",
+        "teaser":null},{
+        "title": "시계열 분석 - part3",
+        "excerpt":"Part1에서는 stationary를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다. 또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서는 이해하고 있는 것이...","categories": ["Spatio-Temporal Data"],
+        "tags": [],
+        "url": "http://localhost:4000/spatio-temporal%20data/time-series-part3/",
         "teaser":null}]

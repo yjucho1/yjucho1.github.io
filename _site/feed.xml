@@ -1,4 +1,165 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-27T23:07:35+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Deploying Keras models using TensorFlow Serving and Flask</title><link href="http://localhost:4000/tensorflow/tensorflow-serving/" rel="alternate" type="text/html" title="Deploying Keras models using TensorFlow Serving and Flask" /><published>2018-12-26T00:00:00+09:00</published><updated>2018-12-26T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow/tensorflow-serving</id><content type="html" xml:base="http://localhost:4000/tensorflow/tensorflow-serving/">&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-12-31T20:52:24+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationary를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서는 이해하고 있는 것이 좋습니다. Part2에서는 실제 데이터를 이용해 statonary 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델이 적합한지 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 것을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)한 결과를 시각화하고 MSE를 이용해 평가해보기도 하였습니다.&lt;/p&gt;
+
+&lt;p&gt;이번 Part3에서는 non-stationary 시게열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 &lt;script type=&quot;math/tex&quot;&gt;{x_1, …, x_n}&lt;/script&gt;에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다. 그렇지 않은 경우, 주어진 데이터를 변환시켜 (a)와 (b) 특정을 갖는 새로운 시계열 데이터를 생성하는 방법을 사용해야합니다. 이 때 주로 사용하는 방법은 “differencing(차분)”으로, differencing한 새로운 시리즈 &lt;script type=&quot;math/tex&quot;&gt;{y_1, … y_n}&lt;/script&gt;가 ARMA를 따를 때, ARIMA 프로세스를 따른다고 표현합니다.&lt;/p&gt;
+
+&lt;p&gt;A generalization of this class, which incorporates a wide range of nonstationary series, is provided by the ARIMA processes, i.e., processes that reduce to ARMA processes when differenced finitely many times&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;If d is a nonnegative integer, then &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is an ARIMA(p, d, q) process if &lt;script type=&quot;math/tex&quot;&gt;Y_t := (1-B)^dX_t&lt;/script&gt; is a causal ARMA(p, q) process.&lt;/p&gt;
+
+&lt;p&gt;참고로 B는 backward shift operator를 의미합니다. &lt;script type=&quot;math/tex&quot;&gt;BX_t = X_{t-1}&lt;/script&gt;로 &lt;script type=&quot;math/tex&quot;&gt;\nabla X_t = X_t - X_{t-1} = (1-B) X_t&lt;/script&gt;로 표기합니다.&lt;/p&gt;
+
+&lt;p&gt;이해를 돕기 위해서 ARIMA(1, 1, 0) process를 따르는 데이터를 생성한후, sample ACF, sample PACF를 살펴보도록 하겠습니다. statsmodels의 arma_generate_sample를 이용해 ARMA(1,0) 프로세스를 따르는 데이터를 생성한 후(&lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt; = 0.8), cumsum()을 이용하면 ARIMA(1,1,0) 프로세스를 따르는 데이터를 생성할 수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;statsmodels.api&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matplotlib&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inline&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;alphas&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alphas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ma&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;arma10&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arma_generate_sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ma&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nsample&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;arima110&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cumsum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이 인공 데이터의 sample ACF와 sample PACF를 나타내면 아래와 같습니다.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;plt.plot(arima110)
+plt.show()
+sm.tsa.graphics.plot_acf(arima110, lags=50)
+sm.tsa.graphics.plot_pacf(arima110, lags=50)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-31/output_0_0.png&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-12-31/output_1_0.png&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-12-31/output_1_1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;위 그림에서도 알 수 있듯이 ARIMA 모델의 적합성을 나타내는 가장 큰 증거는 양의 sample ACF가 천천히 감쇠하는 모습을 띄는 것입니다. 시계열 데이터가 주어지고, 주어진 데이터에 적합한 모델을 찾기 위해서 가장 먼저 할일은 데이터가 ARMA 프로세스와 대응되도록(sample ACF가 급격히 감소하는 모습이 보일때까지)  &lt;script type=&quot;math/tex&quot;&gt;\nabla = 1-B&lt;/script&gt; 오퍼레이터를 적용하하는 것입니다. 실제로 위의 인공데이터에서 &lt;script type=&quot;math/tex&quot;&gt;\nabla&lt;/script&gt; 오퍼레이터를 한번 적용한 후 다시 시계열 차트와 sample ACF, sample PACF를 그려본 결과는 아래와 같습니다. (앞의 것에 비해서 ACF가 더 급격히 감소하는 것을 볼 수 있습니다)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;plt.plot(arma10)
+plt.show()
+sm.tsa.graphics.plot_acf(arma10, lags=50)
+sm.tsa.graphics.plot_pacf(arma10, lags=50)
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-31/output_2_0.png&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-12-31/output_2_1.png&quot; /&gt;
+&lt;img src=&quot;/assets/img/2018-12-31/output_2_2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;arima_mod110&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARIMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arima110&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;trend&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'nc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arima_mod110&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'variance :'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arima_mod110&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                             ARIMA Model Results                              
+==============================================================================
+Dep. Variable:                    D.y   No. Observations:                  199
+Model:                 ARIMA(1, 1, 0)   Log Likelihood                -270.813
+Method:                       css-mle   S.D. of innovations              0.941
+Date:                Mon, 31 Dec 2018   AIC                            545.626
+Time:                        06:49:49   BIC                            552.212
+Sample:                             1   HQIC                           548.291
+                                                                              
+==============================================================================
+                 coef    std err          z      P&amp;gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1.D.y      0.8085      0.041     19.576      0.000       0.728       0.889
+                                    Roots                                    
+=============================================================================
+                 Real           Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1            1.2369           +0.0000j            1.2369            0.0000
+-----------------------------------------------------------------------------
+variance : 0.8895674306182718
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Estimated parameters from data : 
+&lt;script type=&quot;math/tex&quot;&gt;(1-0.8085)(1-B)X_t = Z_t, \ \ \ \ \ \ \ \{Z_t\} \sim WN(0, 0.8798)&lt;/script&gt;&lt;/li&gt;
+  &lt;li&gt;True generating Process : 
+&lt;script type=&quot;math/tex&quot;&gt;(1-0.8)(1-B)X_t = Z_t, \ \ \ \ \ \ \ \ \ \ \ \ \{Z_t\} \sim WN(0, 1)&lt;/script&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;위의 두 결과가 거의 비슷한 것을 볼 수 있습니다. 지금까지 예시에서 본 것처럼 ARIMA 모델을 추정하는 방법은 differencing을 적용하는 것을 제외하고는 ARMA와 비슷한 맥략을 유지합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;identification-techniques&quot;&gt;Identification Techniques&lt;/h3&gt;
+
+&lt;p&gt;&lt;b&gt; (a) Preliminary Transformations &lt;/b&gt; 
+ARMA 모델을 사용하기 전에 주어진 데이터가 stationarity 가정에 더 부합한 새로운 시리즈로 변환할 필요성이 있는지 검토해야합니다. 예를 들어 스케일에 대한 의존도가 있는 경우, 로그변환을 취해서 스케일에 대한 의존성을 제거해야합니다. 또한 시계열 차트에서 전체적으로 우상향/우하향하는 추세(trend)나 주기적으로 반복되는 패턴(seasonality)이 발견될 수 있습니다. 이런 경우 2가지 방법으로 처리할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;1) Classical decomposition - trend component, seasonal component, random residual component&lt;/p&gt;
+
+&lt;p&gt;2) Differencing - Wine sale의 예시에서는 12개월 주기로 반복되는 패턴이 존재하므로, &lt;script type=&quot;math/tex&quot;&gt;{(1-B^{12})V_t}&lt;/script&gt;를 적용&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt; 
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;statsmodels.api&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read_csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'monthly-australian-wine-sales-th.csv'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;skiprows&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;header&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;encoding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'euc-kr'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;u_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;v_t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;v_t_st&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v_t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;diff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;311&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;marker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'o'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;legend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'$U_t$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;312&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'orange'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;marker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'o'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;legend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'$V_t = lnU_t$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;313&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v_t_st&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'green'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;marker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'o'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;legend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'$V_t^* = (1-B^{12})V_t$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;suptitle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Monthly Australian Wine Sales'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-31/output_6_0.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt; (b) Identification and Estimation &lt;/b&gt; 전처리 변환을 통해서 stationarity 가정에 부합하는 시리즈를 얻을 후에는 적합한 ARMA(p, q)를 찾습니다. p와 q를 먼저 결정해야하는데, 보통 p와 q를 크게 설정할 수록 추정된 모델의 성능이 더 좋은 것으로 나타납니다. 추정해야하는 파라미터 갯수가 많아질수록 패널티가 증가하도록 AIC 등과 같은 지표를 사용하는 것이 바람직합니다. 또한 모델을 선택한 후에는 residual이 white noise가 맞는지 검증하는 작업을 수행해야합니다. 이에 대한 내용은 part2에서 이미 살펴보았으니 이번에는 자세히 다루지 않겠습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;stationary_series&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v_t_st&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropna&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stattools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arma_order_select_ic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stationary_series&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'aic'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'bic'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trend&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'nc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;## result.aic_min_order = (2,2)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;## result.bic_min_order = (1,1)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;wine_model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v_t_st&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropna&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aic_min_order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;trend&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'nc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wine_model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'variance :'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wine_model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                            ARMA Model Results                              
+==============================================================================
+Dep. Variable:                      y   No. Observations:                  175
+Model:                     ARMA(2, 2)   Log Likelihood                  95.322
+Method:                       css-mle   S.D. of innovations              0.139
+Date:                Mon, 31 Dec 2018   AIC                           -180.643
+Time:                        20:50:06   BIC                           -164.819
+Sample:                             0   HQIC                          -174.225
+                                                                            
+==============================================================================
+                coef    std err          z      P&amp;gt;|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+ar.L1.y        0.0304      0.055      0.556      0.579      -0.077       0.138
+ar.L2.y        0.8740      0.047     18.621      0.000       0.782       0.966
+ma.L1.y        0.2052      0.086      2.398      0.018       0.038       0.373
+ma.L2.y       -0.7948      0.085     -9.367      0.000      -0.961      -0.628
+                                    Roots                                    
+=============================================================================
+                Real          Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1            1.0524           +0.0000j            1.0524            0.0000
+AR.2           -1.0872           +0.0000j            1.0872            0.5000
+MA.1           -1.0000           +0.0000j            1.0000            0.5000
+MA.2            1.2582           +0.0000j            1.2582            0.0000
+-----------------------------------------------------------------------------
+variance : 0.019416898661637372
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>yjucho</name></author><summary type="html">Part1에서는 stationary를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다. 또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서는 이해하고 있는 것이 좋습니다. Part2에서는 실제 데이터를 이용해 statonary 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델이 적합한지 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 것을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)한 결과를 시각화하고 MSE를 이용해 평가해보기도 하였습니다.</summary></entry><entry><title type="html">Deploying Keras models using TensorFlow Serving and Flask</title><link href="http://localhost:4000/tensorflow/tensorflow-serving/" rel="alternate" type="text/html" title="Deploying Keras models using TensorFlow Serving and Flask" /><published>2018-12-26T00:00:00+09:00</published><updated>2018-12-26T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow/tensorflow-serving</id><content type="html" xml:base="http://localhost:4000/tensorflow/tensorflow-serving/">&lt;blockquote&gt;
   &lt;p&gt;이 글은 &lt;a href=&quot;https://towardsdatascience.com/deploying-keras-models-using-tensorflow-serving-and-flask-508ba00f1037&quot;&gt;Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask&lt;/a&gt;을 참고하여 작성한 글입니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2261,116 +2422,4 @@ similarity  =  cos \theta &amp; = \frac{A \cdot B}{|A||B|} \\
 
 &lt;p&gt;http://nicolas-hug.com/blog/matrix_facto_2&lt;/p&gt;
 
-&lt;p&gt;https://datascienceschool.net/view-notebook/fcd3550f11ac4537acec8d18136f2066/&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다.</summary></entry><entry><title type="html">Big Data Analysis with Scala and Spark</title><link href="http://localhost:4000/spark/spark-with-scala/" rel="alternate" type="text/html" title="Big Data Analysis with Scala and Spark " /><published>2018-10-21T00:00:00+09:00</published><updated>2018-10-21T00:00:00+09:00</updated><id>http://localhost:4000/spark/spark-with-scala</id><content type="html" xml:base="http://localhost:4000/spark/spark-with-scala/">&lt;p&gt;https://www.coursera.org/learn/scala-spark-big-data/home/welcome&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Shared Memory Data Parallelism (SDP)와 Distributed Data Parallelism (DDP)의 공통점과 차이점을 얘기해주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;공통점 : 데이터를 나눠서, 병렬로 데이터를 처리한 후 결과를 합침(data-parallel programming). Collection abstraction을 처리할 수 있음. &lt;br /&gt;차이점 : SDP의 경우 한 머신 내 메모리 상에서 데이터가 나눠져  처리가 일어나지만, DDP는 여러개의 노드(머신)에서 처리가 됨. DDP는 노드간의 통신이 필요하기 때문에 latency를 고려해야함&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;분산처리 프레임워크 Haddop의 Fault Tolerance는 DDP의 어떤 문제를 해결했나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Computations on unthinkably large data sets to succeed to completion. 수백~수천개의 노드로 확장가능하도록 함. 노드 중 한개라도 failure 발생하더라도 recover할 수 있음&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Spark가 하둡과 달리 데이터를 메모리에 저장하면서 개선한 것 무엇이고, 왜 메모리에 저장하면 그것이 개선이 되나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;latency를 개선함. 같은 job에 대해서 100배 이상의 성능을 보임. Functional programming을 통해 latency를 줄임&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;val ramyons = List(&quot;신라면&quot;, &quot;틈새라면&quot;, &quot;너구리&quot;)&lt;/code&gt; &lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;val kkodulRamyons = ramyons.map(ramyon =&amp;gt; &quot;꼬들꼬들 &quot; + ramyon)&lt;/code&gt; &lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;kkodulRamyonsList.map()을 사용하여 ramyons 리스트에서 kkodulRamyon List를 새로 만들었습니다. kkodulRamyons랑 똑같이 생긴 List를 만드는 Scala 코드를 써주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;val kkodulRamyons = List(“꼬들꼬들 신라면”, “꼬들꼬들 틈새라면”, “꼬들꼬들 너구리”)&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;val noodles = List(List(&quot;신라면&quot;, &quot;틈새라면&quot;, &quot;너구리&quot;), List(&quot;짜파게티&quot;, &quot;짜왕&quot;, &quot;진짜장&quot;))&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;val flatNoodles = noodles.flatMap(list =&amp;gt; list)&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;flatNoodlesList.flatmap() 을 사용하여 noodles 리스트에서 flatNoodles List를 새로 만들었습니다. flatNoodles랑 똑같이 생긴 List를 만드는 Scala 코드를 써주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;val flatNoodles = List(“신라면”, “틈새라면”, “너구리”, “짜파게티”, “짜왕”, “진짜장”)&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;val jajangs = flatNoodles.filter(noodle =&amp;gt; noodle.contains(&quot;짜&quot;))&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;jajangsList.filter() 를 사용하여 flatNoodles 리스트에서 jajangs List를 새로 만들었습니다. jajangs랑 똑같이 생긴 List를 만드는 Scala 코드를 써주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;val jajangs = List(“짜파게티”, “짜왕”, “진짜장”)&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;val jajangMenu = jajangs.reduce((first, second) =&amp;gt; first +&quot;,&quot; + second)&lt;/code&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;jajangMenuList.reduce()를 사용하여 jajangs 리스트에서 jajangMenu String을 만들었습니다. jajangMenu랑 똑같이 생긴 String을 만드는 Scala 코드를 써주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;var jajangMenu = “짜파게티,짜왕,진짜장”&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Eager execution와 Lazy execution의 차이점은 무엇인가요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Lazy execution은 결과값이 바로 계산되지 않고 eager execution은 결과가 바로 계산됨. spark의 transformation은 lazy execution이라 action이 나타날때까지 실제로는 아무것도 수행되지 않음&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Transformation과 Action의 결과물 (Return Type)은 어떻게 다를까요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Transformation은 새로운 RDD를 결과물로 리턴하고, Action은 HDFS같은 외부 저장소에 값을 리턴함&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RDD.cache()는 어떤 작동을 하고, 언제 쓰는 것이 좋은가?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Action을 수행할때마다 RDD를 다시 계산하는 것은 시간적 비용이 크기때문에 메모리에 캐시 저장함&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Lazy Execution이 Eager Execution 보다 더 빠를 수 있는 예를 얘기해주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;logistic regression처럼 Iterative algoritm의 경우, 값(weight)이 업데이트될때마다 데이터를 평가하하는 경우 매 iteration마다 반복 계산되는 것은 계산 비용이 큼. 따라서 RDD를 persist()나 cache()를 이용해 메모리에 저장하는 방법이 효과적임
-other’s best answer : RDD에서 transformation 이 수행 된 데이터를 재사용하는 경우 Lazy Execution이 Eager Excution보다 더 빠르다. 예를 들어 로그파일에서 “ERROR”가 포함된 로그만 필터링하기 위해 filter를 예약한 뒤 캐싱 기능을 호출한다. 이후 take를 이용하여 10개의 에러로그를 획득하는데, 액션이 호출되어 필터링이 수행되면서 필터링된 로그를 메모리에 캐싱을 하게 된다. 이처럼 캐싱된 에러 로그는 이후 총 개수를 구한다던가 하는 다른 actino이 호출될 때 메모리에 적재된 데이터를 이용하여 성능이 향상된다. 최초로 호출되는 action은 disk에서 읽어오는 것보다 조금 느릴 수 있다.
-참고 - http://knight76.tistory.com/entry/%ED%8E%8C-lazy-evaluation%EB%8A%90%EA%B8%8B%ED%95%9C-%EA%B3%84%EC%82%B0%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A2%8B%EC%9D%80-%EC%84%A4%EB%AA%85-%EA%B7%B8%EB%A6%BC-%EC%9E%90%EB%A3%8C&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;foldLft 와 aggregate 둘다 inputType과 outputType이 다른데 왜 aggregate 만 병렬 처리가 가능한지 설명해주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;foldLeft는 시퀀셜하게 처리되기 때문에 병렬처리가 불가능함. 만약 두개 콜렉션으로 나눠서 병렬처리한다고 했을때, 아웃풋 타입이 바뀌기때문에 두개의 아웃풋을 합치려고 할 때 타입 에러가 나서 더이상 동일한 함수를 적용할수 없음. aggregate는 seqop과 combop 펑션으로 이루어져있어, chunk로 나눠 처리된 결과를 combop함수를 통해 합칠수 있기 때문에 리턴 타입 변환과 병렬처리가 모두 가능함&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pairRDD는 어떤 데이터 구조에 적합한지 설명해주세요. 또 pairRDD는 어떻게 만드나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Key-value 형태로 구조화된 데이터를 다룰 때 유용함. 이미 존재하는 RDD에서 map을 이용해서 아래와 같이 만들수 있음
-val rdd: RDD[WikipediaPage] = … 
-val pairRdd = rdd.map(page =&amp;gt; (page.title, page.text))&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;groupByKey()와 mapValues()를 통해 나온 결과를 reduceByKey()를 사용해서도 똑같이 만들 수 있습니다. 그렇지만 reduceByKey를 쓰는 것이 더 효율적인 이유는 무엇일까요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;reduceByKey는 싱글머신에 있는 데이터끼리 합친 후 셔플됨. 반면 groupByKey()는 모든 key-value 값들이 셔플되기때문에 네트워크 상에 데이터가 불필요하게 많이 이동하면서 계산됨. 참고 - https://databricks.gitbooks.io/databricks-spark-knowledge-base/content/best_practices/prefer_reducebykey_over_groupbykey.html&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;join 과 leftOuterJoin, rightOuterJoin이 어떻게 다른지 설명하세요. &lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;join(inner join) return a new RDD containing combined pairs whose keys are present in both input RDDs —inner join(join)은 두개의 RDD에 모두 포함되는 key만 포함하여 새로운 pair-RDD를 리턴함. Outer join(leftOuterJoin, rightOuterJoin) return a new RDD containing combined pairs whose keys don’t have to be present in both input RDDs — 왼쪽 혹은 오른쪽 RDD 중에서 유지하고 싶은 keys를 중심으로 결합하여 새로운 RDD를 만듦&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Shuffling은 무엇인가요? 이것은 어떤 distributed data paraellism의 성능에 어떤 영향을 가져오나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;we typically have to move data from one node to another to be “grouped with” its key. Doing this is called “shuffling”. 인메모리 대비 노드간 네트워크 통신이 필요함으로 되도록이면 최소화하는 것이 좋음&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;셔플링은 무엇이고 언제 발생하나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;데이터를 키값을 기준으로 그룹핑하여 한 노드에서 다른 노드로 이동시키기는 것. groupByKey()를 수행할 때 발생.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;파티션은 무엇인가요? 파티션의 특징을 2가지 알려주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;pair-RDD를 키값을 중심으로 여러 노드에 나눠 저장하는 것&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;동일한 파티션에 있는 데이터들은 반드시 같은 머신에 존재한다.&lt;/li&gt;
-  &lt;li&gt;클러스터 안에 한개의 머신에는 적어도 하나 이상의 파티션이 존재할수 있다.&lt;/li&gt;
-  &lt;li&gt;파티션의 수는 설정할수 있다. 기본적으로는 executor node의 코어 수와 같다.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;스파크에서 제공하는 partitioning 의 종류 두가지를 각각 설명해주세요.&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Hash partitioning :튜플(k, v)마다 p=k.hashCode()%numPartitions 해서 p가 같은 데이터끼리 모아 파티셔닝하는 것. &lt;br /&gt;
-Range partitionin :ordering이 있는 key일 경우, 범위별로 데이터를 나누는 것&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;파티셔닝은 어떻게 퍼포먼스를 높여주나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;키값을 중심으로 데이터가 어떤 머신에 있는지 알기 때문에 데이터가 셔플링되는 것을 최소화할수 있음&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rdd 의 toDebugString 의 결과값은 무엇을 보여주나요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;RDD’s lineage를 시각적으로 보여줌&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;파티션 된 rdd에 map 을 실행하면 결과물의 파티션은 어떻게 될까요? mapValues의 경우는 어떤가요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;map을 실행하면 파티션이 없어짐. map은 키를 바꿀수 있는 오퍼레이션 이기때문임. mapValues는 키값을 유지하기때문에 파티션도 유지됨.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Narrow Dependency 와 Wide Dependency를 설명해주세요. 각 Dependency를 만드는 operation은 무엇이 있을까요?&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Narrow Dependency - 1개의 부모RDD는 최대 1개의 자식RDD에만 영향을 줌. map, filter, union, join with co-partitioned inputs &lt;br /&gt;
-Wide Dependency - 1개의 부모RDD가 여러개의 자식RDD에 영향을 줌. groupByKey, join with inputs not co-partitioned&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Lineage 는 어떻게 Fault Tolerance를 가능하게 하나요?&lt;/code&gt;
-RDD는 immutable하고, 우리가 higher-order function을 사용하고, 그 function 역시 RDD를 리턴하기 때문에 lineage graphs를 통해서 dependency information을 추적하여 잃어버린 파티션을 다시 계산하여 failure로부터 회복할수 있다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">https://www.coursera.org/learn/scala-spark-big-data/home/welcome</summary></entry></feed>
+&lt;p&gt;https://datascienceschool.net/view-notebook/fcd3550f11ac4537acec8d18136f2066/&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다.</summary></entry></feed>
