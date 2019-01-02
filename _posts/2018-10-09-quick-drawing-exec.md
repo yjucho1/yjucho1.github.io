@@ -169,6 +169,8 @@ model.save('quick_drawing_model.h5')
 
 ```python
 import matplotlib.image as mpimg
+from skimage import util
+
 a_dog=mpimg.imread('articles/quick-drawing/yjucho-dog.png')
 a_cat=mpimg.imread('articles/quick-drawing/yjucho-cat.png')
 
@@ -188,7 +190,9 @@ plt.show()
 
 ```python
 tmp = np.mean(a_dog, axis=-1)
-plt.imshow(tmp, plt.get_cmap('gray'))
+tmp = util.invert(tmp)
+
+plt.imshow(tmp, plt.get_cmap('gray_r'))
 plt.show()
 y_pred = model.predict(tmp.reshape(1, 28,28,1))
 y_pred
@@ -208,7 +212,9 @@ y_pred
 
 ```python
 tmp = np.mean(a_cat, axis=-1)
-plt.imshow(tmp, plt.get_cmap('gray'))
+tmp = util.invert(tmp)
+
+plt.imshow(tmp, plt.get_cmap('gray_r'))
 plt.show()
 y_pred = model.predict(tmp.reshape(1, 28,28,1))
 y_pred
@@ -221,7 +227,7 @@ y_pred
 
 
 
-    array([[0.5847676 , 0.41523245]], dtype=float32)
+    array([[0.49400282 , 0.5059972]], dtype=float32)
 
 
 

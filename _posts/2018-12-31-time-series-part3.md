@@ -186,17 +186,136 @@ print('variance :', wine_model.resid.var())
 <b>Definition</b>
 
 If d and D are nonnegative integers, then $$\{X_t\}$$ is a seasonal $$ARIMA(p, d, q) \times (P, D, Q)_s$$ process with period s if the differenced series $$Y_t=(1-B)^d(1-B^s)^D X_t$$ is a causal ARMA process defined by
+
 $$ \phi(B)\Phi(B^s)Y_t = \theta(B)\Theta(B^s)Z_t, \ \ \ \{Z_t\} \sim WN(0, \sigma^2)$$
+
 where $$\phi(z) = 1 - \phi_1z - ... - \phi_p z^p,  \Phi(z) = 1 -\Phi_1z - ... - \Phi_Pz^P, \\ \theta(z) = 1 + \theta_1z + ... + \theta_qz^q$$ and $$ \Theta(z) = 1+ \Theta_1z + ... + \Theta_Qz^Q.$$
+
 
 모델 order를 결정하기 위해서 총 7가지의 파라미터$$(p, d, q, P, D, Q)_s$$가 존재합니다. 예를 들어 살펴보도록 하겠습니다.
 
-<b>Example - $$SARIMA(1, 0, 0, 1, 0, 1)_{12}$$</b>
-$$ (1-\phi_1B)(1-\Phi_1B^{12})X_t = (1+\Theta_1B^{12})Z_t$$
+p : order of non-seasonal AR terms
+d : order of non-seasonal differencing
+q : order of non-seasonal MA terms
+P : order of seasonal AR (i.e. SAR) terms
+D : order of seasonal differencing (I.e. power of (1 - $$B^s$$)
+Q : order of seasonal MA (i.e. SMA) terms
+s : the number of time steps for a single seasonal period
 
+<b>Example - $$SARIMA(1, 0, 0, 1, 0, 1)_{12}$$</b>
+
+$$ (1-\phi_1B)(1-\Phi_1B^{12})X_t = (1+\Theta_1B^{12})Z_t$$
+$$X_t - \phi_1X_{t-1} - \Phi_1X_{t-12} +  \phi_1\Phi_1X_{t-13} = Z_t + \Theta_1Z_{t-12}$$
 
 <b>Example - $$SARIMA(0, 1, 1, 0, 0, 1)_{4}$$</b>
+
 $$ (1-B)X_t = (1+\Theta_1B^{4})(1+\theta_1B)Z_t$$
+$$X_t - X_{t-1} = Z_t + \theta_1Z_{t-1} + \Theta_1Z_{t-4} + \theta_1\Theta_1Z_{t-5}$$
+
+Seasonality가 존재하는 시계열 데이터의 ACF는 아래와 같이 zero에 수렴하지 않고 주기적인 패턴이 나타나는 것이 특징입니다. 예를 들어 $$SARIMA(0,0,1, 0, 0,1)_{12}$$ 의 ACF를 계산해보도록 하겠습니다. 
+
+<b>Example - $$SARIMA(0, 0, 1, 0, 0, 1)_{12}$$</b>
+
+$$
+\begin{align}
+X_t & = (1 + \Theta_1B^{12})(1+\theta_1B)Z_t \\
+X_t & = Z_t + \theta_1Z_{t-1} + \Theta_1Z_{t-12} + \theta_1\Theta_1Z_{t-13} \\
+\\
+\gamma(0) & = Cov(X_t, X_t)=Var(X_t) \\
+X_t & = Z_t + \theta_1Z_{t-1} + \Theta_1Z_{t-12} + \theta_1\Theta_1Z_{t-13} \\
+Var(X_t) & = \sigma_Z^2 + \theta_1^2\sigma_Z^2 + \Theta_1^2\sigma_Z^2 + \theta_1^2\Theta_1^2\sigma_Z^2 \\
+\gamma(0) & = (1+\theta_1^2)(1+\Theta_1^2)\sigma_z^2 \\
+\\
+\gamma(1) & = Cov(X_t, X_{t-1}) \\
+X_t & = Z_t + \theta_1Z_{t-1} + \Theta_1Z_{t-12} + \theta_1\Theta_1Z_{t-13} \\
+X_{t-1} & = Z_{t-1} + \theta_1Z_{t-2} + \Theta_1Z_{t-13} + \theta_1\Theta_1Z_{t-14} \\
+\gamma(1) & = \theta_1\sigma_Z^2 + \theta_1\Theta_1^2\sigma_Z^2\\
+\gamma(1) & = \theta_1(1+\Theta_1^2)\sigma_Z^2
+\end{align}
+$$
+
+참고. $$Z_t$$ is independent with $$Z_{t-1}$$
+
+$$
+\begin{align}
+\rho(1) & = \frac{\gamma(1)}{\gamma(0)} = \frac{\theta_1}{1 + \theta_1^2} \le \frac{1}{2}
+\\
+\\
+\gamma(2) & = Cov(X_t, X_{t-2}) \\
+X_t & = Z_t + \theta_1Z_{t-1} + \Theta_1Z_{t-12} + \theta_1\Theta_1Z_{t-13} \\
+X_{t-2} & = Z_{t-2} + \theta_1Z_{t-3} + \Theta_1Z_{t-14} + \theta_1\Theta_1Z_{t-15} \\
+\rho(2) & = 0 \\
+\rho(i) & = 0, \ \ \ \ \ \ \ for \ i = 2, 3, … 10\\
+\\
+\gamma(11) & = Cov(X_t, X_{t-11}) \\
+X_t & = Z_t + \theta_1Z_{t-1} + \Theta_1Z_{t-12} + \theta_1\Theta_1Z_{t-13} \\
+X_{t-11} & = Z_{t-11} + \theta_1Z_{t-12} + \Theta_1Z_{t-23} + \theta_1\Theta_1Z_{t-24} \\
+\gamma(11) & = \theta_1\Theta_1\sigma_Z^2\\
+\rho(11) & = \frac{\gamma(11)}{\gamma(0)} = \frac{\theta_1\Theta_1}{(1 + \theta_1^2)(1 + \Theta_1^2)} \le \frac{1}{4} 
+\end{align}
+$$
+
+
+```python
+import statsmodels.api as sm
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+sarima_00100112 = sm.tsa.arma_generate_sample([1], [1, 0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.6, 0.24], nsample=200)
+plt.plot(sarima_00100112)
+plt.show()
+sm.tsa.graphics.plot_acf(sarima_00100112, lags=100)
+plt.show()
+sm.tsa.graphics.plot_pacf(sarima_00100112,lags=50)
+plt.show()
+model = sm.tsa.statespace.SARIMAX(sarima_00100112, order=(0, 0, 1), seasonal_order=(0, 0, 1, 12)).fit()
+print(model.summary())
+```
+
+<img src = "/assets/img/2018-12-31/output_7_0.png">
+<img src = "/assets/img/2018-12-31/output_7_1.png">
+<img src = "/assets/img/2018-12-31/output_7_2.png">
+
+
+                                    Statespace Model Results                                 
+    ==========================================================================================
+    Dep. Variable:                                  y   No. Observations:                  200
+    Model:             SARIMAX(0, 0, 1)x(0, 0, 1, 12)   Log Likelihood                -272.506
+    Date:                            Wed, 02 Jan 2019   AIC                            551.013
+    Time:                                    22:27:26   BIC                            560.908
+    Sample:                                         0   HQIC                           555.017
+                                                - 200                                         
+    Covariance Type:                              opg                                         
+    ==============================================================================
+                    coef    std err          z      P>|z|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    ma.L1          0.4721      0.070      6.791      0.000       0.336       0.608
+    ma.S.L12       0.6453      0.061     10.587      0.000       0.526       0.765
+    sigma2         0.8638      0.093      9.326      0.000       0.682       1.045
+    ===================================================================================
+    Ljung-Box (Q):                       36.60   Jarque-Bera (JB):                 1.18
+    Prob(Q):                              0.62   Prob(JB):                         0.55
+    Heteroskedasticity (H):               1.10   Skew:                            -0.18
+    Prob(H) (two-sided):                  0.70   Kurtosis:                         2.93
+    ===================================================================================
+
+
+위에서 말씀드렸다시피, Seasonal ARIMA는 7개의 hyper parameter(trend order: p,d,q와 seasonal order : P,D,Q,S)를 갖습니다. Part2에서 이야기한 검증 방법들을 사용하여 7개의 hyper parameter를 구성할수 있지만, 각각에 맞춰 신중한 분석과 도메인 지식이 필요합니다. (대안으로 hyper parameter 모음을 그리드 서치 형태로 실험한 후 선택할 수 있습니다. 자세한 내용은 [포스팅](https://machinelearningmastery.com/how-to-grid-search-sarima-model-hyperparameters-for-time-series-forecasting-in-python/)을 참고하세요.
+
+ 
+
+## 실제 데이터를 이용한 Seasonal ARIMA Forecasting
+
+Part2에서 사용한 서울역 앞의 초미세먼지 농도를 사용하여 Seasonal ARIMA를 적용해보도록 하겠습니다.
+
+* 데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도 
+* 기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)
+
+<img src = "/assets/img/2018-12-25/output_4_1.png">
+
+grid search방식을 사용하여 적절한 모델 order를 탐색하였습니다. 
+
+<script src="https://gist.github.com/yjucho1/fa517213628e0f8fcbf10a96cbe01141.js"></script>
 
 
 <b>reference</b>
@@ -210,3 +329,5 @@ $$ (1-B)X_t = (1+\Theta_1B^{4})(1+\theta_1B)Z_t$$
 [4] [시계열분석 강의, 한양대학교(이기천)](http://www.kocw.net/home/search/kemView.do?kemId=977301)
 
 [5] [wikipedia - Partial correlation](https://en.wikipedia.org/wiki/Partial_correlation)
+
+[6] [How to grid search SARIMA model hyperparameters for time series forecasting in python](https://machinelearningmastery.com/how-to-grid-search-sarima-model-hyperparameters-for-time-series-forecasting-in-python/)
