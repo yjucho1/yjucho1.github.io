@@ -315,8 +315,6 @@ Part2에서 사용한 서울역 앞의 초미세먼지 농도를 사용하여 Se
 
 grid search방식을 사용하여 적절한 모델 order를 탐색하였습니다. 
 
-<script src="https://gist.github.com/yjucho1/fa517213628e0f8fcbf10a96cbe01141.js"></script>
-
 
 <b>reference</b>
 
