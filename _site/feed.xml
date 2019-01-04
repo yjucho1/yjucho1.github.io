@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-02T22:56:07+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-04T13:19:50+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
 
 &lt;p&gt;이번 Part3에서는 non-stationary 시계열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 &lt;script type=&quot;math/tex&quot;&gt;{x_1, …, x_n}&lt;/script&gt;에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다.&lt;/p&gt;
 
@@ -177,13 +177,15 @@ variance : 0.019416898661637372
 
 &lt;p&gt;모델 order를 결정하기 위해서 총 7가지의 파라미터&lt;script type=&quot;math/tex&quot;&gt;(p, d, q, P, D, Q)_s&lt;/script&gt;가 존재합니다. 예를 들어 살펴보도록 하겠습니다.&lt;/p&gt;
 
-&lt;p&gt;p : order of non-seasonal AR terms
-d : order of non-seasonal differencing
-q : order of non-seasonal MA terms
-P : order of seasonal AR (i.e. SAR) terms
-D : order of seasonal differencing (I.e. power of (1 - &lt;script type=&quot;math/tex&quot;&gt;B^s&lt;/script&gt;)
-Q : order of seasonal MA (i.e. SMA) terms
-s : the number of time steps for a single seasonal period&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;p : order of non-seasonal AR terms&lt;/li&gt;
+  &lt;li&gt;d : order of non-seasonal differencing&lt;/li&gt;
+  &lt;li&gt;q : order of non-seasonal MA terms&lt;/li&gt;
+  &lt;li&gt;P : order of seasonal AR (i.e. SAR) terms&lt;/li&gt;
+  &lt;li&gt;D : order of seasonal differencing (I.e. power of (1 - &lt;script type=&quot;math/tex&quot;&gt;B^s&lt;/script&gt;)&lt;/li&gt;
+  &lt;li&gt;Q : order of seasonal MA (i.e. SMA) terms&lt;/li&gt;
+  &lt;li&gt;s : the number of time steps for a single seasonal period&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;&lt;b&gt;Example - &lt;script type=&quot;math/tex&quot;&gt;SARIMA(1, 0, 0, 1, 0, 1)_{12}&lt;/script&gt;&lt;/b&gt;&lt;/p&gt;
 
@@ -282,18 +284,74 @@ Prob(H) (two-sided):                  0.70   Kurtosis:                         2
 
 &lt;h2 id=&quot;실제-데이터를-이용한-seasonal-arima-forecasting&quot;&gt;실제 데이터를 이용한 Seasonal ARIMA Forecasting&lt;/h2&gt;
 
-&lt;p&gt;Part2에서 사용한 서울역 앞의 초미세먼지 농도를 사용하여 Seasonal ARIMA를 적용해보도록 하겠습니다.&lt;/p&gt;
+&lt;p&gt;Part2에서 사용한 초미세먼지 농도를 사용하여 Seasonal ARIMA를 적용해보도록 하겠습니다.&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도&lt;/li&gt;
+  &lt;li&gt;데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM.25)&lt;/li&gt;
   &lt;li&gt;기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_4_1.png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;grid search방식을 사용하여 적절한 모델 order를 탐색하였습니다.&lt;/p&gt;
+&lt;p&gt;grid search방식을 사용하여 적절한 모델 order를 탐색하였습니다. 7개의 파라미터의 탐색범위는 아래와 같고, 모델 선택 기준으로는 AIC 지표를 사용하였습니다.&lt;/p&gt;
 
-&lt;script src=&quot;https://gist.github.com/yjucho1/fa517213628e0f8fcbf10a96cbe01141.js&quot;&gt;&lt;/script&gt;
+&lt;ul&gt;
+  &lt;li&gt;p_params = [0, 1, 2]&lt;/li&gt;
+  &lt;li&gt;d_params = [0, 1]&lt;/li&gt;
+  &lt;li&gt;q_params = [0, 1, 2]&lt;/li&gt;
+  &lt;li&gt;t_params = [‘n’,’c’,’t’,’ct’]&lt;/li&gt;
+  &lt;li&gt;P_params = [0, 1, 2]&lt;/li&gt;
+  &lt;li&gt;D_params = [0, 1]&lt;/li&gt;
+  &lt;li&gt;Q_params = [0, 1, 2]&lt;/li&gt;
+  &lt;li&gt;m_params = [24] ## 하루 주기가 있다고 가정하여 24시간으로 고정&lt;/li&gt;
+  &lt;li&gt;총 1,296개의 조합을 탐색&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;전체 코드는 &lt;a href=&quot;https://gist.github.com/yjucho1/fa517213628e0f8fcbf10a96cbe01141&quot;&gt;여기&lt;/a&gt;를 참고하세요.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;탐색결과&lt;/b&gt;
+    best 3 :
+    [(2, 0, 2), (1, 1, 2, 24), ‘n’] 11723.18462075862
+    [(2, 0, 2), (1, 1, 2, 24), ‘c’] 11725.455126156874
+    [(1, 0, 2), (1, 1, 2, 24), ‘n’] 11725.651159324498&lt;/p&gt;
+
+&lt;p&gt;1296가지 모델들의 AIC 히스토그램
+&lt;img src=&quot;/assets/img/2018-12-31/output_8_0.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;AIC가 가장 낮았던 &lt;script type=&quot;math/tex&quot;&gt;SARIMA(2, 0, 2, 1, 1, 2)_{24}&lt;/script&gt; 모델을 검증하고, 모델을 이용해서 예측을 수행해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;residual plot
+&lt;img src=&quot;/assets/img/2018-12-31/output_8_1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;residual acf, pacf
+&lt;img src=&quot;/assets/img/2018-12-31/output_8_2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;residual qq plot&lt;br /&gt;
+&lt;img src=&quot;/assets/img/2018-12-31/output_8_3.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;residual normality test :&lt;br /&gt;
+NormaltestResult(statistic=561.8797124030831, pvalue=9.758222244224708e-123)&lt;/p&gt;
+
+&lt;p&gt;위 결과를 종합해보면 residual이 White Noise이고, 정규분포를 따른다고 할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;이제 이 모델을 이용하여 forcasting을 수행해보도록 하겠습니다. dynamic 옵션을 False로 설정하는 것은 항상 in-sample 데이터를 사용하여 미래값을 예측하는 것이고, True로 설정할 경우 이전 lag의 모델 예측값을 사용해서 계산하는 것입니다. 첫번째 예측값을 이후 lag에서 계속 사용하게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-31/output_8_4.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;예측력을 평가하기 위해 RMSE는 다음과 같습니다. AR(8) 모델과 비교하여 약 0.0257가 감소한 것을 볼 수 있습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;b&gt;SARIMA(2,0,2,1,1,2, 24) model’s RMSE : 2.8916720525590627&lt;/b&gt;&lt;/li&gt;
+  &lt;li&gt;AR(1) model’s RMSE:  3.006486217286414&lt;/li&gt;
+  &lt;li&gt;AR(3) model’s RMSE:  2.9717700323027256&lt;/li&gt;
+  &lt;li&gt;AR(8) model’s RMSE:  2.9174007777104203&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;여기까지 non-stationary 모델을 살펴보았습니다. Differencing을 이용해 ARMA을 적용하는 ARIMA모델을 살펴보았고, seasonality까지 함께 고려하는 SARIMA까지 알아보았습니다. 또한 실제 데이터를 이용하여 SARIMA의 하이퍼파라미터를 그리드탐색하여 최적의 모델 order를 결정하였고, 이를 통해서 AR모델 대비 예측력(RMSE)가 0.0257가 향상된 결과를 얻을수 있었습니다.&lt;/p&gt;
+
+&lt;p&gt;다음 포스팅에서는 multivariate time series에 대해서 살펴보도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;감사합니다!&lt;/p&gt;
 
 &lt;p&gt;&lt;b&gt;reference&lt;/b&gt;&lt;/p&gt;
 
@@ -946,10 +1004,10 @@ urls.py를 생성하여 http://localhost:8000/predict에 접속하면 view.predi
 
 &lt;h3 id=&quot;실제-데이터---초미세먼지-농도&quot;&gt;실제 데이터 - 초미세먼지 농도&lt;/h3&gt;
 
-&lt;p&gt;분석할 데이터는 서울역 앞 초미세먼지 농도입니다.&lt;/p&gt;
+&lt;p&gt;분석할 데이터는 초미세먼지 농도입니다.&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도&lt;/li&gt;
+  &lt;li&gt;데이터 :  경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM.25)&lt;/li&gt;
   &lt;li&gt;기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)&lt;/li&gt;
 &lt;/ul&gt;
 

@@ -194,13 +194,13 @@ where $$\phi(z) = 1 - \phi_1z - ... - \phi_p z^p,  \Phi(z) = 1 -\Phi_1z - ... - 
 
 모델 order를 결정하기 위해서 총 7가지의 파라미터$$(p, d, q, P, D, Q)_s$$가 존재합니다. 예를 들어 살펴보도록 하겠습니다.
 
-p : order of non-seasonal AR terms
-d : order of non-seasonal differencing
-q : order of non-seasonal MA terms
-P : order of seasonal AR (i.e. SAR) terms
-D : order of seasonal differencing (I.e. power of (1 - $$B^s$$)
-Q : order of seasonal MA (i.e. SMA) terms
-s : the number of time steps for a single seasonal period
+* p : order of non-seasonal AR terms
+* d : order of non-seasonal differencing
+* q : order of non-seasonal MA terms
+* P : order of seasonal AR (i.e. SAR) terms
+* D : order of seasonal differencing (I.e. power of (1 - $$B^s$$)
+* Q : order of seasonal MA (i.e. SMA) terms
+* s : the number of time steps for a single seasonal period
 
 <b>Example - $$SARIMA(1, 0, 0, 1, 0, 1)_{12}$$</b>
 
@@ -306,14 +306,69 @@ print(model.summary())
 
 ## 실제 데이터를 이용한 Seasonal ARIMA Forecasting
 
-Part2에서 사용한 서울역 앞의 초미세먼지 농도를 사용하여 Seasonal ARIMA를 적용해보도록 하겠습니다.
+Part2에서 사용한 초미세먼지 농도를 사용하여 Seasonal ARIMA를 적용해보도록 하겠습니다.
 
-* 데이터 : 서울 용산구 한강대로 405(서울역 앞)의 초미세먼지 농도 
+* 데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM.25)
 * 기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)
 
 <img src = "/assets/img/2018-12-25/output_4_1.png">
 
-grid search방식을 사용하여 적절한 모델 order를 탐색하였습니다. 
+grid search방식을 사용하여 적절한 모델 order를 탐색하였습니다. 7개의 파라미터의 탐색범위는 아래와 같고, 모델 선택 기준으로는 AIC 지표를 사용하였습니다.
+
+* p_params = [0, 1, 2]
+* d_params = [0, 1]
+* q_params = [0, 1, 2]
+* t_params = ['n','c','t','ct']
+* P_params = [0, 1, 2]
+* D_params = [0, 1]
+* Q_params = [0, 1, 2]
+* m_params = [24] ## 하루 주기가 있다고 가정하여 24시간으로 고정
+* 총 1,296개의 조합을 탐색
+
+전체 코드는 [여기](https://gist.github.com/yjucho1/fa517213628e0f8fcbf10a96cbe01141)를 참고하세요. 
+
+<b>탐색결과</b>
+    best 3 :
+    [(2, 0, 2), (1, 1, 2, 24), 'n'] 11723.18462075862
+    [(2, 0, 2), (1, 1, 2, 24), 'c'] 11725.455126156874
+    [(1, 0, 2), (1, 1, 2, 24), 'n'] 11725.651159324498
+
+1296가지 모델들의 AIC 히스토그램
+<img src = "/assets/img/2018-12-31/output_8_0.png">
+
+AIC가 가장 낮았던 $$SARIMA(2, 0, 2, 1, 1, 2)_{24}$$ 모델을 검증하고, 모델을 이용해서 예측을 수행해보도록 하겠습니다.
+
+residual plot
+<img src = "/assets/img/2018-12-31/output_8_1.png">
+
+residual acf, pacf
+<img src = "/assets/img/2018-12-31/output_8_2.png">
+
+residual qq plot<br>
+<img src = "/assets/img/2018-12-31/output_8_3.png">
+
+residual normality test :<br>
+NormaltestResult(statistic=561.8797124030831, pvalue=9.758222244224708e-123)
+
+위 결과를 종합해보면 residual이 White Noise이고, 정규분포를 따른다고 할 수 있습니다.
+
+이제 이 모델을 이용하여 forcasting을 수행해보도록 하겠습니다. dynamic 옵션을 False로 설정하는 것은 항상 in-sample 데이터를 사용하여 미래값을 예측하는 것이고, True로 설정할 경우 이전 lag의 모델 예측값을 사용해서 계산하는 것입니다. 첫번째 예측값을 이후 lag에서 계속 사용하게 됩니다. 
+
+<img src = "/assets/img/2018-12-31/output_8_4.png">
+
+예측력을 평가하기 위해 RMSE는 다음과 같습니다. AR(8) 모델과 비교하여 약 0.0257가 감소한 것을 볼 수 있습니다.
+
+* <b>SARIMA(2,0,2,1,1,2, 24) model's RMSE : 2.8916720525590627</b>
+* AR(1) model's RMSE:  3.006486217286414
+* AR(3) model's RMSE:  2.9717700323027256
+* AR(8) model's RMSE:  2.9174007777104203
+
+
+여기까지 non-stationary 모델을 살펴보았습니다. Differencing을 이용해 ARMA을 적용하는 ARIMA모델을 살펴보았고, seasonality까지 함께 고려하는 SARIMA까지 알아보았습니다. 또한 실제 데이터를 이용하여 SARIMA의 하이퍼파라미터를 그리드탐색하여 최적의 모델 order를 결정하였고, 이를 통해서 AR모델 대비 예측력(RMSE)가 0.0257가 향상된 결과를 얻을수 있었습니다.
+
+다음 포스팅에서는 multivariate time series에 대해서 살펴보도록 하겠습니다.
+
+감사합니다! 
 
 
 <b>reference</b>
