@@ -152,7 +152,6 @@ for idx, data in df.iterrows():
     gridx.append(x), gridy.append(y)
 df = df.assign(gridx = gridx, gridy = gridy)
 
-startdate=dt(2018, 12, 13, 9, 0, 0)
 background = plt.imread('background.png')
 
 grid_array = np.empty((253+1, 149+1))
