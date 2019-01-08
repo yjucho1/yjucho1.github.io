@@ -1,0 +1,543 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>시계열 분석 - part4 - yjucho’s blog</title>
+<meta name="description" content="지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="시계열 분석 - part4">
+<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series-part4/">
+
+
+  <meta property="og:description" content="지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2019-01-07T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/time-series-part4/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="시계열 분석 - part4">
+    <meta itemprop="description" content="지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.">
+    <meta itemprop="datePublished" content="January 07, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">시계열 분석 - part4
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</p>
+
+<p>Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. <script type="math/tex">(X_{t1}, X_{t2})’</script> at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 <script type="math/tex">\{X_{t1}\}</script>와 <script type="math/tex">\{X_{t2}\}</script>를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.</p>
+
+<p>랜덤 벡터 <script type="math/tex">\mathbf{X_t} =(X_{t1}, X_{t2})</script>’에 대해서 평균벡터와 공분산 메트릭스는 <script type="math/tex">\mu_t</script>와 <script type="math/tex">\Gamma(t+h, t)</script>와 같이 정의됩니다.</p>
+
+<script type="math/tex; mode=display">\mu_t := EX_t = \begin{bmatrix} EX_{t1} \\ EX_{t2} \end{bmatrix}</script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\Gamma(t+h, t) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} Cov(X_{t+h,1}, X_{t1}) & Cov(X_{t+h,1}, X_{t2}) \\ Cov(X_{t+h,2}, X_{t1}) & Cov(X_{t+h,2}, X_{t2}) \end{bmatrix} %]]></script>
+
+<p>또한 univariate와 마찬가지로 <script type="math/tex">\mu_t</script>와 <script type="math/tex">\Gamma(t+h, t)</script>가 모두 t와 독립적일 때, (weakly) stationary하다고 정의합니다. 이 때의 공분산 메트릭스는 <script type="math/tex">\Gamma(h)</script>로 표기하고, 메트릭스의 diagonal은 각 각 univariate series인 <script type="math/tex">\{X_{t1}\}</script>와 <script type="math/tex">\{X_{t2}\}</script>의 Auto-Covariance Function와 같습니다. 반면 off-diagonal elements는 <script type="math/tex">X_{t+h, i}</script>와 <script type="math/tex">X_{t, i}</script>, <script type="math/tex">i \ne j</script>의 covariances를 나타냅니다. 이 때, <script type="math/tex">\gamma_{12}(h) = \gamma_{21}(-h)</script>	의 특성이 있습니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\Gamma(h) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} \gamma_{11}(h) & \gamma_{12}(h) \\ \gamma_{21}(h) & \gamma_{22}(h) \end{bmatrix} \\ %]]></script>
+
+<p><script type="math/tex">\mu</script> vector와 <script type="math/tex">\Gamma(h)</script>, <script type="math/tex">\rho_{ij}(h)</script>의 estimator는 다음과 같습니다.</p>
+
+<script type="math/tex; mode=display">\bar{\mathbf{X_n}} = \frac{1}{n} \sum_{t=1}^n\mathbf{X_t}</script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+\hat\Gamma(h) & = n^{-1} \sum_{t=1}^{n-h} \left( \mathbf{X_{t+h}} - \bar{\mathbf{X_n}} \right) \left( \mathbf{X_{t}} - \bar{\mathbf{X_n}} \right) \ \ \ \ \ \ \ & for \ 0 \le h \le n-1 \\
+& = \hat\Gamma(-h)'\ \ \ \ \ \ \  & for \ -n+1 \le h \le 0 \\
+\end{align} %]]></script>
+
+<p>correlation between <script type="math/tex">X_{t+h,i}</script> and <script type="math/tex">X_{t,j}</script></p>
+
+<script type="math/tex; mode=display">\hat{\rho_{ij}}(h) = \hat{\gamma_{ij}}(h) (\hat{\gamma_{ii}}(0)\hat{\gamma_{jj}}(0))^{-1/2}</script>
+
+<p>이를 m개의 다변량 시계열 데이터로 확대하면 다음과 같습니다.</p>
+
+<script type="math/tex; mode=display">\mathbf{X_t} :=\begin{bmatrix} X_{t1} \\ \vdots \\ X_{tm} \end{bmatrix}</script>
+
+<script type="math/tex; mode=display">\mu_t := EX_t = \begin{bmatrix} \mu_{t1} \\ \vdots \\ \mu_{tm} \end{bmatrix}</script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\Gamma(t+h, t) := \begin{bmatrix} \gamma_{11}(t+h, t) & \cdots & \gamma_{1m}(t+h, t) \\ 
+\vdots & \vdots & \vdots \\
+\gamma_{m1}(t+h, t) & \cdots & \gamma_{mm}(t+h, t) \end{bmatrix} \\
+where \ \gamma_{ij}(t+h, t):=Cov(X_{t+h, i}, X_{t, j}) %]]></script>
+
+<p><b>Definition</b><br />
+The m-variate series <script type="math/tex">\{\mathbf{X_t}\}</script> is (weakly) stationary if <br />
+(1) <script type="math/tex">\mu_X(t)</script> is independent of t, and <br />
+(2) <script type="math/tex">\Gamma_X(t+h, t)</script> is independent of t for each h.</p>
+
+<p>이 때 <script type="math/tex">\gamma_{ij}(\cdot)</script>, <script type="math/tex">i \ne j</script> 는 서로 다른 두 시리즈 <script type="math/tex">\{X_{ti}\}</script>와 <script type="math/tex">\{X_{tj}\}</script> 의 cross-covariance라고 부릅니다. 일반적으로 <script type="math/tex">\gamma_{ij}(\cdot)</script>는 <script type="math/tex">\gamma_{ji}(\cdot)</script>와 같지 않기 때문에 주의하셔야합니다.</p>
+
+<p><b>Basic Properties of <script type="math/tex">\Gamma(\cdot)</script>:</b><br />
+(1) <script type="math/tex">\Gamma(h) = \Gamma'(h)</script> \   <br />
+(2) <script type="math/tex">\left\vert\gamma_{ij}(h)\right\vert \le [\gamma_{ii}(0)\gamma_{jj}(0)]^{1/2}</script>, i,j=1,…,m <br />
+(3) <script type="math/tex">\gamma_{ii}(\cdot)</script> is an autocovariance function, i = 1,…,m <br />
+(4) <script type="math/tex">\rho_{ii}(0) = 1</script> for all i</p>
+
+<p>Univariate에서 살펴본 white noise 역시 아래와 같이 다변량 정규분포를 따르는 벡터로 정의됩니다.</p>
+
+<p><b>Definition</b> <br />
+The m-variate series <script type="math/tex">\{Z_t\}</script> is called white noise with mean 0 and covariance matrix <script type="math/tex">\Sigma</script>, written
+<script type="math/tex">\{Z_t\} \sim WN(\mathbf{0}, \Sigma)</script>, <br />
+if <script type="math/tex">\{Z_t\}</script> is stationary with mean vector <script type="math/tex">\mathbf{0}</script> and covariance matrix function <br />
+<script type="math/tex">% <![CDATA[
+\begin{align} \Gamma(h) & = \Sigma, \ \ if \ h = 0 \\ & = 0, \ \ \ \ otherwise. \end{align} %]]></script></p>
+
+<p>White noise의 선형조합으로 표현되는 m-variate series <script type="math/tex">\{X_t\}</script>를 linear process로 부르며, MA(<script type="math/tex">\infty</script>) 프로세스는 j가 0보다 작은 경우에는 <script type="math/tex">C_j=0</script>인 linear process에 해당합니다.</p>
+
+<p><b>Definition</b><br />
+The m-variate series <script type="math/tex">\{X_t\}</script> is a linear process if it has the representation
+<script type="math/tex">\mathbf{X_t} = \sum_{j=-\infty}^\infty C_j \mathbf{Z_{t-j}}, \ \ \ \ \ \{\mathbf{Z_{t-j}}\} \sim WN(\mathbf{0}, \mathbf{\Sigma})</script>,<br />
+where <script type="math/tex">\{C_j\}</script> is a sequence of m X m matrics whose components are absolutely summable.</p>
+
+<p>또한 causality를 만족하는 모든 ARMA(p, q) 프로세스는 MA(<script type="math/tex">\infty</script>) 프로세스로 변환할 수 있으며, invertibiliy를 만족하는 모든 ARMA(p, q) 프로세스는 AR(<script type="math/tex">\infty</script>) 프로세스로 변환할 수 있습니다. causality 조건을 만족하면 항상 stationary하고, stationary ARMA(p, q) process는 항상 causality를 만족합니다.</p>
+
+<p><b>Causality</b> <br />
+An ARMA(p, q) process <script type="math/tex">\{X_t\}</script> is causal, or a causal function of <script type="math/tex">\{Z_t\}</script>, if there exist matrices <script type="math/tex">\{\Psi_t\}</script> with absolutely summable components such that <br />
+<script type="math/tex">X_t = \sum_{j=0}^{\infty}\Psi_jZ_{t-j}</script> for all t.<br />
+Causality is equivalent to the condition<br />
+<script type="math/tex">det\Phi(z) \ne 0</script> for all <script type="math/tex">z \in \mathbb{C}</script> such that <script type="math/tex">\vert z \vert \le 1</script></p>
+
+<p>Causality 조건을 다시 보면 1보다 작은 모든 z에 대해서 <script type="math/tex">\Phi(z)</script>의 determinant는 0이 아니여야합니다.  이는 <b><script type="math/tex">\Phi(z)</script>의 모든 eigenvalue들이 1보다 작아야한다</b> 것과 동일합니다.</p>
+
+<p><b> Yule-walker equation</b> <br />
+Yule-walker equation을 이용해 모델의 파라미터를 추정하는 방법에 대해서 살펴보도록 하겠습니다. 실제로는 소프트웨어를 통해 계산되기 때문에 복잡한 계산을 수행할 필요는 없지만, 원리를 이해하는 것을 목적으로 합니다.</p>
+
+<script type="math/tex; mode=display">X_t = \Phi X_{t-1} + Z_t</script>
+
+<p>양변에 <script type="math/tex">X_{t-h}'</script>를 곱해줍니다.</p>
+
+<script type="math/tex; mode=display">X_t X_{t-h}' = \Phi X_{t-1}X_{t-h}' + Z_tX_{t-h}'</script>
+
+<p>이후 Expectation을 취해줍니다.</p>
+
+<script type="math/tex; mode=display">E[X_t X_{t-h}'] = \Phi E[ X_{t-1}X_{t-h}' ] + E[Z_tX_{t-h}' ]</script>
+
+<p><script type="math/tex">X_t</script>의 평균이 0인 시리즈라고 가정하고, h가 1보다 크거나 같을 때와 h가 0일때로 나눠서 생각해볼수 있습니다.
+<script type="math/tex">% <![CDATA[
+\begin{align}
+\Gamma(h) & = \Phi \Gamma(h-1) + \mathbf{0} \ \ \ \ \ \ for \ h \ge 1 \\
+\Gamma(0) & = \Phi \Gamma(-1) + \Sigma_Z \\
+& = \Phi \Gamma(1)' + \Sigma_Z \ \ \ \ \ \ for \ h =0
+\end{align} %]]></script></p>
+
+<p>h가 1일때와 h가 0일때의 두 식을 연립하여 풀면 <script type="math/tex">\Phi</script>를 구할수 있습니다. 
+<script type="math/tex">% <![CDATA[
+\begin{align}
+\Gamma(1) & = \Phi \Gamma(0) + \mathbf{0} \ \ \ \ \ \ for \ h = 1 \\
+\Gamma(0) & = \Phi \Gamma(1) + \Sigma_Z \ \ \ \ \ \ for \ h =0 
+\end{align} %]]></script></p>
+
+<p><b>Cointegration</b></p>
+
+<h2 id="실제-데이터를-이용한-var-forecasting">실제 데이터를 이용한 VAR Forecasting</h2>
+
+<p>앞에서 계속 사용한 초미세먼지 데이터(PM2.5)에 미세먼지(PM10) 농도를 추가하여 Bivariate 시계열 예측을 수행해보도록 하겠습니다.</p>
+
+<ul>
+  <li>데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)와 미세먼지(PM10)</li>
+  <li>기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)</li>
+</ul>
+
+<p><img src="/assets/img/2019-01-07/output_0_0.png" /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-01-07T00:00:00+09:00">January 07, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+-+part4%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part4%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part4%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part4%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part4%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/spatio-temporal%20data/time-series-part3/" class="pagination--pager" title="시계열 분석 - part3
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/spatio-temporal%20data/time-series-part4/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/spatio-temporal%20data/time-series-part4"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>

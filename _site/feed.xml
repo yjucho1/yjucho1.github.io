@@ -1,4 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-04T13:19:50+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-08T13:52:57+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part4</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 - part4" /><published>2019-01-07T00:00:00+09:00</published><updated>2019-01-07T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. &lt;script type=&quot;math/tex&quot;&gt;(X_{t1}, X_{t2})’&lt;/script&gt; at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t1}\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t2}\}&lt;/script&gt;를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.&lt;/p&gt;
+
+&lt;p&gt;랜덤 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathbf{X_t} =(X_{t1}, X_{t2})&lt;/script&gt;’에 대해서 평균벡터와 공분산 메트릭스는 &lt;script type=&quot;math/tex&quot;&gt;\mu_t&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\Gamma(t+h, t)&lt;/script&gt;와 같이 정의됩니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mu_t := EX_t = \begin{bmatrix} EX_{t1} \\ EX_{t2} \end{bmatrix}&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\Gamma(t+h, t) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} Cov(X_{t+h,1}, X_{t1}) &amp; Cov(X_{t+h,1}, X_{t2}) \\ Cov(X_{t+h,2}, X_{t1}) &amp; Cov(X_{t+h,2}, X_{t2}) \end{bmatrix} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;또한 univariate와 마찬가지로 &lt;script type=&quot;math/tex&quot;&gt;\mu_t&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\Gamma(t+h, t)&lt;/script&gt;가 모두 t와 독립적일 때, (weakly) stationary하다고 정의합니다. 이 때의 공분산 메트릭스는 &lt;script type=&quot;math/tex&quot;&gt;\Gamma(h)&lt;/script&gt;로 표기하고, 메트릭스의 diagonal은 각 각 univariate series인 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t1}\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t2}\}&lt;/script&gt;의 Auto-Covariance Function와 같습니다. 반면 off-diagonal elements는 &lt;script type=&quot;math/tex&quot;&gt;X_{t+h, i}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;X_{t, i}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;i \ne j&lt;/script&gt;의 covariances를 나타냅니다. 이 때, &lt;script type=&quot;math/tex&quot;&gt;\gamma_{12}(h) = \gamma_{21}(-h)&lt;/script&gt;	의 특성이 있습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\Gamma(h) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} \gamma_{11}(h) &amp; \gamma_{12}(h) \\ \gamma_{21}(h) &amp; \gamma_{22}(h) \end{bmatrix} \\ %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; vector와 &lt;script type=&quot;math/tex&quot;&gt;\Gamma(h)&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\rho_{ij}(h)&lt;/script&gt;의 estimator는 다음과 같습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\bar{\mathbf{X_n}} = \frac{1}{n} \sum_{t=1}^n\mathbf{X_t}&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+\hat\Gamma(h) &amp; = n^{-1} \sum_{t=1}^{n-h} \left( \mathbf{X_{t+h}} - \bar{\mathbf{X_n}} \right) \left( \mathbf{X_{t}} - \bar{\mathbf{X_n}} \right) \ \ \ \ \ \ \ &amp; for \ 0 \le h \le n-1 \\
+&amp; = \hat\Gamma(-h)'\ \ \ \ \ \ \  &amp; for \ -n+1 \le h \le 0 \\
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;correlation between &lt;script type=&quot;math/tex&quot;&gt;X_{t+h,i}&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;X_{t,j}&lt;/script&gt;&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\hat{\rho_{ij}}(h) = \hat{\gamma_{ij}}(h) (\hat{\gamma_{ii}}(0)\hat{\gamma_{jj}}(0))^{-1/2}&lt;/script&gt;
+
+&lt;p&gt;이를 m개의 다변량 시계열 데이터로 확대하면 다음과 같습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbf{X_t} :=\begin{bmatrix} X_{t1} \\ \vdots \\ X_{tm} \end{bmatrix}&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mu_t := EX_t = \begin{bmatrix} \mu_{t1} \\ \vdots \\ \mu_{tm} \end{bmatrix}&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\Gamma(t+h, t) := \begin{bmatrix} \gamma_{11}(t+h, t) &amp; \cdots &amp; \gamma_{1m}(t+h, t) \\ 
+\vdots &amp; \vdots &amp; \vdots \\
+\gamma_{m1}(t+h, t) &amp; \cdots &amp; \gamma_{mm}(t+h, t) \end{bmatrix} \\
+where \ \gamma_{ij}(t+h, t):=Cov(X_{t+h, i}, X_{t, j}) %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;br /&gt;
+The m-variate series &lt;script type=&quot;math/tex&quot;&gt;\{\mathbf{X_t}\}&lt;/script&gt; is (weakly) stationary if &lt;br /&gt;
+(1) &lt;script type=&quot;math/tex&quot;&gt;\mu_X(t)&lt;/script&gt; is independent of t, and &lt;br /&gt;
+(2) &lt;script type=&quot;math/tex&quot;&gt;\Gamma_X(t+h, t)&lt;/script&gt; is independent of t for each h.&lt;/p&gt;
+
+&lt;p&gt;이 때 &lt;script type=&quot;math/tex&quot;&gt;\gamma_{ij}(\cdot)&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;i \ne j&lt;/script&gt; 는 서로 다른 두 시리즈 &lt;script type=&quot;math/tex&quot;&gt;\{X_{ti}\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{X_{tj}\}&lt;/script&gt; 의 cross-covariance라고 부릅니다. 일반적으로 &lt;script type=&quot;math/tex&quot;&gt;\gamma_{ij}(\cdot)&lt;/script&gt;는 &lt;script type=&quot;math/tex&quot;&gt;\gamma_{ji}(\cdot)&lt;/script&gt;와 같지 않기 때문에 주의하셔야합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Basic Properties of &lt;script type=&quot;math/tex&quot;&gt;\Gamma(\cdot)&lt;/script&gt;:&lt;/b&gt;&lt;br /&gt;
+(1) &lt;script type=&quot;math/tex&quot;&gt;\Gamma(h) = \Gamma'(h)&lt;/script&gt; \   &lt;br /&gt;
+(2) &lt;script type=&quot;math/tex&quot;&gt;\left\vert\gamma_{ij}(h)\right\vert \le [\gamma_{ii}(0)\gamma_{jj}(0)]^{1/2}&lt;/script&gt;, i,j=1,…,m &lt;br /&gt;
+(3) &lt;script type=&quot;math/tex&quot;&gt;\gamma_{ii}(\cdot)&lt;/script&gt; is an autocovariance function, i = 1,…,m &lt;br /&gt;
+(4) &lt;script type=&quot;math/tex&quot;&gt;\rho_{ii}(0) = 1&lt;/script&gt; for all i&lt;/p&gt;
+
+&lt;p&gt;Univariate에서 살펴본 white noise 역시 아래와 같이 다변량 정규분포를 따르는 벡터로 정의됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt; &lt;br /&gt;
+The m-variate series &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\}&lt;/script&gt; is called white noise with mean 0 and covariance matrix &lt;script type=&quot;math/tex&quot;&gt;\Sigma&lt;/script&gt;, written
+&lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(\mathbf{0}, \Sigma)&lt;/script&gt;, &lt;br /&gt;
+if &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\}&lt;/script&gt; is stationary with mean vector &lt;script type=&quot;math/tex&quot;&gt;\mathbf{0}&lt;/script&gt; and covariance matrix function &lt;br /&gt;
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\begin{align} \Gamma(h) &amp; = \Sigma, \ \ if \ h = 0 \\ &amp; = 0, \ \ \ \ otherwise. \end{align} %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;White noise의 선형조합으로 표현되는 m-variate series &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;를 linear process로 부르며, MA(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;) 프로세스는 j가 0보다 작은 경우에는 &lt;script type=&quot;math/tex&quot;&gt;C_j=0&lt;/script&gt;인 linear process에 해당합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;br /&gt;
+The m-variate series &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is a linear process if it has the representation
+&lt;script type=&quot;math/tex&quot;&gt;\mathbf{X_t} = \sum_{j=-\infty}^\infty C_j \mathbf{Z_{t-j}}, \ \ \ \ \ \{\mathbf{Z_{t-j}}\} \sim WN(\mathbf{0}, \mathbf{\Sigma})&lt;/script&gt;,&lt;br /&gt;
+where &lt;script type=&quot;math/tex&quot;&gt;\{C_j\}&lt;/script&gt; is a sequence of m X m matrics whose components are absolutely summable.&lt;/p&gt;
+
+&lt;p&gt;또한 causality를 만족하는 모든 ARMA(p, q) 프로세스는 MA(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;) 프로세스로 변환할 수 있으며, invertibiliy를 만족하는 모든 ARMA(p, q) 프로세스는 AR(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;) 프로세스로 변환할 수 있습니다. causality 조건을 만족하면 항상 stationary하고, stationary ARMA(p, q) process는 항상 causality를 만족합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Causality&lt;/b&gt; &lt;br /&gt;
+An ARMA(p, q) process &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is causal, or a causal function of &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\}&lt;/script&gt;, if there exist matrices &lt;script type=&quot;math/tex&quot;&gt;\{\Psi_t\}&lt;/script&gt; with absolutely summable components such that &lt;br /&gt;
+&lt;script type=&quot;math/tex&quot;&gt;X_t = \sum_{j=0}^{\infty}\Psi_jZ_{t-j}&lt;/script&gt; for all t.&lt;br /&gt;
+Causality is equivalent to the condition&lt;br /&gt;
+&lt;script type=&quot;math/tex&quot;&gt;det\Phi(z) \ne 0&lt;/script&gt; for all &lt;script type=&quot;math/tex&quot;&gt;z \in \mathbb{C}&lt;/script&gt; such that &lt;script type=&quot;math/tex&quot;&gt;\vert z \vert \le 1&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;Causality 조건을 다시 보면 1보다 작은 모든 z에 대해서 &lt;script type=&quot;math/tex&quot;&gt;\Phi(z)&lt;/script&gt;의 determinant는 0이 아니여야합니다.  이는 &lt;b&gt;&lt;script type=&quot;math/tex&quot;&gt;\Phi(z)&lt;/script&gt;의 모든 eigenvalue들이 1보다 작아야한다&lt;/b&gt; 것과 동일합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt; Yule-walker equation&lt;/b&gt; &lt;br /&gt;
+Yule-walker equation을 이용해 모델의 파라미터를 추정하는 방법에 대해서 살펴보도록 하겠습니다. 실제로는 소프트웨어를 통해 계산되기 때문에 복잡한 계산을 수행할 필요는 없지만, 원리를 이해하는 것을 목적으로 합니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t = \Phi X_{t-1} + Z_t&lt;/script&gt;
+
+&lt;p&gt;양변에 &lt;script type=&quot;math/tex&quot;&gt;X_{t-h}'&lt;/script&gt;를 곱해줍니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t X_{t-h}' = \Phi X_{t-1}X_{t-h}' + Z_tX_{t-h}'&lt;/script&gt;
+
+&lt;p&gt;이후 Expectation을 취해줍니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;E[X_t X_{t-h}'] = \Phi E[ X_{t-1}X_{t-h}' ] + E[Z_tX_{t-h}' ]&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;의 평균이 0인 시리즈라고 가정하고, h가 1보다 크거나 같을 때와 h가 0일때로 나눠서 생각해볼수 있습니다.
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\begin{align}
+\Gamma(h) &amp; = \Phi \Gamma(h-1) + \mathbf{0} \ \ \ \ \ \ for \ h \ge 1 \\
+\Gamma(0) &amp; = \Phi \Gamma(-1) + \Sigma_Z \\
+&amp; = \Phi \Gamma(1)' + \Sigma_Z \ \ \ \ \ \ for \ h =0
+\end{align} %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;h가 1일때와 h가 0일때의 두 식을 연립하여 풀면 &lt;script type=&quot;math/tex&quot;&gt;\Phi&lt;/script&gt;를 구할수 있습니다. 
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\begin{align}
+\Gamma(1) &amp; = \Phi \Gamma(0) + \mathbf{0} \ \ \ \ \ \ for \ h = 1 \\
+\Gamma(0) &amp; = \Phi \Gamma(1) + \Sigma_Z \ \ \ \ \ \ for \ h =0 
+\end{align} %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Cointegration&lt;/b&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;실제-데이터를-이용한-var-forecasting&quot;&gt;실제 데이터를 이용한 VAR Forecasting&lt;/h2&gt;
+
+&lt;p&gt;앞에서 계속 사용한 초미세먼지 데이터(PM2.5)에 미세먼지(PM10) 농도를 추가하여 Bivariate 시계열 예측을 수행해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)와 미세먼지(PM10)&lt;/li&gt;
+  &lt;li&gt;기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-07/output_0_0.png&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</summary></entry><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
 
 &lt;p&gt;이번 Part3에서는 non-stationary 시계열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 &lt;script type=&quot;math/tex&quot;&gt;{x_1, …, x_n}&lt;/script&gt;에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다.&lt;/p&gt;
 
@@ -287,7 +407,7 @@ Prob(H) (two-sided):                  0.70   Kurtosis:                         2
 &lt;p&gt;Part2에서 사용한 초미세먼지 농도를 사용하여 Seasonal ARIMA를 적용해보도록 하겠습니다.&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM.25)&lt;/li&gt;
+  &lt;li&gt;데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)&lt;/li&gt;
   &lt;li&gt;기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2210,7 +2330,6 @@ Y &amp; = w_Y  Z + e_{Y} \\
     &lt;span class=&quot;n&quot;&gt;gridx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gridy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;assign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gridx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gridx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gridy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gridy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-&lt;span class=&quot;n&quot;&gt;startdate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2018&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;background&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imread&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'background.png'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;grid_array&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;253&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;149&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
@@ -2544,92 +2663,4 @@ k &lt; n %]]&gt;&lt;/script&gt;인 단일 컨볼루션 레이어는 인풋과 �
 (E) : sinusoidal positional encoding 대신에 learned positional embedding으로 변경한 결과, 거의 유사한 결과를 얻었습니다. (0.1 낮음)&lt;/p&gt;
 
 &lt;h2 id=&quot;conclusion&quot;&gt;conclusion&lt;/h2&gt;
-&lt;p&gt;이 논문은 어텐션만 사용하여 시퀀스 모델을 학습한 최초의 접근인 Transformer를 제안하였습니다. 향후에는 텍스트 이외에 이미지, 오디오, 비디오와 같은 인풋과 아웃풋 문제로 확장하고, 로컬로 제약된 어텐션 메커니즘을 연결할 계획입니다. 또한 덜 순차적인 방식으로 일반화시키는 것이 또 다른 목표입니다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Ashish Vaswani et al. (Google Brain), 2017</summary></entry><entry><title type="html">recommender systems 2</title><link href="http://localhost:4000/recommender%20systems/recommendation2/" rel="alternate" type="text/html" title="recommender systems 2" /><published>2018-10-28T00:00:00+09:00</published><updated>2018-10-28T00:00:00+09:00</updated><id>http://localhost:4000/recommender%20systems/recommendation2</id><content type="html" xml:base="http://localhost:4000/recommender%20systems/recommendation2/">&lt;p&gt;추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다.&lt;/p&gt;
-
-&lt;p&gt;Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2가지 접근 방식이 있습니다. &lt;code class=&quot;highlighter-rouge&quot;&gt;neighborhood method&lt;/code&gt;와 &lt;code class=&quot;highlighter-rouge&quot;&gt;latent factor models&lt;/code&gt; 입니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;neighborhood-method&quot;&gt;Neighborhood method&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;neighborhood method&lt;/code&gt;는 아이템간 혹은 유저간 관계를 계산하는 것에 중점을 둡니다.&lt;/p&gt;
-
-&lt;p&gt;유저 기반의 방법은 해당 유저와 유사한 다른 유저를 찾은 후, 비슷한 유저가 좋아하는 아이템을 추천하는 방식입니다. 그림1에서처럼, 세가지 영화를 좋아하는 Joe를 위해서, 세가지 영화를 동일하게 좋아하는 비슷한 유저를 찾습니다. 이들이 좋아하는 영화 중에서 가장 인기있는 영화인 Saving Private Ryan(라이언 일병 구하기, denoted #1)를 Joe에게 추천할 수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-10-28/user-based-CF.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;small&gt;&lt;em&gt;그림1. user-oriented neighborhood method (Image source: Fig 1 in &lt;a href=&quot;https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf&quot;&gt;Yehuda Koren et al., 2009&lt;/a&gt;)&lt;/em&gt;&lt;/small&gt;&lt;/p&gt;
-
-&lt;p&gt;아이템 기반의 방법은 해당 유저가 좋아하는 아이템과 유사한 아이템을 추천하는 방식입니다. 유사한 아이템은 해당 유저에게 동일한 평가를 받을 가능성이 크기 때문입니다. 예를 들어, Saving Private Ryan와 유사한 영화는 전쟁 영화거나, 톰행크스가 나오거나, 스필버그 감동의 다른 영화일 수 있습니다. 만약 누군가가 Saving Private Ryan를 어떻게 평가할지 궁금하다면, 그 사람이 실제로 본 영화 중에서 Saving Private Ryan와 유사한 영화를 어떻게 평가했는지 찾는 것과 같은 맥락입니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;similarity&quot;&gt;similarity&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;neighborhood method&lt;/code&gt;는 두 유저간 혹은 아이템간 유사도를 계산해야합니다. 유사도를 정량적으로 평가하기 위해서 일반적으로 2가지 measure를 사용합니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt; (1) pearson correlation coefficient&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;유저 &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt;와 유저 &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt;의 유사도를 &lt;script type=&quot;math/tex&quot;&gt;s(u, v)&lt;/script&gt;로 나타내면,&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;s(u, v) = {
-{\sum_{i \in I_{uv}} (r_{ui} - \mu_u) \cdot (r_{vi} - \mu_v)}\over{\sqrt{\sum_{i \in I_{uv}} {(r_{ui} - \mu_u)}^2} \cdot \sqrt{\sum_{i \in I_{uv}} {(r_{vi} - \mu_v)}^2}}}&lt;/script&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;r_{ui}&lt;/script&gt;는 사용자 u가 아이템 i에 대해서 평가한 평점&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;I_{uv}&lt;/script&gt;는 유저 &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt; 와 유저 &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt; 모두에 의해 평가된 아이템의 집합&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\mu_u&lt;/script&gt;는 유저 &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt;의 평균 평점과 &lt;script type=&quot;math/tex&quot;&gt;\mu_v&lt;/script&gt;는 유저 &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt;의 평균 평점&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;마찬가지로 아이템 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;와 아이템 &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;의 유사도를 &lt;script type=&quot;math/tex&quot;&gt;s(i, j)&lt;/script&gt;로 나타내면,&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;s(i, j) = {
-{\sum_{u \in U_{ij}} (r_{ui} - \mu_i) \cdot (r_{uj} - \mu_j)}\over{\sqrt{\sum_{u \in U_{ij}} {(r_{ui} - \mu_i)}^2} \cdot \sqrt{\sum_{u \in U_{ij}} {(r_{uj} - \mu_j)}^2}}}&lt;/script&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;U_{ij}&lt;/script&gt;는 아이템 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt; 와 아이템 &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;를 모두 평가한 유저들의 집합&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\mu_i&lt;/script&gt;는 아이템 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;의 평균 평점과 &lt;script type=&quot;math/tex&quot;&gt;\mu_j&lt;/script&gt;는 아이템 &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;의 평균 평점&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;의미적으로는 유저 &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt;(혹은 아이템 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;) 평점이 1점 증가할때, 유저 &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt;(혹은 아이템 &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;) 평점은 어느정도 증가/감소하는지를 평가하는 것입니다. 상관계수는 상관관계가 클수록 &lt;script type=&quot;math/tex&quot;&gt;\pm1&lt;/script&gt;에 가까운 값을 갖고, 0일 경우 상관관계가 거의 없는 것을 의미합니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt; (2) Cosine Similarity &lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;코사인 유사도는 두 non-zero vector간의 코사인 각을 측정하는 것입니다. 
-두 벡터 A와 B의 코사인 유사도는 두 벡터의 내적을 이용해 정의됩니다. 각도 &lt;script type=&quot;math/tex&quot;&gt;\theta&lt;/script&gt;가 0도이면 코사인 유사도는 1이 되고, &lt;script type=&quot;math/tex&quot;&gt;\theta&lt;/script&gt;가 90도이면 코사인 유사도는 0이 됩니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-A \cdot B &amp; = |A| |B| cos \theta \\ \\
-similarity  =  cos \theta &amp; = \frac{A \cdot B}{|A||B|} \\
-&amp; =  \frac{\sum_{i=1}^{n}A_i \cdot B_i}{\sqrt{\sum_{i=1}^{n}(A_i)^2}{\sqrt{\sum_{i=1}^{n}(B_i)^2}}}
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;유저 &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt;와 유저 &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt;의 유사도를 &lt;script type=&quot;math/tex&quot;&gt;s(u, v)&lt;/script&gt;로 나타내면,&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;s(u, v) = \frac{\sum_{i \in I_{uv}} r_{ui} \cdot r_{vi} }{ \sqrt{\sum_{i \in I_{uv}}r_{ui}^2} \sqrt{\sum_{i \in I_{uv}}r_{vi}^2} }&lt;/script&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;r_{ui}&lt;/script&gt;는 사용자 u가 아이템 i에 대해서 평가한 평점&lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;I_{uv}&lt;/script&gt;는 유저 &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt; 와 유저 &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt; 모두에 의해 평가된 아이템의 집합&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;마찬가지로 아이템 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;와 아이템 &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;의 유사도를 &lt;script type=&quot;math/tex&quot;&gt;s(i, j)&lt;/script&gt;로 나타내면,&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;s(i, j) = \frac{\sum_{u \in U_{ij}} r_{ui} \cdot r_{uj} }{ \sqrt{\sum_{u \in U_{ij}}r_{ui}^2} \sqrt{\sum_{u \in U_{ij}}r_{uj}^2} }&lt;/script&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;U_{ij}&lt;/script&gt;는 아이템 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt; 와 아이템 &lt;script type=&quot;math/tex&quot;&gt;j&lt;/script&gt;를 모두 평가한 유저들의 집합&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;pearson correlation coefficient와 비교하여 평균 평점에 대한 교정이 포함되지 않은 것을 볼수 있습니다.&lt;/p&gt;
-
-&lt;h2 id=&quot;matrix-factorization&quot;&gt;Matrix Factorization&lt;/h2&gt;
-
-&lt;h3 id=&quot;sgd-vs-als&quot;&gt;SGD vs. ALS&lt;/h3&gt;
-
-&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
-
-&lt;p&gt;https://en.wikipedia.org/wiki/Collaborative_filtering&lt;/p&gt;
-
-&lt;p&gt;https://medium.com/@cfpinela/recommender-systems-user-based-and-item-based-collaborative-filtering-5d5f375a127f&lt;/p&gt;
-
-&lt;p&gt;https://datajobs.com/data-science-repo/Recommender-Systems-[Netflix].pdf&lt;/p&gt;
-
-&lt;p&gt;http://jeongchul.tistory.com/553&lt;/p&gt;
-
-&lt;p&gt;http://nicolas-hug.com/blog/matrix_facto_2&lt;/p&gt;
-
-&lt;p&gt;https://datascienceschool.net/view-notebook/fcd3550f11ac4537acec8d18136f2066/&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다.</summary></entry></feed>
+&lt;p&gt;이 논문은 어텐션만 사용하여 시퀀스 모델을 학습한 최초의 접근인 Transformer를 제안하였습니다. 향후에는 텍스트 이외에 이미지, 오디오, 비디오와 같은 인풋과 아웃풋 문제로 확장하고, 로컬로 제약된 어텐션 메커니즘을 연결할 계획입니다. 또한 덜 순차적인 방식으로 일반화시키는 것이 또 다른 목표입니다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Ashish Vaswani et al. (Google Brain), 2017</summary></entry></feed>
