@@ -13,7 +13,7 @@ published: true
 
 * 원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다. 
 * 원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.
-django APP의 전체코드는 [이 깃헙 레포지토리](https://github.com/yjucho1/korea-air-pollution-dashboard)를 참고하십시요.
+django APP의 전체코드는 [이 깃헙 레포지토리](https://github.com/yjucho1/air-pollution)를 참고하십시요.
 * 추가된 부분은 Blockquotes 표시되어 있습니다.
 
 <img src = "/assets/img/2018-12-26/fig0.png">

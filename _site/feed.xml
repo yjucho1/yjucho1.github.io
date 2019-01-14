@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-08T13:52:57+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part4</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 - part4" /><published>2019-01-07T00:00:00+09:00</published><updated>2019-01-07T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-14T20:49:52+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part4</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 - part4" /><published>2019-01-07T00:00:00+09:00</published><updated>2019-01-07T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
 
 &lt;p&gt;Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. &lt;script type=&quot;math/tex&quot;&gt;(X_{t1}, X_{t2})’&lt;/script&gt; at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t1}\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t2}\}&lt;/script&gt;를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.&lt;/p&gt;
 
@@ -107,7 +107,69 @@ Yule-walker equation을 이용해 모델의 파라미터를 추정하는 방법�
 \Gamma(0) &amp; = \Phi \Gamma(1) + \Sigma_Z \ \ \ \ \ \ for \ h =0 
 \end{align} %]]&gt;&lt;/script&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;b&gt;Cointegration&lt;/b&gt;&lt;/p&gt;
+&lt;h3 id=&quot;cointegration&quot;&gt;Cointegration&lt;/h3&gt;
+
+&lt;p&gt;앞선 nonstationary univariate time series에서 &lt;script type=&quot;math/tex&quot;&gt;\nabla = 1-B&lt;/script&gt;를 이용하여 stationary를 만드는 방법을 이야기한 적 있습니다. 만약 &lt;script type=&quot;math/tex&quot;&gt;\{\nabla^d X_t\}&lt;/script&gt;가 어떤 양수 d에 대해서 stationary이나, &lt;script type=&quot;math/tex&quot;&gt;\{\nabla^{d-1} X_t\}&lt;/script&gt;에 대해서는 nonstationary할 때, &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is integrated of order d라고 하며, &lt;script type=&quot;math/tex&quot;&gt;\{X_t\} \sim I(d)&lt;/script&gt;라고 표기합니다. 마찬가지로 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; 가 k-variate time series일 경우에도, &lt;script type=&quot;math/tex&quot;&gt;\{\nabla^{d} X_t\}&lt;/script&gt;는 j번째(j=1, …, k) 컴포넌트에 &lt;script type=&quot;math/tex&quot;&gt;(1-B)^d&lt;/script&gt; 오퍼레이터를 적용하여 얻은 시리즈를 의미합니다.&lt;/p&gt;
+
+&lt;p&gt;cointegration이라는 개념은 Granger(1981)에서 처음 도입되고, Engle and Granger(1987)가 개발하였습니다. 여기서는 Lukepohl(1993)의 개념을 사용하도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;If d is a positive integer, &lt;script type=&quot;math/tex&quot;&gt;\{\nabla^d X_t\}&lt;/script&gt; is stationary and &lt;script type=&quot;math/tex&quot;&gt;\{\nabla^{d-1} X_t\}&lt;/script&gt; is nonstationary, the k-dimensional time series &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is integrated of order d (&lt;script type=&quot;math/tex&quot;&gt;\{X_t\} \sim I(d)&lt;/script&gt;).&lt;/p&gt;
+
+&lt;p&gt;The I(d) process &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is said to be cointegrated with cointegration vector &lt;script type=&quot;math/tex&quot;&gt;\alpha&lt;/script&gt; if &lt;script type=&quot;math/tex&quot;&gt;\alpha&lt;/script&gt; is a k &lt;script type=&quot;math/tex&quot;&gt;\times&lt;/script&gt; 1 vector such that &lt;script type=&quot;math/tex&quot;&gt;\{\alpha' X_t\}&lt;/script&gt; is integrated of order less than d.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;example&lt;/b&gt;&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+X_t = \sum_{j=1}^t Z_j, &amp; &amp; t =1, 2, ...,  \ \ &amp; \{Z_t\} \sim IID(0, \sigma^2) \\
+Y_t = X_t + W_t, &amp; &amp; t=1, 2, ..., \ \ &amp; \{W_t\} \sim IID(0, \tau^2) \\
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\{W_t\}&lt;/script&gt; is independent of &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\}&lt;/script&gt;. Then &lt;script type=&quot;math/tex&quot;&gt;\{(X_t, Y_t)'\}&lt;/script&gt; is integrated of order 1 and cointegrated with cointegration vector &lt;script type=&quot;math/tex&quot;&gt;\alpha = (1, -1)'&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;cointegration 개념은 univariate nonstationary time series가 “함께 움직인다”는 아이디어를 설명하는 것입니다.  위의 예제에서 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{Y_t\}&lt;/script&gt;는 모두 nonstationary이지만, stationary한 &lt;script type=&quot;math/tex&quot;&gt;\{W_t\}&lt;/script&gt; 부문만 다를뿐 서로 연결되어 있습니다.&lt;/p&gt;
+
+&lt;p&gt;cointegration 방식으로 움직이는 시리즈들은 경제학에서 많이 볼 수 있는데, Engle and Granger (1991)에서는 Northern California와 Southern California에서의 토마토 가격인 &lt;script type=&quot;math/tex&quot;&gt;\{U_t\}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\{V_t\}&lt;/script&gt;를 대표적인 예로 설명하였습니다. 두 시리즈는 서로 연결되어 있기때문에 한 도시에서의 토마토 가격이 상승하면, 다른 도시에서의 토마토를 사서 되파는 상황이 가능하고 이 때문에 두 도시의 가격은 v=u 형태의 직선에 가깝게 됩니다.&lt;/p&gt;
+
+&lt;p&gt;즉, &lt;script type=&quot;math/tex&quot;&gt;\{U_t\}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\{V_t\}&lt;/script&gt;는 시간의 흐름에 따라 nonstationary하게 움직이지만, &lt;script type=&quot;math/tex&quot;&gt;(U_t, V_t)'&lt;/script&gt; 을 2차원 평면에 점으로 표현하면, v=u 직선에서 약간의 랜덤한 편차가 존재하는 형태로 표현될 것입니다. 이때, 이 직선을 attractor for &lt;script type=&quot;math/tex&quot;&gt;(U_t, V_t)'&lt;/script&gt; 라고 합니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;example&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;위의 예제에서 &lt;script type=&quot;math/tex&quot;&gt;\nabla = 1-B&lt;/script&gt;를 적용하여 얻은 새로운 시리즈 &lt;script type=&quot;math/tex&quot;&gt;(U_t, V_t)'&lt;/script&gt;라고 하겠습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+U_t &amp; =  Z_t \\
+V_t &amp; = Z_t + W_t - W_{t-1}
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{(U_t, V_t)'\}&lt;/script&gt;는 stationary mutivariate MA(1) process입니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix}
+U_t \\
+V_t
+\end{bmatrix}
+= \begin{bmatrix}
+1 &amp; 0 \\
+0 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+Z_t \\
+Z_t + W_t
+\end{bmatrix}
+- 
+\begin{bmatrix}
+0 &amp; 0 \\
+-1 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+Z_{t-1} \\
+Z_{t-1} + W_{t-1}
+\end{bmatrix} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;하지만 &lt;script type=&quot;math/tex&quot;&gt;\{(U_t, V_t)'\}&lt;/script&gt;는 AR(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;)로 표현될수는 없습니다. 메트릭스 &lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} - z \begin{bmatrix} 0 &amp; 0 \\ -1 &amp; 1 \end{bmatrix} %]]&gt;&lt;/script&gt; 가 z=1일때 zero determinant이기때문에 causuality condition을 만족하지 않기때문입니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;실제-데이터를-이용한-var-forecasting&quot;&gt;실제 데이터를 이용한 VAR Forecasting&lt;/h2&gt;
 
@@ -118,7 +180,96 @@ Yule-walker equation을 이용해 모델의 파라미터를 추정하는 방법�
   &lt;li&gt;기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-07/output_0_0.png&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</summary></entry><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-07/output_0_0.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;statsmodel의 VAR 모듈을 이용해 multivariate time sereis 모델링을 수행할 수 있습니다. VAR 모듈의 select_order 함수는 AIC, BIC, HQIC와 같은 지표를 기준으로 가장 최적의 order를 결정할수 있도록 도와줍니다. 최대 order를 30으로 하고 최적 order를 탐색한 결과, 아래와 같이 AIC 기준으로는 9, BIC 기준으로 5가 결정된 것을 볼 수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'pm10Value'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'pm25Value'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;VAR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;freq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'H'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;select_order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trend&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'nc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;## &amp;lt;statsmodels.tsa.vector_ar.var_model.LagOrderResults object. Selected orders are: AIC -&amp;gt; 9, BIC -&amp;gt; 5, FPE -&amp;gt; 9, HQIC -&amp;gt; 5&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;BIC 기준으로 order 5를 선택하여 모델을 학습한 결과는 아래와 같습니다. 모델이 추정한 파라미터를 이용해 수식으로 적어보면 다음과 같습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align} \begin{bmatrix} X_t \\ Y_t \end{bmatrix} = &amp; \begin{bmatrix} 0.227950 &amp; 1.021808 \\ 0.013951 &amp; 0.856883 \end{bmatrix} + \begin{bmatrix} X_{t-1} \\ Y_{t-1} \end{bmatrix} + \\ &amp; \begin{bmatrix} 0.175133 &amp; -0.172207 \\ 0.005520 &amp; 0.090531 \end{bmatrix} + \begin{bmatrix} X_{t-2} \\ Y_{t-2} \end{bmatrix} +  \\ &amp; \begin{bmatrix} 0.114712 &amp;-0.170387  \\ -0.000139 &amp; -0.031543 \end{bmatrix} + \begin{bmatrix} X_{t-3} \\ Y_{t-3} \end{bmatrix} + \\ &amp; \begin{bmatrix} 0.07475107 &amp; -0.01361328 \\ -0.00297173 &amp; -0.0174331 \end{bmatrix} +  \begin{bmatrix} X_{t-4} \\ Y_{t-4} \end{bmatrix} + \\ &amp; \begin{bmatrix} 0.16981114 &amp; -0.20771503 \\ 0.00960018 &amp; 0.03822593 \end{bmatrix} + \begin{bmatrix} X_{t-5} \\ Y_{t-5} \end{bmatrix} +  \begin{bmatrix} Z_t \\ W_t \end{bmatrix}\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trend&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'nc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  Summary of Regression Results   
+==================================
+Model:                         VAR
+Method:                        OLS
+Date:           Mon, 14, Jan, 2019
+Time:                     16:47:40
+--------------------------------------------------------------------
+No. of Equations:         2.00000    BIC:                    8.37752
+Nobs:                     2179.00    HQIC:                   8.35103
+Log likelihood:          -15249.5    FPE:                    4170.38
+AIC:                      8.33576    Det(Omega_mle):         4139.93
+--------------------------------------------------------------------
+Results for equation pm10Value
+===============================================================================
+                  coefficient       std. error           t-stat            prob
+-------------------------------------------------------------------------------
+L1.pm10Value         0.246944         0.022176           11.136           0.000
+L1.pm25Value         0.996998         0.096106           10.374           0.000
+L2.pm10Value         0.200154         0.022561            8.872           0.000
+L2.pm25Value        -0.199703         0.124451           -1.605           0.109
+L3.pm10Value         0.147570         0.022565            6.540           0.000
+L3.pm25Value        -0.191717         0.124290           -1.543           0.123
+L4.pm10Value         0.113603         0.022163            5.126           0.000
+L4.pm25Value        -0.040803         0.096037           -0.425           0.671
+===============================================================================
+
+Results for equation pm25Value
+===============================================================================
+                  coefficient       std. error           t-stat            prob
+-------------------------------------------------------------------------------
+L1.pm10Value         0.015231         0.005147            2.959           0.003
+L1.pm25Value         0.856493         0.022305           38.399           0.000
+L2.pm10Value         0.007163         0.005236            1.368           0.171
+L2.pm25Value         0.087437         0.028884            3.027           0.002
+L3.pm10Value         0.001760         0.005237            0.336           0.737
+L3.pm25Value        -0.028244         0.028846           -0.979           0.328
+L4.pm10Value         0.000100         0.005144            0.019           0.984
+L4.pm25Value         0.023794         0.022289            1.068           0.286
+===============================================================================
+
+Correlation matrix of residuals
+            pm10Value  pm25Value
+pm10Value     1.000000   0.273513
+pm25Value     0.273513   1.000000
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Univariate에서와 마찬가지로 모델의 적합성을 검증하기 위해 residual analysis를 수행합니다. residual plot과 residual acf 등을 그려 모델 적합성을 검증합니다. 두 시리즈의 residual acf가 거의 zero에 가가운 것을 볼 수가 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_acorr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nlags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-07/output_1_0.png&quot; /&gt;
+&lt;img src=&quot;/assets/img/2019-01-07/output_1_2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;또한 plot_forecast 혹은 forecast 함수를 이용해 미래값을 예측할 수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_forecast&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.05&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot_stderr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-07/output_2_0.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;reference&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;[1] &lt;a href=&quot;https://www.springer.com/us/book/9781475777505&quot;&gt;Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[2] &lt;a href=&quot;https://www.statsmodels.org/dev/index.html&quot;&gt;Statsmodel’s Documentation&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[3] &lt;a href=&quot;http://www.kocw.net/home/search/kemView.do?kemId=977301&quot;&gt;시계열분석 강의, 한양대학교(이기천)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[4]  &lt;a href=&quot;https://en.wikipedia.org/wiki/Cointegration&quot;&gt;https://en.wikipedia.org/wiki/Cointegration&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</summary></entry><entry><title type="html">시계열 분석 - part3</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 - part3" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
 
 &lt;p&gt;이번 Part3에서는 non-stationary 시계열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 &lt;script type=&quot;math/tex&quot;&gt;{x_1, …, x_n}&lt;/script&gt;에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다.&lt;/p&gt;
 
@@ -492,7 +643,7 @@ NormaltestResult(statistic=561.8797124030831, pvalue=9.758222244224708e-123)&lt;
 &lt;ul&gt;
   &lt;li&gt;원글은 tensorflow serving 설치방법을 apt-get(리눅스 환경에서만 가능)를 이용하였으나, 본 글은 docker를 이용해 설치하는 방법을 이용해 MAC OSX에서 테스트한 내용을 추가하였습니다.&lt;/li&gt;
   &lt;li&gt;원글은 api서버로 Flask를 이용하였으나, 본 글은 django를 이용한 예제을 추가하였습니다.
-django APP의 전체코드는 &lt;a href=&quot;https://github.com/yjucho1/korea-air-pollution-dashboard&quot;&gt;이 깃헙 레포지토리&lt;/a&gt;를 참고하십시요.&lt;/li&gt;
+django APP의 전체코드는 &lt;a href=&quot;https://github.com/yjucho1/air-pollution&quot;&gt;이 깃헙 레포지토리&lt;/a&gt;를 참고하십시요.&lt;/li&gt;
   &lt;li&gt;추가된 부분은 Blockquotes 표시되어 있습니다.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2365,7 +2516,7 @@ Y &amp; = w_Y  Z + e_{Y} \\
 
 &lt;p&gt;&lt;b&gt;Demo&lt;/b&gt; : &lt;a href=&quot;https://youtu.be/Xt-Yw83cv7E&quot;&gt;Youtue&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;b&gt;github repo.&lt;/b&gt; : &lt;a href=&quot;https://github.com/yjucho1/mysite&quot;&gt;github&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;github repo.&lt;/b&gt; : &lt;a href=&quot;https://github.com/yjucho1/air-pollution&quot;&gt;github&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;related-tools-and-docs&quot;&gt;Related Tools and Docs&lt;/h3&gt;
 
