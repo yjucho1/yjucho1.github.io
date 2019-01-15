@@ -108,4 +108,9 @@ var store = [{
         "excerpt":"지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다. Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다....","categories": ["Spatio-Temporal Data"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part4/",
+        "teaser":null},{
+        "title": "시계열 분석 - part5",
+        "excerpt":"지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다. ARCH ARCH(autoregressive conditional heteroskedasticity) 모델은 다음과 같이 정의됩니다. Definition ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보도록 하죠. 의 평균은 0이고, lag=h인 관측값간의 공분산이 0이라는 것은 가 white noise라는 것을 의미합니다. 또한 이기때문에, 를...","categories": ["Spatio-Temporal Data"],
+        "tags": [],
+        "url": "http://localhost:4000/spatio-temporal%20data/time-series-part5/",
         "teaser":null}]
