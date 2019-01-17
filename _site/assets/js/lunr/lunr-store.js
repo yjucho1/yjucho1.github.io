@@ -110,7 +110,12 @@ var store = [{
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part4/",
         "teaser":null},{
         "title": "시계열 분석 - part5",
-        "excerpt":"지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다. ARCH ARCH(autoregressive conditional heteroskedasticity) 모델은 다음과 같이 정의됩니다. Definition ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보도록 하죠. 의 평균은 0이고, lag=h인 관측값간의 공분산이 0이라는 것은 가 white noise라는 것을 의미합니다. 또한 이기때문에, 를...","categories": ["Spatio-Temporal Data"],
+        "excerpt":"지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다. 이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 ARMAX 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term...","categories": ["Spatio-Temporal Data"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series-part5/",
+        "teaser":null},{
+        "title": "django - AWS 배포하기",
+        "excerpt":"django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. 이 블로그를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다. 아마존 웹 서비스 (AWS) 가입하기 계정 가입 후 콘솔 로그인 서비스 검색에 IAM(Identity and Access Management) 사용자 탭에 사용자 추가 엑세스 유형 : 프로그래밍 방식 액세스...","categories": ["django"],
+        "tags": [],
+        "url": "http://localhost:4000/django/django-deploy-aws/",
         "teaser":null}]

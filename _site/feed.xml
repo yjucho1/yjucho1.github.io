@@ -1,4 +1,231 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-15T21:18:23+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part5</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part5/" rel="alternate" type="text/html" title="시계열 분석 - part5" /><published>2019-01-15T00:00:00+09:00</published><updated>2019-01-15T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part5</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part5/">&lt;p&gt;지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-17T18:10:14+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">django - AWS 배포하기</title><link href="http://localhost:4000/django/django-deploy-aws/" rel="alternate" type="text/html" title="django - AWS 배포하기" /><published>2019-01-17T00:00:00+09:00</published><updated>2019-01-17T00:00:00+09:00</updated><id>http://localhost:4000/django/django-deploy-aws</id><content type="html" xml:base="http://localhost:4000/django/django-deploy-aws/">&lt;p&gt;django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. &lt;a href=&quot;https://nachwon.github.io/django-deploy-1-aws/&quot;&gt;이 블로그&lt;/a&gt;를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;아마존-웹-서비스-aws-가입하기&quot;&gt;아마존 웹 서비스 (AWS) 가입하기&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;계정 가입 후 콘솔 로그인
+    &lt;ul&gt;
+      &lt;li&gt;서비스 검색에 IAM(Identity and Access Management)&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-17/1.png&quot; width=&quot;400&quot; /&gt;
+ &lt;img src=&quot;/assets/img/2019-01-17/2.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;사용자 탭에 사용자 추가
+    &lt;ul&gt;
+      &lt;li&gt;엑세스 유형 : 프로그래밍 방식 액세스&lt;/li&gt;
+      &lt;li&gt;기존 정책 직접 연결 : AmazonEC2FullAccess&lt;/li&gt;
+      &lt;li&gt;완료 창의 Access key ID 와 Secret access key는 꼭 저장해두어야 합니다. “download.csv”를 눌러 저장합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;EC2 서비스로 이동&lt;/li&gt;
+  &lt;li&gt;키페어 생성 - pem 파일 다운로드
+    &lt;ul&gt;
+      &lt;li&gt;다운로드한 pem 파일은 ~/.ssh 폴더에 보관한다.&lt;/li&gt;
+      &lt;li&gt;chmod 400 pem파일 로 권한을 변경합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;인스턴스 생성
+    &lt;ul&gt;
+      &lt;li&gt;Ubuntu Server 16.04&lt;/li&gt;
+      &lt;li&gt;보안 그룹 이름 및 설명 입력&lt;/li&gt;
+      &lt;li&gt;검토 후 시작 클릭 후 생성한 키페어 선택합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;생성된 인스턴스에 sss 접속
+    &lt;ul&gt;
+      &lt;li&gt;ssh -i 키페어경로 유저명@EC2퍼블릭DNS주소&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;서버 환경 설정
+    &lt;ul&gt;
+      &lt;li&gt;locale 설정&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; sudo vi /etc/default/locale
+
+ LC_CTYPE=&quot;en_US.UTF-8&quot;
+ LC_ALL=&quot;en_US.UTF-8&quot;
+ LANG=&quot;en_US.UTF-8&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; sudo apt-get update
+ sudo apt-get dist-upgrade
+ sudo apt-get install python-pip
+ sudo apt-get install zsh
+ sudo curl -L http://install.ohmyz.sh | sh
+ sudo chsh ubuntu -s /usr/bin/zsh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;pyenv 설치
+    &lt;ul&gt;
+      &lt;li&gt;먼저 Ubuntu에서 Build 할 때 공통적으로 발생하는 문제를 방지하기 위해 필요한 패키지들을 설치해준다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+ libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+ xz-utils tk-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;git clone 후 설치해줍니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;~/.zshrc 의 pyenv 환경변수 설정을 해줍니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; export PATH=&quot;/home/ubuntu/.pyenv/bin:$PATH&quot;
+ eval &quot;$(pyenv init -)&quot;
+ eval &quot;$(pyenv virtualenv-init -)&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Python 설치
+    &lt;ul&gt;
+      &lt;li&gt;pyenv를 통해서 Python을 설치합니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; pyenv install 3.6.7
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Pillow를 위한 Python 라이브러리 설치합니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; sudo apt-get install python-dev python-setuptools
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;scp를 사용하여 django 프로젝트 파일 업로드하기
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scp -i 키페어경로 -r 보낼폴더경로 유저명@퍼블릭DNS:받을폴더경로
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;서버에서 Python 가상환경 설치하기
+    &lt;ul&gt;
+      &lt;li&gt;AWS 서버에 로컬 서버에서 생성했던 pyenv 가상환경 이름과 동일한 이름으로 가상환경을 생성합니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pyenv virtualenv 3.6.7 mysite
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;다음의 명령어를 입력하여 requirements.txt 에 기재되어있는 패키지들을 설치해줍니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install -r requirements.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;만약 pip 버전이 최신버전이 아니라는 에러가 날 경우 아래 명령어를 입력해준 다음 다시 설치합니다.
+        &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip install --upgrade pip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;보안 그룹에 포트 추가하기
+    &lt;ul&gt;
+      &lt;li&gt;EC2 관리 화면으로 접속한 뒤, 보안 그룹 화면으로 이동합니다.&lt;/li&gt;
+      &lt;li&gt;보안 그룹 목록에서 생성한 보안 그룹을 체크하고 인바운드 탭의 편집 버튼을 누릅니다.&lt;/li&gt;
+      &lt;li&gt;규칙 추가 버튼을 누른 다음, 포트 범위에 8080 을 입력하고 저장을 누릅니다. 
+&lt;img src=&quot;/assets/img/2019-01-17/3.png&quot; width=&quot;400&quot; /&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;runserver 실행하기
+    &lt;ul&gt;
+      &lt;li&gt;srv 폴더안의 프로젝트 폴더로 이동하여 runserver 를 포트 8080에 실행합니다.
+./manage.py runserver 0:8080&lt;/li&gt;
+      &lt;li&gt;위의 모든 과정이 올바르게 수행되었다면 django application 화면이 보일 것입니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;wsgi와-nginx&quot;&gt;WSGI와 NGINX&lt;/h2&gt;
+
+&lt;h2 id=&quot;static-files을-s3에-저장하기&quot;&gt;static files을 S3에 저장하기&lt;/h2&gt;
+
+&lt;h2 id=&quot;외부도메인-연결을-위해-route-53-사용하기&quot;&gt;외부도메인 연결을 위해 Route 53 사용하기&lt;/h2&gt;
+
+&lt;h2 id=&quot;trouble-shooting&quot;&gt;trouble shooting&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;b&gt;어드민 로그인 시 “attempt to write a readonly database” 에러 발생&lt;/b&gt;&lt;br /&gt;
+db.sqlite3의 권한 문제로 아래 명령어를 이용해 권한 부여를 해주어야합니다. 이때 db.sqlite3가 위치한 부모 디렉토리에도 권한이 부여되여있어야하니 주의하셔야합니다.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo chgrp [deploy를 수행하는 유저그룹] [path-to-db.sqlite3]
+sudo chown [deploy를 수행하는 유저] [path-to-db.sqlite3]
+sudo chown [deploy를 수행하는 유저] [path-to-parent-directory-of-db.sqlite3]
+sudo chgrp [deploy를 수행하는 유저그룹] [path-to-parent-directory-of-db.sqlite3]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;b&gt;Reference&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://nachwon.github.io/django-deploy-1-aws/&quot;&gt;https://nachwon.github.io/django-deploy-1-aws/&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. 이 블로그를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.</summary></entry><entry><title type="html">시계열 분석 - part5</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part5/" rel="alternate" type="text/html" title="시계열 분석 - part5" /><published>2019-01-15T00:00:00+09:00</published><updated>2019-01-15T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part5</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part5/">&lt;p&gt;지금까지 우리는 시계열 데이터를 설명하기 위해 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARMA&lt;/code&gt;모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARIMA&lt;/code&gt; 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
+Vector AR 모델도 알아보았습니다.&lt;/p&gt;
+
+&lt;p&gt;이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 ARMAX 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 ARFIMA 모델을 설명드리고자 합니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;armax---arma-with-exogenous-inputs&quot;&gt;ARMAX - ARMA with exogenous inputs&lt;/h2&gt;
+
+&lt;p&gt;일반적인 ARMA(p, q) process는 다음과 같고, &lt;code class=&quot;highlighter-rouge&quot;&gt;ARMAX&lt;/code&gt;는 여기에 시간따라 변하는 외적 요인(&lt;code class=&quot;highlighter-rouge&quot;&gt;exogenous inputs&lt;/code&gt;, &lt;script type=&quot;math/tex&quot;&gt;d_t&lt;/script&gt;)을 고려하는 모델입니다.&lt;/p&gt;
+
+&lt;p&gt;ARMA(p, q) : &lt;script type=&quot;math/tex&quot;&gt;X_t = c + Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;ARMA 모델에 과거 b개의 외적 요인 &lt;script type=&quot;math/tex&quot;&gt;\{d_t\}&lt;/script&gt;의 선형 조합이 포함되며, 이에 따라 &lt;script type=&quot;math/tex&quot;&gt;\eta_1, ..., \eta_k&lt;/script&gt;가 모델 파라미터로 추가됩니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;
+ARMAX(p, q, b) :&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j} + \sum_{k=1}^b \eta_k d_{t-k}&lt;/script&gt;
+
+&lt;p&gt;statsmodels의 시계열 모형 클래스 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARMA&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ARIMA&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;SARIMAX&lt;/code&gt; 등은 모두 외부 시계열의 영향을 포함하기 위한 &lt;code class=&quot;highlighter-rouge&quot;&gt;exog&lt;/code&gt; 라는 인자를 가지고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;실제 데이터를 이용한 분석&lt;/b&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)와 기상 데이터(온도, 습도)&lt;/li&gt;
+  &lt;li&gt;기간 : 	2018-11-01 ~ 2018-12-1 (1개월, 1시간 단위)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-15/fig1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;미세먼지 측정 농도는 온도와 습도에 영향을 받습니다. 측정방식에 따른 한게점이기도 하고, 미세먼지 발생량 자체가 온도, 습도 기상 상태에 따라 달라질 수 있기 때문입니다. 따라서 초미세먼지 농도를 예측함에 있어서 해당 시간대의 기상 데이터를 외부 요인으로 사용하여 모델을 추정해보았습니다.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;df = df[['pm25Value', 'temp','hm']]
+df = np.array(df)
+
+arma_mod30 = sm.tsa.ARMA(df[:,0], (3,0)).fit(disp=False)
+predict_pm25 = arma_mod30.predict(dynamic=True)
+print(&quot;AR(3) model's RMSE: &quot;, mean_forecast_err(df[3:,0], predict_pm25))
+
+armax_mod30 = sm.tsa.ARMA(df[:,0], (3,0), exog=df[:,1:]).fit(disp=False)
+predict_pm25 = armax_mod30.predict(dynamic=True)
+print(&quot;ARX(3) model's RMSE: &quot;, mean_forecast_err(df[3:,0], predict_pm25))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;output :&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AR(3) model's RMSE:  8.036039331569588
+ARX(3) model's RMSE:  7.710071937116329
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;추정결과, 예측정확도를 평가하는 RMSE가 0.3 줄어든 것을 볼수 있습니다. 외부 요인을 도입함으로서 예측 성능을 높일 수 있다는 것을 보여주는 결과입니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;arfima---autoregressive-fractionally-integrated-moving-average&quot;&gt;ARFIMA - Autoregressive fractionally integrated moving average&lt;/h2&gt;
+
+&lt;p&gt;일반적인 ARMA(p, q)모델은 ACF가 빠르게 감소하는 모습을 띕니다. 이러한 형태를 &lt;code class=&quot;highlighter-rouge&quot;&gt;short-term memory process&lt;/code&gt;라고 합니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\rho(h) \to 0 \ as \ h \to \infty&lt;/script&gt;
+
+&lt;p&gt;하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다.  &lt;a href=&quot;/spatio-temporal%20data/time-series-part3/&quot;&gt;Part3&lt;/a&gt;에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 알아보았습니다. 하지만 differencing을 반복적으로 수행하였지만 여전히 &lt;code class=&quot;highlighter-rouge&quot;&gt;long-term memory process&lt;/code&gt; 성질이 남아있는 경우가 있습니다. 이러한 경우 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARFIMA&lt;/code&gt; 모델을 사용할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1-B)^d X_t = Z_t, \ \ \ \ \ 0 \lt d \lt \frac{1}{2}&lt;/script&gt;
+
+&lt;p&gt;여기서 &lt;script type=&quot;math/tex&quot;&gt;(1-B)^d&lt;/script&gt;를 “fractionally differenced”된 &lt;script type=&quot;math/tex&quot;&gt;\Phi(B)&lt;/script&gt; 라고 부릅니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t = (1-B)^{-d} Z_t
+= \sum_{j=0}^\infty \Theta_j B^j Z_t&lt;/script&gt;
+
+&lt;p&gt;ACF of &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\rho(h) = \frac{\Gamma(h+d)\Gamma(1-d)}{\Gamma(h-d+1)\Gamma(d)} \sim h^{2d-1} \ for \ large \ h&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\sum_{h=-\infty}^{\infty} |\rho(h)| = \infty&lt;/script&gt;
+
+&lt;p&gt;위와 같이 모든 lag에 대한 ACF를 모두 더하면 &lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;가 되기 때문에, 이를 &lt;code class=&quot;highlighter-rouge&quot;&gt;long-term memory process&lt;/code&gt;라고 부릅니다. 여기서 추정해야할 모델 파라미터는 &lt;script type=&quot;math/tex&quot;&gt;d&lt;/script&gt;가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Phi(B)(1-B)^d X_t = \Theta(B) Z_t&lt;/script&gt;
+
+&lt;p&gt;&lt;b&gt;statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;arch&quot;&gt;ARCH&lt;/h2&gt;
 
@@ -12,7 +239,7 @@ X_t &amp; = \sigma_t * Z_t \\
 \sigma_t^2 &amp; = \alpha_0 + \sum_{I=1}^p \alpha_i x_{t-i}^2
 \end{align} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보도록 하죠.&lt;/p&gt;
+&lt;p&gt;ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보겠습니다.&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 \begin{align}
@@ -33,7 +260,7 @@ Cov[X_{t+h}, X_t] &amp; = E[X_{t+h} X_t] \\
 &amp; =0
 \end{align} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;의 평균은 0이고, lag=h인 관측값간의 공분산이 0이라는 것은 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 white noise라는 것을 의미합니다. 또한 &lt;script type=&quot;math/tex&quot;&gt;Var[X_t]=\sigma_t^2&lt;/script&gt;이기때문에, &lt;script type=&quot;math/tex&quot;&gt;\sigma_t^2&lt;/script&gt;를 volatility 라고 합니다.&lt;/p&gt;
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;의 평균은 0이고, lag=h인 관측값간의 공분산은 0입니다. 즉 시간에 따라 변하지 않는 성질을 가지고 있습니다. (&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 white noise라는 것을 의미합니다) 하지만 &lt;script type=&quot;math/tex&quot;&gt;Var[X_t]=\sigma_t^2&lt;/script&gt;이기때문에, nonstationary합니다.  &lt;script type=&quot;math/tex&quot;&gt;\sigma_t^2&lt;/script&gt;를 volatility 라고 부르기도 합니다.&lt;/p&gt;
 
 &lt;p&gt;&lt;b&gt;example&lt;/b&gt;&lt;/p&gt;
 
@@ -46,16 +273,17 @@ X_t &amp; = \sigma_t * Z_t \\
 \end{align}
 \right. %]]&gt;&lt;/script&gt;&lt;/p&gt;
 
-&lt;p&gt;첫번째 식을 제곱한 후, 두 식을 빼면 다음과 같습니다. 
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+&lt;p&gt;첫번째 식을 제곱한 후, 두 식을 빼면 다음과 같습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 \begin{align}
 X_t^2 &amp; = \sigma_t^2 * Z_t^2 \\
 \alpha_0 + \alpha_1 X_{t-1}^2  &amp; = \sigma_t^2 \\
 X_t^2 - (\alpha_0 + \alpha_1 X_{t-1}^2) &amp; = \sigma_t^2(Z_t^2 - 1) \\
 X_t^2 &amp; = \alpha_0 + \alpha_1 X_{t-1}^2 + \sigma_t^2(Z_t^2 - 1)
-\end{align} %]]&gt;&lt;/script&gt;&lt;/p&gt;
+\end{align} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;마지막 수식을 살펴보면 &lt;script type=&quot;math/tex&quot;&gt;\{X_t^2\}&lt;/script&gt; 가 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 noise가 non-Gaussian 인 AR(1) 프로세스와 동일한 것을 알 수 있습니다.&lt;/p&gt;
+&lt;p&gt;마지막 수식을 살펴보면 &lt;script type=&quot;math/tex&quot;&gt;\{X_t^2\}&lt;/script&gt; 가 직전 값인 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t-1}^2\}&lt;/script&gt;에 영향을 받는 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 &lt;script type=&quot;math/tex&quot;&gt;\{X_t^2\}&lt;/script&gt;가 AR(1)인 프로세스와 동일한 것을 알 수 있습니다. 다만 AR(1)의 noise가 non-Gaussian인 것은 주의해야합니다.&lt;/p&gt;
 
 &lt;p&gt;ARCH(p) 모델에서 추정해야하는 모델 파라미터는 &lt;script type=&quot;math/tex&quot;&gt;\alpha_0, \alpha_1&lt;/script&gt;으로 Maximum Likelihood Estimation(MLE)를 이용해 추정합니다. 자세한 증명은 여기서 생략하도록 하겠습니다.&lt;/p&gt;
 
@@ -71,7 +299,34 @@ X_t^2 &amp; = \alpha_0 + \alpha_1 X_{t-1}^2 + \sigma_t^2(Z_t^2 - 1)
 X_t &amp; = \phi X_{t-1} + Z_t \\
 \sigma_t^2 &amp; = \alpha_0 + \alpha_1 Z_{t-1}^2 \\
 \end{align}
-\right. %]]&gt;&lt;/script&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.</summary></entry><entry><title type="html">시계열 분석 - part4</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 - part4" /><published>2019-01-07T00:00:00+09:00</published><updated>2019-01-07T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
+\right. %]]&gt;&lt;/script&gt;
+
+&lt;h2 id=&quot;generalized-archgarch&quot;&gt;Generalized ARCH(GARCH)&lt;/h2&gt;
+
+&lt;p&gt;GARCH는 ARCH 모델의 &lt;script type=&quot;math/tex&quot;&gt;\sigma_t^2&lt;/script&gt;에 auto-regressive한 성질을 추가한 것입니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;example&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;GARCH(1, 1) : 
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\left\{
+\begin{align}
+X_t &amp; = \sigma_t * Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \alpha_1 X_{t-1}^2 + \beta_1 \sigma_{t-1}^2 \\
+\end{align}
+\right. %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;일반적인 GARCH(p, q) 모델은 다음과 같습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+X_t &amp; = \sigma_t * Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \sum_{i=1}^p \alpha_i x_{t-i}^2 + \sum_{j=1}^q \beta_j \sigma_{t-j}^2
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 ARCH(p) 모델일 경우, &lt;script type=&quot;math/tex&quot;&gt;\{X_t^2\}&lt;/script&gt;는 AR(p)모델이 된다는 것을 앞서 설명드렸습니다. 마찬가지로,  &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 GARCH(p, q) 모델일 경우, &lt;script type=&quot;math/tex&quot;&gt;\{X_t^2\}&lt;/script&gt;는 ARMA(p, q)모델이 됩니다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록 Vector AR 모델도 알아보았습니다.</summary></entry><entry><title type="html">시계열 분석 - part4</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 - part4" /><published>2019-01-07T00:00:00+09:00</published><updated>2019-01-07T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
 
 &lt;p&gt;Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. &lt;script type=&quot;math/tex&quot;&gt;(X_{t1}, X_{t2})’&lt;/script&gt; at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t1}\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t2}\}&lt;/script&gt;를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.&lt;/p&gt;
 
@@ -2637,63 +2892,4 @@ Chart.js is &lt;u&gt;open source&lt;/u&gt; and available under the MIT license.&
 &lt;ul&gt;
   &lt;li&gt;한국환경공단_측정소정보 조회 서비스 : https://www.data.go.kr/dataset/15000660/openapi.do&lt;/li&gt;
   &lt;li&gt;한국환경공단_대기오염정보 조회 서비스 : https://www.data.go.kr/dataset/15000581/openapi.do&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다.</summary></entry><entry><title type="html">Clustering and Unsupervised Anomaly Detection with l2 Normalized Deep Auto-Encoder Representations</title><link href="http://localhost:4000/clustering/deep%20learning%20paper/clustering-with-l2-norm/" rel="alternate" type="text/html" title="Clustering and Unsupervised Anomaly Detection with l2 Normalized Deep Auto-Encoder Representations" /><published>2018-11-22T00:00:00+09:00</published><updated>2018-11-22T00:00:00+09:00</updated><id>http://localhost:4000/clustering/deep%20learning%20paper/clustering-with-l2-norm</id><content type="html" xml:base="http://localhost:4000/clustering/deep%20learning%20paper/clustering-with-l2-norm/">&lt;p&gt;&lt;b&gt; Caglar Aytekin, Xingyang Ni, Francesco Cricri and Emre Aksu (Nokia) 2017 &lt;/b&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Recently, there are many works on learning deep unsupervised representations for clustering analysis.&lt;/li&gt;
-  &lt;li&gt;Works rely on variants of auto-encoders and use encoder outputs as representation/features for cluster.&lt;/li&gt;
-  &lt;li&gt;In this paper, l&lt;sub&gt;2&lt;/sub&gt; normalization constraint during auto-encoder training makes the representations more separable and compact in the Euclidean space.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;related-work&quot;&gt;Related Work&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;DEC : First, dense auto-encoder is trained with minimizing reconstruction error. Then, as clustering optimization state, minimizing the KL divergence between auto-encoder representation and an auxiliary target distribution.
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/yjucho1/articles/blob/master/DEC/readme.md&quot;&gt;DEC paper&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;IDEC : proposes to jointly optimize the clustering loss and reconstruction loss of the auto-encoder&lt;/li&gt;
-  &lt;li&gt;DCEC : adopts a convolutional auto-encoder&lt;/li&gt;
-  &lt;li&gt;GMVAE : adopts variational auto-encoder&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;proposed-method&quot;&gt;Proposed Method&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Clustering on l&lt;sub&gt;2&lt;/sub&gt; normalized deep auto-encoder representations&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;L = \frac{1}{|J|} \sum_{j \in J} (I_j - D(E_c(I_j)))^2, \\
-E_c(I) = \frac{E(I)}{\parallel E(I) \parallel _2}&lt;/script&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;after training auto-encoder with loss function, the clustering is simply performed by k-means algorithm.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Unsupervised Anomaly Detection using l&lt;sub&gt;2&lt;/sub&gt; normalized deep auto-encoder representations&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;v_i = max_j (E_c(I_i) \cdot \frac{C_j}{\parallel C_j \parallel _2} )&lt;/script&gt;
-
-&lt;h2 id=&quot;experimental-result&quot;&gt;Experimental result&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;clustering : evaluation metrics - accuracy&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-11-22/dense-AE.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-11-22/conv-AE.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-11-22/comparison-norm.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;comparision of normalization method : neither batch nor layer normalization provides a noticeable accuracy increase over CAE + k-means. Moreover in MNIST dataset, layer and batch normalization results into a significant accuracy decrease.&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;This is an important indicator showing that the performance upgrade of our method is not a result of a input conditioning, but it is a result of the specific normalization type that is more fit for clustering in Euclidean space.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;anomaly detection : evaluation metrics - AUC&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-11-22/anomaly-detection.png&quot; width=&quot;600&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Caglar Aytekin, Xingyang Ni, Francesco Cricri and Emre Aksu (Nokia) 2017</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다.</summary></entry></feed>

@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 
 <!-- begin _includes/seo.html --><title>시계열 분석 - part5 - yjucho’s blog</title>
-<meta name="description" content="지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.">
+<meta name="description" content="지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다.">
 
 
 
@@ -21,7 +21,7 @@
 <meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series-part5/">
 
 
-  <meta property="og:description" content="지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.">
+  <meta property="og:description" content="지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다.">
 
 
 
@@ -264,7 +264,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="시계열 분석 - part5">
-    <meta itemprop="description" content="지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.">
+    <meta itemprop="description" content="지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다.">
     <meta itemprop="datePublished" content="January 15, 2019">
     
 
@@ -279,7 +279,85 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.</p>
+        <p>지금까지 우리는 시계열 데이터를 설명하기 위해 <code class="highlighter-rouge">ARMA</code>모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 <code class="highlighter-rouge">ARIMA</code> 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
+Vector AR 모델도 알아보았습니다.</p>
+
+<p>이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 ARMAX 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 ARFIMA 모델을 설명드리고자 합니다.</p>
+
+<h2 id="armax---arma-with-exogenous-inputs">ARMAX - ARMA with exogenous inputs</h2>
+
+<p>일반적인 ARMA(p, q) process는 다음과 같고, <code class="highlighter-rouge">ARMAX</code>는 여기에 시간따라 변하는 외적 요인(<code class="highlighter-rouge">exogenous inputs</code>, <script type="math/tex">d_t</script>)을 고려하는 모델입니다.</p>
+
+<p>ARMA(p, q) : <script type="math/tex">X_t = c + Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}</script></p>
+
+<p>ARMA 모델에 과거 b개의 외적 요인 <script type="math/tex">\{d_t\}</script>의 선형 조합이 포함되며, 이에 따라 <script type="math/tex">\eta_1, ..., \eta_k</script>가 모델 파라미터로 추가됩니다.</p>
+
+<p><b>Definition</b>
+ARMAX(p, q, b) :</p>
+
+<script type="math/tex; mode=display">X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j} + \sum_{k=1}^b \eta_k d_{t-k}</script>
+
+<p>statsmodels의 시계열 모형 클래스 <code class="highlighter-rouge">ARMA</code>, <code class="highlighter-rouge">ARIMA</code>, <code class="highlighter-rouge">SARIMAX</code> 등은 모두 외부 시계열의 영향을 포함하기 위한 <code class="highlighter-rouge">exog</code> 라는 인자를 가지고 있습니다.</p>
+
+<p><b>실제 데이터를 이용한 분석</b></p>
+
+<ul>
+  <li>데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)와 기상 데이터(온도, 습도)</li>
+  <li>기간 : 	2018-11-01 ~ 2018-12-1 (1개월, 1시간 단위)</li>
+</ul>
+
+<p><img src="/assets/img/2019-01-15/fig1.png" /></p>
+
+<p>미세먼지 측정 농도는 온도와 습도에 영향을 받습니다. 측정방식에 따른 한게점이기도 하고, 미세먼지 발생량 자체가 온도, 습도 기상 상태에 따라 달라질 수 있기 때문입니다. 따라서 초미세먼지 농도를 예측함에 있어서 해당 시간대의 기상 데이터를 외부 요인으로 사용하여 모델을 추정해보았습니다.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df = df[['pm25Value', 'temp','hm']]
+df = np.array(df)
+
+arma_mod30 = sm.tsa.ARMA(df[:,0], (3,0)).fit(disp=False)
+predict_pm25 = arma_mod30.predict(dynamic=True)
+print("AR(3) model's RMSE: ", mean_forecast_err(df[3:,0], predict_pm25))
+
+armax_mod30 = sm.tsa.ARMA(df[:,0], (3,0), exog=df[:,1:]).fit(disp=False)
+predict_pm25 = armax_mod30.predict(dynamic=True)
+print("ARX(3) model's RMSE: ", mean_forecast_err(df[3:,0], predict_pm25))
+</code></pre></div></div>
+<p>output :</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AR(3) model's RMSE:  8.036039331569588
+ARX(3) model's RMSE:  7.710071937116329
+</code></pre></div></div>
+
+<p>추정결과, 예측정확도를 평가하는 RMSE가 0.3 줄어든 것을 볼수 있습니다. 외부 요인을 도입함으로서 예측 성능을 높일 수 있다는 것을 보여주는 결과입니다.</p>
+
+<h2 id="arfima---autoregressive-fractionally-integrated-moving-average">ARFIMA - Autoregressive fractionally integrated moving average</h2>
+
+<p>일반적인 ARMA(p, q)모델은 ACF가 빠르게 감소하는 모습을 띕니다. 이러한 형태를 <code class="highlighter-rouge">short-term memory process</code>라고 합니다.</p>
+
+<script type="math/tex; mode=display">\rho(h) \to 0 \ as \ h \to \infty</script>
+
+<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다.  <a href="/spatio-temporal%20data/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 알아보았습니다. 하지만 differencing을 반복적으로 수행하였지만 여전히 <code class="highlighter-rouge">long-term memory process</code> 성질이 남아있는 경우가 있습니다. 이러한 경우 <code class="highlighter-rouge">ARFIMA</code> 모델을 사용할 수 있습니다.</p>
+
+<p><b>Definition</b></p>
+
+<script type="math/tex; mode=display">(1-B)^d X_t = Z_t, \ \ \ \ \ 0 \lt d \lt \frac{1}{2}</script>
+
+<p>여기서 <script type="math/tex">(1-B)^d</script>를 “fractionally differenced”된 <script type="math/tex">\Phi(B)</script> 라고 부릅니다.</p>
+
+<script type="math/tex; mode=display">X_t = (1-B)^{-d} Z_t
+= \sum_{j=0}^\infty \Theta_j B^j Z_t</script>
+
+<p>ACF of <script type="math/tex">X_t</script>:</p>
+
+<script type="math/tex; mode=display">\rho(h) = \frac{\Gamma(h+d)\Gamma(1-d)}{\Gamma(h-d+1)\Gamma(d)} \sim h^{2d-1} \ for \ large \ h</script>
+
+<script type="math/tex; mode=display">\sum_{h=-\infty}^{\infty} |\rho(h)| = \infty</script>
+
+<p>위와 같이 모든 lag에 대한 ACF를 모두 더하면 <script type="math/tex">\infty</script>가 되기 때문에, 이를 <code class="highlighter-rouge">long-term memory process</code>라고 부릅니다. 여기서 추정해야할 모델 파라미터는 <script type="math/tex">d</script>가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다.</p>
+
+<script type="math/tex; mode=display">\Phi(B)(1-B)^d X_t = \Theta(B) Z_t</script>
+
+<p><b>statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.</b></p>
+
+<p>지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.</p>
 
 <h2 id="arch">ARCH</h2>
 
@@ -293,7 +371,7 @@ X_t & = \sigma_t * Z_t \\
 \sigma_t^2 & = \alpha_0 + \sum_{I=1}^p \alpha_i x_{t-i}^2
 \end{align} %]]></script>
 
-<p>ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보도록 하죠.</p>
+<p>ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보겠습니다.</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
@@ -314,7 +392,7 @@ Cov[X_{t+h}, X_t] & = E[X_{t+h} X_t] \\
 & =0
 \end{align} %]]></script>
 
-<p><script type="math/tex">\{X_t\}</script>의 평균은 0이고, lag=h인 관측값간의 공분산이 0이라는 것은 <script type="math/tex">\{X_t\}</script>가 white noise라는 것을 의미합니다. 또한 <script type="math/tex">Var[X_t]=\sigma_t^2</script>이기때문에, <script type="math/tex">\sigma_t^2</script>를 volatility 라고 합니다.</p>
+<p><script type="math/tex">\{X_t\}</script>의 평균은 0이고, lag=h인 관측값간의 공분산은 0입니다. 즉 시간에 따라 변하지 않는 성질을 가지고 있습니다. (<script type="math/tex">\{X_t\}</script>가 white noise라는 것을 의미합니다) 하지만 <script type="math/tex">Var[X_t]=\sigma_t^2</script>이기때문에, nonstationary합니다.  <script type="math/tex">\sigma_t^2</script>를 volatility 라고 부르기도 합니다.</p>
 
 <p><b>example</b></p>
 
@@ -327,16 +405,17 @@ X_t & = \sigma_t * Z_t \\
 \end{align}
 \right. %]]></script></p>
 
-<p>첫번째 식을 제곱한 후, 두 식을 빼면 다음과 같습니다. 
-<script type="math/tex">% <![CDATA[
+<p>첫번째 식을 제곱한 후, 두 식을 빼면 다음과 같습니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
 X_t^2 & = \sigma_t^2 * Z_t^2 \\
 \alpha_0 + \alpha_1 X_{t-1}^2  & = \sigma_t^2 \\
 X_t^2 - (\alpha_0 + \alpha_1 X_{t-1}^2) & = \sigma_t^2(Z_t^2 - 1) \\
 X_t^2 & = \alpha_0 + \alpha_1 X_{t-1}^2 + \sigma_t^2(Z_t^2 - 1)
-\end{align} %]]></script></p>
+\end{align} %]]></script>
 
-<p>마지막 수식을 살펴보면 <script type="math/tex">\{X_t^2\}</script> 가 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 noise가 non-Gaussian 인 AR(1) 프로세스와 동일한 것을 알 수 있습니다.</p>
+<p>마지막 수식을 살펴보면 <script type="math/tex">\{X_t^2\}</script> 가 직전 값인 <script type="math/tex">\{X_{t-1}^2\}</script>에 영향을 받는 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 <script type="math/tex">\{X_t^2\}</script>가 AR(1)인 프로세스와 동일한 것을 알 수 있습니다. 다만 AR(1)의 noise가 non-Gaussian인 것은 주의해야합니다.</p>
 
 <p>ARCH(p) 모델에서 추정해야하는 모델 파라미터는 <script type="math/tex">\alpha_0, \alpha_1</script>으로 Maximum Likelihood Estimation(MLE)를 이용해 추정합니다. 자세한 증명은 여기서 생략하도록 하겠습니다.</p>
 
@@ -353,6 +432,34 @@ X_t & = \phi X_{t-1} + Z_t \\
 \sigma_t^2 & = \alpha_0 + \alpha_1 Z_{t-1}^2 \\
 \end{align}
 \right. %]]></script>
+
+<h2 id="generalized-archgarch">Generalized ARCH(GARCH)</h2>
+
+<p>GARCH는 ARCH 모델의 <script type="math/tex">\sigma_t^2</script>에 auto-regressive한 성질을 추가한 것입니다.</p>
+
+<p><b>example</b></p>
+
+<p>GARCH(1, 1) : 
+<script type="math/tex">% <![CDATA[
+\left\{
+\begin{align}
+X_t & = \sigma_t * Z_t \\
+\sigma_t^2 & = \alpha_0 + \alpha_1 X_{t-1}^2 + \beta_1 \sigma_{t-1}^2 \\
+\end{align}
+\right. %]]></script></p>
+
+<p>일반적인 GARCH(p, q) 모델은 다음과 같습니다.</p>
+
+<p><b>Definition</b></p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+X_t & = \sigma_t * Z_t \\
+\sigma_t^2 & = \alpha_0 + \sum_{i=1}^p \alpha_i x_{t-i}^2 + \sum_{j=1}^q \beta_j \sigma_{t-j}^2
+\end{align} %]]></script>
+
+<p><script type="math/tex">\{X_t\}</script>가 ARCH(p) 모델일 경우, <script type="math/tex">\{X_t^2\}</script>는 AR(p)모델이 된다는 것을 앞서 설명드렸습니다. 마찬가지로,  <script type="math/tex">\{X_t\}</script>가 GARCH(p, q) 모델일 경우, <script type="math/tex">\{X_t^2\}</script>는 ARMA(p, q)모델이 됩니다.</p>
+
 
         
       </section>
@@ -406,7 +513,8 @@ X_t & = \phi X_{t-1} + Z_t \\
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="/django/django-deploy-aws/" class="pagination--pager" title="django - AWS 배포하기
+">Next</a>
     
   </nav>
 
