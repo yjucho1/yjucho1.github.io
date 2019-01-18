@@ -9,17 +9,15 @@ published: true
 ---
 
 지금까지 우리는 시계열 데이터를 설명하기 위해 `ARMA`모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 `ARIMA` 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
-Vector AR 모델도 알아보았습니다. 
+`Vector AR` 모델도 알아보았습니다. 
 
-이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 ARMAX 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 ARFIMA 모델을 설명드리고자 합니다. 
+이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 `ARMAX` 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 `ARFIMA` 모델, 3) non-linear 모형의 대표적인 예인 `ARCH`, `GARCH`에 대해서 설명드리고자 합니다. 각 각의 모델들은 ARIMA 모델들의 확장판으로 기존 모델과의 차이점을 이해하는 것을 목표로 합니다. 
 
 ## ARMAX - ARMA with exogenous inputs
 
-일반적인 ARMA(p, q) process는 다음과 같고, `ARMAX`는 여기에 시간따라 변하는 외적 요인(`exogenous inputs`, $$d_t$$)을 고려하는 모델입니다. 
+ `ARMAX`는 일반적인 ARMA(p, q) process에 시간따라 변하는 외적 요인(`exogenous inputs`, $$d_t$$)을 추가하여 고려하는 모델입니다. ARMA 모델에 과거 b개의 외적 요인 $$\{d_t\}$$의 선형 조합이 포함되며, 이에 따라 $$\eta_1, ..., \eta_k$$가 모델 파라미터로 추가됩니다. 
 
 ARMA(p, q) : $$X_t = c + Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}$$
-
-ARMA 모델에 과거 b개의 외적 요인 $$\{d_t\}$$의 선형 조합이 포함되며, 이에 따라 $$\eta_1, ..., \eta_k$$가 모델 파라미터로 추가됩니다. 
 
 <b>Definition</b>
 ARMAX(p, q, b) : 
@@ -28,7 +26,7 @@ $$
 X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j} + \sum_{k=1}^b \eta_k d_{t-k}
 $$
 
-statsmodels의 시계열 모형 클래스 `ARMA`, `ARIMA`, `SARIMAX` 등은 모두 외부 시계열의 영향을 포함하기 위한 `exog` 라는 인자를 가지고 있습니다. 
+statsmodels의 시계열 모형 클래스 `ARMA`, `ARIMA`, `SARIMAX` 등은 모두 외부 시계열의 영향을 포함하기 위한 `exog` 라는 인자를 가지고 있습니다. 이 인자에 외부요인에 해당하는 데이터를 지정해주면 `ARMAX` 모델을 추정할 수 있습니다. 
 
 <b>실제 데이터를 이용한 분석</b>
 
@@ -68,7 +66,7 @@ $$
 \rho(h) \to 0 \ as \ h \to \infty
 $$
 
-하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다.  [Part3]({% post_url 2018-12-31-time-series-part3 %})에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 알아보았습니다. 하지만 differencing을 반복적으로 수행하였지만 여전히 `long-term memory process` 성질이 남아있는 경우가 있습니다. 이러한 경우 `ARFIMA` 모델을 사용할 수 있습니다. 
+하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다. 이 경우, [Part3]({% post_url 2018-12-31-time-series-part3 %})에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 설명하였지만, differencing을 반복적으로 수행하더라도 여전히 ACF가 long tail 형태를 띄는 경우가 있습니다. 이를 `long-term memory process`라고 하며, `ARFIMA` 모델을 사용합니다. 
 
 <b>Definition</b>
 
@@ -76,7 +74,7 @@ $$
 (1-B)^d X_t = Z_t, \ \ \ \ \ 0 \lt d \lt \frac{1}{2}
 $$
 
-여기서 $$(1-B)^d$$를 "fractionally differenced"된 $$\Phi(B)$$ 라고 부릅니다. 
+`ARIMA`의 $$(1-B)^d$$ 부분은 d가 양수로 몇번의 differencing을 수행할것인지를 의미했습니다. 하지만 `ARFIMA`모델에서는 d가 0과 1/2 사이의 유리수라는 점이 다릅니다. 여기서 $$(1-B)^d$$는 "fractionally differenced"된 $$\Phi(B)$$ 라고 부릅니다. 
 
 $$
 X_t = (1-B)^{-d} Z_t
@@ -93,7 +91,7 @@ $$
 \sum_{h=-\infty}^{\infty} |\rho(h)| = \infty 
 $$
 
-위와 같이 모든 lag에 대한 ACF를 모두 더하면 $$\infty$$가 되기 때문에, 이를 `long-term memory process`라고 부릅니다. 여기서 추정해야할 모델 파라미터는 $$d$$가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다. 
+위와 같이 모든 lag에 대한 ACF를 모두 더하면 $$\infty$$가 되기 때문에, 이를 `long-term memory process`를 설명할 수 있습니다. 추정해야할 모델 파라미터는 $$d$$가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다. 
 
 
 $$
@@ -103,12 +101,9 @@ $$
 <b>statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.</b>
 
 
-
-지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다. 
-
 ## ARCH
 
-ARCH(autoregressive conditional heteroskedasticity) 모델은 다음과 같이 정의됩니다. 
+앞서 살펴본 모델들은 \{X_t\}가 이전 값 혹은 white noise 등 과의 선형(linear) 조합으로 설명되는 경우였습니다. 지금부터는 non-linear 모델의 대표적인 예인 `ARCH`와 `GARCH`를 소개하도록 하겠습니다. 먼저 `ARCH(autoregressive conditional heteroskedasticity)` 모델은 다음과 같이 정의됩니다. 
 
 <b>Definition</b>
 
@@ -188,7 +183,7 @@ $$
 
 ## Generalized ARCH(GARCH)
 
-GARCH는 ARCH 모델의 $$\sigma_t^2$$에 auto-regressive한 성질을 추가한 것입니다. 
+`GARCH`는 ARCH 모델의 $$\sigma_t^2$$에 auto-regressive한 성질을 추가한 것입니다. 
 
 <b>example</b>
 
