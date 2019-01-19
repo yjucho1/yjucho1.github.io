@@ -280,29 +280,27 @@
       <section class="page__content" itemprop="text">
         
         <p>지금까지 우리는 시계열 데이터를 설명하기 위해 <code class="highlighter-rouge">ARMA</code>모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 <code class="highlighter-rouge">ARIMA</code> 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
-Vector AR 모델도 알아보았습니다.</p>
+<code class="highlighter-rouge">Vector AR</code> 모델도 알아보았습니다.</p>
 
-<p>이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 ARMAX 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 ARFIMA 모델을 설명드리고자 합니다.</p>
+<p>이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 <code class="highlighter-rouge">ARMAX</code> 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 <code class="highlighter-rouge">ARFIMA</code> 모델, 3) non-linear 모형의 대표적인 예인 <code class="highlighter-rouge">ARCH</code>, <code class="highlighter-rouge">GARCH</code>에 대해서 설명드리고자 합니다. 각 각의 모델들은 ARIMA 모델들의 확장판으로 기존 모델과의 차이점을 이해하는 것을 목표로 합니다.</p>
 
 <h2 id="armax---arma-with-exogenous-inputs">ARMAX - ARMA with exogenous inputs</h2>
 
-<p>일반적인 ARMA(p, q) process는 다음과 같고, <code class="highlighter-rouge">ARMAX</code>는 여기에 시간따라 변하는 외적 요인(<code class="highlighter-rouge">exogenous inputs</code>, <script type="math/tex">d_t</script>)을 고려하는 모델입니다.</p>
+<p><code class="highlighter-rouge">ARMAX</code>는 일반적인 ARMA(p, q) process에 시간따라 변하는 외적 요인(<code class="highlighter-rouge">exogenous inputs</code>, <script type="math/tex">d_t</script>)을 추가하여 고려하는 모델입니다. ARMA 모델에 과거 b개의 외적 요인 <script type="math/tex">\{d_t\}</script>의 선형 조합이 포함되며, 이에 따라 <script type="math/tex">\eta_1, ..., \eta_k</script>가 모델 파라미터로 추가됩니다.</p>
 
-<p>ARMA(p, q) : <script type="math/tex">X_t = c + Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}</script></p>
-
-<p>ARMA 모델에 과거 b개의 외적 요인 <script type="math/tex">\{d_t\}</script>의 선형 조합이 포함되며, 이에 따라 <script type="math/tex">\eta_1, ..., \eta_k</script>가 모델 파라미터로 추가됩니다.</p>
+<p>ARMA(p, q) : <script type="math/tex">X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}</script></p>
 
 <p><b>Definition</b>
 ARMAX(p, q, b) :</p>
 
 <script type="math/tex; mode=display">X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j} + \sum_{k=1}^b \eta_k d_{t-k}</script>
 
-<p>statsmodels의 시계열 모형 클래스 <code class="highlighter-rouge">ARMA</code>, <code class="highlighter-rouge">ARIMA</code>, <code class="highlighter-rouge">SARIMAX</code> 등은 모두 외부 시계열의 영향을 포함하기 위한 <code class="highlighter-rouge">exog</code> 라는 인자를 가지고 있습니다.</p>
+<p>statsmodels의 시계열 모형 클래스 <code class="highlighter-rouge">ARMA</code>, <code class="highlighter-rouge">ARIMA</code>, <code class="highlighter-rouge">SARIMAX</code> 등은 모두 외부 시계열의 영향을 포함하기 위한 <code class="highlighter-rouge">exog</code> 라는 인자를 가지고 있습니다. 이 인자에 외부요인에 해당하는 데이터를 지정해주면 <code class="highlighter-rouge">ARMAX</code> 모델이 됩니다.</p>
 
 <p><b>실제 데이터를 이용한 분석</b></p>
 
 <ul>
-  <li>데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)와 기상 데이터(온도, 습도)</li>
+  <li>데이터 : 경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM2.5)와 인근 북창원의 기상 데이터(온도, 습도)</li>
   <li>기간 : 	2018-11-01 ~ 2018-12-1 (1개월, 1시간 단위)</li>
 </ul>
 
@@ -334,13 +332,13 @@ ARX(3) model's RMSE:  7.710071937116329
 
 <script type="math/tex; mode=display">\rho(h) \to 0 \ as \ h \to \infty</script>
 
-<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다.  <a href="/spatio-temporal%20data/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 알아보았습니다. 하지만 differencing을 반복적으로 수행하였지만 여전히 <code class="highlighter-rouge">long-term memory process</code> 성질이 남아있는 경우가 있습니다. 이러한 경우 <code class="highlighter-rouge">ARFIMA</code> 모델을 사용할 수 있습니다.</p>
+<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다. 이 경우, <a href="/spatio-temporal%20data/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 설명하였지만, differencing을 반복적으로 수행하더라도 여전히 ACF가 long tail 형태를 띄는 경우가 있습니다. 이를 <code class="highlighter-rouge">long-term memory process</code>라고 하며, <code class="highlighter-rouge">ARFIMA</code> 모델을 사용합니다.</p>
 
 <p><b>Definition</b></p>
 
 <script type="math/tex; mode=display">(1-B)^d X_t = Z_t, \ \ \ \ \ 0 \lt d \lt \frac{1}{2}</script>
 
-<p>여기서 <script type="math/tex">(1-B)^d</script>를 “fractionally differenced”된 <script type="math/tex">\Phi(B)</script> 라고 부릅니다.</p>
+<p><code class="highlighter-rouge">ARIMA</code>의 <script type="math/tex">(1-B)^d</script> 부분은 d가 양수로 몇번의 differencing을 수행할것인지를 의미했습니다. 하지만 <code class="highlighter-rouge">ARFIMA</code>모델에서는 d가 0과 1/2 사이의 유리수라는 점이 다릅니다. 여기서 <script type="math/tex">(1-B)^d</script>는 “fractionally differenced”된 <script type="math/tex">\Phi(B)</script> 라고 부릅니다.</p>
 
 <script type="math/tex; mode=display">X_t = (1-B)^{-d} Z_t
 = \sum_{j=0}^\infty \Theta_j B^j Z_t</script>
@@ -351,17 +349,15 @@ ARX(3) model's RMSE:  7.710071937116329
 
 <script type="math/tex; mode=display">\sum_{h=-\infty}^{\infty} |\rho(h)| = \infty</script>
 
-<p>위와 같이 모든 lag에 대한 ACF를 모두 더하면 <script type="math/tex">\infty</script>가 되기 때문에, 이를 <code class="highlighter-rouge">long-term memory process</code>라고 부릅니다. 여기서 추정해야할 모델 파라미터는 <script type="math/tex">d</script>가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다.</p>
+<p>위와 같이 모든 lag에 대한 ACF를 모두 더하면 <script type="math/tex">\infty</script>가 되기 때문에, 이를 <code class="highlighter-rouge">long-term memory process</code>를 설명할 수 있습니다. 추정해야할 모델 파라미터는 <script type="math/tex">d</script>가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다.</p>
 
 <script type="math/tex; mode=display">\Phi(B)(1-B)^d X_t = \Theta(B) Z_t</script>
 
 <p><b>statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.</b></p>
 
-<p>지금까지는 linear 형태의 시계열 모형에 대해서 살펴보았습니다. 이번 포스팅에서는 non-linear 모형의 대표적인 예인 ARCH, GARCH에 대해서 공부해보도록 하겠습니다.</p>
-
 <h2 id="arch">ARCH</h2>
 
-<p>ARCH(autoregressive conditional heteroskedasticity) 모델은 다음과 같이 정의됩니다.</p>
+<p>앞서 살펴본 모델들은 {X_t}가 이전 값 혹은 white noise 등 과의 선형(linear) 조합으로 설명되는 경우였습니다. 지금부터는 non-linear 모델의 대표적인 예인 <code class="highlighter-rouge">ARCH</code>와 <code class="highlighter-rouge">GARCH</code>를 소개하도록 하겠습니다. 먼저 <code class="highlighter-rouge">ARCH(autoregressive conditional heteroskedasticity)</code> 모델은 다음과 같이 정의됩니다.</p>
 
 <p><b>Definition</b></p>
 
@@ -417,7 +413,7 @@ X_t^2 & = \alpha_0 + \alpha_1 X_{t-1}^2 + \sigma_t^2(Z_t^2 - 1)
 
 <p>마지막 수식을 살펴보면 <script type="math/tex">\{X_t^2\}</script> 가 직전 값인 <script type="math/tex">\{X_{t-1}^2\}</script>에 영향을 받는 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 <script type="math/tex">\{X_t^2\}</script>가 AR(1)인 프로세스와 동일한 것을 알 수 있습니다. 다만 AR(1)의 noise가 non-Gaussian인 것은 주의해야합니다.</p>
 
-<p>ARCH(p) 모델에서 추정해야하는 모델 파라미터는 <script type="math/tex">\alpha_0, \alpha_1</script>으로 Maximum Likelihood Estimation(MLE)를 이용해 추정합니다. 자세한 증명은 여기서 생략하도록 하겠습니다.</p>
+<p>ARCH(p) 모델에서 추정해야하는 모델 파라미터는 <script type="math/tex">\alpha_0, \alpha_1</script>으로 Maximum Likelihood Estimation(MLE)를 이용해 추정합니다.</p>
 
 <p>ARCH(p) 모델을 앞서 살펴본 linear 모델들과 합친 joint ARCH model도 생각해볼수 있습니다. 예를 들어, AR(1)-ARCH(1) 모델은 다음과 같습니다.</p>
 
@@ -435,7 +431,7 @@ X_t & = \phi X_{t-1} + Z_t \\
 
 <h2 id="generalized-archgarch">Generalized ARCH(GARCH)</h2>
 
-<p>GARCH는 ARCH 모델의 <script type="math/tex">\sigma_t^2</script>에 auto-regressive한 성질을 추가한 것입니다.</p>
+<p><code class="highlighter-rouge">GARCH</code>는 ARCH 모델의 <script type="math/tex">\sigma_t^2</script>에 auto-regressive한 성질을 추가한 것입니다.</p>
 
 <p><b>example</b></p>
 
@@ -455,11 +451,105 @@ X_t & = \sigma_t * Z_t \\
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{align}
 X_t & = \sigma_t * Z_t \\
-\sigma_t^2 & = \alpha_0 + \sum_{i=1}^p \alpha_i x_{t-i}^2 + \sum_{j=1}^q \beta_j \sigma_{t-j}^2
+\sigma_t^2 & = \alpha_0 + \sum_{i=1}^p \alpha_i X_{t-i}^2 + \sum_{j=1}^q \beta_j \sigma_{t-j}^2
 \end{align} %]]></script>
 
 <p><script type="math/tex">\{X_t\}</script>가 ARCH(p) 모델일 경우, <script type="math/tex">\{X_t^2\}</script>는 AR(p)모델이 된다는 것을 앞서 설명드렸습니다. 마찬가지로,  <script type="math/tex">\{X_t\}</script>가 GARCH(p, q) 모델일 경우, <script type="math/tex">\{X_t^2\}</script>는 ARMA(p, q)모델이 됩니다.</p>
 
+<p><b>실제 데이터를 이용한 분석</b></p>
+
+<p>ARCH 계열의 모델에 적합한 시계열 데이터은 그 자체로는 auto-correlation 관계가 없지만, 데이터의 제곱값간의 auto-correlation이 존재하는 경우입니다. 주가의 수익률이 대표적인 ARCH모델에 설명되는 시계열 데이터입니다.</p>
+
+<p>여기서는 ARCH모델을 이용해 주가의 수익률을 예측해보았습니다.<a href="https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/">이 분석 사례</a>를 참고하여 작성하였습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="k">as</span> <span class="n">web</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="n">dt</span>
+<span class="n">st</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">en</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">get_data_yahoo</span><span class="p">(</span><span class="s">'^GSPC'</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">st</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">en</span><span class="p">)</span>
+<span class="n">returns</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="s">'Adj Close'</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">returns</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+<p><img src="/assets/img/2019-01-15/fig2.png" /></p>
+
+<p>수익률 그 자체로는 자기 상관관계가 없지만, 수익률의 제곱값은 자기 상관관계를 갖고 있는 것을 볼 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">((</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+<p><img src="/assets/img/2019-01-15/fig4.png" />
+<img src="/assets/img/2019-01-15/fig5.png" /></p>
+
+<p>ARCH모델은 파이썬의 <code class="highlighter-rouge">arch</code>패키지를 통해서 사용할 수 있습니다. ARCH(1)모델로 추정해보도록 하겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">arch</span> <span class="kn">import</span> <span class="n">arch_model</span>
+<span class="n">am1</span> <span class="o">=</span> <span class="n">arch_model</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+<span class="n">res1</span> <span class="o">=</span> <span class="n">am1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">res1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</code></pre></div></div>
+<p>output :</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration:      1,   Func. Count:      5,   Neg. LLF: 10051.187042085134
+Iteration:      2,   Func. Count:     14,   Neg. LLF: 10047.115662777182
+Iteration:      3,   Func. Count:     23,   Neg. LLF: 9820.333972115874
+Iteration:      4,   Func. Count:     29,   Neg. LLF: 9810.75544390718
+Iteration:      5,   Func. Count:     35,   Neg. LLF: 9804.073095175208
+Iteration:      6,   Func. Count:     40,   Neg. LLF: 9801.645677600663
+Iteration:      7,   Func. Count:     45,   Neg. LLF: 9801.613667614067
+Iteration:      8,   Func. Count:     50,   Neg. LLF: 9801.613523562157
+Iteration:      9,   Func. Count:     55,   Neg. LLF: 9801.613520460578
+Optimization terminated successfully.    (Exit mode 0)
+            Current function value: 9801.613520460529
+            Iterations: 9
+            Function evaluations: 55
+            Gradient evaluations: 9
+                      Constant Mean - ARCH Model Results                      
+==============================================================================
+Dep. Variable:              Adj Close   R-squared:                      -0.000
+Mean Model:             Constant Mean   Adj. R-squared:                 -0.000
+Vol Model:                       ARCH   Log-Likelihood:               -9801.61
+Distribution:                  Normal   AIC:                           19609.2
+Method:            Maximum Likelihood   BIC:                           19629.6
+                                        No. Observations:                 6552
+Date:                Sat, Jan 19 2019   Df Residuals:                     6549
+Time:                        17:13:45   Df Model:                            3
+                                 Mean Model                                 
+============================================================================
+                 coef    std err          t      P&gt;|t|      95.0% Conf. Int.
+----------------------------------------------------------------------------
+mu             0.0482  1.487e-02      3.239  1.202e-03 [1.902e-02,7.732e-02]
+                            Volatility Model                            
+========================================================================
+                 coef    std err          t      P&gt;|t|  95.0% Conf. Int.
+------------------------------------------------------------------------
+omega          0.9115  4.354e-02     20.935  2.568e-97 [  0.826,  0.997]
+alpha[1]       0.3147  4.866e-02      6.467  9.971e-11 [  0.219,  0.410]
+========================================================================
+
+Covariance estimator: robust
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res1</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</code></pre></div></div>
+<p><img src="/assets/img/2019-01-15/fig3.png" /></p>
+
+<p><b>reference</b></p>
+
+<p>[1] <a href="https://www.springer.com/us/book/9781475777505">Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,</a></p>
+
+<p>[2] <a href="https://www.statsmodels.org/dev/index.html">Statsmodel’s Documentation</a></p>
+
+<p>[3] <a href="http://www.kocw.net/home/search/kemView.do?kemId=977301">시계열분석 강의, 한양대학교(이기천)</a></p>
+
+<p>[4]  <a href="https://en.wikipedia.org/wiki/Autoregressive_fractionally_integrated_moving_average">https://en.wikipedia.org/wiki/Autoregressive_fractionally_integrated_moving_average</a></p>
+
+<p>[5] <a href="https://en.wikipedia.org/wiki/Autoregressive%E2%80%93moving-average_model#ARMAX">https://en.wikipedia.org/wiki/Autoregressive%E2%80%93moving-average_model#ARMAX</a></p>
+
+<p>[6] <a href="https://en.wikipedia.org/wiki/Autoregressive_conditional_heteroskedasticity">https://en.wikipedia.org/wiki/Autoregressive_conditional_heteroskedasticity</a></p>
+
+<p>[7] <a href="https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/">https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/</a></p>
 
         
       </section>
