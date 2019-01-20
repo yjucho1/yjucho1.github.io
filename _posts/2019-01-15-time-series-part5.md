@@ -296,7 +296,7 @@ res1.plot()
 <img src = "/assets/img/2019-01-15/fig3.png">
 
 
-<b>reference</b>
+<b>Reference</b>
 
 [1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
 

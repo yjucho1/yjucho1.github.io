@@ -371,7 +371,7 @@ NormaltestResult(statistic=561.8797124030831, pvalue=9.758222244224708e-123)
 감사합니다! 
 
 
-<b>reference</b>
+<b>Reference</b>
 
 [1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
 

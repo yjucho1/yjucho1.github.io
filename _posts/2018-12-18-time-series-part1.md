@@ -420,7 +420,7 @@ AR(2)의 예시와 같이 주어진 데이터가 AR(p) process를 따를경우 P
 |<b>PACF</b> | cuts off after lag p | tails off |tails off|
 
 
-<b>reference</b>
+<b>Reference</b>
 
 [1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
 
