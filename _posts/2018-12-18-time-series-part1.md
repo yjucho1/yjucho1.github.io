@@ -1,5 +1,5 @@
 ---
-title: "시계열 분석 - part1"
+title: "시계열 분석 part1 - Auto-Regressive, Moving-Average "
 categories: 
   - Spatio-Temporal Data
 comments: true

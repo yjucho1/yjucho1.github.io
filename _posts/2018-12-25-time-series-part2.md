@@ -1,5 +1,5 @@
 ---
-title: "시계열 분석 - part2"
+title: "시계열 분석 part2 - practical example"
 categories: 
   - Spatio-Temporal Data
 comments: true

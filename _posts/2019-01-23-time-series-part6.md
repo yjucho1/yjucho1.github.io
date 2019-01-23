@@ -1,5 +1,5 @@
 ---
-title: "시계열 분석 - part6"
+title: "시계열 분석 part6 - Spectral analysis"
 categories: 
  - Spatio-Temporal Data
 comments: true

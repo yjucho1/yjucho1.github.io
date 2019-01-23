@@ -1,5 +1,5 @@
 ---
-title: "시계열 분석 - part4"
+title: "시계열 분석 part4 - VAR"
 categories: 
   - Spatio-Temporal Data
 comments: true

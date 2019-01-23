@@ -1,5 +1,5 @@
 ---
-title: "시계열 분석 - part3"
+title: "시계열 분석 part3 - Non-stationary"
 categories: 
   - Spatio-Temporal Data
 comments: true

@@ -1,5 +1,5 @@
 ---
-title: "시계열 분석 - part5"
+title: "시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH"
 categories: 
   - Spatio-Temporal Data
 comments: true
