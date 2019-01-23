@@ -8,7 +8,9 @@ published: true
 
 ---
 
-지금까지 우리는 `time domain`에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 `frequency domain`에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 $$f$$로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다. 
+지금까지 우리는 `time domain`에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 `frequency domain`에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 결과값을 쉽게 얻을 수 있습니다. 여기서는 이론적인 내용을 통해서 주파수 도메인에서의 개념을 직관적으로 이해하고 실제 데이터를 통해서 결과값을 이해하고 활용할 수 있는 것을 목표로 합니다. 
+
+Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. 먼저, Time domain에서의 ACF가 frequency domain에서의 spectral density $$f$$로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다. 
 
 What we can do with spectral analysis is
 - Frequency detection
@@ -40,7 +42,7 @@ and <br>
 
 $$f(\lambda)$$는 대칭성을 가지고 있고, $$(-\pi, \pi]$$에서 항상 양수값을 갖습니다. 그리고 spectral density를 (c)와 같이 적분하여 타임 도메인의 auto covariance function으로 변환할 수 있습니다. 
 
-즉, $$\gamma_X$$가 가진 정보와 $$f_ㅌ(\lambda)$$가 가진 정보가 완전히 동일합니다. 또한 spectral densities는 essentially unique하기 때문에 s$$\gamma(\cdot)$$에 대응되는 Spectral densities $$f$$와 $$g$$가 있다면, 이 둘은 $$f$$와 $$g$$는 서로 동일한 Fourier coefficients를 갖게 되기 때문에 서로 동일한 함수라고 할수 있습니다. 
+즉, $$\gamma_X$$가 가진 정보와 $$f_X(\lambda)$$가 가진 정보가 완전히 동일합니다. 또한 spectral densities는 essentially unique하기 때문에 $$\gamma(\cdot)$$에 대응되는 Spectral densities $$f$$와 $$g$$가 있다면, 이 둘은 $$f$$와 $$g$$는 서로 동일한 Fourier coefficients를 갖게 되어, 서로 동일한 함수라고 할수 있습니다. 
 
 다음은 우리가 알고 있는 몇개의 stationary time series의 sepectral density를 구하는 예제를 살펴보도록 하겠습니다. 
 
@@ -79,7 +81,7 @@ where $$\{Z_t\} \sim WN(0, \sigma^2)$$, then $$\{X_t\}$$ has spectral density
 
 $$
 \begin{align}
-f(\lambda) & = \frac{\sigma^2}{2\pi} (1 + \theta^2 + \theta(e^{-i\lambda} + e^ {i\lambda}))
+f(\lambda) & = \frac{\sigma^2}{2\pi} (1 + \theta^2 + \theta(e^{-i\lambda} + e^ {i\lambda})) \\
 & = \frac{\sigma^2}{2\pi} (1 + 2\theta cos \lambda + \theta^2)
 \end{align}
 $$
@@ -171,17 +173,16 @@ $$
 
 where $$\hat{\gamma}(h)$$ is the sample ACVF of $$x_1, \cdots, x_n$$.
 
-(eq.2)와 (eq.3)을 비교하면 두 식이 비슷한 것을 볼수 있습니다. 따라서 $$I_n(w_k)$$이 $$f(\lambda)$$의 estimator로 사용할 수 있습니다.
+(eq.2)와 (eq.3)을 비교하면 두 식이 비슷한 것을 볼수 있고, 자연스럽게 $$I_n(w_k)$$이 $$f(\lambda)$$의 estimator로 사용할 수 있다는 것을 알 수 있습니다.
 
 <b>실제 데이터를 이용한 분석</b>
 
-이제 실제 시계열 데이터에서 spectral analysis를 수행해보도록 하겠습니다. 
-먼저 Fourier transform통해서 데이터의 주기를 파악해보도록 하겠습니다. 
+이제 실제 시계열 데이터에서 spectral analysis를 수행해보겠습니다. 
 
 * 데이터 : 북창원의 기상 데이터(온도)
 * 기간 : 2018-11-01 ~ 2018-12-1 (1개월, 1시간 단위)
 
-Discrete Fourier transform는 numpy 패키지를 통해 쉽게 이용할 수 있습니다. 
+먼저 Fourier transform통해서 데이터의 주기를 파악해보도록 하겠습니다. Discrete Fourier transform는 numpy 패키지를 통해 쉽게 이용할 수 있습니다. 
 
 ```python
 df = df.rename(columns={'지점':'stn', '일시':'dataTime', '기온(°C)':'temp',
@@ -211,8 +212,7 @@ plt.show()
 
 주파수 도메인으로 변환된 그래프를 살펴보면 2개의 peak가 있는 것을 볼 수 있습니다. 해당 주파수 대역을 좀더 확대해서 보면 다음과 같이 약 0.041 과 0.083 에서 peak가 발생한 것으로 보입니다. 따라서 주어진 온도 데이터는 주파수가 0.041인 시그널1과 주파수가 0.083인 시그널2의 합쳐진 것으로 생각할 수 있습니다. 
 
-주기 = 1/주파수 이기때문에 주어진 온도 데이터의 주기는 1/0.041 = 24 와 1/0.083=12로 구해집니다. 해당 데이터의 시간 단위가 1시간이고 주기가 24라는 것은 온도 데이터가 24시간의 주기를 가지고 있다는 것입니다. 하루동안의 온도 패턴이 반복적인 것을 생각하면 
-매우 직관적인 결과라는 것을 알수 있습니다. 
+주기 = 1/주파수 이기때문에 주어진 온도 데이터의 주기는 1/0.041 = 24로 구해집니다. 해당 데이터의 시간 단위가 1시간이고 주기가 24라는 것을 통해 온도 데이터가 24시간의 주기를 가지고 있다는 사실을 확인할 수 있습니다. 하루동안의 온도 패턴이 반복적인 것을 생각하면 매우 직관적인 결과입니다.
 
 <img src = "/assets/img/2019-01-23/fig3.png" width='500'><br>
 
@@ -242,9 +242,16 @@ plt.show()
 
 <img src = "/assets/img/2019-01-23/fig4.png" width='500'><br>
 
-디노이즈 작업은 주파수 도메인에서 강한 값으로 보인 부분을 제외한 나머지를 모두 0으로 변경한 후 다시 타임 도에인으로 바꿔주는 방식으로 진행하였습니다. 그 결과, 변환된 시계열 데이터는 24시간을 주기로 반복적인 패턴을 보이는 시그널로 변경된 것을 볼 수 있습니다. 
+디노이즈 작업은 주파수 도메인에서 강한 값으로 보인 부분(fourier[60]과 fourier[120])을 제외한 나머지 값들은 모두 0으로 변경하는 방식을 사용하였습니다. 그 후 다시 타임 도에인으로 바꿔 시그널의 패턴을 확인하였습니다. 변환된 시계열 데이터는 24시간을 주기로 매우 반복적인 패턴을 보이는 시그널로 변경된 것을 볼 수 있습니다. 
 
-위와 같은 주파수 도메인에서의 분석은 음향이나 설비의 진동 등을 분석하는데 많이 활용되고 있습니다. 
+위와 같은 주파수 도메인에서의 분석은 음향이나 설비의 진동 등의 신호처리에 많이 사용되고 있으니 알아두시면 매우 유용할 것같습니다.
+
+
+그동안 시계열 분석 포스팅을 읽어주셔서 감사합니다. 시계열 분석 포스팅은 이 포스팅을 마지막으로 마무리짓고자 합니다.
+이후에는 딥러닝 논문 리뷰, 모델 구현 등의 포스팅으로 찾아뵙도록 하겠습니다.
+
+앞으로도 같이 즐겁고 재미나게 공부합시다! 
+
 
 
 [1] [Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,](https://www.springer.com/us/book/9781475777505)
