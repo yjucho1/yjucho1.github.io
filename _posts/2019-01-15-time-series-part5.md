@@ -98,7 +98,7 @@ $$
 \Phi(B)(1-B)^d X_t = \Theta(B) Z_t
 $$
 
-<b>statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.</b>
+<small>statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.</small>
 
 
 ## ARCH

@@ -1,0 +1,637 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>시계열 분석 - part6 - yjucho’s blog</title>
+<meta name="description" content="지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="시계열 분석 - part6">
+<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series-part6/">
+
+
+  <meta property="og:description" content="지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2019-01-23T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/time-series-part6/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="시계열 분석 - part6">
+    <meta itemprop="description" content="지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다.">
+    <meta itemprop="datePublished" content="January 23, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">시계열 분석 - part6
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>지금까지 우리는 <code class="highlighter-rouge">time domain</code>에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 <code class="highlighter-rouge">frequency domain</code>에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 <script type="math/tex">f</script>로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다.</p>
+
+<p>What we can do with spectral analysis is</p>
+<ul>
+  <li>Frequency detection</li>
+  <li>Noise removal</li>
+  <li>Model detection</li>
+  <li>Lag detection (lagged regression)</li>
+  <li>Feature detection</li>
+</ul>
+
+<h2 id="spectral-density">spectral density</h2>
+
+<p><b>Definition</b></p>
+
+<p>Suppose that <script type="math/tex">\{X_t\}</script> is a zero-mean stationary time series with auto covariance function <script type="math/tex">\gamma(\cdot)</script> satisfying <script type="math/tex">\sum_{h=-\infty}^\infty \left\vert \gamma(h) \right\vert \lt \infty</script>. The spectral density of <script type="math/tex">\{X_t\}</script> is the function <script type="math/tex">f(\cdot)</script> defined by</p>
+
+<script type="math/tex; mode=display">f(\lambda) = \frac{1}{2\pi} \sum_{h=-\infty}^\infty e^{-ih\lambda} \gamma(h), \ \ \ \ -\infty \lt \lambda \lt \infty</script>
+
+<p>where <script type="math/tex">e^{ i\lambda} = cos(\lambda) + i sin(\lambda)</script> and <script type="math/tex">i = \sqrt{-1}</script>.</p>
+
+<p><script type="math/tex">\left\vert \gamma(\cdot) \right\vert</script>의 summability로 인해 <script type="math/tex">f</script> 역시 절대적으로 수렴하며, cos와 sin의 주기가 <script type="math/tex">2\pi</script>이기때문에 <script type="math/tex">f</script>의 주기도 <script type="math/tex">2\pi</script>가 됩니다. 또한 앞으로의 수식에서는 <script type="math/tex">(-\pi, \pi]</script> 구간에서의 <script type="math/tex">f</script>의 값만 고려하도록 하겠습니다.</p>
+
+<p><b>Basic Properties of <script type="math/tex">f</script></b></p>
+
+<p>(a) <script type="math/tex">f</script> is even, i.e., <script type="math/tex">f(\lambda) = f(-\lambda)</script> <br />
+(b) <script type="math/tex">f(\lambda) \ge 0</script> for all <script type="math/tex">\lambda \in (-\pi, \pi]</script>, <br />
+and <br />
+(c) <script type="math/tex">\gamma(k) =\int_{-\pi}^\pi e^{ik\lambda} f(\lambda) d\lambda = \int_{-\pi}^\pi cos(k\lambda) f(\lambda) d\lambda</script></p>
+
+<p><script type="math/tex">f(\lambda)</script>는 대칭성을 가지고 있고, <script type="math/tex">(-\pi, \pi]</script>에서 항상 양수값을 갖습니다. 그리고 spectral density를 (c)와 같이 적분하여 타임 도메인의 auto covariance function으로 변환할 수 있습니다.</p>
+
+<p>즉, <script type="math/tex">\gamma_X</script>가 가진 정보와 <script type="math/tex">f_ㅌ(\lambda)</script>가 가진 정보가 완전히 동일합니다. 또한 spectral densities는 essentially unique하기 때문에 s<script type="math/tex">\gamma(\cdot)</script>에 대응되는 Spectral densities <script type="math/tex">f</script>와 <script type="math/tex">g</script>가 있다면, 이 둘은 <script type="math/tex">f</script>와 <script type="math/tex">g</script>는 서로 동일한 Fourier coefficients를 갖게 되기 때문에 서로 동일한 함수라고 할수 있습니다.</p>
+
+<p>다음은 우리가 알고 있는 몇개의 stationary time series의 sepectral density를 구하는 예제를 살펴보도록 하겠습니다.</p>
+
+<p><b>Example</b></p>
+
+<p><b>White noise</b> :
+If <script type="math/tex">\{X_t\} \sim WN(0, \sigma^2)</script>, then <script type="math/tex">\gamma(0)=\sigma^2</script> and <script type="math/tex">\gamma(h)=0</script> for all <script type="math/tex">\left\vert h \right\vert \gt 0</script>. This process has a flat spectral density</p>
+
+<script type="math/tex; mode=display">f(\lambda) = \frac{\sigma^2}{2\pi}, \ \ \ \ \ \ -\pi \gt \lambda \gt \pi</script>
+
+<p>Each Frequency in the spectrum contributes equally to the variance of the process.</p>
+
+<p><b>AR(1)</b>:
+If 
+<script type="math/tex">X_t = \phi X_{t-1} + Z_t</script>
+where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script>, then <script type="math/tex">\{X_t\}</script> has spectral density</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+f(\lambda) & = \frac{\sigma^2}{2\pi(1-\phi^2)} (1 + \sum_{h=1}^\infty \phi^h (e^{-ih\lambda} + e^{ih\lambda})) \\
+& = \frac{\sigma^2}{2\pi(1-\phi^2)} (1 + \frac{\phi e^{i\lambda}}{1- \phi e^{i\lambda}} + \frac{\phi e^{-i\lambda}}{1- \phi e^{-i\lambda}}) \\
+& = \frac{\sigma^2}{2\pi} (1 -2\phi cos \lambda + \phi^2)^{-1}
+\end{align} %]]></script>
+
+<p><b>MA(1)</b>:
+If 
+<script type="math/tex">X_t = Z_t + \theta Z_{t-1}</script>
+where <script type="math/tex">\{Z_t\} \sim WN(0, \sigma^2)</script>, then <script type="math/tex">\{X_t\}</script> has spectral density</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+f(\lambda) & = \frac{\sigma^2}{2\pi} (1 + \theta^2 + \theta(e^{-i\lambda} + e^ {i\lambda}))
+& = \frac{\sigma^2}{2\pi} (1 + 2\theta cos \lambda + \theta^2)
+\end{align} %]]></script>
+
+<p><b>ARMA(p, q)</b> :
+If <script type="math/tex">\{X_t\}</script> is a causal ARMA(p, q) process satisfying <script type="math/tex">\phi(B)X_t = \theta(B)Z_t</script>, then</p>
+
+<script type="math/tex; mode=display">f_X(\lambda) = \frac{\sigma^2}{2\pi} \frac{\left\vert \theta(e^{-i\lambda})\right\vert ^2}{\left\vert \phi(e^{-i\lambda})\right\vert ^2}</script>
+
+<p><img src="/assets/img/2019-01-23/fig1.png" width="500" /><br />
+<small>출처 : <a href="http://contents.kocw.or.kr/contents4/document/lec/2013/Hanyang/Lee%20Kichun/11.pdf">Time Series Analysis Lecture Note</a></small></p>
+
+<p>여기까지 주어진 시계열데이터의 타임 도메인에서의 auto-covariance function이 주파수 도메인의 spectral density function으로 변환가능함을 살펴보았습니다. 앞서 우리는 시계열 데이터의 샘플들로부터 sample ACF를 추정하는 방법을 알아보았습니다. 마찬가지로 주어진 샘플데이터로부터 spectral density function을 추정하는 것은 어떻게 할까요? 이제 시계열 데이터의 spectral density function의 estimate인 <code class="highlighter-rouge">periodogram</code>에 대해서 알아보도록 하겠습니다.</p>
+
+<h2 id="periodogram">Periodogram</h2>
+
+<p>먼저 <code class="highlighter-rouge">periodogram</code>을 설명하기 위해 복소수 벡터 <script type="math/tex">x</script>를 생각해보도록 하겠습니다.</p>
+
+<script type="math/tex; mode=display">x = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix} \in \mathbb{C^n}</script>
+
+<p>여기서 <script type="math/tex">\mathbb{C^n}</script>는 복소수를 포함한 가능한 모든 컬럼벡터의 집합을 의미합니다. 이제 <script type="math/tex">w_k = 2 \pi k/n</script>라고 표기하고, 여기서 <script type="math/tex">k</script> 는  -(n-1)/2와  n/2 사이의 (inclusive) 자연수라고 하겠습니다. 즉,</p>
+
+<script type="math/tex; mode=display">w_k = \frac{2\pi k}{n},  \ \ \ k = -[\frac{n-1}{2}], \cdots, [\frac{n}{2}],</script>
+
+<p>[y]라는 표기는 y보다 작거나 같은 가장 큰 자연수를 나타냅니다.</p>
+
+<p><script type="math/tex">w_k</script>와 같은 값들의 집합 <script type="math/tex">F_n</script>를 샘플사이즈가 n인 <b>Fourier frequencies</b> 라고 합니다. 이때, <script type="math/tex">F_n</script> 는 <script type="math/tex">(-\pi, \pi]</script> 구간의 부분집합으로 표현됩니다.</p>
+
+<p>마찬가지로 아래와 같은 n개의 벡터를 생각해보도록 하겠습니다.</p>
+
+<script type="math/tex; mode=display">e_k = \frac{1}{\sqrt{n}} \begin{bmatrix} e^{iw_k} \\ e^{2iw_k} \\ \vdots \\ e^{niw_k}  \end{bmatrix}, \ \ \ \ \  k = -[\frac{n-1}{2}], \cdots, [\frac{n}{2}].</script>
+
+<p>여기서 <script type="math/tex">e_1, \cdots, e_n</script> 는 아래와 같은 관계를 만족시키는 서로 수직(<b>orthonormal</b>)인 벡터들입니다.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+e_j * e_k = \begin{cases}
+1, & \mbox{if } j =k  \\
+0, & \mbox{if } j \ne k
+\end{cases} %]]></script>
+
+<p><script type="math/tex">e_j *</script>는 <script type="math/tex">e_j</script>의 k번째 컴포넌트를 복소수 컨주게이트값으로 바꾼 행벡터를 타나냅니다.  row vector whose <script type="math/tex">k</script>th component is the complex conjugate of the <script type="math/tex">k</script>th component of <script type="math/tex">e_j</script>.</p>
+
+<p>이는 곧 <script type="math/tex">\{e_1, \cdots, e_n\}</script> 가 <script type="math/tex">\mathbb{C^n}</script> 집합의 basis인 것을 의미하고, 따라서, <script type="math/tex">\mathbb{C^n}</script> 에 속하는 임의의 벡터 <script type="math/tex">x</script>는 이 basis의 선형 조합으로 표현될 수 있습니다.</p>
+
+<script type="math/tex; mode=display">x = \sum_{k = -[\frac{n-1}{2}]}^{[\frac{n}{2}]} a_k e_k  \ \ \ \ \mbox{(eq.1)}</script>
+
+<p>이 때, coefficients <script type="math/tex">a_k</script>는 다음과 같이 구할수 있습니다.</p>
+
+<script type="math/tex; mode=display">a_k = e_k * x = \frac{1}{\sqrt{n}} \sum_{t=1}^n x_t e^{-itw_k}</script>
+
+<p>여기서 {<script type="math/tex">a_k</script>} 시퀀스를 <script type="math/tex">\{x_1, \cdots, x_n\}</script>의 <b>discrete Fourier transform</b> 라고 부릅니다.</p>
+
+<p><b>Definition</b></p>
+
+<p>The periodogram of <script type="math/tex">\{x_1, \cdots, x_n\}</script> is the function</p>
+
+<script type="math/tex; mode=display">I_n(\lambda) = \frac{1}{n} \left\vert \sum_{t=1} ^{n} x_t e^{-it \lambda} \right\vert ^2</script>
+
+<p>다음의 proposition은 <script type="math/tex">I_n(\lambda)</script>가 <script type="math/tex">2\pi f(\lambda)</script>의 샘플 추정값으로 간주될수 있음을 보입니다. 먼저 sepectral density <script type="math/tex">f(\lambda)</script>의 정의가 다음과 같다는 것을 상기하도록 합니다.</p>
+
+<script type="math/tex; mode=display">2\pi f(\lambda) = \sum_{h=-\infty}^\infty \gamma(h)e^{-ih\lambda}, \ \ \ \ \ \lambda \in (-\pi, \pi]
+ \ \ \ \ \ \ \ \mbox{(eq.2)}</script>
+
+<p><b>proposition</b></p>
+
+<p>If <script type="math/tex">x_1, \cdots, x_n</script> are any real numbers and <script type="math/tex">w_k</script> is any of the nonzero Fourier frequencies <script type="math/tex">2\pi k/n</script> in <script type="math/tex">(-\pi, \pi]</script>, then</p>
+
+<script type="math/tex; mode=display">I_n(w_k) = \sum_{\left\vert h \right\vert \lt n} \hat{\gamma}(h)e^{-ihw_k},  \ \ \ \ \ \ \ \mbox{(eq.3)}</script>
+
+<p>where <script type="math/tex">\hat{\gamma}(h)</script> is the sample ACVF of <script type="math/tex">x_1, \cdots, x_n</script>.</p>
+
+<p>(eq.2)와 (eq.3)을 비교하면 두 식이 비슷한 것을 볼수 있습니다. 따라서 <script type="math/tex">I_n(w_k)</script>이 <script type="math/tex">f(\lambda)</script>의 estimator로 사용할 수 있습니다.</p>
+
+<p><b>실제 데이터를 이용한 분석</b></p>
+
+<p>이제 실제 시계열 데이터에서 spectral analysis를 수행해보도록 하겠습니다. 
+먼저 Fourier transform통해서 데이터의 주기를 파악해보도록 하겠습니다.</p>
+
+<ul>
+  <li>데이터 : 북창원의 기상 데이터(온도)</li>
+  <li>기간 : 2018-11-01 ~ 2018-12-1 (1개월, 1시간 단위)</li>
+</ul>
+
+<p>Discrete Fourier transform는 numpy 패키지를 통해 쉽게 이용할 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s">'지점'</span><span class="p">:</span><span class="s">'stn'</span><span class="p">,</span> <span class="s">'일시'</span><span class="p">:</span><span class="s">'dataTime'</span><span class="p">,</span> <span class="s">'기온(°C)'</span><span class="p">:</span><span class="s">'temp'</span><span class="p">,</span>
+                          <span class="s">'풍속(m/s)'</span><span class="p">:</span><span class="s">'ws'</span><span class="p">,</span>
+                          <span class="s">'풍향(16방위)'</span><span class="p">:</span><span class="s">'wd'</span><span class="p">,</span>
+                          <span class="s">'습도(</span><span class="si">%</span><span class="s">)'</span><span class="p">:</span><span class="s">'hm'</span><span class="p">})</span>
+<span class="n">df</span><span class="p">[</span><span class="s">'dataTime'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'dataTime'</span><span class="p">],</span> <span class="n">format</span><span class="o">=</span><span class="s">'</span><span class="si">%</span><span class="s">Y-</span><span class="si">%</span><span class="s">m-</span><span class="si">%</span><span class="s">d </span><span class="si">%</span><span class="s">H:</span><span class="si">%</span><span class="s">M'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s">'dataTime'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">temp</span>  <span class="c">## 온도 데이터</span>
+<span class="n">fourier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">signal</span><span class="p">))</span> <span class="c">### fft 수행 </span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">size</span> 
+<span class="n">freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="c">### 주파수 시퀀스</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">dff</span><span class="o">.</span><span class="n">temp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)],</span> <span class="n">fourier</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'frequency(Hz)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'amplitude'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+<p><img src="/assets/img/2019-01-23/fig2.png" width="500" /><br /></p>
+
+<p>주파수 도메인으로 변환된 그래프를 살펴보면 2개의 peak가 있는 것을 볼 수 있습니다. 해당 주파수 대역을 좀더 확대해서 보면 다음과 같이 약 0.041 과 0.083 에서 peak가 발생한 것으로 보입니다. 따라서 주어진 온도 데이터는 주파수가 0.041인 시그널1과 주파수가 0.083인 시그널2의 합쳐진 것으로 생각할 수 있습니다.</p>
+
+<p>주기 = 1/주파수 이기때문에 주어진 온도 데이터의 주기는 1/0.041 = 24 와 1/0.083=12로 구해집니다. 해당 데이터의 시간 단위가 1시간이고 주기가 24라는 것은 온도 데이터가 24시간의 주기를 가지고 있다는 것입니다. 하루동안의 온도 패턴이 반복적인 것을 생각하면 
+매우 직관적인 결과라는 것을 알수 있습니다.</p>
+
+<p><img src="/assets/img/2019-01-23/fig3.png" width="500" /><br /></p>
+
+<p>이제 주파수 값들에서 노이즈에 해당하는 값들을 0으로 바꾼 후 다시 타임 도메인으로 변경해보도록 하겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## fourier[60]과 fourier[120]의 값을 제외하고 모두 0으로 변경</span>
+<span class="n">fourier</span><span class="p">[:</span><span class="mi">60</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">fourier</span><span class="p">[</span><span class="mi">61</span><span class="p">:</span><span class="mi">120</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">fourier</span><span class="p">[</span><span class="mi">121</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c">## inverse fourier transform </span>
+<span class="n">denoise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">fourier</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">denoise</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freq</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)],</span> <span class="n">fourier</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'frequency(Hz)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'amplitude'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p><img src="/assets/img/2019-01-23/fig4.png" width="500" /><br /></p>
+
+<p>디노이즈 작업은 주파수 도메인에서 강한 값으로 보인 부분을 제외한 나머지를 모두 0으로 변경한 후 다시 타임 도에인으로 바꿔주는 방식으로 진행하였습니다. 그 결과, 변환된 시계열 데이터는 24시간을 주기로 반복적인 패턴을 보이는 시그널로 변경된 것을 볼 수 있습니다.</p>
+
+<p>위와 같은 주파수 도메인에서의 분석은 음향이나 설비의 진동 등을 분석하는데 많이 활용되고 있습니다.</p>
+
+<p>[1] <a href="https://www.springer.com/us/book/9781475777505">Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,</a></p>
+
+<p>[2] <a href="http://www.kocw.net/home/search/kemView.do?kemId=977301">시계열분석 강의, 한양대학교(이기천)</a></p>
+
+<p>[3] <a href="https://docs.scipy.org/doc/numpy-1.15.0/reference/routines.fft.html#module-numpy.fft">numpy - Discrete Fourier Transform</a></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-01-23T00:00:00+09:00">January 23, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+-+part6%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part6%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part6%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part6%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part6%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/django/django-deploy-aws/" class="pagination--pager" title="django - AWS 배포하기
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/spatio-temporal%20data/time-series-part6/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/spatio-temporal%20data/time-series-part6"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>

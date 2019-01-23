@@ -118,4 +118,9 @@ var store = [{
         "excerpt":"django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. 이 블로그를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다. 아마존 웹 서비스 (AWS) 가입하기 계정 가입 후 콘솔 로그인 서비스 검색에 IAM(Identity and Access Management) 사용자 탭에 사용자 추가 엑세스 유형 : 프로그래밍 방식 액세스...","categories": ["django"],
         "tags": [],
         "url": "http://localhost:4000/django/django-deploy-aws/",
+        "teaser":null},{
+        "title": "시계열 분석 - part6",
+        "excerpt":"지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다. What...","categories": ["Spatio-Temporal Data"],
+        "tags": [],
+        "url": "http://localhost:4000/spatio-temporal%20data/time-series-part6/",
         "teaser":null}]

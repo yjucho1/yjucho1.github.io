@@ -1,4 +1,218 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-20T20:50:03+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">django - AWS 배포하기</title><link href="http://localhost:4000/django/django-deploy-aws/" rel="alternate" type="text/html" title="django - AWS 배포하기" /><published>2019-01-17T00:00:00+09:00</published><updated>2019-01-17T00:00:00+09:00</updated><id>http://localhost:4000/django/django-deploy-aws</id><content type="html" xml:base="http://localhost:4000/django/django-deploy-aws/">&lt;p&gt;django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. &lt;a href=&quot;https://nachwon.github.io/django-deploy-1-aws/&quot;&gt;이 블로그&lt;/a&gt;를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-01-23T23:04:51+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">시계열 분석 - part6</title><link href="http://localhost:4000/spatio-temporal%20data/time-series-part6/" rel="alternate" type="text/html" title="시계열 분석 - part6" /><published>2019-01-23T00:00:00+09:00</published><updated>2019-01-23T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series-part6</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series-part6/">&lt;p&gt;지금까지 우리는 &lt;code class=&quot;highlighter-rouge&quot;&gt;time domain&lt;/code&gt;에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 &lt;code class=&quot;highlighter-rouge&quot;&gt;frequency domain&lt;/code&gt;에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;What we can do with spectral analysis is&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Frequency detection&lt;/li&gt;
+  &lt;li&gt;Noise removal&lt;/li&gt;
+  &lt;li&gt;Model detection&lt;/li&gt;
+  &lt;li&gt;Lag detection (lagged regression)&lt;/li&gt;
+  &lt;li&gt;Feature detection&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;spectral-density&quot;&gt;spectral density&lt;/h2&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;Suppose that &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is a zero-mean stationary time series with auto covariance function &lt;script type=&quot;math/tex&quot;&gt;\gamma(\cdot)&lt;/script&gt; satisfying &lt;script type=&quot;math/tex&quot;&gt;\sum_{h=-\infty}^\infty \left\vert \gamma(h) \right\vert \lt \infty&lt;/script&gt;. The spectral density of &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is the function &lt;script type=&quot;math/tex&quot;&gt;f(\cdot)&lt;/script&gt; defined by&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;f(\lambda) = \frac{1}{2\pi} \sum_{h=-\infty}^\infty e^{-ih\lambda} \gamma(h), \ \ \ \ -\infty \lt \lambda \lt \infty&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;e^{ i\lambda} = cos(\lambda) + i sin(\lambda)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;i = \sqrt{-1}&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\left\vert \gamma(\cdot) \right\vert&lt;/script&gt;의 summability로 인해 &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt; 역시 절대적으로 수렴하며, cos와 sin의 주기가 &lt;script type=&quot;math/tex&quot;&gt;2\pi&lt;/script&gt;이기때문에 &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;의 주기도 &lt;script type=&quot;math/tex&quot;&gt;2\pi&lt;/script&gt;가 됩니다. 또한 앞으로의 수식에서는 &lt;script type=&quot;math/tex&quot;&gt;(-\pi, \pi]&lt;/script&gt; 구간에서의 &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;의 값만 고려하도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Basic Properties of &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;(a) &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt; is even, i.e., &lt;script type=&quot;math/tex&quot;&gt;f(\lambda) = f(-\lambda)&lt;/script&gt; &lt;br /&gt;
+(b) &lt;script type=&quot;math/tex&quot;&gt;f(\lambda) \ge 0&lt;/script&gt; for all &lt;script type=&quot;math/tex&quot;&gt;\lambda \in (-\pi, \pi]&lt;/script&gt;, &lt;br /&gt;
+and &lt;br /&gt;
+(c) &lt;script type=&quot;math/tex&quot;&gt;\gamma(k) =\int_{-\pi}^\pi e^{ik\lambda} f(\lambda) d\lambda = \int_{-\pi}^\pi cos(k\lambda) f(\lambda) d\lambda&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;f(\lambda)&lt;/script&gt;는 대칭성을 가지고 있고, &lt;script type=&quot;math/tex&quot;&gt;(-\pi, \pi]&lt;/script&gt;에서 항상 양수값을 갖습니다. 그리고 spectral density를 (c)와 같이 적분하여 타임 도메인의 auto covariance function으로 변환할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;즉, &lt;script type=&quot;math/tex&quot;&gt;\gamma_X&lt;/script&gt;가 가진 정보와 &lt;script type=&quot;math/tex&quot;&gt;f_ㅌ(\lambda)&lt;/script&gt;가 가진 정보가 완전히 동일합니다. 또한 spectral densities는 essentially unique하기 때문에 s&lt;script type=&quot;math/tex&quot;&gt;\gamma(\cdot)&lt;/script&gt;에 대응되는 Spectral densities &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;g&lt;/script&gt;가 있다면, 이 둘은 &lt;script type=&quot;math/tex&quot;&gt;f&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;g&lt;/script&gt;는 서로 동일한 Fourier coefficients를 갖게 되기 때문에 서로 동일한 함수라고 할수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;다음은 우리가 알고 있는 몇개의 stationary time series의 sepectral density를 구하는 예제를 살펴보도록 하겠습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;White noise&lt;/b&gt; :
+If &lt;script type=&quot;math/tex&quot;&gt;\{X_t\} \sim WN(0, \sigma^2)&lt;/script&gt;, then &lt;script type=&quot;math/tex&quot;&gt;\gamma(0)=\sigma^2&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\gamma(h)=0&lt;/script&gt; for all &lt;script type=&quot;math/tex&quot;&gt;\left\vert h \right\vert \gt 0&lt;/script&gt;. This process has a flat spectral density&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;f(\lambda) = \frac{\sigma^2}{2\pi}, \ \ \ \ \ \ -\pi \gt \lambda \gt \pi&lt;/script&gt;
+
+&lt;p&gt;Each Frequency in the spectrum contributes equally to the variance of the process.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;AR(1)&lt;/b&gt;:
+If 
+&lt;script type=&quot;math/tex&quot;&gt;X_t = \phi X_{t-1} + Z_t&lt;/script&gt;
+where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt;, then &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; has spectral density&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+f(\lambda) &amp; = \frac{\sigma^2}{2\pi(1-\phi^2)} (1 + \sum_{h=1}^\infty \phi^h (e^{-ih\lambda} + e^{ih\lambda})) \\
+&amp; = \frac{\sigma^2}{2\pi(1-\phi^2)} (1 + \frac{\phi e^{i\lambda}}{1- \phi e^{i\lambda}} + \frac{\phi e^{-i\lambda}}{1- \phi e^{-i\lambda}}) \\
+&amp; = \frac{\sigma^2}{2\pi} (1 -2\phi cos \lambda + \phi^2)^{-1}
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;b&gt;MA(1)&lt;/b&gt;:
+If 
+&lt;script type=&quot;math/tex&quot;&gt;X_t = Z_t + \theta Z_{t-1}&lt;/script&gt;
+where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt;, then &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; has spectral density&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+f(\lambda) &amp; = \frac{\sigma^2}{2\pi} (1 + \theta^2 + \theta(e^{-i\lambda} + e^ {i\lambda}))
+&amp; = \frac{\sigma^2}{2\pi} (1 + 2\theta cos \lambda + \theta^2)
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;b&gt;ARMA(p, q)&lt;/b&gt; :
+If &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is a causal ARMA(p, q) process satisfying &lt;script type=&quot;math/tex&quot;&gt;\phi(B)X_t = \theta(B)Z_t&lt;/script&gt;, then&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;f_X(\lambda) = \frac{\sigma^2}{2\pi} \frac{\left\vert \theta(e^{-i\lambda})\right\vert ^2}{\left\vert \phi(e^{-i\lambda})\right\vert ^2}&lt;/script&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-23/fig1.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;
+&lt;small&gt;출처 : &lt;a href=&quot;http://contents.kocw.or.kr/contents4/document/lec/2013/Hanyang/Lee%20Kichun/11.pdf&quot;&gt;Time Series Analysis Lecture Note&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;여기까지 주어진 시계열데이터의 타임 도메인에서의 auto-covariance function이 주파수 도메인의 spectral density function으로 변환가능함을 살펴보았습니다. 앞서 우리는 시계열 데이터의 샘플들로부터 sample ACF를 추정하는 방법을 알아보았습니다. 마찬가지로 주어진 샘플데이터로부터 spectral density function을 추정하는 것은 어떻게 할까요? 이제 시계열 데이터의 spectral density function의 estimate인 &lt;code class=&quot;highlighter-rouge&quot;&gt;periodogram&lt;/code&gt;에 대해서 알아보도록 하겠습니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;periodogram&quot;&gt;Periodogram&lt;/h2&gt;
+
+&lt;p&gt;먼저 &lt;code class=&quot;highlighter-rouge&quot;&gt;periodogram&lt;/code&gt;을 설명하기 위해 복소수 벡터 &lt;script type=&quot;math/tex&quot;&gt;x&lt;/script&gt;를 생각해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x = \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n \end{bmatrix} \in \mathbb{C^n}&lt;/script&gt;
+
+&lt;p&gt;여기서 &lt;script type=&quot;math/tex&quot;&gt;\mathbb{C^n}&lt;/script&gt;는 복소수를 포함한 가능한 모든 컬럼벡터의 집합을 의미합니다. 이제 &lt;script type=&quot;math/tex&quot;&gt;w_k = 2 \pi k/n&lt;/script&gt;라고 표기하고, 여기서 &lt;script type=&quot;math/tex&quot;&gt;k&lt;/script&gt; 는  -(n-1)/2와  n/2 사이의 (inclusive) 자연수라고 하겠습니다. 즉,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;w_k = \frac{2\pi k}{n},  \ \ \ k = -[\frac{n-1}{2}], \cdots, [\frac{n}{2}],&lt;/script&gt;
+
+&lt;p&gt;[y]라는 표기는 y보다 작거나 같은 가장 큰 자연수를 나타냅니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;w_k&lt;/script&gt;와 같은 값들의 집합 &lt;script type=&quot;math/tex&quot;&gt;F_n&lt;/script&gt;를 샘플사이즈가 n인 &lt;b&gt;Fourier frequencies&lt;/b&gt; 라고 합니다. 이때, &lt;script type=&quot;math/tex&quot;&gt;F_n&lt;/script&gt; 는 &lt;script type=&quot;math/tex&quot;&gt;(-\pi, \pi]&lt;/script&gt; 구간의 부분집합으로 표현됩니다.&lt;/p&gt;
+
+&lt;p&gt;마찬가지로 아래와 같은 n개의 벡터를 생각해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;e_k = \frac{1}{\sqrt{n}} \begin{bmatrix} e^{iw_k} \\ e^{2iw_k} \\ \vdots \\ e^{niw_k}  \end{bmatrix}, \ \ \ \ \  k = -[\frac{n-1}{2}], \cdots, [\frac{n}{2}].&lt;/script&gt;
+
+&lt;p&gt;여기서 &lt;script type=&quot;math/tex&quot;&gt;e_1, \cdots, e_n&lt;/script&gt; 는 아래와 같은 관계를 만족시키는 서로 수직(&lt;b&gt;orthonormal&lt;/b&gt;)인 벡터들입니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+e_j * e_k = \begin{cases}
+1, &amp; \mbox{if } j =k  \\
+0, &amp; \mbox{if } j \ne k
+\end{cases} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;e_j *&lt;/script&gt;는 &lt;script type=&quot;math/tex&quot;&gt;e_j&lt;/script&gt;의 k번째 컴포넌트를 복소수 컨주게이트값으로 바꾼 행벡터를 타나냅니다.  row vector whose &lt;script type=&quot;math/tex&quot;&gt;k&lt;/script&gt;th component is the complex conjugate of the &lt;script type=&quot;math/tex&quot;&gt;k&lt;/script&gt;th component of &lt;script type=&quot;math/tex&quot;&gt;e_j&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;이는 곧 &lt;script type=&quot;math/tex&quot;&gt;\{e_1, \cdots, e_n\}&lt;/script&gt; 가 &lt;script type=&quot;math/tex&quot;&gt;\mathbb{C^n}&lt;/script&gt; 집합의 basis인 것을 의미하고, 따라서, &lt;script type=&quot;math/tex&quot;&gt;\mathbb{C^n}&lt;/script&gt; 에 속하는 임의의 벡터 &lt;script type=&quot;math/tex&quot;&gt;x&lt;/script&gt;는 이 basis의 선형 조합으로 표현될 수 있습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x = \sum_{k = -[\frac{n-1}{2}]}^{[\frac{n}{2}]} a_k e_k  \ \ \ \ \mbox{(eq.1)}&lt;/script&gt;
+
+&lt;p&gt;이 때, coefficients &lt;script type=&quot;math/tex&quot;&gt;a_k&lt;/script&gt;는 다음과 같이 구할수 있습니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;a_k = e_k * x = \frac{1}{\sqrt{n}} \sum_{t=1}^n x_t e^{-itw_k}&lt;/script&gt;
+
+&lt;p&gt;여기서 {&lt;script type=&quot;math/tex&quot;&gt;a_k&lt;/script&gt;} 시퀀스를 &lt;script type=&quot;math/tex&quot;&gt;\{x_1, \cdots, x_n\}&lt;/script&gt;의 &lt;b&gt;discrete Fourier transform&lt;/b&gt; 라고 부릅니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;The periodogram of &lt;script type=&quot;math/tex&quot;&gt;\{x_1, \cdots, x_n\}&lt;/script&gt; is the function&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;I_n(\lambda) = \frac{1}{n} \left\vert \sum_{t=1} ^{n} x_t e^{-it \lambda} \right\vert ^2&lt;/script&gt;
+
+&lt;p&gt;다음의 proposition은 &lt;script type=&quot;math/tex&quot;&gt;I_n(\lambda)&lt;/script&gt;가 &lt;script type=&quot;math/tex&quot;&gt;2\pi f(\lambda)&lt;/script&gt;의 샘플 추정값으로 간주될수 있음을 보입니다. 먼저 sepectral density &lt;script type=&quot;math/tex&quot;&gt;f(\lambda)&lt;/script&gt;의 정의가 다음과 같다는 것을 상기하도록 합니다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;2\pi f(\lambda) = \sum_{h=-\infty}^\infty \gamma(h)e^{-ih\lambda}, \ \ \ \ \ \lambda \in (-\pi, \pi]
+ \ \ \ \ \ \ \ \mbox{(eq.2)}&lt;/script&gt;
+
+&lt;p&gt;&lt;b&gt;proposition&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;If &lt;script type=&quot;math/tex&quot;&gt;x_1, \cdots, x_n&lt;/script&gt; are any real numbers and &lt;script type=&quot;math/tex&quot;&gt;w_k&lt;/script&gt; is any of the nonzero Fourier frequencies &lt;script type=&quot;math/tex&quot;&gt;2\pi k/n&lt;/script&gt; in &lt;script type=&quot;math/tex&quot;&gt;(-\pi, \pi]&lt;/script&gt;, then&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;I_n(w_k) = \sum_{\left\vert h \right\vert \lt n} \hat{\gamma}(h)e^{-ihw_k},  \ \ \ \ \ \ \ \mbox{(eq.3)}&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\hat{\gamma}(h)&lt;/script&gt; is the sample ACVF of &lt;script type=&quot;math/tex&quot;&gt;x_1, \cdots, x_n&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;(eq.2)와 (eq.3)을 비교하면 두 식이 비슷한 것을 볼수 있습니다. 따라서 &lt;script type=&quot;math/tex&quot;&gt;I_n(w_k)&lt;/script&gt;이 &lt;script type=&quot;math/tex&quot;&gt;f(\lambda)&lt;/script&gt;의 estimator로 사용할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;b&gt;실제 데이터를 이용한 분석&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 실제 시계열 데이터에서 spectral analysis를 수행해보도록 하겠습니다. 
+먼저 Fourier transform통해서 데이터의 주기를 파악해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;데이터 : 북창원의 기상 데이터(온도)&lt;/li&gt;
+  &lt;li&gt;기간 : 2018-11-01 ~ 2018-12-1 (1개월, 1시간 단위)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Discrete Fourier transform는 numpy 패키지를 통해 쉽게 이용할 수 있습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;columns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'지점'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'stn'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'일시'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'dataTime'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'기온(°C)'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'temp'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;'풍속(m/s)'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'ws'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;'풍향(16방위)'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'wd'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;'습도(&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;)'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'hm'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'dataTime'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_datetime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'dataTime'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Y-&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;m-&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;d &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;H:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;M'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'dataTime'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;signal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;## 온도 데이터&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fft&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;signal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;### fft 수행 &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;signal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; 
+&lt;span class=&quot;n&quot;&gt;freq&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fft&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fftfreq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;### 주파수 시퀀스&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;freq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xlabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'frequency(Hz)'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ylabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'amplitude'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-23/fig2.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;주파수 도메인으로 변환된 그래프를 살펴보면 2개의 peak가 있는 것을 볼 수 있습니다. 해당 주파수 대역을 좀더 확대해서 보면 다음과 같이 약 0.041 과 0.083 에서 peak가 발생한 것으로 보입니다. 따라서 주어진 온도 데이터는 주파수가 0.041인 시그널1과 주파수가 0.083인 시그널2의 합쳐진 것으로 생각할 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;주기 = 1/주파수 이기때문에 주어진 온도 데이터의 주기는 1/0.041 = 24 와 1/0.083=12로 구해집니다. 해당 데이터의 시간 단위가 1시간이고 주기가 24라는 것은 온도 데이터가 24시간의 주기를 가지고 있다는 것입니다. 하루동안의 온도 패턴이 반복적인 것을 생각하면 
+매우 직관적인 결과라는 것을 알수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-23/fig3.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;이제 주파수 값들에서 노이즈에 해당하는 값들을 0으로 바꾼 후 다시 타임 도메인으로 변경해보도록 하겠습니다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;## fourier[60]과 fourier[120]의 값을 제외하고 모두 0으로 변경&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;61&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;120&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;121&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;## inverse fourier transform &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;denoise&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fft&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ifft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;denoise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;freq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fourier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xlabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'frequency(Hz)'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ylabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'amplitude'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-01-23/fig4.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;디노이즈 작업은 주파수 도메인에서 강한 값으로 보인 부분을 제외한 나머지를 모두 0으로 변경한 후 다시 타임 도에인으로 바꿔주는 방식으로 진행하였습니다. 그 결과, 변환된 시계열 데이터는 24시간을 주기로 반복적인 패턴을 보이는 시그널로 변경된 것을 볼 수 있습니다.&lt;/p&gt;
+
+&lt;p&gt;위와 같은 주파수 도메인에서의 분석은 음향이나 설비의 진동 등을 분석하는데 많이 활용되고 있습니다.&lt;/p&gt;
+
+&lt;p&gt;[1] &lt;a href=&quot;https://www.springer.com/us/book/9781475777505&quot;&gt;Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[2] &lt;a href=&quot;http://www.kocw.net/home/search/kemView.do?kemId=977301&quot;&gt;시계열분석 강의, 한양대학교(이기천)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[3] &lt;a href=&quot;https://docs.scipy.org/doc/numpy-1.15.0/reference/routines.fft.html#module-numpy.fft&quot;&gt;numpy - Discrete Fourier Transform&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이터와 어떤 관계가 있는지를 알아보기 위해서 auto covariance function(ACF)을 이용하였습니다. Time domain에서의 ACF가 frequency domain에서의 로 변형될수 있음(interchangeable)을 살펴보도록 하겠습니다.</summary></entry><entry><title type="html">django - AWS 배포하기</title><link href="http://localhost:4000/django/django-deploy-aws/" rel="alternate" type="text/html" title="django - AWS 배포하기" /><published>2019-01-17T00:00:00+09:00</published><updated>2019-01-17T00:00:00+09:00</updated><id>http://localhost:4000/django/django-deploy-aws</id><content type="html" xml:base="http://localhost:4000/django/django-deploy-aws/">&lt;p&gt;django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. &lt;a href=&quot;https://nachwon.github.io/django-deploy-1-aws/&quot;&gt;이 블로그&lt;/a&gt;를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;아마존-웹-서비스-aws-가입하기&quot;&gt;아마존 웹 서비스 (AWS) 가입하기&lt;/h2&gt;
 
@@ -21,7 +235,7 @@
   &lt;li&gt;EC2 서비스로 이동&lt;/li&gt;
   &lt;li&gt;키페어 생성 - pem 파일 다운로드
     &lt;ul&gt;
-      &lt;li&gt;다운로드한 pem 파일은 ~/.ssh 폴더에 보관한다.&lt;/li&gt;
+      &lt;li&gt;다운로드한 pem 파일은 ~/.ssh 폴더에 보관합니다.&lt;/li&gt;
       &lt;li&gt;chmod 400 pem파일 로 권한을 변경합니다.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
@@ -491,7 +705,7 @@ ARX(3) model's RMSE:  7.710071937116329
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\Phi(B)(1-B)^d X_t = \Theta(B) Z_t&lt;/script&gt;
 
-&lt;p&gt;&lt;b&gt;statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;small&gt;statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.&lt;/small&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;arch&quot;&gt;ARCH&lt;/h2&gt;
 
@@ -3190,67 +3404,4 @@ Y &amp; = w_Y  Z + e_{Y} \\
 &lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-15/background.png&quot; width=&quot;230&quot; /&gt; ►►
 &lt;img src=&quot;/assets/img/2018-12-15/fine-dust.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Good Bye ~ !&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.</summary></entry><entry><title type="html">django를 이용한 대시보드 만들기</title><link href="http://localhost:4000/django/django/" rel="alternate" type="text/html" title="django를 이용한 대시보드 만들기" /><published>2018-12-12T00:00:00+09:00</published><updated>2018-12-12T00:00:00+09:00</updated><id>http://localhost:4000/django/django</id><content type="html" xml:base="http://localhost:4000/django/django/">&lt;p&gt;django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;missions&quot;&gt;Missions&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;데이터를 통한 인사이트 서비스를 제공하고 세상이 더 효율적으로 돌아가는데 기여하자&lt;br /&gt;
-눈에 보이는 유형의 서비스로 만들자 &lt;br /&gt; 
-빠르게 만들고, 피드백을 받아 수정하자&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-12/index.png&quot; width=&quot;500&quot; /&gt;
-&lt;img src=&quot;/assets/img/2018-12-12/detail.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Demo&lt;/b&gt; : &lt;a href=&quot;https://youtu.be/Xt-Yw83cv7E&quot;&gt;Youtue&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;github repo.&lt;/b&gt; : &lt;a href=&quot;https://github.com/yjucho1/air-pollution&quot;&gt;github&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;related-tools-and-docs&quot;&gt;Related Tools and Docs&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;django&lt;/b&gt; : &lt;a href=&quot;https://www.djangoproject.com/&quot;&gt;https://www.djangoproject.com/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design. 
-Built by experienced developers, it takes care of much of the hassle of Web development, so you can focus on writing your app without needing to reinvent the wheel. 
-It’s &lt;u&gt;free and open source&lt;/u&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;bootstrap&lt;/b&gt; : &lt;a href=&quot;https://getbootstrap.com/&quot;&gt;https://getbootstrap.com/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Bootstrap is &lt;u&gt;an open source&lt;/u&gt; toolkit for developing with HTML, CSS, and JS. 
-Quickly prototype your ideas or build your entire app with our Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful plugins built on jQuery.
-Bootstrap is released under the MIT license and is copyright 2018 Twitter.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;charts.js&lt;/b&gt; : &lt;a href=&quot;https://www.chartjs.org/&quot;&gt;https://www.chartjs.org/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Simple yet flexible JavaScript charting for designers &amp;amp; developers.
-Chart.js is &lt;u&gt;open source&lt;/u&gt; and available under the MIT license.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;leaflet.js&lt;/b&gt; : &lt;a href=&quot;https://leafletjs.com/&quot;&gt;https://leafletjs.com/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Leaflet is the leading &lt;u&gt;open-source&lt;/u&gt; JavaScript library for mobile-friendly interactive maps. Weighing just about 38 KB of JS, it has all the mapping features most developers ever need. As the code is published under the very permissive 2-clause BSD License. &lt;u&gt;Just make sure to attribute the use of the library somewhere in the app UI or the distribution&lt;/u&gt; (e.g. keep the Leaflet link on the map, or mention the use on the About page or a Readme file, etc.) and you’ll be fine.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;git&lt;/b&gt; : &lt;a href=&quot;https://git-scm.com/&quot;&gt;https://git-scm.com/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Git is &lt;u&gt;a free and open source&lt;/u&gt; distributed version control system designed to handle everything from small to very large projects with speed and efficiency. The Git project chose to use GPLv2 to guarantee your freedom to share and change free software—to make sure the software is free for all its users.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;공공데이터 포털&lt;/b&gt; : &lt;a href=&quot;https://www.data.go.kr/&quot;&gt;https://www.data.go.kr/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;공공데이터포털은 공공기관이 생성 또는 취득하여 관리하고 있는 공공데이터를 한 곳에서 제공하는 통합 창구입니다. 
-포털에서는 국민이 쉽고 편리하게 공공데이터를 이용할 수 있도록 파일데이터, 오픈API, 시각화 등 다양한 방식으로 제공하고 있으며, 누구라도 쉽고 편리한 검색을 통해 원하는 공공데이터를 빠르고 정확하게 찾을 수 있습니다.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;한국환경공단_측정소정보 조회 서비스 : https://www.data.go.kr/dataset/15000660/openapi.do&lt;/li&gt;
-  &lt;li&gt;한국환경공단_대기오염정보 조회 서비스 : https://www.data.go.kr/dataset/15000581/openapi.do&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">django는 python 기반의 웹프레임워크로 비교적 쉽고 빠르게 웹어플리케이션을 제작할수 있도록 도와줍니다. django와 여러가지 오픈소스 라이브러리를 이용해 간단한 대시보드를 제작해보았습니다. 이 포스트에서는 1차 프로토타입을 소개하고, 사용한 라이브러리를 소개하도록 하겠습니다.</summary></entry></feed>
+&lt;p&gt;Good Bye ~ !&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">기상청은 전국을 5km×5km 간격의 촘촘한 격자화하여 읍,면,동 단위로 상세한 날씨를 제공하는 동네예보를 제공합니다. 구역별 기상데이터를 관리하기 위해 한반도를 가로로 149개, 세로로 253개의 선을 그어 그리드형태로 관리하며, 위경도 데이터를 이 그리드 상의 좌표로 변화하는 알고리즘을 제공하고 있습니다.</summary></entry></feed>

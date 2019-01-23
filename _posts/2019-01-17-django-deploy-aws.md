@@ -25,7 +25,7 @@ django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약�
 
 3. EC2 서비스로 이동 
 4. 키페어 생성 - pem 파일 다운로드 
-    - 다운로드한 pem 파일은 ~/.ssh 폴더에 보관한다.
+    - 다운로드한 pem 파일은 ~/.ssh 폴더에 보관합니다.
     - chmod 400 pem파일 로 권한을 변경합니다.
 5. 인스턴스 생성
     - Ubuntu Server 16.04
