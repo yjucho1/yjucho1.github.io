@@ -2,6 +2,7 @@
 title: "시계열 분석 part2 - practical example"
 categories: 
   - Spatio-Temporal Data
+  - Time-series
 comments: true
 mathjax : true
 published: true

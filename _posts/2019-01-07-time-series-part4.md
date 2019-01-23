@@ -2,6 +2,7 @@
 title: "시계열 분석 part4 - VAR"
 categories: 
   - Spatio-Temporal Data
+  - Time-series
 comments: true
 mathjax : true
 published: true
