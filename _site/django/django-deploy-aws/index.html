@@ -283,7 +283,7 @@
             <nav class="toc">
               <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> </h4></header>
               <ul class="toc__menu">
-  <li><a href="#아마존-웹-서비스-aws-가입하기">아마존 웹 서비스 (AWS) 가입하기</a></li>
+  <li><a href="#aws-가입-후-ec2-서버-셋팅">AWS 가입 후 EC2 서버 셋팅</a></li>
   <li><a href="#wsgi와-nginx">WSGI와 NGINX</a></li>
   <li><a href="#static-files을-s3에-저장하기">static files을 S3에 저장하기</a></li>
   <li><a href="#외부도메인-연결을-위해-route-53-사용하기">외부도메인 연결을 위해 Route 53 사용하기</a></li>
@@ -294,7 +294,7 @@
         
         <p>django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. <a href="https://nachwon.github.io/django-deploy-1-aws/">이 블로그</a>를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.</p>
 
-<h2 id="아마존-웹-서비스-aws-가입하기">아마존 웹 서비스 (AWS) 가입하기</h2>
+<h2 id="aws-가입-후-ec2-서버-셋팅">AWS 가입 후 EC2 서버 셋팅</h2>
 
 <ol>
   <li>계정 가입 후 콘솔 로그인
@@ -303,7 +303,7 @@
     </ul>
 
     <p><img src="/assets/img/2019-01-17/1.png" width="400" />
- <img src="/assets/img/2019-01-17/2.png" width="400" /></p>
+<img src="/assets/img/2019-01-17/2.png" width="400" /></p>
   </li>
   <li>사용자 탭에 사용자 추가
     <ul>
@@ -336,37 +336,37 @@
       <li>locale 설정</li>
     </ul>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo vi /etc/default/locale
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vi /etc/default/locale
 
- LC_CTYPE="en_US.UTF-8"
- LC_ALL="en_US.UTF-8"
- LANG="en_US.UTF-8"
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
+LANG="en_US.UTF-8"
 </code></pre></div>    </div>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo apt-get update
- sudo apt-get dist-upgrade
- sudo apt-get install python-pip
- sudo apt-get install zsh
- sudo curl -L http://install.ohmyz.sh | sh
- sudo chsh ubuntu -s /usr/bin/zsh
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get update
+sudo apt-get dist-upgrade
+sudo apt-get install python-pip
+sudo apt-get install zsh
+sudo curl -L http://install.ohmyz.sh | sh
+sudo chsh ubuntu -s /usr/bin/zsh
 </code></pre></div>    </div>
   </li>
   <li>pyenv 설치
     <ul>
       <li>먼저 Ubuntu에서 Build 할 때 공통적으로 발생하는 문제를 방지하기 위해 필요한 패키지들을 설치해준다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> $ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
- libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
- xz-utils tk-dev
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+xz-utils tk-dev
 </code></pre></div>        </div>
       </li>
       <li>git clone 후 설치해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> $ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 </code></pre></div>        </div>
       </li>
       <li>~/.zshrc 의 pyenv 환경변수 설정을 해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> export PATH="/home/ubuntu/.pyenv/bin:$PATH"
- eval "$(pyenv init -)"
- eval "$(pyenv virtualenv-init -)"
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH="/home/ubuntu/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 </code></pre></div>        </div>
       </li>
     </ul>
@@ -374,31 +374,31 @@
   <li>Python 설치
     <ul>
       <li>pyenv를 통해서 Python을 설치합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pyenv install 3.6.7
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv install 3.6.7
 </code></pre></div>        </div>
       </li>
       <li>Pillow를 위한 Python 라이브러리 설치합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo apt-get install python-dev python-setuptools
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install python-dev python-setuptools
 </code></pre></div>        </div>
       </li>
     </ul>
   </li>
   <li>scp를 사용하여 django 프로젝트 파일 업로드하기
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp -i 키페어경로 -r 보낼폴더경로 유저명@퍼블릭DNS:받을폴더경로
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   scp -i 키페어경로 -r 보낼폴더경로 유저명@퍼블릭DNS:받을폴더경로
 </code></pre></div>    </div>
   </li>
   <li>서버에서 Python 가상환경 설치하기
     <ul>
       <li>AWS 서버에 로컬 서버에서 생성했던 pyenv 가상환경 이름과 동일한 이름으로 가상환경을 생성합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv virtualenv 3.6.7 mysite
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   pyenv virtualenv 3.6.7 mysite
 </code></pre></div>        </div>
       </li>
       <li>다음의 명령어를 입력하여 requirements.txt 에 기재되어있는 패키지들을 설치해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install -r requirements.txt
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   pip install -r requirements.txt
 </code></pre></div>        </div>
       </li>
       <li>만약 pip 버전이 최신버전이 아니라는 에러가 날 경우 아래 명령어를 입력해준 다음 다시 설치합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install --upgrade pip
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   pip install --upgrade pip
 </code></pre></div>        </div>
       </li>
     </ul>
@@ -407,18 +407,14 @@
     <ul>
       <li>EC2 관리 화면으로 접속한 뒤, 보안 그룹 화면으로 이동합니다.</li>
       <li>보안 그룹 목록에서 생성한 보안 그룹을 체크하고 인바운드 탭의 편집 버튼을 누릅니다.</li>
-      <li>규칙 추가 버튼을 누른 다음, 포트 범위에 8080 을 입력하고 저장을 누릅니다.</li>
+      <li>규칙 추가 버튼을 누른 다음, 포트 범위에 8080 을 입력하고 저장을 누릅니다. <br />
+   <img src="/assets/img/2019-01-17/3.png" width="400" /></li>
     </ul>
   </li>
-</ol>
-
-<p><img src="/assets/img/2019-01-17/3.png" width="400" /></p>
-
-<ol>
   <li>runserver 실행하기
     <ul>
-      <li>srv 폴더안의 프로젝트 폴더로 이동하여 runserver 를 포트 8080에 실행합니다.
-./manage.py runserver 0:8080</li>
+      <li>srv 폴더안의 프로젝트 폴더로 이동하여 runserver 를 포트 8080에 실행합니다.<br />
+   ./manage.py runserver 0:8080</li>
       <li>위의 모든 과정이 올바르게 수행되었다면 django application 화면이 보일 것입니다.</li>
     </ul>
   </li>
@@ -436,19 +432,19 @@
   <li>uWSGI 설치
     <ul>
       <li><code class="highlighter-rouge">ssh</code>로 접속 후 배포에 사용할 유저 <code class="highlighter-rouge">deploy</code> 를 생성합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo adduser deploy
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo adduser deploy
 </code></pre></div>        </div>
       </li>
       <li>uWSGI를 설치할 별도의 python 가상환경을 생성합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pyenv virtualenv 3.6.7 uwsgi-env
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv virtualenv 3.6.7 uwsgi-env
 </code></pre></div>        </div>
       </li>
       <li>이 가상환경을 지금 현재의 가상 컴퓨터 셸에만 일시적으로 적용하도록 설정해줍니다. 서버 전체에서 하나의 uwsgi를 사용하게 하기 위함입니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pyenv shell uwsgi-env
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pyenv shell uwsgi-env
 </code></pre></div>        </div>
       </li>
       <li>이제 가상환경에 uwsgi 를 설치합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pip install uwsgi
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install uwsgi
 </code></pre></div>        </div>
       </li>
     </ul>
@@ -456,17 +452,17 @@
   <li>uWSGI로 서버 열어보기
     <ul>
       <li>uWSGI를 실행하려면 pyenv shell uwsgi-env 를 입력해 uwsgi-env를 적용한 다음, 아래와 같이 입력합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> uwsgi \
- --http :[포트번호] \
- --home [virtualenv 경로] \
- --chdir [장고프로젝트폴더 경로] \
- -w [wsgi 모듈명].wsgi
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uwsgi \
+--http :[포트번호] \
+--home [virtualenv 경로] \
+--chdir [장고프로젝트폴더 경로] \
+-w [wsgi 모듈명].wsgi
 </code></pre></div>        </div>
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> uwsgi \
- --http :8080 \
- --home /home/ubuntu/.pyenv/versions/mysite \
- --chdir /srv/air-pollution/mysite \
- -w  mysite.wsgi
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>uwsgi \
+--http :8080 \
+--home /home/ubuntu/.pyenv/versions/mysite \
+--chdir /srv/air-pollution/mysite \
+-w  mysite.wsgi
 </code></pre></div>        </div>
       </li>
     </ul>
@@ -477,91 +473,91 @@
       <li>로컬에서 장고 프로젝트 폴더에 .config 라는 폴더를 하나 새로 생성하고 그 안에 다시 uwsgi 폴더를 생성하고, uwsgi 폴더 안에 <code class="highlighter-rouge">mysite.ini</code> 파일을 만들어 줍니다.</li>
     </ul>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> air-pollution
- ├── .config
- │   └── uwsgi
- │       ├── mysite.ini
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>air-pollution
+├── .config
+│   └── uwsgi
+│       ├── mysite.ini
 </code></pre></div>    </div>
 
     <p><code class="highlighter-rouge">mysite.ini</code> :</p>
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [uwsgi]
- chdir = /srv/air-pollution/mysite
- module = mysite.wsgi:application
- home = /home/ubuntu/.pyenv/versions/mysite
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[uwsgi]
+chdir = /srv/air-pollution/mysite
+module = mysite.wsgi:application
+home = /home/ubuntu/.pyenv/versions/mysite
 
- uid = deploy
- gid = deploy
+uid = deploy
+gid = deploy
 
- http = :8080
+http = :8080
 
- enable-threads = true
- master = true
- vacuum = true
- pidfile = /tmp/mysite.pid
- logto = /var/log/uwsgi/mysite/@(exec://date +%%Y-%%m-%%d).log
- log-reopen = true
+enable-threads = true
+master = true
+vacuum = true
+pidfile = /tmp/mysite.pid
+logto = /var/log/uwsgi/mysite/@(exec://date +%%Y-%%m-%%d).log
+log-reopen = true
 </code></pre></div>    </div>
     <ul>
       <li>uWSGI를 실행하기 전에 mysite.ini 파일에 설정해주었던 <code class="highlighter-rouge">logto</code> 옵션의 디렉토리를 생성합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo mkdir -p /var/log/uwsgi/mysite
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo mkdir -p /var/log/uwsgi/mysite
 </code></pre></div>        </div>
       </li>
       <li>그 다음 아래의 명령을 실행해 ini 파일로 uWSGI를 실행합니다. sudo 권한으로 실행해야 하기 때문에, uwsgi-env 가상환경 폴더 안에 있는 uwsgi를 직접 실행해주어야 합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo /home/ubuntu/.pyenv/versions/uwsgi-env/bin/uwsgi -i /srv/air-pollution/.config/uwsgi/mysite.ini 
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo /home/ubuntu/.pyenv/versions/uwsgi-env/bin/uwsgi -i /srv/air-pollution/.config/uwsgi/mysite.ini 
 </code></pre></div>        </div>
       </li>
     </ul>
   </li>
   <li>Nginx 설치
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # PPA 추가를 위한 필요 패키지
- sudo apt-get install software-properties-common python-software-properties
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># PPA 추가를 위한 필요 패키지
+sudo apt-get install software-properties-common python-software-properties
 
- # nginx 안정화 최신버전 PPA 추가
- sudo add-apt-repository ppa:nginx/stable
+# nginx 안정화 최신버전 PPA 추가
+sudo add-apt-repository ppa:nginx/stable
 
- # PPA 저장소 업데이트
- sudo apt-get update
+# PPA 저장소 업데이트
+sudo apt-get update
 
- # nginx 설치
- sudo apt-get install nginx
+# nginx 설치
+sudo apt-get install nginx
 </code></pre></div>    </div>
     <ul>
       <li>유저 설정
- 배포에 관한 작업은 <code class="highlighter-rouge">deploy</code> 유저가 담당하므로 Nginx 의 유저를 <code class="highlighter-rouge">deploy</code> 로 바꿔줍니다.
- Nginx 관련 설정은 /etc/nginx/nginx.conf 에서 관리합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo vi /etc/nginx/nginx.conf
+배포에 관한 작업은 <code class="highlighter-rouge">deploy</code> 유저가 담당하므로 Nginx 의 유저를 <code class="highlighter-rouge">deploy</code> 로 바꿔줍니다.
+Nginx 관련 설정은 /etc/nginx/nginx.conf 에서 관리합니다.
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo vi /etc/nginx/nginx.conf
 </code></pre></div>        </div>
       </li>
       <li>파일의 첫 줄 user www-data; 를 user deploy; 로 수정해줍니다.</li>
     </ul>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> user deploy;
- worker_processes auto;
- pid /run/nginx.pid;
- include /etc/nginx/modules-enabled/*.conf;
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user deploy;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
 
- events {
-         worker_connections 768;
-         # multi_accept on;
- }
+events {
+        worker_connections 768;
+        # multi_accept on;
+}
 
- http {
-     ...
+http {
+    ...
 </code></pre></div>    </div>
 
     <ul>
       <li>Nginx 설정 파일 생성 및 연결
- 이제 로컬 서버로 빠져나가서 장고 프로젝트 폴더로 이동합니다. 
- uWSGI 설정을 저장했던 .config 폴더에 nginx 폴더를 새로 만들고 그 아래에 <code class="highlighter-rouge">mysite.conf</code> 파일을 생성합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> air-pollution
- ├── .config
- │   ├── nginx
- │   │   └── mysite.conf
- │   └── uwsgi
- │       ├── mysite.ini
+이제 로컬 서버로 빠져나가서 장고 프로젝트 폴더로 이동합니다. 
+uWSGI 설정을 저장했던 .config 폴더에 nginx 폴더를 새로 만들고 그 아래에 <code class="highlighter-rouge">mysite.conf</code> 파일을 생성합니다.
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>air-pollution
+├── .config
+│   ├── nginx
+│   │   └── mysite.conf
+│   └── uwsgi
+│       ├── mysite.ini
 </code></pre></div>        </div>
         <p><code class="highlighter-rouge">mysite.conf</code> :</p>
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> server {
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   listen 80;
   server_name *.compute.amazonaws.com;
   charset utf-8;
@@ -571,19 +567,19 @@
       uwsgi_pass  unix:///tmp/mysite.sock;
       include     uwsgi_params;
   }
- }
+}
 </code></pre></div>        </div>
       </li>
       <li>장고 프로젝트 폴더 내의 <code class="highlighter-rouge">mysite.conf</code> 파일을 <code class="highlighter-rouge">/etc/nginx/sites-available/</code> 경로에 복사해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo cp -f /srv/air-pollution/.config/nginx/mysite.conf /etc/nginx/sites-available/mysite.conf
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo cp -f /srv/air-pollution/.config/nginx/mysite.conf /etc/nginx/sites-available/mysite.conf
 </code></pre></div>        </div>
       </li>
       <li>이제 다음 명령을 입력하여 sites-available 에 있는 설정파일을 sites-enabled 폴더에 링크해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo ln -sf /etc/nginx/sites-available/mysite.conf /etc/nginx/sites-enabled/mysite.conf
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo ln -sf /etc/nginx/sites-available/mysite.conf /etc/nginx/sites-enabled/mysite.conf
 </code></pre></div>        </div>
       </li>
       <li>sites-enabled 폴더의 default 링크는 삭제해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo rm /etc/nginx/sites-enabled/default
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo rm /etc/nginx/sites-enabled/default
 </code></pre></div>        </div>
       </li>
     </ul>
@@ -593,75 +589,75 @@
       <li>이제 uWSGI를 Nginx와 통신하도록 설정해줍니다.</li>
       <li>리눅스에서 관리하는 service 파일을 만들어 서버가 실행될 때 자동으로 uWSGI를 백그라운드에 실행시켜주도록 해야합니다.</li>
       <li>/장고 프로젝트 폴더/.config/uwsgi/ 에 uwsgi.service 파일을 생성합니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> air-pollution
- ├── .config
- │   ├── nginx
- │   │   └── mysite.conf
- │   └── uwsgi
- │       ├── mysite.ini
- │       └── uwsgi.service
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>air-pollution
+├── .config
+│   ├── nginx
+│   │   └── mysite.conf
+│   └── uwsgi
+│       ├── mysite.ini
+│       └── uwsgi.service
 </code></pre></div>        </div>
       </li>
       <li>uwsgi.service 파일안에 아래와 같이 작성합니다.</li>
     </ul>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [Unit]
- Description=uWSGI service
- After=syslog.target
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Unit]
+Description=uWSGI service
+After=syslog.target
 
- [Service]
- ExecStart=/home/ubuntu/.pyenv/versions/uwsgi-env/bin/uwsgi -i /srv/air-pollution/.config/uwsgi/mysite.ini
+[Service]
+ExecStart=/home/ubuntu/.pyenv/versions/uwsgi-env/bin/uwsgi -i /srv/air-pollution/.config/uwsgi/mysite.ini
 
- Restart=always
- KillSignal=SIGQUIT
- Type=notify
- StandardError=syslog
- NotifyAccess=all
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
 
- [Install]
- WantedBy=multi-user.target
+[Install]
+WantedBy=multi-user.target
 </code></pre></div>    </div>
 
     <ul>
       <li>AWS 서버에 접속해서 uwsgi.service 파일을 /etc/systemd/system/ 에 하드링크를 걸어줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo ln -f /srv/air-pollution/.config/uwsgi/uwsgi.service /etc/systemd/system/uwsgi.service
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo ln -f /srv/air-pollution/.config/uwsgi/uwsgi.service /etc/systemd/system/uwsgi.service
 </code></pre></div>        </div>
       </li>
       <li>파일을 연결해준 뒤 아래 명령을 실행해서 데몬을 리로드 해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo systemctl daemon-reload
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl daemon-reload
 </code></pre></div>        </div>
       </li>
       <li>그 다음 아래 명령어로 uwsgi 데몬을 활성화 해줍니다. 이제 서버에 접속하기만 해도 uwsgi와 Nginx가 백그라운드에서 실행됩니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo systemctl enable uwsgi
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl enable uwsgi
 </code></pre></div>        </div>
       </li>
       <li>소켓 통신 설정 : <code class="highlighter-rouge">mysite.ini</code> 파일을 열어 http = :8080 을 삭제하고 그 부분에 아래와 같이 추가합니다. uWSGI가 http 요청을 받는 대신, /tmp/mysite.sock 파일을 통해 요청을 받도록 소켓 통신을 설정해주는 것입니다.</li>
     </ul>
 
     <p><code class="highlighter-rouge">mysite.ini</code></p>
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [uwsgi]
- chdir = /srv/air-pollution/mysite
- module = mysite.wsgi:application
- home = /home/ubuntu/.pyenv/versions/mysite
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[uwsgi]
+chdir = /srv/air-pollution/mysite
+module = mysite.wsgi:application
+home = /home/ubuntu/.pyenv/versions/mysite
 
- uid = deploy
- gid = deploy
+uid = deploy
+gid = deploy
 
- socket = /tmp/mysite.sock
- chmod-socket = 666
- chown-socket = deploy:deploy
+socket = /tmp/mysite.sock
+chmod-socket = 666
+chown-socket = deploy:deploy
 
- enable-threads = true
- master = true
- vacuum = true
- pidfile = /tmp/mysite.pid
- logto = /var/log/uwsgi/mysite/@(exec://date +%%Y-%%m-%%d).log
- log-reopen = true
+enable-threads = true
+master = true
+vacuum = true
+pidfile = /tmp/mysite.pid
+logto = /var/log/uwsgi/mysite/@(exec://date +%%Y-%%m-%%d).log
+log-reopen = true
 </code></pre></div>    </div>
     <ul>
       <li>데몬 리로드로 다시 불러와주고, Nginx와 uWSGI를 재부팅해줍니다.
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> sudo systemctl daemon-reload
- sudo systemctl restart nginx uwsgi
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo systemctl daemon-reload
+sudo systemctl restart nginx uwsgi
 </code></pre></div>        </div>
       </li>
     </ul>
@@ -679,18 +675,175 @@
       <li>만약 에러가 난다면 아래의 명령으로 에러 로그를 확인해서 문제점을 찾을 수 있습니다.</li>
     </ul>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> # Nginx 에러 로그
- cat /var/log/nginx/error.log
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Nginx 에러 로그
+cat /var/log/nginx/error.log
 
- # uWSGI 로그
- cat /var/log/uwsgi/mysite/로그작성날짜.log
+# uWSGI 로그
+cat /var/log/uwsgi/mysite/로그작성날짜.log
 </code></pre></div>    </div>
   </li>
 </ol>
 
 <h2 id="static-files을-s3에-저장하기">static files을 S3에 저장하기</h2>
 
+<p>Amazon S3 는 아마존 웹 서비스(AWS)에서 제공하는 클라우드 스토리지 서비스입니다. 여기서는 장고 프로젝트에 필요한 스태틱 파일 및 미디어 파일들을 Amazon S3라는 별도의 저장소에 저장하여 관리하는 방법을 정리하였습니다.</p>
+
+<ol>
+  <li><code class="highlighter-rouge">django-storages</code> 패키지 설치
+    <ul>
+      <li>터미널에서 아래 명령을 입력하여 django_storages 패키지를 설치합니다.
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install django_storages
+</code></pre></div>        </div>
+      </li>
+      <li><code class="highlighter-rouge">setting.py</code>에서 <code class="highlighter-rouge">INSTALLED_APPS</code>에 storages를 추가해줍니다.
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>INSTALLED_APPS = [
+'django.contrib.admin',
+...
+'storages',
+]
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">boto3</code> 설치하기
+    <blockquote>
+      <p>Boto is the Amazon Web Services (AWS) SDK for Python, which allows Python developers to write software that makes use of Amazon services like S3 and EC2. Boto provides an easy to use, object-oriented API as well as low-level direct service access. <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">출처</a></p>
+    </blockquote>
+
+    <ul>
+      <li>django_storages 패키지는 <code class="highlighter-rouge">boto3</code> 라는 패키지를 사용하여 S3와 통신하도록 구성되어있습니다.</li>
+      <li>터미널에서 아래 명령을 입력하여 boto3 패키지를 설치합니다.
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip install boto3
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>AWS에서 S3 시작하기
+    <ul>
+      <li>먼저, S3는 EC2와 별개의 서비스이므로 <code class="highlighter-rouge">IAM</code>으로 생성했던 유저에게 S3 사용 권한을 추가해주어야 합니다.</li>
+      <li>AWS 콘솔로 접속한 다음 <code class="highlighter-rouge">IAM</code> &gt; <code class="highlighter-rouge">User</code>탬을 눌러 사용자 관리 화면으로 갑니다.</li>
+      <li>생성되어 있는 사용자 이름을 클릭하여 수정화면으로 들어갑니다.</li>
+      <li>Permissions 탭에서 <code class="highlighter-rouge">Add permissions</code> 버튼을 클릭합니다.</li>
+    </ul>
+
+    <p><img src="/assets/img/2019-01-17/5.png" width="400" /></p>
+  </li>
+  <li>버킷(bucket) 생성하기
+    <ul>
+      <li>S3 서비스는 <code class="highlighter-rouge">버킷(bucket)</code>이라는 단위로 저장소를 제공합니다.</li>
+      <li>AWS의 S3콘솔로 이동하여 <code class="highlighter-rouge">버킷 만들기</code>를 눌러 새로운 버킷을 생성합니다.</li>
+      <li>생성한 버킷을 선택하여 Permissions에서 아래와 같이 설정합니다.</li>
+    </ul>
+
+    <p><img src="/assets/img/2019-01-17/6.png" width="400" /></p>
+  </li>
+  <li>django 설정
+    <ul>
+      <li><code class="highlighter-rouge">setting.py</code>에서 아래와 같은 변수들을 추가해줍니다.</li>
+    </ul>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">DEFAULT_FILE_STORAGE</span> <span class="o">=</span> <span class="s">'storages.backends.s3boto3.S3Boto3Storage'</span>
+<span class="n">STATICFILES_STORAGE</span> <span class="o">=</span> <span class="s">'storages.backends.s3boto3.S3Boto3Storage'</span>
+<span class="n">AWS_ACCESS_KEY_ID</span> <span class="o">=</span> <span class="s">"your-AWS_ACCESS_KEY_ID"</span>
+<span class="n">AWS_SECRET_ACCESS_KEY</span> <span class="o">=</span> <span class="s">"your-AWS_SECRET_ACCESS_KEY"</span>
+<span class="n">AWS_STORAGE_BUCKET_NAME</span> <span class="o">=</span> <span class="s">"your-BUCKET_NAME"</span>
+<span class="n">AWS_DEFAULT_ACL</span> <span class="o">=</span> <span class="s">'public-read'</span>
+<span class="n">AWS_REGION</span> <span class="o">=</span> <span class="s">'ap-northeast-2'</span>  <span class="c">### When AWS region is 'SEOUL' </span>
+<span class="n">AWS_S3_CUSTOM_DOMAIN</span> <span class="o">=</span> <span class="s">'</span><span class="si">%</span><span class="s">s.s3.</span><span class="si">%</span><span class="s">s.amazonaws.com'</span> <span class="o">%</span> <span class="p">(</span><span class="n">AWS_STORAGE_BUCKET_NAME</span><span class="p">,</span><span class="n">AWS_REGION</span><span class="p">)</span>
+<span class="n">AWS_S3_OBJECT_PARAMETERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'CacheControl'</span><span class="p">:</span> <span class="s">'max-age=86400'</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+    <ul>
+      <li>이제 모든 설정이 끝났습니다.</li>
+    </ul>
+  </li>
+  <li>S3에 Static 파일 모으기
+    <ul>
+      <li>S3에 잘 저장이 되는지 확인해보기위해 <code class="highlighter-rouge">static</code> 폴더를 생성한후 test.txt 파일을 생성합니다.</li>
+      <li><code class="highlighter-rouge">setting.py</code>에 <code class="highlighter-rouge">STATICFILES_DIRS</code>에 경로를 추가하여 최종적으로는 아래와 같아야합니다.</li>
+    </ul>
+
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s">'/static/'</span>
+
+<span class="n">DEFAULT_FILE_STORAGE</span> <span class="o">=</span> <span class="s">'storages.backends.s3boto3.S3Boto3Storage'</span>
+<span class="n">STATICFILES_STORAGE</span> <span class="o">=</span> <span class="s">'storages.backends.s3boto3.S3Boto3Storage'</span>
+<span class="n">AWS_ACCESS_KEY_ID</span> <span class="o">=</span> <span class="s">"your-AWS_ACCESS_KEY_ID"</span>
+<span class="n">AWS_SECRET_ACCESS_KEY</span> <span class="o">=</span> <span class="s">"your-AWS_SECRET_ACCESS_KEY"</span>
+<span class="n">AWS_STORAGE_BUCKET_NAME</span> <span class="o">=</span> <span class="s">"your-BUCKET_NAME"</span>
+<span class="n">AWS_DEFAULT_ACL</span> <span class="o">=</span> <span class="s">'public-read'</span>
+<span class="n">AWS_REGION</span> <span class="o">=</span> <span class="s">'ap-northeast-2'</span>  <span class="c">### When AWS region is 'SEOUL' </span>
+<span class="n">AWS_S3_CUSTOM_DOMAIN</span> <span class="o">=</span> <span class="s">'</span><span class="si">%</span><span class="s">s.s3.</span><span class="si">%</span><span class="s">s.amazonaws.com'</span> <span class="o">%</span> <span class="p">(</span><span class="n">AWS_STORAGE_BUCKET_NAME</span><span class="p">,</span><span class="n">AWS_REGION</span><span class="p">)</span>
+<span class="n">AWS_S3_OBJECT_PARAMETERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'CacheControl'</span><span class="p">:</span> <span class="s">'max-age=86400'</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">STATIC_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">'static'</span><span class="p">)</span>
+<span class="n">STATICFILES_DIRS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">STATIC_DIR</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>    </div>
+
+    <ul>
+      <li>모든 세팅이 끝나면 <code class="highlighter-rouge">collectstatic</code> 명령으로 모든 정적 파일들을 모아줍니다.
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python manage.py collectstatic
+</code></pre></div>        </div>
+      </li>
+      <li>실행이 완료되면 S3 콘솔로 가서 생성했던 버킷으로 들어가 저장된 파일을 확인합니다.</li>
+      <li>테스트로 추가한 test.txt도 추가된 것을 볼 수 있을 것입니다.</li>
+    </ul>
+  </li>
+</ol>
+
 <h2 id="외부도메인-연결을-위해-route-53-사용하기">외부도메인 연결을 위해 Route 53 사용하기</h2>
+
+<ol>
+  <li>도메인 구입하기
+    <ul>
+      <li>도메인을 구매하는 사이트는 많으나, 여기서는 cafe24를 이용하였습니다. 
+https://www.cafe24.com/?controller=domain_main</li>
+    </ul>
+  </li>
+  <li>고정IP 부여받기
+    <ul>
+      <li>EC2는 기본적으로 유동IP를 가집니다. 그때문에 인스턴스를 stoping 후 다시 시작을 하는 경우, IP가 변경됩니다.</li>
+      <li>유동IP를 사용할 경우 인스턴스를 재시작할때마다 DNS 연결설정을 다시 해주어야하는 번거로움이 생기기 때문에 우선 elastic IP 할당(고정IP 할당)후 도메인을 연결하도록 하겠습니다.</li>
+      <li>EC2 서비스에서 <code class="highlighter-rouge">탄력적 IP(Elastic IP)</code>를 클릭합니다.</li>
+      <li>‘새주소 할당’ -&gt; ‘할당’</li>
+      <li>
+        <p>할당된 IP에 ‘작업’ -&gt; ‘주소 연결’
+<img src="/assets/img/2019-01-17/7.png" width="400" /></p>
+      </li>
+      <li>아래와 같이 EC2 인스턴스를 연결합니다. 
+<img src="/assets/img/2019-01-17/8.png" width="400" /></li>
+    </ul>
+  </li>
+  <li>AWS의 Route53 설정
+    <ul>
+      <li>Amazon <code class="highlighter-rouge">Route 53</code>은 가용성과 확장성이 우수한 DNS(도메인 이름 시스템) 웹 서비스입니다.</li>
+      <li>https://console.aws.amazon.com/route53/home?#</li>
+      <li>Create Hosted Zone 을 클릭합니다.
+        <ul>
+          <li>도메인 이름에 구매한 외부 도메인 주소를 적고 create를 클릭합니다.</li>
+        </ul>
+      </li>
+      <li>아래와 같은 레코드 셋이 생성된 것을 볼 수 있습니다.</li>
+      <li>create record set을 클릭하여 A type 레코드를 생성합니다.
+        <ul>
+          <li>value 에 인스턴스에 할당된 고정IP를 적어줍니다. 
+<img src="/assets/img/2019-01-17/9.png" width="400" /></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>외부도메인에 Name Server 연결하기
+    <ul>
+      <li>cafe24의 도메인 관리 페이지에 들어가서 <code class="highlighter-rouge">네임서버 변경</code>을 클릭합니다.</li>
+      <li>네임서버를 <code class="highlighter-rouge">Route 53</code>의 <code class="highlighter-rouge">NS 레코드값</code>들로 변경해줍니다. 
+<img src="/assets/img/2019-01-17/10.png" width="400" /></li>
+    </ul>
+  </li>
+  <li>모든 것이 완료되었고, 구입한 도메인으로 연결이 성공할때까지 약 30분 정도 소요 시간이 걸릴 수 있습니다.</li>
+</ol>
 
 <h2 id="trouble-shooting">trouble shooting</h2>
 
@@ -711,7 +864,9 @@ sudo chgrp [deploy를 수행하는 유저그룹] [path-to-parent-directory-of-db
   <li><a href="https://nachwon.github.io/django-deploy-1-aws/">https://nachwon.github.io/django-deploy-1-aws/</a></li>
   <li><a href="https://nachwon.github.io/django-deploy-2-wsgi/">https://nachwon.github.io/django-deploy-2-wsgi/</a></li>
   <li><a href="https://nachwon.github.io/django-deploy-3-nginx/">https://nachwon.github.io/django-deploy-3-nginx/</a></li>
+  <li><a href="https://nachwon.github.io/django-deploy-7-s3/">https://nachwon.github.io/django-deploy-7-s3/</a></li>
 </ul>
+
 
         
       </section>
@@ -761,11 +916,11 @@ sudo chgrp [deploy를 수행하는 유저그룹] [path-to-parent-directory-of-db
       
   <nav class="pagination">
     
-      <a href="/spatio-temporal%20data/time-series-part5/" class="pagination--pager" title="시계열 분석 - part5
+      <a href="/spatio-temporal%20data/time-series/time-series-part5/" class="pagination--pager" title="시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH
 ">Previous</a>
     
     
-      <a href="/spatio-temporal%20data/time-series-part6/" class="pagination--pager" title="시계열 분석 - part6
+      <a href="/spatio-temporal%20data/time-series/time-series-part6/" class="pagination--pager" title="시계열 분석 part6 - Spectral analysis
 ">Next</a>
     
   </nav>
@@ -845,10 +1000,6 @@ sudo chgrp [deploy를 수행하는 유저그룹] [path-to-parent-directory-of-db
   
 
 
-
-<script type="text/javascript" async
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
 
 
 

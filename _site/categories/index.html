@@ -299,28 +299,6 @@
         </li>
       
     
-  
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
       
     
   
@@ -347,7 +325,43 @@
     
       
     
+      
+    
   
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <li>
+          <a href="#time-series">
+            <strong>Time-series</strong> <span class="taxonomy__count">6</span>
+          </a>
+        </li>
+      
+    
+  
+    
+      
     
       
     
@@ -401,6 +415,8 @@
     
       
     
+      
+    
   
     
       
@@ -411,6 +427,8 @@
             <strong>Clustering</strong> <span class="taxonomy__count">3</span>
           </a>
         </li>
+      
+    
       
     
       
@@ -485,6 +503,8 @@
     
       
     
+      
+    
   
     
       
@@ -521,6 +541,8 @@
             <strong>spark</strong> <span class="taxonomy__count">1</span>
           </a>
         </li>
+      
+    
       
     
       
@@ -566,12 +588,12 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/spatio-temporal%20data/time-series-part6/" rel="permalink">시계열 분석 - part6
+        <a href="/spatio-temporal%20data/time-series/time-series-part6/" rel="permalink">시계열 분석 part6 - Spectral analysis
 </a>
       
     </h2>
     
-    <p class="archive__item-excerpt" itemprop="description">지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. Time domain에서의 시계열 데이터는 특정 시점의 데이터가 과거 시점의 데이...</p>
+    <p class="archive__item-excerpt" itemprop="description">지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있...</p>
   </article>
 </div>
           
@@ -584,7 +606,7 @@
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/spatio-temporal%20data/time-series-part5/" rel="permalink">시계열 분석 - part5
+        <a href="/spatio-temporal%20data/time-series/time-series-part5/" rel="permalink">시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH
 </a>
       
     </h2>
@@ -603,7 +625,7 @@ V...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/spatio-temporal%20data/time-series-part4/" rel="permalink">시계열 분석 - part4
+        <a href="/spatio-temporal%20data/time-series/time-series-part4/" rel="permalink">시계열 분석 part4 - VAR
 </a>
       
     </h2>
@@ -623,7 +645,7 @@ V...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/spatio-temporal%20data/time-series-part3/" rel="permalink">시계열 분석 - part3
+        <a href="/spatio-temporal%20data/time-series/time-series-part3/" rel="permalink">시계열 분석 part3 - Non-stationary
 </a>
       
     </h2>
@@ -641,7 +663,7 @@ V...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/spatio-temporal%20data/time-series-part2/" rel="permalink">시계열 분석 - part2
+        <a href="/spatio-temporal%20data/time-series/time-series-part2/" rel="permalink">시계열 분석 part2 - practical example
 </a>
       
     </h2>
@@ -661,7 +683,7 @@ V...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="/spatio-temporal%20data/time-series-part1/" rel="permalink">시계열 분석 - part1
+        <a href="/spatio-temporal%20data/time-series/time-series-part1/" rel="permalink">시계열 분석 part1 - Auto-Regressive, Moving-Average
 </a>
       
     </h2>
@@ -713,28 +735,6 @@ V...</p>
       </section>
     
   
-
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
     
   
 
@@ -761,7 +761,158 @@ V...</p>
   
     
   
+    
+  
 
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <section id="time-series" class="taxonomy__section">
+        <h2 class="archive__subtitle">Time-series</h2>
+        <div class="entries-list">
+          
+            
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/spatio-temporal%20data/time-series/time-series-part6/" rel="permalink">시계열 분석 part6 - Spectral analysis
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있...</p>
+  </article>
+</div>
+          
+            
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/spatio-temporal%20data/time-series/time-series-part5/" rel="permalink">시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
+V...</p>
+  </article>
+</div>
+          
+            
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/spatio-temporal%20data/time-series/time-series-part4/" rel="permalink">시계열 분석 part4 - VAR
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.
+
+</p>
+  </article>
+</div>
+          
+            
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/spatio-temporal%20data/time-series/time-series-part3/" rel="permalink">시계열 분석 part3 - Non-stationary
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살...</p>
+  </article>
+</div>
+          
+            
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/spatio-temporal%20data/time-series/time-series-part2/" rel="permalink">시계열 분석 part2 - practical example
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다.
+
+</p>
+  </article>
+</div>
+          
+            
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="/spatio-temporal%20data/time-series/time-series-part1/" rel="permalink">시계열 분석 part1 - Auto-Regressive, Moving-Average
+</a>
+      
+    </h2>
+    
+    <p class="archive__item-excerpt" itemprop="description">시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이...</p>
+  </article>
+</div>
+          
+        </div>
+        <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
+      </section>
+    
+  
+
+  
+    
   
     
   
@@ -897,6 +1048,8 @@ V...</p>
   
     
   
+    
+  
 
   
     
@@ -965,6 +1118,8 @@ V...</p>
         </div>
         <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
       </section>
+    
+  
     
   
     
@@ -1254,6 +1409,8 @@ V...</p>
   
     
   
+    
+  
 
   
     
@@ -1358,6 +1515,8 @@ V...</p>
         </div>
         <a href="#page-title" class="back-to-top">Back to Top &uarr;</a>
       </section>
+    
+  
     
   
     

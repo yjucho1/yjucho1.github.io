@@ -9,7 +9,7 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>시계열 분석 - part5 - yjucho’s blog</title>
+<!-- begin _includes/seo.html --><title>시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH - yjucho’s blog</title>
 <meta name="description" content="지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다.">
 
 
@@ -17,8 +17,8 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="시계열 분석 - part5">
-<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series-part5/">
+<meta property="og:title" content="시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH">
+<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/">
 
 
   <meta property="og:description" content="지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다.">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/time-series-part5/">
+<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/">
 
 
 
@@ -263,7 +263,7 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="시계열 분석 - part5">
+    <meta itemprop="headline" content="시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH">
     <meta itemprop="description" content="지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록Vector AR 모델도 알아보았습니다.">
     <meta itemprop="datePublished" content="January 15, 2019">
     
@@ -271,7 +271,7 @@
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">시계열 분석 - part5
+          <h1 id="page-title" class="page__title" itemprop="headline">시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH
 </h1>
           
         </header>
@@ -332,7 +332,7 @@ ARX(3) model's RMSE:  7.710071937116329
 
 <script type="math/tex; mode=display">\rho(h) \to 0 \ as \ h \to \infty</script>
 
-<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다. 이 경우, <a href="/spatio-temporal%20data/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 설명하였지만, differencing을 반복적으로 수행하더라도 여전히 ACF가 long tail 형태를 띄는 경우가 있습니다. 이를 <code class="highlighter-rouge">long-term memory process</code>라고 하며, <code class="highlighter-rouge">ARFIMA</code> 모델을 사용합니다.</p>
+<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다. 이 경우, <a href="/spatio-temporal%20data/time-series/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 설명하였지만, differencing을 반복적으로 수행하더라도 여전히 ACF가 long tail 형태를 띄는 경우가 있습니다. 이를 <code class="highlighter-rouge">long-term memory process</code>라고 하며, <code class="highlighter-rouge">ARFIMA</code> 모델을 사용합니다.</p>
 
 <p><b>Definition</b></p>
 
@@ -572,7 +572,11 @@ Covariance estimator: robust
     
       
       
-      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a>
+      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#time-series" class="page__taxonomy-item" rel="tag">Time-series</a>
     
     </span>
   </p>
@@ -586,20 +590,20 @@ Covariance estimator: robust
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+-+part5%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part5%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+part5+-+ARMAX%2C+ARFIMA%2C+ARCH%2C+GARCH%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part5%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part5%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part5%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part5%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part5%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part5%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part5%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/spatio-temporal%20data/time-series-part4/" class="pagination--pager" title="시계열 분석 - part4
+      <a href="/spatio-temporal%20data/time-series/time-series-part4/" class="pagination--pager" title="시계열 분석 part4 - VAR
 ">Previous</a>
     
     
@@ -667,8 +671,8 @@ Covariance estimator: robust
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/spatio-temporal%20data/time-series-part5/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/spatio-temporal%20data/time-series-part5"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/spatio-temporal%20data/time-series/time-series-part5"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');

@@ -9,7 +9,7 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>시계열 분석 - part1 - yjucho’s blog</title>
+<!-- begin _includes/seo.html --><title>시계열 분석 part1 - Auto-Regressive, Moving-Average  - yjucho’s blog</title>
 <meta name="description" content="시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.">
 
 
@@ -17,8 +17,8 @@
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="시계열 분석 - part1">
-<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series-part1/">
+<meta property="og:title" content="시계열 분석 part1 - Auto-Regressive, Moving-Average">
+<meta property="og:url" content="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part1/">
 
 
   <meta property="og:description" content="시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.">
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/time-series-part1/">
+<link rel="canonical" href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part1/">
 
 
 
@@ -263,7 +263,7 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="시계열 분석 - part1">
+    <meta itemprop="headline" content="시계열 분석 part1 - Auto-Regressive, Moving-Average">
     <meta itemprop="description" content="시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.">
     <meta itemprop="datePublished" content="December 18, 2018">
     
@@ -271,7 +271,7 @@
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">시계열 분석 - part1
+          <h1 id="page-title" class="page__title" itemprop="headline">시계열 분석 part1 - Auto-Regressive, Moving-Average
 </h1>
           
         </header>
@@ -726,7 +726,11 @@ Y & = w_Y  Z + e_{Y} \\
     
       
       
-      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a>
+      <a href="/categories/#spatio-temporal-data" class="page__taxonomy-item" rel="tag">Spatio-Temporal Data</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#time-series" class="page__taxonomy-item" rel="tag">Time-series</a>
     
     </span>
   </p>
@@ -740,13 +744,13 @@ Y & = w_Y  Z + e_{Y} \\
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+-+part1%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=%EC%8B%9C%EA%B3%84%EC%97%B4+%EB%B6%84%EC%84%9D+part1+-+Auto-Regressive%2C+Moving-Average+%20http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part1%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part1%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series-part1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fspatio-temporal%2520data%2Ftime-series%2Ftime-series-part1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
@@ -757,7 +761,7 @@ Y & = w_Y  Z + e_{Y} \\
 ">Previous</a>
     
     
-      <a href="/spatio-temporal%20data/time-series-part2/" class="pagination--pager" title="시계열 분석 - part2
+      <a href="/spatio-temporal%20data/time-series/time-series-part2/" class="pagination--pager" title="시계열 분석 part2 - practical example
 ">Next</a>
     
   </nav>
@@ -821,8 +825,8 @@ Y & = w_Y  Z + e_{Y} \\
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/spatio-temporal%20data/time-series-part1/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/spatio-temporal%20data/time-series-part1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/spatio-temporal%20data/time-series/time-series-part1/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/spatio-temporal%20data/time-series/time-series-part1"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');
