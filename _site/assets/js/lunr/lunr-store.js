@@ -123,4 +123,9 @@ var store = [{
         "excerpt":"지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있는 방법입니다. 여기서는 이론적인 내용을 통해서 주파수 도메인에서의 개념을 직관적으로 이해하고, 실제 데이터를 통해서 결과값을 이해하고 활용할 수 있는 것을 목표로...","categories": ["Spatio-Temporal Data","Time-series"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6/",
+        "teaser":null},{
+        "title": "Self-Supervised Generative Adversarial Networks",
+        "excerpt":"Ting Chen et al. (Google Brain, 2018) Abstract Conditional GAN은 이미지 생성에서 탁월한 성능을 보이지만, 많은 양의 라벨링 데이터를 필요로 한다는 단점이 있습니다. 이 논문은 self-supervision learning과 adversarial training 기법을 적용하여 별도의 라벨링 없이도 image representations을 학습하고 좋은 품질의 이미지를 생성할 수 있음을 보였습니다.Introduction GAN의 학습은 고차원의 파라미터 공간에서 non-convex...","categories": ["Generative Adversarial Network","Deep Learning paper"],
+        "tags": [],
+        "url": "http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/",
         "teaser":null}]
