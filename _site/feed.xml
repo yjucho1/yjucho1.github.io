@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-08T20:40:19+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Self-Supervised Generative Adversarial Networks</title><link href="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/" rel="alternate" type="text/html" title="Self-Supervised Generative Adversarial Networks" /><published>2019-02-08T00:00:00+09:00</published><updated>2019-02-08T00:00:00+09:00</updated><id>http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan</id><content type="html" xml:base="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/">&lt;p&gt;&lt;b&gt; Ting Chen et al. (Google Brain, 2018)&lt;/b&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-12T22:15:42+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">How does batch normalization help optimization?</title><link href="http://localhost:4000/deep%20learning%20paper/batchnorm/" rel="alternate" type="text/html" title="How does batch normalization help optimization?" /><published>2019-02-12T00:00:00+09:00</published><updated>2019-02-12T00:00:00+09:00</updated><id>http://localhost:4000/deep%20learning%20paper/batchnorm</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/batchnorm/">&lt;p&gt;&lt;b&gt;Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) &lt;/b&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;BatchNorm은 딥러닝의 안정적이고 학습속도를 빠르게 하는데 도움을 주는 기법으로 널리 활용되고 있습니다 .&lt;/li&gt;
+  &lt;li&gt;하지만 그 활용성에 비해서 왜 BatchNorm이 효과적인지에 대한 실질적인 고찰은 거의 없었으며, 대부분은 internal covariance shift를 줄이는 효과를 줄이기 때문이라고 믿고 있습니다.&lt;/li&gt;
+  &lt;li&gt;이 논문에서는 internal covariance shift라는 것이 실제로는 BatchNorm과 거의 상관없이 없다는 것을 실험적으로 밝혔습니다. 또한 BatchNorm기법이 최적화 함수를 훨씬 smoother하게 만들어주기 때문이라는 것을 이론적, 실험적으로 확인하였으며 이 영향으로 인해 그래디언트가 더 안정적이게 하여 빠른 학습이 가능하다는 것을 주장합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;지난 몇년간 딥러닝이 컴퓨터비전, 스피치 인식 등과 같은 풀기어려운 문제를 해결하는데 성공하였으며, 이러한 성공에는 BatchNorm이 큰 기여를 하고 있습니다.&lt;/li&gt;
+  &lt;li&gt;BatchNorm의 실용성은 논란의 여기가 없지만, 그러한 효과가 왜 발생하느지에 대한 명확한 이유는 아직 밝혀지지 않았습니다.&lt;/li&gt;
+  &lt;li&gt;BatchNorm이 처음 제안되었을 때는 internal covariance shift(ICS)를 최소화하기 위한 방안으로 설명되었지만, 이 연구에서는 ICS와의 연관성을 말해주는 상세한 증거를 찾지 못하였습니다,&lt;/li&gt;
+  &lt;li&gt;Constribution
+    &lt;ul&gt;
+      &lt;li&gt;BatchNorm과 ICS는 아무런 관련이 없다는 것을 설명하며&lt;/li&gt;
+      &lt;li&gt;BatchNorm이 효과적인 이유는 최적화 함수를 더 smooth하게 만들어 learning rate가 더 크더라도 안정적인 그래디언트를 보장하여 더 빠른 학습을 가능하게 하기 때문임을 확인하였습니다.&lt;/li&gt;
+      &lt;li&gt;이러한 내용을 실험적인 확인 이외에 loss함수와 그 gradient의 Lipschitzness 를 이용해 이론적으로 설명하였습니다.&lt;/li&gt;
+      &lt;li&gt;이러한 근본적인 고찰을 통해서 BatchNorm과 동일한 효과를 가져오는 다른 기법들이 존재할수 있는 가능성을 제시하였습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;batch-normalization-and-internal-covariance-shift&quot;&gt;Batch normalization and internal covariance shift&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;처음에 Ioffe and Szegedy의 BatchNorm은 모델이 학습될때는 파라미터가 바뀌기때문에 각 레이엉의 입력값들의 분포가 달라지는 현상(internal covariate shift)를 줄이기 위해 제안되었습니다.&lt;/li&gt;
+  &lt;li&gt;BatchNorm이란 각 레이어의 액티베이션값을 평균과 분산을 각 각 0과 1로 정규화시킨 후, 모델의 설명력을 유지하기 위해 다시 scaled and shifted를 해주는 과정으로 이루집니다. 이 과정은 이전 레이어의 non-linearity전에 이루어집니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;does-batchnorms-performance-stem-form-controlling-internal-covariate-shift&quot;&gt;Does BatchNorm’s performance stem form controlling internal covariate shift?&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;BatchNorm 논문에서는 각 레이어의 인풋 분포의 평균과 분산을 제한하는 것이 학습성능에 직접적인 영향을 준다고 주장하였습니다. 이 것을 입증하기 위해 한가지 실험을 수행하였습니다.&lt;/li&gt;
+  &lt;li&gt;배치놈 이후에 랜덤한 노이즈를 일부러 주입하여 네트워크를 학습시켜 보았습니다. 노이즈는 평균이 0이 아니고, 분산도 1이 아닌 분포에서 추출하여 각 레이어의 액티베이션에 더해주었습니다. 이 때, 각 스텝마다 노이즈의 분포가 달라지도록 하여 꽤 심한 covariate shift를 만들도록 하였습니다.&lt;/li&gt;
+  &lt;li&gt;Fig2는 standard, standard + batchnorm, standard + noisy batchnorm 세가지 네트워크의 학습 성능(좌)을 나타냅니다. 또한 시간에 따른 레이어의 액티베이션의 분포들(우)을 함께 표시하였습니다. 그림에서 볼수 있듯이, 학습데이터셋을 기준으로 batchnorm과 noisy batchnorm의 성능차이는 거의 없는 것을 확인하였습니다. 두가지 모두 standard 보다 높은 성능을 보였습니다.&lt;/li&gt;
+  &lt;li&gt;Noisy batchnorm의 액티베이션 분포들은 불안정하지만, 학습 성능은 좋다는 실험 결과는 batchnorm의 효과가 레이어의 인풋 분포를 안정시키기 때문이다는 주장을 반박하는 결과입니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;is-batchnorm-reducing-internal-covariate-shift&quot;&gt;Is BatchNorm reducing internal covariate shift?&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;그렇다면 더 광의적인 측면의 internal covariate shift가 batchnorm의 높은 학습성능과 직접적으로 연관된 것은 아닐까?&lt;/li&gt;
+  &lt;li&gt;네트워크의 각각 레이어는 주어진 인풋에 대해서 리스크 최적화 문제를 푸는 것으로 생각할수 있고, 파라미터가 업데이트될 때마다 인풋을 바꾸고, 결과적으로 최적화 문제자체를 바꾸게 됩니다. Ioffe and Szegedy는 이 현상을 internal covariate shift라고 불렀고, 각 레이어의 인풋 분포 관점에서 설명하려고 했습니다. 하지만 이 관점은 batchnorm의 성공적인 성능을 설명해주지 못한다는 것을 앞서 실험을 통해 살펴보았습니다.&lt;/li&gt;
+  &lt;li&gt;인풋 분포가 아니라 전체 최적화 관점에서 각 레이어의 그래디어트 변화를 살펴보도록 하겠습니다.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT)</summary></entry><entry><title type="html">Self-Supervised Generative Adversarial Networks</title><link href="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/" rel="alternate" type="text/html" title="Self-Supervised Generative Adversarial Networks" /><published>2019-02-08T00:00:00+09:00</published><updated>2019-02-08T00:00:00+09:00</updated><id>http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan</id><content type="html" xml:base="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/">&lt;p&gt;&lt;b&gt; Ting Chen et al. (Google Brain, 2018)&lt;/b&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
 
@@ -3288,170 +3331,4 @@ Y &amp; = w_Y  Z + e_{Y} \\
 
 &lt;p&gt;[4] &lt;a href=&quot;http://www.kocw.net/home/search/kemView.do?kemId=977301&quot;&gt;시계열분석 강의, 한양대학교(이기천)&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;[5] &lt;a href=&quot;https://en.wikipedia.org/wiki/Partial_correlation&quot;&gt;wikipedia - Partial correlation&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.</summary></entry><entry><title type="html">Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction</title><link href="http://localhost:4000/spatio-temporal%20data/deep%20learning%20paper/ST-resnet/" rel="alternate" type="text/html" title="Deep Spatio-Temporal Residual Networks for Citywide Crowd Flows Prediction" /><published>2018-12-16T00:00:00+09:00</published><updated>2018-12-16T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/deep%20learning%20paper/ST-resnet</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/deep%20learning%20paper/ST-resnet/">&lt;p&gt;&lt;b&gt; Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017 &lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt; Keras implementation &lt;/b&gt; : &lt;a href=&quot;https://github.com/lucktroy/DeepST&quot;&gt;https://github.com/lucktroy/DeepST&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Forecating the flow of crowds&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;In this paper, we predict two types fo crowd flows : inflow and outflow&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Inflow and outflow of crowds are affected by the following
-    &lt;ul&gt;
-      &lt;li&gt;Spatial dependencies&lt;/li&gt;
-      &lt;li&gt;Temporal dependencies&lt;/li&gt;
-      &lt;li&gt;External influence : such as weather, events&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Contributions
-    &lt;ul&gt;
-      &lt;li&gt;ST-ResNet employs convolution-based residual networks to model nearby and distance spatial dependencies between any two regions&lt;/li&gt;
-      &lt;li&gt;three categories of temporal properties : temporal closeness, period, and trend. ST-ResNet use three residual netowrks to model these, respectively&lt;/li&gt;
-      &lt;li&gt;ST-ResNet dynamically aggregates the output of the three aforementioned networks.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;formulation-of-crowd-flows-problem&quot;&gt;Formulation of Crowd Flows Problem&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Region : we partition a city into an I*J grid map&lt;/li&gt;
-  &lt;li&gt;Inflow/outflow : Let P be a collection of trajectories at the t&lt;sup&gt;th&lt;/sup&gt; time interval. For a grid (i, j) that lies at the i&lt;sup&gt;th&lt;/sup&gt; row and j&lt;sup&gt;th&lt;/sup&gt; column, the inflow and outflow of the crowds at the tiem interval t are defined respectively as
-  &lt;script type=&quot;math/tex&quot;&gt;x_t^{in, i, j} = \sum_{T_r \in P} |{k &gt; 1 |g_{k-1} \notin (i, j) \land g_k \in (i, j)}| \\
-  x_t^{out, i, j} = \sum_{T_r \in P} |{k \ge 1 |g_{k-1} \in (i, j) \land g_{k+1} \notin (i, j)}|&lt;/script&gt;
-  where
-    &lt;ul&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;T_r : g_1 \to g_2 \to ... \to g_{\left\vert T_r \right\vert}&lt;/script&gt; is a trajectory in P&lt;/li&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;g_k&lt;/script&gt; is the geospatial coordinate&lt;/li&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;g_k \in (i, j)&lt;/script&gt; means the point &lt;script type=&quot;math/tex&quot;&gt;g_k&lt;/script&gt; lies within grid (i, j), and vice versa&lt;/li&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\left\vert \cdot \right\vert&lt;/script&gt; denotes the cardinality of a set&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;deep-spatio-temporal-residual-networks&quot;&gt;Deep Spatio-Temporal Residual Networks&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/ST-ResNet architecture.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;comprised of four major components modeling &lt;i&gt;temporal closeness, period, trend, and external influence,&lt;/i&gt; respectively.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;First, we turn inflow and outflow throughout a city at each time interval into a 2-channel image-like matrix.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Then, we divide the time axis into three fragments, denoting recent time, near history and distant history. The 2-channel flow matrics of intervals in each time fragment are the fed into the first three components seperately to model the aforementioned three temporal properties: &lt;i&gt;closeness, period, and trend&lt;/i&gt;
-    &lt;ul&gt;
-      &lt;li&gt;three components share the same network structure(Regisudal Unit sequence)&lt;/li&gt;
-      &lt;li&gt;The output of the three components are fused as &lt;script type=&quot;math/tex&quot;&gt;X_{Res}&lt;/script&gt; based on parameter metrics, which assign different weights to the results of different components in different regions.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;In the &lt;i&gt;external&lt;/i&gt; component, we manually extract some feature form external datasets, such as weather conditions and events, feeding them into a two-layer fully-connected neural network.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;X_{Res}&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;X_{Ext}&lt;/script&gt; are integrated together. Then, the final output is mapped into [-1, 1] using Tanh function.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;structures-of-the-first-three-components&quot;&gt;Structures of the First Three Components&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/residual unit.png&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Do not user subsampling, but only convolutions&lt;/li&gt;
-  &lt;li&gt;closeness component
-    &lt;ul&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;[X_{t-l_c}, X_{t-l_c-1}, ..., X_{t-1}]&lt;/script&gt; : concatnate them along with the first axis&lt;/li&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;X_c^{(0)} \in R^{2l_c \times I \times J}&lt;/script&gt; is followed by &lt;code class=&quot;highlighter-rouge&quot;&gt;conv1&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Residual Unit&lt;/code&gt; : stack &lt;script type=&quot;math/tex&quot;&gt;L&lt;/script&gt; residual units to capture very large citywide dependencies&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Residual Unit&lt;/code&gt; combinations fo “ReLu + Convolution” and “BatchNormalization” is added before ReLu.&lt;/li&gt;
-      &lt;li&gt;On top of the &lt;script type=&quot;math/tex&quot;&gt;L^{th}&lt;/script&gt; residual unit, we append a convolutional layer &lt;code class=&quot;highlighter-rouge&quot;&gt;conv2&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;output of the closeness componet is &lt;script type=&quot;math/tex&quot;&gt;X_c^{(L+2)}&lt;/script&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/component.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;period component
-    &lt;ul&gt;
-      &lt;li&gt;Assume that there are &lt;script type=&quot;math/tex&quot;&gt;l_p&lt;/script&gt; time intervals from the period fragment and the period is &lt;script type=&quot;math/tex&quot;&gt;p&lt;/script&gt; ;&lt;script type=&quot;math/tex&quot;&gt;[X_{t-l_p \cdot p}, X_{t-(l_p-1) \cdot p}, ..., X_{t-p}]&lt;/script&gt;&lt;/li&gt;
-      &lt;li&gt;output : &lt;script type=&quot;math/tex&quot;&gt;X_p^{(L+2)}&lt;/script&gt;&lt;/li&gt;
-      &lt;li&gt;in implementation, p is equal to one-day (daily periodicity)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;trend component
-    &lt;ul&gt;
-      &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;l_q&lt;/script&gt; is the length of the trend dependent sequence and q is the trend span&lt;/li&gt;
-      &lt;li&gt;input : &lt;script type=&quot;math/tex&quot;&gt;[X_{t-l_q \cdot q}, X_{t-(l_q-1) \cdot q}, ..., X_{t-q}]&lt;/script&gt;&lt;/li&gt;
-      &lt;li&gt;output : &lt;script type=&quot;math/tex&quot;&gt;X_q^{(L+2)}&lt;/script&gt;&lt;/li&gt;
-      &lt;li&gt;in implementation, q is equal to one-week(week trend)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;the-structure-of-the-external-component&quot;&gt;The Structure of the External Component&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;mainly consider weather, holiday event, and metadata(DayOfWeek, Weekday/Weekend)&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;stack two fully-connected layers upon &lt;script type=&quot;math/tex&quot;&gt;E_t&lt;/script&gt;&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;first layer : embedding layer&lt;/li&gt;
-      &lt;li&gt;second layer : to map low to high dimensions that have the same shape with &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;fusion&quot;&gt;Fusion&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;flows of two regions are all affected by closeness, period, and trend, but the degrees of influence may be very different ; parametric-matrix-based fusion&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_{Res} = W_c \circ X_c^{L+2} + W_p \circ X_p^{L+2} + W_q \circ X_q^{L+2}&lt;/script&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\circ&lt;/script&gt; is Hadamard product (i.e., element-wise multiplication)&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;W_c, W_p, W_q&lt;/script&gt; are learnable parameters&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;fusing the external component&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\hat{X_t} = tanh(X_{Res} + X_{Ext})&lt;/script&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;objectives : minimizing mean squared error between the predicted flow matrix and the true flow matrix.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;experiments&quot;&gt;Experiments&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Datasets&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/datasets.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Baselines
-    &lt;ul&gt;
-      &lt;li&gt;HA : historical data (previous week, same time)&lt;/li&gt;
-      &lt;li&gt;ARIMA, SARIMA, VAR&lt;/li&gt;
-      &lt;li&gt;ST-ANN : It first extracts spatial (nearby 8 regions’ values) and temporal (8 previous time intervals) features, then fed into an artificial neural network.&lt;/li&gt;
-      &lt;li&gt;DeepST : (Zhang et al. 2016)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Preprocessing
-    &lt;ul&gt;
-      &lt;li&gt;min-max normalization : [-1, 1] (tanh)&lt;/li&gt;
-      &lt;li&gt;one-hot encoding for external data&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Result&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-16/result1.png&quot; width=&quot;300&quot; /&gt;
-&lt;img src=&quot;/assets/img/2018-12-16/result2.png&quot; width=&quot;300&quot; /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Junbo Zhang, Yu Zheng, Dekang Qi (Microsoft Research) 2017</summary></entry></feed>
+&lt;p&gt;[5] &lt;a href=&quot;https://en.wikipedia.org/wiki/Partial_correlation&quot;&gt;wikipedia - Partial correlation&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.</summary></entry></feed>
