@@ -130,7 +130,7 @@ var store = [{
         "url": "http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/",
         "teaser":null},{
         "title": "How does batch normalization help optimization?",
-        "excerpt":"Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) Abstract BatchNorm은 딥러닝의 안정적이고 학습속도를 빠르게 하는데 도움을 주는 기법으로 널리 활용되고 있습니다 . 하지만 그 활용성에 비해서 왜 BatchNorm이 효과적인지에 대한 실질적인 고찰은 거의 없었으며, 대부분은 internal covariance shift를 줄이는 효과를 줄이기 때문이라고 믿고 있습니다. 이 논문에서는 internal covariance...","categories": ["Deep Learning paper"],
+        "excerpt":"Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) Abstract BatchNorm은 딥러닝의 안정적이고 학습속도를 빠르게 하는데 도움을 주는 기법으로 널리 활용되고 있습니다. 하지만 그 활용성에 비해서 왜 BatchNorm이 효과적인지에 대한 실질적인 고찰은 거의 없었으며, 대부분은 internal covariance shift를 줄이는 효과를 줄이기 때문이라고 믿고 있습니다. 이 논문에서는 internal covariance shift라는...","categories": ["Deep Learning paper"],
         "tags": [],
         "url": "http://localhost:4000/deep%20learning%20paper/batchnorm/",
         "teaser":null}]
