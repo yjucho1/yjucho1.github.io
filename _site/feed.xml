@@ -1,4 +1,200 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-17T14:10:00+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">How does batch normalization help optimization?</title><link href="http://localhost:4000/deep%20learning%20paper/batchnorm/" rel="alternate" type="text/html" title="How does batch normalization help optimization?" /><published>2019-02-12T00:00:00+09:00</published><updated>2019-02-12T00:00:00+09:00</updated><id>http://localhost:4000/deep%20learning%20paper/batchnorm</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/batchnorm/">&lt;p&gt;&lt;b&gt;Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) &lt;/b&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-24T18:26:29+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series</title><link href="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/" rel="alternate" type="text/html" title="RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series" /><published>2019-02-24T00:00:00+09:00</published><updated>2019-02-24T00:00:00+09:00</updated><id>http://localhost:4000/deep%20learning%20paper/time-series/robustSTL</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/">&lt;p&gt;&lt;b&gt;Qingsong Wen et al (2018, Alibaba Group)&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;Implementation : &lt;a href=&quot;https://github.com/LeeDoYup/RobustSTL&quot;&gt;https://github.com/LeeDoYup/RobustSTL&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;시계열데이터를 trend, seasonality, and remainder components로 분해하는 것은 어노말리 디텍션이나 예측 모델을 만드는데 중요한 역할을 합니다.&lt;/li&gt;
+  &lt;li&gt;기존의 여러가지 성분분해 방식들은
+    &lt;ul&gt;
+      &lt;li&gt;1) 주기성이 변하거나 이동하는 것, 트렌드나 나머지성분의 갑작스러운 변화를 잘 처리하지 못하며(seasonality fluctuation and shift, and abrupt change in trend and reminder)&lt;/li&gt;
+      &lt;li&gt;2) 어노말리 데이터에 대해서 로버스트하지 못하거나&lt;/li&gt;
+      &lt;li&gt;3) 주기가 긴 시계열 데이터에 대해서 적용하기 어려운 문제가 있습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;본 논문에서는 위와 같은 문제점을 해결할 수 있는 새로운 성분 분해 방식을 제안합니다.
+    &lt;ul&gt;
+      &lt;li&gt;먼저 sparse regularization와 least absolute deviation loss를 이용해 트렌드를 뽑고&lt;/li&gt;
+      &lt;li&gt;Non-local seasonal filter를 사용하여 seasonality 성분을 얻습니다.&lt;/li&gt;
+      &lt;li&gt;이 과정을 정확한 디컴포지션을 얻을때까지 반복합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;실험데이터와 실제 시계열데이터에 대해서 기존 방법들 대비 더 좋은 성능을 보임을 확인하였습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;디컴포지션 방법으로 널리 사용되는 방법은 STL(seasonal trend decomposition using Loess), X-13-ARIMA-SEATS, X-11-ARIMA, X-12-ARIMA 등이 있습니다. 하지만 seasonality shift나 fluctuation이 존재할 경우 정확하지 않거나, 빅데이터에 존재하는 long seasonality에는 적합하지 않습니다.
+    &lt;ul&gt;
+      &lt;li&gt;seasonality fluctuation and shift - 하루가 주기인 시계열 데이터가 있다고 했을때, 오늘 1시에서의 seasonality component는 어제의 12시 30분에 대응되고, 그제의 1시 30분에 대응될수 있음&lt;/li&gt;
+      &lt;li&gt;Abrupt change of trend and remainder - local anomaly could be a spike during an idle period (busy day의 높은 값보다는 낮아서 정확히 디텍션하기 어려움&lt;/li&gt;
+      &lt;li&gt;Long seasonality - 보통은 quarterly or monthly data임. T 주기의 시즈널리티를 찾기 위해서는 T-1개의 데이터가 필요함. 하루 주기에 1분 간격 데이터의 경우 T=1440개고 이와 같은 long seasonality는 기존 방법들로는 풀기어려움&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;이 논문에서 제안한 방법은 Long seasonality period and high noises 더라도 시즈널리티를 비교적 정확하게 디컴포지션할수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;robust-stl-decomposition&quot;&gt;Robust STL Decomposition&lt;/h2&gt;
+&lt;h3 id=&quot;model-overview&quot;&gt;Model Overview&lt;/h3&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+y_t &amp; = \tau_t + s_t + r_t, &amp; t = 1, 2, …, N \\
+r_t &amp; = a_t + n_t \\
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;a_t&lt;/script&gt; denotes spike or dip, and &lt;script type=&quot;math/tex&quot;&gt;n_t&lt;/script&gt; denotes the white noise.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;시계열 모델은 트렌드(&lt;script type=&quot;math/tex&quot;&gt;\tau_t&lt;/script&gt;), 시즈널리티(&lt;script type=&quot;math/tex&quot;&gt;s_t&lt;/script&gt;), 리마인더(&lt;script type=&quot;math/tex&quot;&gt;r_t&lt;/script&gt;)로 구성되어 있고, 리마인더는 스파크 또는 딥과 같은 어노말리(&lt;script type=&quot;math/tex&quot;&gt;a_t&lt;/script&gt;)와 화이트 노이즈(&lt;script type=&quot;math/tex&quot;&gt;n_t&lt;/script&gt;)로 이루어집니다.&lt;/li&gt;
+  &lt;li&gt;제안하는 알고리즘은 크게 4-steps 으로 각 성분을 분해합니다.
+    &lt;ul&gt;
+      &lt;li&gt;Denoise time series by applying bilateral filtering&lt;/li&gt;
+      &lt;li&gt;Extract trend robustly by solving a LAD regression with sparse regularization&lt;/li&gt;
+      &lt;li&gt;Calculate the seasonality component by applying a non-local seasonal filtering to overcome seasonality fluctuation and shift&lt;/li&gt;
+      &lt;li&gt;Adjust extracted components&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;noise-removal&quot;&gt;Noise Removal&lt;/h3&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+y^\prime_t &amp; = \sum_{j \in J} w_j^t y_t, &amp; J = t, t \pm 1, …, t \pm H \\
+w_j^t &amp; = \frac{1}{z} e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y_j - y_t \right\vert ^2}{2\delta_i^2}}
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;J는 필터의 윈도우를 의미하며, 윈도우 사이즈는 2H+1 입니다.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;필터의 가중치는 두개의 가우시안 함수로 구성됩니다. bilateral filter는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Bilateral_filter&quot;&gt;여기&lt;/a&gt;를 참고하세요.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;After denoising,&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+y^\prime_t &amp; = \tau_t + s_t + r^\prime_t, &amp; t = 1, 2, …, N \\
+r^\prime_t &amp; = a_t + (n_t - \hat{n}_t \\
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;Where the &lt;script type=&quot;math/tex&quot;&gt;\hat{n}_t = y_t - y^\prime_t&lt;/script&gt; is the filtered noise.&lt;/p&gt;
+
+&lt;h3 id=&quot;trend-extraction&quot;&gt;Trend Extraction&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;시즈널 디퍼런스 오퍼레이터는 같은 주기의 값을 차분하는 것으로 아래와 같이 정의할 수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+g_t &amp; = \nabla_T y^\prime_t = y^\prime_t - y^\prime_{t-T} \\
+&amp; = \nabla_T \tau_t + \nabla_T s_t + \nabla_T r^\prime_t \\
+&amp; = \sum_{I=0}^{T-1} \nabla \tau_{t-i} + ( \nabla_T s_t + \nabla_T r^\prime_t )
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;마지막 줄의 수식에서 첫번째 항이 &lt;script type=&quot;math/tex&quot;&gt;g_t&lt;/script&gt;에 가장 많은 기여를 합니다. &lt;script type=&quot;math/tex&quot;&gt;s_t&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;r^\prime_t&lt;/script&gt;에 시즈널 디퍼런스 오퍼레이터를 적용하면 값이 매우 작아진다고 가정하기 때문입니다.&lt;/li&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;g_t&lt;/script&gt;에서 트렌드의 first order differece(&lt;script type=&quot;math/tex&quot;&gt;\nabla \tau_t&lt;/script&gt;)를 구하기 위해서 다음과 같은 최적화 식을 사용합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Minimize \ \sum_{t=T+1}^N \left\vert g_t - \sum_{I=0}^{T-1} \nabla \tau_{t-i} \right\vert + \lambda_1 \sum_{t=2}^N \left\vert \nabla \tau_t \right\vert + \lambda_2 \sum_{t=3}^N \left\vert \nabla^2 \tau_t \right\vert&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;첫번째 항은 LAD를 사용한 emprical error를 의미합니다. sum-of-squares 보다 아웃라이어에 대해서 더 로버스트하기 때문에 LAD를 사용하였습니다.&lt;/li&gt;
+  &lt;li&gt;두번째와 세번째 항은 각 각 트렌드에 대한 first-order 와 second-order difference operator 입니다.&lt;/li&gt;
+  &lt;li&gt;두번째 항은 트렌드 디퍼런스 &lt;script type=&quot;math/tex&quot;&gt;\nabla \tau_t&lt;/script&gt; 가 천천히 변화하지만 종종 갑작스러운 레벨 쉬프트(abrupt level shift)가 있다는 것을 의미합니다.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;세번째 항은 트렌드가 smooth하고 piecewise linear such that &lt;script type=&quot;math/tex&quot;&gt;\nabla^2 x_t = \nabla(\nabla x_t)) = x_t -2 x_{t-1} + x_{t-2}&lt;/script&gt; are sparse&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;이를 매트릭스 형태로 표현하면 다음과 같습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Vert P \nabla \tau - q \Vert _1&lt;/script&gt;
+
+&lt;p&gt;where the matrix P and vector q are&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;P = \begin{bmatrix}
+M_{(N-T) \times (N-1)} \\
+\lambda_1 I_{(N-1) \times (N-1)} \\
+\lambda_2 D_{(N-2) \times (N-1)} \\
+\end{bmatrix}, 
+q = \begin{bmatrix}
+g_{(N-T) \times 1} \\
+0_{(2N-3) \times 1} \\
+\end{bmatrix}&lt;/script&gt;
+
+&lt;p&gt;M and D are Toeplitz matrix (refer to the paper for details)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;위의 최적화식을 통해서 &lt;script type=&quot;math/tex&quot;&gt;\tau_1&lt;/script&gt;에 대한 상대적인 트렌드(relative trend, &lt;script type=&quot;math/tex&quot;&gt;\tilde{\tau}_t^r&lt;/script&gt;)를 구할수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\tilde{\tau}_t^r = \tilde{\tau}_t - \tau_1 = 
+\begin{cases}
+0, &amp; t=1 \\
+\sum_{I=2}^t \nabla \tilde{\tau}_i, &amp; t \ge 2
+\end{cases} %]]&gt;&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;그리고 나서, 디컴포지션 모델은 아래와 같이 업데이트 됩니다. 
+&lt;script type=&quot;math/tex&quot;&gt;y_t'' = y_t' - \tilde{\tau}_t^r = s_t + \tau_1 + r_t'' \\
+r_t’’ = a_t + (n_t - \hat{n}_t) +  (\tau_t - \tilde{\tau}_t)&lt;/script&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;seasonality-extraction&quot;&gt;Seasonality Extraction&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;relative trend component를 분리한 후에는, &lt;script type=&quot;math/tex&quot;&gt;y’’_t&lt;/script&gt;는 시즈널리티로 오염되어 있다고 생각할 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;기존의 시즈널리티 분해 방법들은 주기가 &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt;인 &lt;script type=&quot;math/tex&quot;&gt;s_t&lt;/script&gt;’를 구하기 위해서는 K개의 연속적인 값 &lt;script type=&quot;math/tex&quot;&gt;y_{t-KT}, y_{t-(K-1)T}, …, y_{t-T}&lt;/script&gt; 만 고려하였습니다. 하지만, 이 방식은 시즈널리 쉬프트 현상을 설명할수 없다는 단점이 있습니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;여기서는  &lt;script type=&quot;math/tex&quot;&gt;y’’_{t-KT}&lt;/script&gt;를 중심으로 인접한 값들을 고려합니다.  &lt;script type=&quot;math/tex&quot;&gt;y’’_{t-KT}&lt;/script&gt;를 계산할때는 그 값을 중심으로 2H+1개의 인접값들 &lt;script type=&quot;math/tex&quot;&gt;y’’_{t-KT-H}, y’’_{t-KT-H+1}, …, y’’_{t-KT}, y’’_{t-KT+1}…, y’’_{t-KT+H}&lt;/script&gt;를 사용합니다.&lt;/li&gt;
+  &lt;li&gt;시즈널 컴포넌트 &lt;script type=&quot;math/tex&quot;&gt;s_t&lt;/script&gt; 는 아래와 같이 of &lt;script type=&quot;math/tex&quot;&gt;y’’_t&lt;/script&gt;의 가중합으로 표현됩니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\tilde{s}_t = \sum_{(t’, j) \in \Omega} w^t_{(t’,j’)}y’’_j&lt;/script&gt;
+
+&lt;p&gt;Where the &lt;script type=&quot;math/tex&quot;&gt;w^t_{(t’,j’)}&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\Omega&lt;/script&gt; are defined as&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;w^t_{(t’,j’)} = \frac{1}{z}e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y’’_j - y’’_{t’} \right\vert ^2}{2\delta_i^2}} \\
+\Omega = \{(t’,j) \vert (t’=t-k \times T, j= t’ \pm h )\} \\
+k=1, 2, …, K; \ h=0, 1, …, H&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;시즈널티리를 분리한 후에는, 리마이더 시그널은 아래와 같이 표현됩니다. 
+&lt;script type=&quot;math/tex&quot;&gt;r’’’_t = y’’_t - \tilde{s}_t = a_t + (n_t - \hat{n}_t) + (\tau_t - \tilde{\tau}_t) + (s_t - \tilde{s}_t)&lt;/script&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;final-adjustment&quot;&gt;Final Adjustment&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;시즈널리티 컴포넌트의 합계는 0으로 조정되어야합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\sum_{I=j}^{I=j+T-1}s_i = 0&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;따라서 평균값(트렌드 &lt;script type=&quot;math/tex&quot;&gt;\tau_1&lt;/script&gt;에 대응되는 값)을 빼줌으로서 시즈널리트를 조정합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\hat{\tau}_1 = \frac{1}{T\lfloor N/T \rfloor} \sum_{t=1}^{T\lfloor N/T \rfloor} \tilde{s}_t \\
+\hat{s}_t = \tilde{s}_t - \hat{\tau}_1 \\
+\hat{\tau}_t = \tilde{\tau}^r_t + \hat{\tau}_1 \\
+\hat{r}_t = y_t - \hat{s}_t + \hat{\tau}_t&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;리마인더 시그널 &lt;script type=&quot;math/tex&quot;&gt;\hat{r}_t&lt;/script&gt; 가 수렴할 때까지 위 과정을 반복합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/algorithm1.png&quot; width=&quot;550&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;experiments&quot;&gt;Experiments&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/fig3.png&quot; width=&quot;550&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/fig4.png&quot; width=&quot;550&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/table2.png&quot; width=&quot;450&quot; /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Qingsong Wen et al (2018, Alibaba Group)</summary></entry><entry><title type="html">How does batch normalization help optimization?</title><link href="http://localhost:4000/deep%20learning%20paper/batchnorm/" rel="alternate" type="text/html" title="How does batch normalization help optimization?" /><published>2019-02-12T00:00:00+09:00</published><updated>2019-02-12T00:00:00+09:00</updated><id>http://localhost:4000/deep%20learning%20paper/batchnorm</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/batchnorm/">&lt;p&gt;&lt;b&gt;Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) &lt;/b&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
 &lt;ul&gt;
@@ -2976,428 +3172,4 @@ AR(8) model's RMSE:  2.9174007777104203
 
 &lt;p&gt;&lt;b&gt;Reference&lt;/b&gt;&lt;/p&gt;
 
-&lt;p&gt;[1] &lt;a href=&quot;https://www.statsmodels.org/dev/index.html&quot;&gt;Statsmodel’s Documentation&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다.</summary></entry><entry><title type="html">시계열 분석 part1 - Auto-Regressive, Moving-Average</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part1/" rel="alternate" type="text/html" title="시계열 분석 part1 - Auto-Regressive, Moving-Average " /><published>2018-12-18T00:00:00+09:00</published><updated>2018-12-18T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part1</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part1/">&lt;p&gt;시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;일반적인 시계열분석의 과정은 아래와 같습니다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Plot the series and examine the main features of the graph, checking in particular whether there is
-    &lt;ul&gt;
-      &lt;li&gt;A trend&lt;/li&gt;
-      &lt;li&gt;A seasonal component&lt;/li&gt;
-      &lt;li&gt;Any apparent sharp changes in behavior&lt;/li&gt;
-      &lt;li&gt;Any outlying observations&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Remove the trend and seasonal components to get stationary residuals
-    &lt;ul&gt;
-      &lt;li&gt;To achieve goal, you may need to apply a preliminary transformation like taking logarithms&lt;/li&gt;
-      &lt;li&gt;Estimate the trend and seasonal components using classical decomposition model&lt;/li&gt;
-      &lt;li&gt;Or Eliminate the trend and seasonal components using differencing&lt;/li&gt;
-      &lt;li&gt;Anyway, the goal is to get stationary residuals&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Choose a model to fit the residuals&lt;/li&gt;
-  &lt;li&gt;Forecasting the residuals and then inverting the transformations for original series&lt;/li&gt;
-  &lt;li&gt;Alternative approach is to express the series in terms of its Fourier components. But it will not be discussed in here.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;시계열 분석은 시간의 경과에 따라 변하지 않는 어떤 특성을 가진 프로세스를 분석하는 것입니다. 만약 시계열 데이터를 예측하고자 한다면, 우리는 시간에 따라 변하지 않는 무언가가 있다는 것을 반드시 가정해야합니다. 예를 들면 평균이 변하지 않는것(no trend), 분산이 변하지 않고, 주기적인 패턴이 없는 데이터를 가정합니다. 이러한 속성을 “stationary”하다고 합니다. 어떤 시계열 데이터가 stationary하다는 가정을 하면, 우리는 다양한 기법들을 활용할수 있습니다. 앞으로의 포스팅에서는 이러한 기법들이 무엇인지 소개하려고 합니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;stationary-auto-covariance-function-and-auto-correlation-function&quot;&gt;Stationary, Auto-Covariance Function and Auto-Correlation Function&lt;/h3&gt;
-
-&lt;p&gt;시계열 &lt;script type=&quot;math/tex&quot;&gt;\{X_t, t=0, \pm 1, ...\}&lt;/script&gt; 가 stationary하다는 것은 h lag만큼 time-shifted 된 시계열 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t+h}, t=0, \pm 1, ...\}&lt;/script&gt;와 통계적인 속성이 유사하다는 것을 의미합니다. 이 때 통계적인 속성을 first and second order moments(mean and covariance)로만 제한하면, 아래와 같이 수식적 정의를 할 수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Definition&lt;b&gt;&lt;/b&gt;&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;Let &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; be a time series with &lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-E(X_t^2) &lt; \infty %]]&gt;&lt;/script&gt;.&lt;/p&gt;
-
-&lt;p&gt;The mean function of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is &lt;script type=&quot;math/tex&quot;&gt;\mu_X(t) = E(X_t)&lt;/script&gt;.&lt;/p&gt;
-
-&lt;p&gt;The covariance function of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is &lt;script type=&quot;math/tex&quot;&gt;\rho_X(r, s) = Cov(X_r, X_s) = E[(X_r - \mu_X(r))(X_s - \mu_X(s))]&lt;/script&gt; for all integers r and s.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; is (weakly) stationary if&lt;/p&gt;
-
-&lt;p&gt;1) &lt;script type=&quot;math/tex&quot;&gt;\mu_X(t)&lt;/script&gt; is independent of t.&lt;/p&gt;
-
-&lt;p&gt;2) &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(t+h, t)&lt;/script&gt; is independent of t for each h.&lt;/p&gt;
-
-&lt;p&gt;Strictly stationary is also&lt;/p&gt;
-
-&lt;p&gt;3) &lt;script type=&quot;math/tex&quot;&gt;(X_1, ..., Xn)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;(X_{1+h}, ..., X_{n+h})&lt;/script&gt; have the same joint distributions for all h and n &amp;gt;0&lt;/p&gt;
-
-&lt;p&gt;2)에서의 정의를 이용해 stationary한 타임시리즈의 &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(t+h, t)&lt;/script&gt;는 t에 대해서 무관하기 때문에 &lt;script type=&quot;math/tex&quot;&gt;\gamma(\cdot)&lt;/script&gt;는 “autocovariance function”으로 부르며, &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(h)&lt;/script&gt;는 h lag에서의 값을 지칭하는 것으로 하겠습니다. 또한 covariance를 normalization하여 correlation을 함께 정의할수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;Let &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; be a stationary time series.&lt;/p&gt;
-
-&lt;p&gt;The autocovariance function (ACVF) of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; at lag h is &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(h) = Cov(X_{t+h}, X_t)&lt;/script&gt;.&lt;/p&gt;
-
-&lt;p&gt;The autocorrelation function (ACF) of &lt;script type=&quot;math/tex&quot;&gt;{X_t}&lt;/script&gt; at lag h is &lt;script type=&quot;math/tex&quot;&gt;\rho_X(h) \equiv \frac{\gamma_X(h)}{\gamma_X(0)} = Cor(X_{t+h}, X_t)&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;stationary time series의 대표적인 예는 iid noise와 white noise가 있습니다. iid noise는 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 동일하고(identically) 서로 독립적인(independent) 분포를 따르며, 평균이 0인 확률변수로 정의됩니다. t에 상관없이 평균이 0이고, &lt;script type=&quot;math/tex&quot;&gt;\gamma_X(\cdot)&lt;/script&gt;도 0이기때문에 stationary 조건을 만족합니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-\gamma_X(t+h, t) &amp; = \sigma^2, \ &amp; if \ h=0 \\ 
-                 &amp; = 0, \ &amp; if \ h \ne 0
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;마찬가지로 white noise with zero mean and variance &lt;script type=&quot;math/tex&quot;&gt;\sigma^2&lt;/script&gt;도 (weak) staionary 조건을 만족합니다. 참고로 iid noise와 white noise는 다릅니다. 모든 iid noise는 white noise이지만, 그 역은 성립하지 않습니다. &lt;a href=&quot;https://www.researchgate.net/post/What_is_the_difference_between_white_noise_and_iid_noise&quot;&gt;참고&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;시계열 데이터(realization)가 주어졌을때, 이 프로세스의 mean과 covariance를 추정하기 위해 sample mean과 sample covariance function, sample autocorrelation function를 사용합니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;Let &lt;script type=&quot;math/tex&quot;&gt;x_1, ..., x_n&lt;/script&gt; be observations of a time series.&lt;/p&gt;
-
-&lt;p&gt;The sample mean of &lt;script type=&quot;math/tex&quot;&gt;x_1, ..., x_n&lt;/script&gt; is
-&lt;script type=&quot;math/tex&quot;&gt;\bar{x} = \frac{1}{n} \sum_{t=1}^n x_t&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;The sample autocovariance function is
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\hat{\gamma} := n^{-1} \sum_{t=1}^{n-|h|}(x_{t+|h|} - \bar{x})(x_{t} - \bar{x}), -n &lt; h &lt; n %]]&gt;&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;The sample autocorrelation function is
-&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
-\hat{\rho} := \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}, -n &lt; h &lt; n %]]&gt;&lt;/script&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;moving-average-and-auto-regressive-process&quot;&gt;Moving Average and Auto Regressive process&lt;/h3&gt;
-
-&lt;p&gt;시계열 분석의 문제는 stocastic process의 realization인 시계열 데이터 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 주어졌을때(그리고 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 stationary할때), 우리는 이 데이터가 생성된 본래의 stocastic process를 모델링하고 싶다는 겁니다. 데이터가 주어져있기때문에 우리는 (sample) mean과 lag에 따른 covariance과 correlation은 쉽게 구할수 있는 상황입니다.(auto covariance function과 auto correlation function)&lt;/p&gt;
-
-&lt;p&gt;만약 ACF가 주어졌을때 이에 대응되는 stationary stochatic process가 unique하게 결정된다면 아주 쉬운 문제가 됩니다. analytic한 솔루션이 1개 존재하는 것이고, 그건 공식에 맞춰 계산하면 되는 문제가 되니까요. 그러한 특징과 관련된 2가지 모델을 살펴보도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;The MA(q) process:&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is a moving-average process of order q if
-&lt;script type=&quot;math/tex&quot;&gt;X_t = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q}&lt;/script&gt; &lt;br /&gt;
-where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\theta_1, ..., \theta_q&lt;/script&gt; are constants.&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 t 이전 시점의 white noise &lt;script type=&quot;math/tex&quot;&gt;\{Z_x\}&lt;/script&gt;(s &lt;script type=&quot;math/tex&quot;&gt;\le&lt;/script&gt; t)로 표현되는 프로세스를 Moving Average process라고 합니다.  앞서 본 “stationary” 정의에 따라, MA(q) process는 항상 (weakly) stationary합니다.&lt;/p&gt;
-
-&lt;p&gt;invertibility :&lt;/p&gt;
-
-&lt;p&gt;흥미롭게도 MA(1)은 AR(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;)로 변환될수 있습니다. 아래 수식에서 볼수 있듯이 &lt;script type=&quot;math/tex&quot;&gt;Z_t&lt;/script&gt;는 &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;의 과거값들의 linear combination로 표현될수 있습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-X_t &amp; = Z_t + \theta Z_{t-1} \\
-Z_t &amp; = X_t - \theta Z_{t-1} \\
-    &amp; = X_t - \theta(X_{t-1} - \theta Z_{t-2}) \\
-    &amp; = X_t - \theta X_{t-1} + \theta^2 (X_{t-2} - \theta Z_{t-3}) \\
-    &amp; = X_t - \theta X_{t-1} + \theta^2 X_{t-2} - \theta^3 X_{t-3} + ... + (-\theta)^n Z_{t-n}, &amp;
-when \left\vert \theta \right\vert \lt 1, (-\theta)^n Z_{t-n} \approx 0 \\
-    &amp; = \sum_{n=0}^{\infty} (-\theta)^nX_{t-n} \\
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;이러한 성질을 일반화하여 MA(q)에 대해 이야기할 수 있습니다. white noise인 &lt;script type=&quot;math/tex&quot;&gt;Z_t&lt;/script&gt;를 &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;의 무한등비급수의 형태로 표현할수 있다면, 주어진 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;는 invertible하다고 정의합니다. 이 때 수렴 조건(MA(1)에서의 &lt;script type=&quot;math/tex&quot;&gt;\left\vert \theta \right\vert \lt 1&lt;/script&gt;)을 invertibility condition이라고 하고 합니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-Z_t &amp; = \theta(B)X_t, \ &amp; where \ \theta(\cdot) \ are \ the \ q-th \ degree \ polynomials \\
-\theta(z) &amp; = 1 + \theta z + ... + \theta_q z^q
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;자세한 증명은 여기서 다루지 않지만, 결론적으로는 &lt;script type=&quot;math/tex&quot;&gt;\theta(z)&lt;/script&gt;의 해가 unit circle 밖에 있는 경우 invertible 조건을 만족하게 됩니다.&lt;/p&gt;
-
-&lt;p&gt;Invertibility is equivalent to the condition&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\theta(z) = 1+ \theta_1 z + ... + \theta_q z^q \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
-
-&lt;p&gt;invertible이 중요한 이유는 ACF가 주어질 때, 이 ACF를 만족하는 MA process가 unique하게 결정되기 때문입니다.&lt;/p&gt;
-
-&lt;p&gt;두번재 모델은 Auto-Regressive Process입니다. &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 이전 시점의 자기 자신 값 &lt;script type=&quot;math/tex&quot;&gt;\{X_s\}&lt;/script&gt;(s &lt;script type=&quot;math/tex&quot;&gt;\le&lt;/script&gt; t)와 t 시점의 white noise &lt;script type=&quot;math/tex&quot;&gt;\{Z_x\}&lt;/script&gt;로 표현되는 프로세스를 Auto-Regress process라고 합니다. 기억해야할 점은 MA process와 달리 AR process는 항상 stationary한 것은 아니라는 점입니다.&lt;/p&gt;
-
-&lt;p&gt;The AR(q) process:&lt;br /&gt;
-&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is a auto-regressive process of order q if
-&lt;script type=&quot;math/tex&quot;&gt;X_t = Z_t + \phi_1 X_{t-1} + ... + \phi_q X_{t-q}&lt;/script&gt; &lt;br /&gt;
-where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\phi_1, ..., \phi_q&lt;/script&gt; are constants&lt;/p&gt;
-
-&lt;p&gt;MA process의 invertibility 와 유사한 개념으로 AR process에 casuality 개념을 도입할수 있습니다. 아래는 AR(1) process를 MA(&lt;script type=&quot;math/tex&quot;&gt;\infty&lt;/script&gt;)로 변환하는 예시입니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-X_t &amp; = \phi X_{t-1} + Z_t \\
-    &amp; = \phi (\phi X_{t-2} + Z_{t-1}) + Z_t \\
-    &amp; = \phi^2 X_{t-2} + \phi Z_{t-1} + Z_t  \\
-    &amp; = \phi^2 (\phi X_{t-3} + Z_{t-2}) + \phi Z_{t-1} + Z_t \\
-    &amp; = Z_t + \phi Z_{t-1} + \phi^2 Z_{t-3} + ... + \phi^n X_{t-n}, &amp;
-when \left\vert \phi \right\vert \lt 1, \phi^n X_{t-n} \approx 0 \\
-    &amp; = \sum_{n=0}^{\infty} (\phi)^n Z_{t-n} \\
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;를 white noise인 &lt;script type=&quot;math/tex&quot;&gt;Z_x&lt;/script&gt;(단, s &lt;script type=&quot;math/tex&quot;&gt;\le&lt;/script&gt; t)의 linear combination 형태로 표현된다면, 주어진 &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;는 causal하다고 정의합니다. 위의 예시인 AR(1) process &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;가 causal하기 위해서는 &lt;script type=&quot;math/tex&quot;&gt;\left\vert \phi \right\vert \lt 1&lt;/script&gt; 입니다.&lt;/p&gt;
-
-&lt;p&gt;이러한 성질을 일반적인 AR(p) process에 대해서도 이야기할수 있습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-X_t &amp; = \phi(B)X_t, \ &amp; where \ \phi(\cdot) \ are \ the \ p-th \ degree \ polynomials \\
-\phi(z) &amp; = 1+ \phi z + ... + \phi_p z^p
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;자세한 증명은 여기서 다루지 않지만, 결론적으로는 &lt;script type=&quot;math/tex&quot;&gt;\phi(z)&lt;/script&gt;의 해가 unit circle 밖에 있는 경우 causality 조건을 만족하게 됩니다.&lt;/p&gt;
-
-&lt;p&gt;Causality is equivalent to the condition&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
-
-&lt;p&gt;중요한 것은 causality를 만족하는 AR(p) process는 항상 stationary하고, stationary AR(p) process는 항상 causality를 만족합니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;armap-q&quot;&gt;ARMA(p, q)&lt;/h3&gt;
-
-&lt;p&gt;AR(p)와 MA(q)가 합쳐진 process를 ARMA(p, q)로 표기하고 ARMA(p,q) process가 유일한 stationary solution &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;를 갖는 조건은 causality condition을 만족할 때이며, 그 역도 성립합니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Definition&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is an ARMA(p, q) process if &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; is stationary and if for every t,&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t - \phi_1 X_{t-1} - ... - \phi_p X_{t-p} = Z_t + \theta_1 Z_{t-1} + ... + \theta_q Z_{t-q}&lt;/script&gt;
-
-&lt;p&gt;where &lt;script type=&quot;math/tex&quot;&gt;\{Z_t\} \sim WN(0, \sigma^2)&lt;/script&gt; and the polynomials &lt;script type=&quot;math/tex&quot;&gt;( 1 - \phi z - ... - \phi_p z^p)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;(1+\theta_1 z + ... + \theta_q z^q )&lt;/script&gt; have no common factors.&lt;/p&gt;
-
-&lt;p&gt;Existence and Uniqueness :&lt;/p&gt;
-
-&lt;p&gt;A stationary solution &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt; of equation ARMA(p, q) exists (and is also the unique stationary solution) if and only if&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\phi(z) = 1 + \phi_1 z + ... + \phi_p z^p \ne 0 \ for \ all \left\vert z \right\vert \le 1&lt;/script&gt;
-
-&lt;p&gt;&lt;b&gt;Example&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;아래와 같은 조건을 만족하는 ARMA(1, 1) process &lt;script type=&quot;math/tex&quot;&gt;\{X_t\}&lt;/script&gt;를 생각해보도록 하겠습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t - 0.5 X_{t-1} = Z_t + 0.4 Z_{t-1}, \ \ \ {Z_t} \sim WN(0, \sigma^2)&lt;/script&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\phi(z) = 1 - 0.5 z&lt;/script&gt;는 z=2 일때 0이 되고, 이는 unit circle밖에 위치하기 때문에 이는 causality 조건을 만족합니다. 즉, 유니크한 솔루션이 존재합니다. causal하기때문에 &lt;script type=&quot;math/tex&quot;&gt;X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}&lt;/script&gt;로 표현되는 constant &lt;script type=&quot;math/tex&quot;&gt;\{\psi\}&lt;/script&gt;가 존재합니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;X_t = \sum_{j=0}^\infty \psi_j Z_{t-j}&lt;/script&gt;를 &lt;script type=&quot;math/tex&quot;&gt;X_t - \phi X_{t-1} = Z_t + \theta Z_{t-1}&lt;/script&gt;에 대입하면 아래와 같은 식이 성립해야합니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1-\phi z - ... - \phi_p z^p)(\psi_0 +\psi_1 z + ...) = 1 +\theta_1z + ... + \theta_qz^q&lt;/script&gt;
-
-&lt;p&gt;양변의 &lt;script type=&quot;math/tex&quot;&gt;z^j, j=0,1,...&lt;/script&gt; 계수가 동일해야하므로,&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-1 &amp; = \psi_0 \\
-\theta_1 &amp; = \psi_1 - \psi_0 \phi_1 \\
-\theta_2 &amp; = \psi_2 - \psi_1 \phi_1 - \psi_0 \phi_2 \\
-\vdots
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\psi_j - \sum_{k=1}^p \phi_k \psi_{j-k} = \theta_j, j=0,1, ...&lt;/script&gt;
-
-&lt;p&gt;예제의 계수를 대입하면,&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-\psi_0 &amp; = 1\\
-\psi_1 &amp; = 0.4 + 1 * 0.5   \\
-\psi_2 &amp; = 0.5 (0.4 + 0.5) \\
-\psi_j &amp; = 0.5^{j-1} (0.4 + 0.5)
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;h3 id=&quot;yule-walker-equation&quot;&gt;Yule-Walker Equation&lt;/h3&gt;
-
-&lt;p&gt;cauality 조건을 만족하는 ARMA(p,q) process에 대해서 ACF를 이용해 모델 파라미터를 체계적으로 구할수 있는 방법을 알아보도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;설명의 편의성을 위해 AR(2)를 가정하도록 하겠습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t - \phi_1 X_{t-1} - \phi_2 X_{t-2} = Z_t&lt;/script&gt;
-
-&lt;p&gt;위 양변에 &lt;script type=&quot;math/tex&quot;&gt;X_{t-k}&lt;/script&gt;를 곱하고 Expectation을 취해보도록 하겠습니다. 
-&lt;script type=&quot;math/tex&quot;&gt;E[X_t X_{t-k}] - \phi_1 E[X_{t-1} X_{t-k}] - \phi_2 E[X_{t-2} X_{t-k}] = E[Z_t X{t-k}]&lt;/script&gt;&lt;/p&gt;
-
-&lt;p&gt;k를 0부터 1, 2, … 순차적으로 대입하면 아래와 같습니다.&lt;/p&gt;
-
-&lt;p&gt;when k = 0,   &lt;script type=&quot;math/tex&quot;&gt;\gamma(0) -\phi_1 \gamma(1) -\phi_2 \gamma(2) = \sigma^2&lt;/script&gt; &lt;br /&gt;
-when k = 1,   &lt;script type=&quot;math/tex&quot;&gt;\gamma(1) -\phi_1 \gamma(0) -\phi_2 \gamma(1) = 0&lt;/script&gt; &lt;br /&gt;
-when k = 2,   &lt;script type=&quot;math/tex&quot;&gt;\gamma(2) -\phi_1 \gamma(1) -\phi_2 \gamma(0) = 0&lt;/script&gt; &lt;br /&gt;
-… …&lt;/p&gt;
-
-&lt;p&gt;즉,&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\gamma(h) -\phi_1 \gamma(h-1) -\phi_2 \gamma(h-2)
-= \begin{cases} 
-\sigma^2, &amp; \mbox{h=0} \\
-0, &amp; \mbox{h=1}
-\end{cases} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;양변을 &lt;script type=&quot;math/tex&quot;&gt;\gamma(0)&lt;/script&gt;로 나누어, Auto-correlation으로 나타내면&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\rho(h) -\phi_1 \rho(h-1) -\phi_2 \rho(h-2) 
-= \begin{cases} 
-1 &amp; \mbox{h=0} \\
-0, &amp; \mbox{h=1}
-\end{cases} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;위와 같은 식을 Yule-Walker equation 이라고 합니다. 
-Yule-walker equation을 이용해 AR(2)모델의 &lt;script type=&quot;math/tex&quot;&gt;\phi_1, \phi_2&lt;/script&gt;를 구하는 방법은 h=1일때, h=2일때를 대입하여 연립방정식을 푸는 것과 같습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;h = 1 , \rho(1) -\phi_1 \rho(0) -\phi_2 \rho(1) = 0 \\
-h = 2 , \rho(2) -\phi_1 \rho(1) -\phi_2 \rho(0) = 0&lt;/script&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\rho(0)=1&lt;/script&gt;이고, &lt;script type=&quot;math/tex&quot;&gt;\rho(1)&lt;/script&gt; 와 &lt;script type=&quot;math/tex&quot;&gt;\rho(2)&lt;/script&gt;는 주어진 데이터를 이용해 sample ACF로 계산하고, 위의 식을 이용해 &lt;script type=&quot;math/tex&quot;&gt;\phi_1&lt;/script&gt;과 &lt;script type=&quot;math/tex&quot;&gt;\phi_2&lt;/script&gt;를 계산할수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;지금까지 AR(2) 모델에 대해서 살펴본 과정을 AR(p) process에 대해서 일반화할 수 있습니다. AR(p) process에 대한 Yule-walker equation을 적으면 아래와 같습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\gamma(h) - \phi_1 \gamma(h-1) - ... - \phi_p \gamma(h-p) = \begin{cases} 
-\sigma^2 &amp; \mbox{h=0} \\
-0, &amp; \mbox{h &gt;= 1}
-\end{cases} %]]&gt;&lt;/script&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\rho(h) - \phi_1 \rho(h-1) - ... - \phi_p \rho(h-p) = \begin{cases} 
-1 &amp; \mbox{h=0} \\
-0, &amp; \mbox{h &gt;= 1}
-\end{cases} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\rho(h) = \phi_1 \rho(h-1) + ... + \phi_p \rho(h-p), \ \ \ \ when \ h \ge 1&lt;/script&gt; 이를 Matrix 형태로 적어보도록 하겠습니다. (메트릭스 형태는 다음에 설명한 Partial ACF와의 관계를 설명할 때 유용합니다)&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-\rho(0) &amp; = 1 \\
-\rho(1) &amp; = \phi_1  + \phi_2 \rho(1) + \phi_3 \rho(2) + ... +\phi_p \rho(p-1) \\
-\rho(2) &amp; = \phi_1 \rho(1) + \phi_2 +  \phi_3 \rho(1) + ... +\phi_p \rho(p-2) \\
-\rho(3) &amp; = \phi_1 \rho(2) + \phi_2 \rho(1) +  \phi_3 + ... +\phi_p \rho(p-3) \\
-... \\
-\rho(p-1) &amp; = \phi_1 \rho(p-2) + \phi_2 \rho(p-3) +  \phi_3 \rho(p-4) + ... +\phi_p \rho(1) \\
-\rho(p) &amp; = \phi_1 \rho(p-1) + \phi_2 \rho(p-2) +  \phi_3 \rho(p-3) + ... +\phi_p 
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix}
-\rho(1)\\ \rho(2)\\ \rho(3)\\ \vdots \\ \rho(p-1)\\\rho(p)
-\end{bmatrix} =
-\begin{bmatrix}
-1 &amp; \rho(1) &amp; \rho(2) &amp; \cdots &amp; \rho(p-1) \\ 
-\rho(1) &amp; 1 &amp; \rho(1) &amp; \cdots &amp; \rho(p-2) \\ 
-\rho(2) &amp; \rho(1) &amp; 1 &amp; \cdots &amp; \rho(p-3) \\ 
- &amp;  &amp; \vdots &amp; &amp; \\
-\rho(p-2) &amp; \rho(p-3) &amp; \rho(p-4) &amp; \cdots &amp; \rho(1) \\ 
-\rho(p-1) &amp; \rho(p-2) &amp; \rho(p-3) &amp; \cdots &amp; 1 \\ 
-\end{bmatrix} 
-\begin{bmatrix}
-\phi(1)\\ \phi(2)\\ \phi(3)\\ \vdots \\ \phi(p-1)\\\phi(p)
-\end{bmatrix} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;여기까지 우리는 시계열 데이터가 주어졌을때, ARMA(p,q)의 파라미터를 추정하는 방법을 살펴보았습니다. 하지만 파라미터를 추정하기 전에 p와 q(모델의 order)를 결정하는 것이 우선되어야합니다.&lt;/p&gt;
-
-&lt;p&gt;MA(q)에 대해서는 간단합니다. MA process의 정의에 따라, MA(q)는 현재 시점의 데이터 &lt;script type=&quot;math/tex&quot;&gt;X_t&lt;/script&gt;가 이전 q개의 noise로만 표현되기 때문에 q 이전의 데이터들과는 무관합니다. MA(q)의 ACF는 아래와 같이 q개의 유의미한 spike를 갖고 이후 값들은 모두 0에 가깝습니다(negligible)&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/MA_acf.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;반면 AR(p)는 ACF만으로 p를 결정하기가 어렵습니다. AR process의 ACF는 lag가 증가할수록 decay한 모습을 보일뿐, p에 대한 힌트를 주지 못하기 때문입니다.  다음에서는 주어진 데이터로부터 어떻게 AR(p)모델의 order를 결정할 수 있는지 알아보도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/AR_acf.png&quot; width=&quot;500&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;particial-acf&quot;&gt;Particial ACF&lt;/h3&gt;
-
-&lt;p&gt;범죄(crime) 발생 수 와 교회의 수(church)의 상관계수는 양의 상관관계를 갖고 있다고 합니다. 정말로 범죄가 많은 지역에 교회의 수가 많고, 또는 교회의 수가 많은 지역에 범죄가 발생할 가능성도 높은 걸까요? 아닙니다. 이는 두 요인과 관련있는 다른 요인, 인구(population)에 대한 요인을 고려하지 못했기때문에 발생하는 잘못된 결과 해석입니다. 이처럼 두 변수 사이에 수치적 관계가 있는지 또는 어느 정도로 관련이 있는지를 찾을 때, 두 변수와 관련된 다른 변수가있을 경우 해당 상관 계수를 사용하면 잘못된 결과를 얻을 수 있습니다. 이런 경우, 부분 상관 계수(partical correlation)를 계산하여 혼동되는 변수를 제어할 수 있습니다. 범죄 발생 수(X)와 교회의 수(Y)를 각 각 인구(Z)를 독립변수로 하여 회귀 모형을 구한후, 두 회귀 모형의 residual 항만 사용하여 correlation을 구하는 것이 partial correlation입니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-Let \ X = number \ of \ crime, Y = number \ of \ church, Z = population \\
-\begin{align}
-X &amp;= w_X  Z + e_{X} \\
-Y &amp; = w_Y  Z + e_{Y} \\
-\\
-\rho_{XY \cdot Z} &amp; = \frac{\rho_{XY}-\rho_{XZ}\rho_{YZ}}{\sqrt{1-\rho_{XZ}^2} \sqrt{1-\rho_{YZ}^2}}
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;Partial correlation의 개념을 시계열 데이터에 적용한 것이 Partial Auto-Correlation Function(PACF)입니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-\phi_{hh} &amp; = Corr(X_t, X_{t-h} | X_{t-h+1}, X_{t-h+2}, ..., X_{t-1}) \\
-&amp; = Corr(X_t - (\alpha_1 X_{t-h+1} + \alpha_2 X_{t-h+2} +  ... \alpha_h X_{t-1}), X_{t-h} - (\beta_1 X_{t-h+1} + \beta_2 X_{t-h+2} +  ... \beta_h X_{t-1}))
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;예를 들어 AR(1) 모델의 partial autocorrelation function 은 아래와 같이 계산됩니다.&lt;/p&gt;
-
-&lt;p&gt;AR(1) :&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-\phi_{11} &amp;= Corr(X_t, X_{t-1}) = \rho(1) = \phi \\
-\phi_{22} &amp;= Corr(X_t, X_{t-2} | X_{t-1}) = Corr(Z_t, Z_{t-1}) = 0 \\
-\phi_{33} &amp;= Corr(X_t, X_{t-3} | X_{t-1}, X_{t-2}) =  Corr(Z_t, X_{t-2}...) = 0
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;(참고):&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{align}
-\phi_{22} &amp; = Corr(X_t, X_{t-2} | X_{t-1}) \\
-&amp; = Corr(X_t - (\alpha X_{t-1}), X_{t-2} - (\beta X_{t-1})) \\
-&amp; = Corr(Z_t, Z_{t-1}) &amp; since, \ \alpha = corr(X_t, X_{t-1})  = \phi, \beta  = &amp; corr(X_{t-1}, X_{t-2}) = \phi  \\
-&amp; = 0
-\end{align} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;일반적으로 &lt;script type=&quot;math/tex&quot;&gt;\phi_{hh}&lt;/script&gt;는 위의 메트릭스 형태의 Yule-Walker equation의 마지막 컴포턴트와 같습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-\begin{bmatrix}
-\rho(1)\\ \rho(2)\\ \rho(3)\\ \vdots \\ \rho(h-1)\\\rho(h)
-\end{bmatrix} =
-\begin{bmatrix}
-1 &amp; \rho(1) &amp; \rho(2) &amp; \cdots &amp; \rho(h-1) \\ 
-\rho(1) &amp; 1 &amp; \rho(1) &amp; \cdots &amp; \rho(h-2) \\ 
-\rho(2) &amp; \rho(1) &amp; 1 &amp; \cdots &amp; \rho(h-3) \\ 
- &amp;  &amp; \vdots &amp; &amp; \\
-\rho(h-2) &amp; \rho(h-3) &amp; \rho(h-4) &amp; \cdots &amp; \rho(1) \\ 
-\rho(h-1) &amp; \rho(h-2) &amp; \rho(h-3) &amp; \cdots &amp; 1 \\ 
-\end{bmatrix} 
-\begin{bmatrix}
-\phi_{h1}\\ \phi_{h2}\\ \phi_{h3}\\ \vdots \\ \phi_{h(h-1)}\\\phi_{hh}
-\end{bmatrix} %]]&gt;&lt;/script&gt;
-
-&lt;p&gt;AR(2)의 예시와 같이 주어진 데이터가 AR(p) process를 따를경우 PACF의 형태는 lag가 p일때까지는 constant 값을 갖고, 이후의 값은 모두 0에 가까운 값이 됩니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-18/ar1_pacf.png&quot; width=&quot;250&quot; /&gt;
-&lt;img src=&quot;/assets/img/2018-12-18/ar2_pacf.png&quot; width=&quot;250&quot; /&gt;
-&lt;img src=&quot;/assets/img/2018-12-18/ar3_pacf.png&quot; width=&quot;250&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;지금까지 알아본 것을 요약하여, 시계열 데이터가 주어졌을때 모델과 모델의 order를 결정하는 방법은 아래와 같습니다.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt; &lt;/th&gt;
-      &lt;th&gt;AR(p)&lt;/th&gt;
-      &lt;th&gt;MA(q)&lt;/th&gt;
-      &lt;th&gt;ARMA(p, q)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;b&gt;ACF&lt;/b&gt;&lt;/td&gt;
-      &lt;td&gt;tails off&lt;/td&gt;
-      &lt;td&gt;cuts off after lag q&lt;/td&gt;
-      &lt;td&gt;tails off&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;b&gt;PACF&lt;/b&gt;&lt;/td&gt;
-      &lt;td&gt;cuts off after lag p&lt;/td&gt;
-      &lt;td&gt;tails off&lt;/td&gt;
-      &lt;td&gt;tails off&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;b&gt;Reference&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;[1] &lt;a href=&quot;https://www.springer.com/us/book/9781475777505&quot;&gt;Introduction to Time Series and Forecasting, Peter J. Brockwell, Richard A. Davis,&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[2] &lt;a href=&quot;https://www.statsmodels.org/dev/index.html&quot;&gt;Statsmodel’s Documentation&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[3] &lt;a href=&quot;https://www.coursera.org/learn/practical-time-series-analysis/home/info&quot;&gt;Coursera - Practical Time Series Analysis&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[4] &lt;a href=&quot;http://www.kocw.net/home/search/kemView.do?kemId=977301&quot;&gt;시계열분석 강의, 한양대학교(이기천)&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;[5] &lt;a href=&quot;https://en.wikipedia.org/wiki/Partial_correlation&quot;&gt;wikipedia - Partial correlation&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">시계열 데이터는 일정 시간동안 수집된 일련의 데이터로, 시간에 따라서 샘플링되었기 때문에 인접한 시간에 수집된 데이터는 서로 상관관계가 존재하게 됩니다. 따라서 시계열 데이터를 추론하는데, 전통적인 통계적 추론이 적합하지 않을수 있습니다. 현실 세계에서는 날씨, 주가, 마케팅 데이터 등등 다양한 시계열 데이터가 존재하고, 시계열 분석을 통해 이러한 데이터가 생성되는 메카니즘을 이해하여 설명가능한 모델로서 데이터를 표현하거나, 미래 값을 예측하는 것, 의미있는 신호값만만 분리하는 일에 활용할 수 있습니다.</summary></entry></feed>
+&lt;p&gt;[1] &lt;a href=&quot;https://www.statsmodels.org/dev/index.html&quot;&gt;Statsmodel’s Documentation&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다.</summary></entry></feed>

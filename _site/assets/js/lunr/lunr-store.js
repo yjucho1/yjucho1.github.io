@@ -133,4 +133,9 @@ var store = [{
         "excerpt":"Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) Abstract BatchNorm은 딥러닝의 안정적이고 학습속도를 빠르게 하는데 도움을 주는 기법으로 널리 활용되고 있습니다. 하지만 그 활용성에 비해서 왜 BatchNorm이 효과적인지에 대한 실질적인 고찰은 거의 없었으며, 대부분은 internal covariance shift를 줄이는 효과를 줄이기 때문이라고 믿고 있습니다. 이 논문에서는 internal covariance shift라는...","categories": ["Deep Learning paper"],
         "tags": [],
         "url": "http://localhost:4000/deep%20learning%20paper/batchnorm/",
+        "teaser":null},{
+        "title": "RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series",
+        "excerpt":"Qingsong Wen et al (2018, Alibaba Group) Implementation : https://github.com/LeeDoYup/RobustSTL Abstract 시계열데이터를 trend, seasonality, and remainder components로 분해하는 것은 어노말리 디텍션이나 예측 모델을 만드는데 중요한 역할을 합니다. 기존의 여러가지 성분분해 방식들은 1) 주기성이 변하거나 이동하는 것, 트렌드나 나머지성분의 갑작스러운 변화를 잘 처리하지 못하며(seasonality fluctuation and shift, and abrupt change in...","categories": ["Deep Learning paper","Time-series"],
+        "tags": [],
+        "url": "http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/",
         "teaser":null}]

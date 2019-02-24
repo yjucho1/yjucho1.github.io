@@ -1,0 +1,623 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.13.0 by Michael Rose
+  Copyright 2013-2018 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series - yjucho’s blog</title>
+<meta name="description" content="Qingsong Wen et al (2018, Alibaba Group)">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_EN">
+<meta property="og:site_name" content="yjucho's blog">
+<meta property="og:title" content="RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series">
+<meta property="og:url" content="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/">
+
+
+  <meta property="og:description" content="Qingsong Wen et al (2018, Alibaba Group)">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2019-02-24T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/">
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "Person",
+      "name": "yjucho",
+      "url": "http://localhost:4000",
+      "sameAs": null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="yjucho's blog Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="/">yjucho's blog</a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/about/" >About</a>
+            </li><li class="masthead__menu-item">
+              <a href="/category/" >Category</a>
+            </li></ul>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="/assets/img/bio-photo.jpg" alt="yjucho" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">yjucho</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Data science, Deep Learning, AI
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Seoul, Korea</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:jyj0729@gmail.com"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i> Email</a></li>
+          
+        
+          
+        
+          
+        
+          
+            <li><a href="https://www.facebook.com/yjucho"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+          
+        
+          
+            <li><a href="https://github.com/yjucho1"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series">
+    <meta itemprop="description" content="Qingsong Wen et al (2018, Alibaba Group)">
+    <meta itemprop="datePublished" content="February 24, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series
+</h1>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><b>Qingsong Wen et al (2018, Alibaba Group)</b></p>
+
+<p>Implementation : <a href="https://github.com/LeeDoYup/RobustSTL">https://github.com/LeeDoYup/RobustSTL</a></p>
+
+<h2 id="abstract">Abstract</h2>
+<ul>
+  <li>시계열데이터를 trend, seasonality, and remainder components로 분해하는 것은 어노말리 디텍션이나 예측 모델을 만드는데 중요한 역할을 합니다.</li>
+  <li>기존의 여러가지 성분분해 방식들은
+    <ul>
+      <li>1) 주기성이 변하거나 이동하는 것, 트렌드나 나머지성분의 갑작스러운 변화를 잘 처리하지 못하며(seasonality fluctuation and shift, and abrupt change in trend and reminder)</li>
+      <li>2) 어노말리 데이터에 대해서 로버스트하지 못하거나</li>
+      <li>3) 주기가 긴 시계열 데이터에 대해서 적용하기 어려운 문제가 있습니다.</li>
+    </ul>
+  </li>
+  <li>본 논문에서는 위와 같은 문제점을 해결할 수 있는 새로운 성분 분해 방식을 제안합니다.
+    <ul>
+      <li>먼저 sparse regularization와 least absolute deviation loss를 이용해 트렌드를 뽑고</li>
+      <li>Non-local seasonal filter를 사용하여 seasonality 성분을 얻습니다.</li>
+      <li>이 과정을 정확한 디컴포지션을 얻을때까지 반복합니다.</li>
+    </ul>
+  </li>
+  <li>실험데이터와 실제 시계열데이터에 대해서 기존 방법들 대비 더 좋은 성능을 보임을 확인하였습니다.</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+<ul>
+  <li>디컴포지션 방법으로 널리 사용되는 방법은 STL(seasonal trend decomposition using Loess), X-13-ARIMA-SEATS, X-11-ARIMA, X-12-ARIMA 등이 있습니다. 하지만 seasonality shift나 fluctuation이 존재할 경우 정확하지 않거나, 빅데이터에 존재하는 long seasonality에는 적합하지 않습니다.
+    <ul>
+      <li>seasonality fluctuation and shift - 하루가 주기인 시계열 데이터가 있다고 했을때, 오늘 1시에서의 seasonality component는 어제의 12시 30분에 대응되고, 그제의 1시 30분에 대응될수 있음</li>
+      <li>Abrupt change of trend and remainder - local anomaly could be a spike during an idle period (busy day의 높은 값보다는 낮아서 정확히 디텍션하기 어려움</li>
+      <li>Long seasonality - 보통은 quarterly or monthly data임. T 주기의 시즈널리티를 찾기 위해서는 T-1개의 데이터가 필요함. 하루 주기에 1분 간격 데이터의 경우 T=1440개고 이와 같은 long seasonality는 기존 방법들로는 풀기어려움</li>
+    </ul>
+  </li>
+  <li>이 논문에서 제안한 방법은 Long seasonality period and high noises 더라도 시즈널리티를 비교적 정확하게 디컴포지션할수 있습니다.</li>
+</ul>
+
+<h2 id="robust-stl-decomposition">Robust STL Decomposition</h2>
+<h3 id="model-overview">Model Overview</h3>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+y_t & = \tau_t + s_t + r_t, & t = 1, 2, …, N \\
+r_t & = a_t + n_t \\
+\end{align} %]]></script>
+
+<p>where <script type="math/tex">a_t</script> denotes spike or dip, and <script type="math/tex">n_t</script> denotes the white noise.</p>
+
+<ul>
+  <li>시계열 모델은 트렌드(<script type="math/tex">\tau_t</script>), 시즈널리티(<script type="math/tex">s_t</script>), 리마인더(<script type="math/tex">r_t</script>)로 구성되어 있고, 리마인더는 스파크 또는 딥과 같은 어노말리(<script type="math/tex">a_t</script>)와 화이트 노이즈(<script type="math/tex">n_t</script>)로 이루어집니다.</li>
+  <li>제안하는 알고리즘은 크게 4-steps 으로 각 성분을 분해합니다.
+    <ul>
+      <li>Denoise time series by applying bilateral filtering</li>
+      <li>Extract trend robustly by solving a LAD regression with sparse regularization</li>
+      <li>Calculate the seasonality component by applying a non-local seasonal filtering to overcome seasonality fluctuation and shift</li>
+      <li>Adjust extracted components</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="noise-removal">Noise Removal</h3>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+y^\prime_t & = \sum_{j \in J} w_j^t y_t, & J = t, t \pm 1, …, t \pm H \\
+w_j^t & = \frac{1}{z} e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y_j - y_t \right\vert ^2}{2\delta_i^2}}
+\end{align} %]]></script>
+
+<ul>
+  <li>J는 필터의 윈도우를 의미하며, 윈도우 사이즈는 2H+1 입니다.</li>
+  <li>
+    <p>필터의 가중치는 두개의 가우시안 함수로 구성됩니다. bilateral filter는 <a href="https://en.wikipedia.org/wiki/Bilateral_filter">여기</a>를 참고하세요.</p>
+  </li>
+  <li>After denoising,</li>
+</ul>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+y^\prime_t & = \tau_t + s_t + r^\prime_t, & t = 1, 2, …, N \\
+r^\prime_t & = a_t + (n_t - \hat{n}_t \\
+\end{align} %]]></script>
+
+<p>Where the <script type="math/tex">\hat{n}_t = y_t - y^\prime_t</script> is the filtered noise.</p>
+
+<h3 id="trend-extraction">Trend Extraction</h3>
+<ul>
+  <li>시즈널 디퍼런스 오퍼레이터는 같은 주기의 값을 차분하는 것으로 아래와 같이 정의할 수 있습니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align}
+g_t & = \nabla_T y^\prime_t = y^\prime_t - y^\prime_{t-T} \\
+& = \nabla_T \tau_t + \nabla_T s_t + \nabla_T r^\prime_t \\
+& = \sum_{I=0}^{T-1} \nabla \tau_{t-i} + ( \nabla_T s_t + \nabla_T r^\prime_t )
+\end{align} %]]></script>
+
+<ul>
+  <li>마지막 줄의 수식에서 첫번째 항이 <script type="math/tex">g_t</script>에 가장 많은 기여를 합니다. <script type="math/tex">s_t</script> and <script type="math/tex">r^\prime_t</script>에 시즈널 디퍼런스 오퍼레이터를 적용하면 값이 매우 작아진다고 가정하기 때문입니다.</li>
+  <li><script type="math/tex">g_t</script>에서 트렌드의 first order differece(<script type="math/tex">\nabla \tau_t</script>)를 구하기 위해서 다음과 같은 최적화 식을 사용합니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">Minimize \ \sum_{t=T+1}^N \left\vert g_t - \sum_{I=0}^{T-1} \nabla \tau_{t-i} \right\vert + \lambda_1 \sum_{t=2}^N \left\vert \nabla \tau_t \right\vert + \lambda_2 \sum_{t=3}^N \left\vert \nabla^2 \tau_t \right\vert</script>
+
+<ul>
+  <li>첫번째 항은 LAD를 사용한 emprical error를 의미합니다. sum-of-squares 보다 아웃라이어에 대해서 더 로버스트하기 때문에 LAD를 사용하였습니다.</li>
+  <li>두번째와 세번째 항은 각 각 트렌드에 대한 first-order 와 second-order difference operator 입니다.</li>
+  <li>두번째 항은 트렌드 디퍼런스 <script type="math/tex">\nabla \tau_t</script> 가 천천히 변화하지만 종종 갑작스러운 레벨 쉬프트(abrupt level shift)가 있다는 것을 의미합니다.</li>
+  <li>
+    <p>세번째 항은 트렌드가 smooth하고 piecewise linear such that <script type="math/tex">\nabla^2 x_t = \nabla(\nabla x_t)) = x_t -2 x_{t-1} + x_{t-2}</script> are sparse</p>
+  </li>
+  <li>이를 매트릭스 형태로 표현하면 다음과 같습니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">\Vert P \nabla \tau - q \Vert _1</script>
+
+<p>where the matrix P and vector q are</p>
+
+<script type="math/tex; mode=display">P = \begin{bmatrix}
+M_{(N-T) \times (N-1)} \\
+\lambda_1 I_{(N-1) \times (N-1)} \\
+\lambda_2 D_{(N-2) \times (N-1)} \\
+\end{bmatrix}, 
+q = \begin{bmatrix}
+g_{(N-T) \times 1} \\
+0_{(2N-3) \times 1} \\
+\end{bmatrix}</script>
+
+<p>M and D are Toeplitz matrix (refer to the paper for details)</p>
+
+<ul>
+  <li>위의 최적화식을 통해서 <script type="math/tex">\tau_1</script>에 대한 상대적인 트렌드(relative trend, <script type="math/tex">\tilde{\tau}_t^r</script>)를 구할수 있습니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\tilde{\tau}_t^r = \tilde{\tau}_t - \tau_1 = 
+\begin{cases}
+0, & t=1 \\
+\sum_{I=2}^t \nabla \tilde{\tau}_i, & t \ge 2
+\end{cases} %]]></script>
+
+<ul>
+  <li>그리고 나서, 디컴포지션 모델은 아래와 같이 업데이트 됩니다. 
+<script type="math/tex">y_t'' = y_t' - \tilde{\tau}_t^r = s_t + \tau_1 + r_t'' \\
+r_t’’ = a_t + (n_t - \hat{n}_t) +  (\tau_t - \tilde{\tau}_t)</script></li>
+</ul>
+
+<h3 id="seasonality-extraction">Seasonality Extraction</h3>
+<ul>
+  <li>relative trend component를 분리한 후에는, <script type="math/tex">y’’_t</script>는 시즈널리티로 오염되어 있다고 생각할 수 있습니다.</li>
+  <li>
+    <p>기존의 시즈널리티 분해 방법들은 주기가 <script type="math/tex">T</script>인 <script type="math/tex">s_t</script>’를 구하기 위해서는 K개의 연속적인 값 <script type="math/tex">y_{t-KT}, y_{t-(K-1)T}, …, y_{t-T}</script> 만 고려하였습니다. 하지만, 이 방식은 시즈널리 쉬프트 현상을 설명할수 없다는 단점이 있습니다.</p>
+  </li>
+  <li>여기서는  <script type="math/tex">y’’_{t-KT}</script>를 중심으로 인접한 값들을 고려합니다.  <script type="math/tex">y’’_{t-KT}</script>를 계산할때는 그 값을 중심으로 2H+1개의 인접값들 <script type="math/tex">y’’_{t-KT-H}, y’’_{t-KT-H+1}, …, y’’_{t-KT}, y’’_{t-KT+1}…, y’’_{t-KT+H}</script>를 사용합니다.</li>
+  <li>시즈널 컴포넌트 <script type="math/tex">s_t</script> 는 아래와 같이 of <script type="math/tex">y’’_t</script>의 가중합으로 표현됩니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">\tilde{s}_t = \sum_{(t’, j) \in \Omega} w^t_{(t’,j’)}y’’_j</script>
+
+<p>Where the <script type="math/tex">w^t_{(t’,j’)}</script> and <script type="math/tex">\Omega</script> are defined as</p>
+
+<script type="math/tex; mode=display">w^t_{(t’,j’)} = \frac{1}{z}e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y’’_j - y’’_{t’} \right\vert ^2}{2\delta_i^2}} \\
+\Omega = \{(t’,j) \vert (t’=t-k \times T, j= t’ \pm h )\} \\
+k=1, 2, …, K; \ h=0, 1, …, H</script>
+
+<ul>
+  <li>시즈널티리를 분리한 후에는, 리마이더 시그널은 아래와 같이 표현됩니다. 
+<script type="math/tex">r’’’_t = y’’_t - \tilde{s}_t = a_t + (n_t - \hat{n}_t) + (\tau_t - \tilde{\tau}_t) + (s_t - \tilde{s}_t)</script></li>
+</ul>
+
+<h3 id="final-adjustment">Final Adjustment</h3>
+<ul>
+  <li>시즈널리티 컴포넌트의 합계는 0으로 조정되어야합니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">\sum_{I=j}^{I=j+T-1}s_i = 0</script>
+
+<ul>
+  <li>따라서 평균값(트렌드 <script type="math/tex">\tau_1</script>에 대응되는 값)을 빼줌으로서 시즈널리트를 조정합니다.</li>
+</ul>
+
+<script type="math/tex; mode=display">\hat{\tau}_1 = \frac{1}{T\lfloor N/T \rfloor} \sum_{t=1}^{T\lfloor N/T \rfloor} \tilde{s}_t \\
+\hat{s}_t = \tilde{s}_t - \hat{\tau}_1 \\
+\hat{\tau}_t = \tilde{\tau}^r_t + \hat{\tau}_1 \\
+\hat{r}_t = y_t - \hat{s}_t + \hat{\tau}_t</script>
+
+<ul>
+  <li>리마인더 시그널 <script type="math/tex">\hat{r}_t</script> 가 수렴할 때까지 위 과정을 반복합니다.</li>
+</ul>
+
+<p><img src="/assets/img/2019-02-24/algorithm1.png" width="550" /><br /></p>
+
+<h2 id="experiments">Experiments</h2>
+
+<p><img src="/assets/img/2019-02-24/fig3.png" width="550" /><br /></p>
+
+<p><img src="/assets/img/2019-02-24/fig4.png" width="550" /><br /></p>
+
+<p><img src="/assets/img/2019-02-24/table2.png" width="450" /><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#deep-learning-paper" class="page__taxonomy-item" rel="tag">Deep Learning paper</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#time-series" class="page__taxonomy-item" rel="tag">Time-series</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-02-24T00:00:00+09:00">February 24, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=RobustSTL+%3A+A+Robust+Seasonal-Trend+Decomposition+Algorithm+for+Long+Time+Series%20http%3A%2F%2Flocalhost%3A4000%2Fdeep%2520learning%2520paper%2Ftime-series%2FrobustSTL%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdeep%2520learning%2520paper%2Ftime-series%2FrobustSTL%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdeep%2520learning%2520paper%2Ftime-series%2FrobustSTL%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdeep%2520learning%2520paper%2Ftime-series%2FrobustSTL%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/deep%20learning%20paper/batchnorm/" class="pagination--pager" title="How does batch normalization help optimization?
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/deep%20learning%20paper/time-series/robustSTL"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = 'https://yjucho.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
+  </body>
+</html>
