@@ -138,4 +138,9 @@ var store = [{
         "excerpt":"Qingsong Wen et al (2018, Alibaba Group) Implementation : https://github.com/LeeDoYup/RobustSTL Abstract 시계열데이터를 trend, seasonality, and remainder components로 분해하는 것은 어노말리 디텍션이나 예측 모델을 만드는데 중요한 역할을 합니다. 기존의 여러가지 성분분해 방식들은 1) 주기성이 변하거나 이동하는 것, 트렌드나 나머지성분의 갑작스러운 변화를 잘 처리하지 못하며(seasonality fluctuation and shift, and abrupt change in...","categories": ["Deep Learning paper","Time-series"],
         "tags": [],
         "url": "http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/",
+        "teaser":null},{
+        "title": "Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding",
+        "excerpt":"Kyle Hundman et al (2018 KDD, NASA) Implementation : https://github.com/khundman/telemanom Abstract NASA의 우주선은 많은 양의 원격 데이터를 송신합니다. NASA 연구원들은 엔지니어의 모니터링 부담과 운영 비용을 줄이기 위해서 어노말리 디텍션 시스템을 개선하고 있습니다. 이 논문은 expert-labeled 어노말리 데이터가 포함된 Soil Moiture Active Passive(SMAP) satelite와 Mars Science Laboratory(MSL) rover 데이터에 LSTM을 이용해...","categories": ["Deep Learning paper","Time-series"],
+        "tags": [],
+        "url": "http://localhost:4000/deep%20learning%20paper/time-series/Nonparametric-Dynamic-Thresholding/",
         "teaser":null}]

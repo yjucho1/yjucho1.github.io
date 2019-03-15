@@ -1,4 +1,119 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-02-24T18:26:29+09:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series</title><link href="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/" rel="alternate" type="text/html" title="RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series" /><published>2019-02-24T00:00:00+09:00</published><updated>2019-02-24T00:00:00+09:00</updated><id>http://localhost:4000/deep%20learning%20paper/time-series/robustSTL</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/">&lt;p&gt;&lt;b&gt;Qingsong Wen et al (2018, Alibaba Group)&lt;/b&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-03-15T21:37:55+08:00</updated><id>http://localhost:4000/</id><title type="html">yjucho’s blog</title><subtitle>DATA, Deep Learning, AI</subtitle><author><name>yjucho</name></author><entry><title type="html">Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding</title><link href="http://localhost:4000/deep%20learning%20paper/time-series/Nonparametric-Dynamic-Thresholding/" rel="alternate" type="text/html" title="Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding" /><published>2019-03-15T00:00:00+08:00</published><updated>2019-03-15T00:00:00+08:00</updated><id>http://localhost:4000/deep%20learning%20paper/time-series/Nonparametric-Dynamic-Thresholding</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/time-series/Nonparametric-Dynamic-Thresholding/">&lt;p&gt;&lt;b&gt;Kyle Hundman et al (2018 KDD, NASA)&lt;/b&gt;&lt;/p&gt;
+
+&lt;p&gt;Implementation : &lt;a href=&quot;https://github.com/khundman/telemanom&quot;&gt;https://github.com/khundman/telemanom&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;NASA의 우주선은 많은 양의 원격 데이터를 송신합니다. NASA 연구원들은 엔지니어의 모니터링 부담과 운영 비용을 줄이기 위해서 어노말리 디텍션 시스템을 개선하고 있습니다.&lt;/li&gt;
+  &lt;li&gt;이 논문은 expert-labeled 어노말리 데이터가 포함된 Soil Moiture Active Passive(SMAP) satelite와 Mars Science Laboratory(MSL) rover 데이터에 LSTM을 이용해 효율적으로 어노말리 디텍션 방법을 제안하였습니다.&lt;/li&gt;
+  &lt;li&gt;또한 파일럿 구현을 통해서 unsupervised and nonparametric anomaly thresholding approach를 제안하였으며, false positive를 줄이기 위한 방법들을 논의하였습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;우주선에서는 온도, 방사선, 전력, 소프트웨어의 계산량 등 복잡하고 방대한 양의 데이터들이 수집되며 각 데이터들의 어노말리 디텍션은 매우 중요한 문제입니다.&lt;/li&gt;
+  &lt;li&gt;기존의 어노말리 디텍션 방법들은 사전에 정의된 제한값을 벗어나면 발생하는 알람 형식이거나 수작업이 포함된 시각화 방법과 채널별 통계 분석을 이용합니다. 이러한 방식은 적지않은 전문가적 지식을 요구하며 각 규칙을 정의하거나 노말 범위를 업데이트하는데 수기 작업이 필요합니다. 특히 하루에 85테라바이트의 데이터가 생성되는 방대한 양의 데이터를 처리하는 빅데이터 시스템에서는 더욱 문제가 악화됩니다.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;다변량 시계열 데이터의 어려운 이슈이 우주선 데이터를 분석하는데 여전히 유효하고, 라벨링 부족한 상황에서 비지도학습방식이나 세미지도학습방법의 필요성 역시 존재합니다. 또한 대부분의 실제 시계열 데이터가 그러하듯이 non-stationary한 특징과 현재 컨텍스에 매우 종속된 특징을 갖는 것들도 어려운 점입니다. 또한 엔지니어에게 인사이트를 줄수 있도록 interpretability도 필요한 요소입니다. 마지막으로 false positive와 false negative를 최소화하면서 적절한 발런스를 찾는 것 역시 중요합니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;b&gt; Contributions &lt;/b&gt;
+    &lt;ul&gt;
+      &lt;li&gt;이 논문은 LSTM을 이용하여 높은 예측력을 얻고, 각 채널별 예측모델을 구축하여 전체 시스템의 interpretability를 유지하였습니다.&lt;/li&gt;
+      &lt;li&gt;일단 모델의 예측값을 이용해 실제 값과의 오차(residual)을 이용해 어노말리인지 판단하게 됩니다. 이때 nonparametric, dynamic, and unsupervised thresholding approach를 사용합니다. 이 방식을 이용해 신호의 다양성, 비정상성과 노이즈에 대해서 논의하고 이후 사용자 피드백과 과거 데이터를 이용해 시스템을 향상시키는 방법도 함께 논의하였습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;background-and-related-work&quot;&gt;Background and Related Work&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;일반적으로 3가지 종류의 어노말리가 존재합니다.
+    &lt;ul&gt;
+      &lt;li&gt;point anomaly : low density regions에 해당하는 싱글 포인트가 발생하는 것을 의미합니다.&lt;/li&gt;
+      &lt;li&gt;contextual anomaly : low density region은 아니지만 로컬 값들과 비교했을때는 비정상적인 싱글 포인트가 발생하는 경우입니다.&lt;/li&gt;
+      &lt;li&gt;collective anomaly : 여러개의 시퀀스값들이 비정상적일 때를 의미합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;가장 기본적인 어노말리 디텍션은 out-of-limit(OOL)입니다.
+    &lt;ul&gt;
+      &lt;li&gt;그 외 clustering based approaches, nearest neighbors approaches, expert systems, dimensionality reduction approaches 등이 있지만, parameter specification, interpretability, generalizability, or computational expense 등의 단점이 존재합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;기존에도 우주선에 적용가능한 어노말리 디텍션 방법들이 다수 연구되었습니다. ISACS-DOC, IMSE, ELMER, Deep Space One spacecrash 등과 같은 프로젝트들이 있었습니다만, 여전히 직관적인 결과를 얻을수 있고 관리가 쉬운 OOL 방식이 사용되고 있습니다.&lt;/li&gt;
+  &lt;li&gt;최근 딥러닝이 발전하면서 seq-to-seq 학습에서도 큰 성과를 얻고 있습니다. LSTM과 RNN계열의 모델을 이용해 과거값을 이용해 예측값을 학습할수 있습니다. 정상데이터로 학습된 LSTM을 이용하여 정상적인 상태에서의 시스템을 모니터링할수 있습니다. LSTM은 차원축소를 하지 않아도 다변량 시계열 데이터에 적용가능하고, 특별한 도메인 날리지를 요구하지 않기 때문에 다른 우주선에 일반적으로 적용가능합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;method&quot;&gt;Method&lt;/h2&gt;
+
+&lt;h3 id=&quot;telemetry-value-prediction-with-lstms&quot;&gt;Telemetry Value Prediction with LSTMs&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;b&gt;single channel models&lt;/b&gt; : 여기서는 각 채널별로 모델을 생성합니다. 싱글 모델의 장점은
+    &lt;ul&gt;
+      &lt;li&gt;채널 레벨로 추정가능하다는 것&lt;/li&gt;
+      &lt;li&gt;로우 레벨의 어노말리를 그룹핑하여 서브시스템 형태로 통합할수 있습니다. 이로인해서 더 세분화된 시스템 관리가 가능합니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;predicting values for a channel &lt;/b&gt;: 주어진 시계열은 &lt;script type=&quot;math/tex&quot;&gt;X=\left\{ x^{(1)}, x^{(2)}, ..., x^{(n)} \right\}&lt;/script&gt; 이고, &lt;script type=&quot;math/tex&quot;&gt;x^{(t)}&lt;/script&gt;는 m차원의 벡터를 나타내고 각 element가 채널의 입력값을 나타냅니다.  &lt;script type=&quot;math/tex&quot;&gt;l_s&lt;/script&gt;는 모델 입력으로 사용한 시퀀스의 길이를 의미합니다. &lt;script type=&quot;math/tex&quot;&gt;l_p&lt;/script&gt;는 예측할 시퀀스의 길이를 나타내며 이 논문에서는 계산 속도를 위해서 1을 사용하였습니다. 또한 각 채널별 예측을 수행하기 때문에 예측값의 차원 d=1로 설정하였습니다. &lt;script type=&quot;math/tex&quot;&gt;x^{(t)}&lt;/script&gt; 는 각 채널의 이전 값과 함께 우주선에 전송된 encoded command information이 포함됩니다. 커멘드를 생성한 것과 커멘드를 수신한 정보가 one-hot encoded되어 입력으로 사용됩니다. (Fig3 참고)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dynamic-error-thresholds&quot;&gt;Dynamic Error Thresholds&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;수천개의 원격 데이터를 자동으로 모니터링하기 위해서 계산속도가 빠르고, 예측값이 어노말리인지 판단하는 과정이 비지도 학습방식이어야합니다. 이를 위한 일방적인 방식은 과거의 스무딩된 에러들을 가우시안 분포로 가정하여 새로운 에러값과 이전 값들의 compact representation간의 빠른 비교가 되도록 하는 것입니다. 하지만 이 방식은 가우시안 분포라는 가정이 맞지 않을때는 문제가 되기때문에 여기서는 어떠한 가정없이 extreme values를 찾아내는 방식을 제안합니다. distance-based method가 비슷하지만 기존의 distance based method는 각 포인트들을 인근의 k개와 비교하기 때문에 계산량이 많다는 단점이 있습니다.&lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;Errors and Smoothing&lt;/b&gt; : 우선 예측갑과 실제값 사이의 에러를 계산합니다. &lt;script type=&quot;math/tex&quot;&gt;e^{(t)} = \left\vert y^{(t)} - \hat{y}^{(t)} \right\vert&lt;/script&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\boldsymbol{e}=[e^{(t-h)}, ..,e^{(t-1)}, e^{(t)}]&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;이때 각 에러값들은 스무딩(smoothed)된 값들을 사용합니다. 정상적인 상태라도 값이 급변하여 완벽하게 예측이 되지 않아 스파이크 형태의 에러값이 생기는 경우가 종종 있기 때문입니다. 여기서는 Exponentially-weighted average(EWMA)를 사용하였습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\boldsymbol{e_s}=[e_s^{(t-h)}, ..,e_s^{(t-1)}, e_s^{(t)}]&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;값들이 정상인지 판단하기 위해서는 threshold를 설정하여 사용하였습니다. threshold보다 큰 값은 anomalies로 분류됩니다.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;b&gt;Threshold Calculation and Anomaly Scoring &lt;/b&gt; : 일반적으로 threshold를 결정하기 위해서 지도학습방식으로 학습을 합니다. 하지만 이 방식은 라벨링된 데이터가 필요하기 때문에 여기서는 비지도학습 형태로 threshold를 결정하는 방법을 제안하였습니다.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\boldsymbol{\epsilon} = \mu(\boldsymbol{e_s}) + z\sigma(\boldsymbol{e_s})&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Where &lt;script type=&quot;math/tex&quot;&gt;\epsilon&lt;/script&gt; is determined by:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\epsilon = argmax(\boldsymbol{\epsilon}) = \frac{\triangle\mu(\boldsymbol{e_s})/\mu(\boldsymbol{e_s}) + \triangle\sigma(\boldsymbol{e_s})/\sigma(\boldsymbol{e_s})}{\left\vert \boldsymbol{e_a} \right\vert + \left\vert \boldsymbol{E_{seq}} \right\vert^2}&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;such that:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\triangle\mu(\boldsymbol{e_s}) = \mu(\boldsymbol{e_s}) - \mu(\left\{ e_s \in \boldsymbol{e_s} \vert e_s \lt \epsilon \right\}) \\
+\triangle\sigma(\boldsymbol{e_s}) = \sigma(\boldsymbol{e_s}) - \sigma(\left\{ e_s \in \boldsymbol{e_s} \vert e_s \lt \epsilon \right\}) \\
+\boldsymbol{e_a} = \left\{ e_s \in \boldsymbol{e_s} \vert e_s \gt \epsilon \right\} \\
+\boldsymbol{E_{seq}} = \mbox{continuous sequences of }e_a \in \boldsymbol{e_a}&lt;/script&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;anomaly score&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;s^{(i)} = \frac{max(e^{(i)}_{seq})-argmax({\epsilon})}{\mu(\boldsymbol{e_s}) + \sigma( \boldsymbol{e_s})}&lt;/script&gt;
+
+&lt;h3 id=&quot;mitigating-false-positives&quot;&gt;Mitigating False Positives&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;b&gt;Pruning Anomalies&lt;/b&gt;
+    &lt;ul&gt;
+      &lt;li&gt;prediction-based 방식은 과거데이터의 갯수(h)에 영향을 많이 받습니다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;b&gt;Learning from History&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">Kyle Hundman et al (2018 KDD, NASA)</summary></entry><entry><title type="html">RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series</title><link href="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/" rel="alternate" type="text/html" title="RobustSTL : A Robust Seasonal-Trend Decomposition Algorithm for Long Time Series" /><published>2019-02-24T00:00:00+08:00</published><updated>2019-02-24T00:00:00+08:00</updated><id>http://localhost:4000/deep%20learning%20paper/time-series/robustSTL</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/">&lt;p&gt;&lt;b&gt;Qingsong Wen et al (2018, Alibaba Group)&lt;/b&gt;&lt;/p&gt;
 
 &lt;p&gt;Implementation : &lt;a href=&quot;https://github.com/LeeDoYup/RobustSTL&quot;&gt;https://github.com/LeeDoYup/RobustSTL&lt;/a&gt;&lt;/p&gt;
 
@@ -194,7 +309,7 @@ k=1, 2, …, K; \ h=0, 1, …, H&lt;/script&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/fig4.png&quot; width=&quot;550&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/table2.png&quot; width=&quot;450&quot; /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Qingsong Wen et al (2018, Alibaba Group)</summary></entry><entry><title type="html">How does batch normalization help optimization?</title><link href="http://localhost:4000/deep%20learning%20paper/batchnorm/" rel="alternate" type="text/html" title="How does batch normalization help optimization?" /><published>2019-02-12T00:00:00+09:00</published><updated>2019-02-12T00:00:00+09:00</updated><id>http://localhost:4000/deep%20learning%20paper/batchnorm</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/batchnorm/">&lt;p&gt;&lt;b&gt;Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) &lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-24/table2.png&quot; width=&quot;450&quot; /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Qingsong Wen et al (2018, Alibaba Group)</summary></entry><entry><title type="html">How does batch normalization help optimization?</title><link href="http://localhost:4000/deep%20learning%20paper/batchnorm/" rel="alternate" type="text/html" title="How does batch normalization help optimization?" /><published>2019-02-12T00:00:00+08:00</published><updated>2019-02-12T00:00:00+08:00</updated><id>http://localhost:4000/deep%20learning%20paper/batchnorm</id><content type="html" xml:base="http://localhost:4000/deep%20learning%20paper/batchnorm/">&lt;p&gt;&lt;b&gt;Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT) &lt;/b&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
 &lt;ul&gt;
@@ -306,7 +421,7 @@ G^\prime_{t,i}  = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t+1)}, …, W_{i-1}^{(t+1
   &lt;li&gt;이 논문에서는 batchnorm의 효과성이 어디에서 오는지 근본적인 원인을 살펴보았습니다.&lt;/li&gt;
   &lt;li&gt;batchnorm은 internal covariate shift와 거의 상관이 없으며, batchnorm이 오히려 internal covariate shift를 증가시키는 것으로 나타났습니다.&lt;/li&gt;
   &lt;li&gt;대신에 batchnorm은 최적화문제의 landscape를 부드럽게 해주는 효과를 가져오고, 이로 인해서 그래디언트가 예측가능하고, 잘 움직이게 합니다. 이로 인해서 하이퍼파라미터에 로버스트하고, 그래디언트가 사라지거나 폭발하는 현상이 줄어들게 됩니다. 또한 이러한 효과는 batchnorm이 유일하지 않고, 다른 노말리제이션방법들도 동일한 결과를 얻을수 있음을 확인하였습니다.&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT)</summary></entry><entry><title type="html">Self-Supervised Generative Adversarial Networks</title><link href="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/" rel="alternate" type="text/html" title="Self-Supervised Generative Adversarial Networks" /><published>2019-02-08T00:00:00+09:00</published><updated>2019-02-08T00:00:00+09:00</updated><id>http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan</id><content type="html" xml:base="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/">&lt;p&gt;&lt;b&gt; Ting Chen et al. (Google Brain, 2018)&lt;/b&gt;&lt;/p&gt;
+&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas et al. (2018, MIT)</summary></entry><entry><title type="html">Self-Supervised Generative Adversarial Networks</title><link href="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/" rel="alternate" type="text/html" title="Self-Supervised Generative Adversarial Networks" /><published>2019-02-08T00:00:00+08:00</published><updated>2019-02-08T00:00:00+08:00</updated><id>http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan</id><content type="html" xml:base="http://localhost:4000/generative%20adversarial%20network/deep%20learning%20paper/self-supervised-gan/">&lt;p&gt;&lt;b&gt; Ting Chen et al. (Google Brain, 2018)&lt;/b&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;abstract&quot;&gt;Abstract&lt;/h2&gt;
 
@@ -416,7 +531,7 @@ L_D = V(G,D) - \beta \mathbb{E}_{x \sim P_{data}}  \mathbb{E}_{r \sim R} [log Q_
 
 &lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-08/tab1.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-08/tab2.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Ting Chen et al. (Google Brain, 2018)</summary></entry><entry><title type="html">시계열 분석 part6 - Spectral analysis</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6/" rel="alternate" type="text/html" title="시계열 분석 part6 - Spectral analysis" /><published>2019-01-23T00:00:00+09:00</published><updated>2019-01-23T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6/">&lt;p&gt;지금까지 우리는 &lt;code class=&quot;highlighter-rouge&quot;&gt;time domain&lt;/code&gt;에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 &lt;code class=&quot;highlighter-rouge&quot;&gt;frequency domain&lt;/code&gt;에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있는 방법입니다. 여기서는 이론적인 내용을 통해서 주파수 도메인에서의 개념을 직관적으로 이해하고, 실제 데이터를 통해서 결과값을 이해하고 활용할 수 있는 것을 목표로 합니다. 주파수 분석은 주어진 시계열 데이터의 주기성을 확인하거나, 노이즈를 제거하는 등에 활용될 수 있습니다.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/img/2019-02-08/tab2.png&quot; width=&quot;500&quot; /&gt;&lt;br /&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Ting Chen et al. (Google Brain, 2018)</summary></entry><entry><title type="html">시계열 분석 part6 - Spectral analysis</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6/" rel="alternate" type="text/html" title="시계열 분석 part6 - Spectral analysis" /><published>2019-01-23T00:00:00+08:00</published><updated>2019-01-23T00:00:00+08:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part6/">&lt;p&gt;지금까지 우리는 &lt;code class=&quot;highlighter-rouge&quot;&gt;time domain&lt;/code&gt;에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 &lt;code class=&quot;highlighter-rouge&quot;&gt;frequency domain&lt;/code&gt;에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있는 방법입니다. 여기서는 이론적인 내용을 통해서 주파수 도메인에서의 개념을 직관적으로 이해하고, 실제 데이터를 통해서 결과값을 이해하고 활용할 수 있는 것을 목표로 합니다. 주파수 분석은 주어진 시계열 데이터의 주기성을 확인하거나, 노이즈를 제거하는 등에 활용될 수 있습니다.&lt;/p&gt;
 
 &lt;p&gt;What we can do with spectral analysis is&lt;/p&gt;
 &lt;ul&gt;
@@ -635,7 +750,7 @@ e_j * e_k = \begin{cases}
 
 &lt;p&gt;[2] &lt;a href=&quot;http://www.kocw.net/home/search/kemView.do?kemId=977301&quot;&gt;시계열분석 강의, 한양대학교(이기천)&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;[3] &lt;a href=&quot;https://docs.scipy.org/doc/numpy-1.15.0/reference/routines.fft.html#module-numpy.fft&quot;&gt;numpy - Discrete Fourier Transform&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있는 방법입니다. 여기서는 이론적인 내용을 통해서 주파수 도메인에서의 개념을 직관적으로 이해하고, 실제 데이터를 통해서 결과값을 이해하고 활용할 수 있는 것을 목표로 합니다. 주파수 분석은 주어진 시계열 데이터의 주기성을 확인하거나, 노이즈를 제거하는 등에 활용될 수 있습니다.</summary></entry><entry><title type="html">django - AWS 배포하기</title><link href="http://localhost:4000/django/django-deploy-aws/" rel="alternate" type="text/html" title="django - AWS 배포하기" /><published>2019-01-17T00:00:00+09:00</published><updated>2019-01-17T00:00:00+09:00</updated><id>http://localhost:4000/django/django-deploy-aws</id><content type="html" xml:base="http://localhost:4000/django/django-deploy-aws/">&lt;p&gt;django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. &lt;a href=&quot;https://nachwon.github.io/django-deploy-1-aws/&quot;&gt;이 블로그&lt;/a&gt;를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.&lt;/p&gt;
+&lt;p&gt;[3] &lt;a href=&quot;https://docs.scipy.org/doc/numpy-1.15.0/reference/routines.fft.html#module-numpy.fft&quot;&gt;numpy - Discrete Fourier Transform&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지 우리는 time domain에서의 여러가지 시계열 모델을 살펴보았습니다. 이번 포스팅은 주어진 시계열 데이터를 frequency domain에서 분석하는 방법에 대해서 설명하도록 하겠습니다. 수학적으로 다소 복잡해보이지만, 실제로는 numpy 등을 통해서 쉽게 활용할수 있는 방법입니다. 여기서는 이론적인 내용을 통해서 주파수 도메인에서의 개념을 직관적으로 이해하고, 실제 데이터를 통해서 결과값을 이해하고 활용할 수 있는 것을 목표로 합니다. 주파수 분석은 주어진 시계열 데이터의 주기성을 확인하거나, 노이즈를 제거하는 등에 활용될 수 있습니다.</summary></entry><entry><title type="html">django - AWS 배포하기</title><link href="http://localhost:4000/django/django-deploy-aws/" rel="alternate" type="text/html" title="django - AWS 배포하기" /><published>2019-01-17T00:00:00+08:00</published><updated>2019-01-17T00:00:00+08:00</updated><id>http://localhost:4000/django/django-deploy-aws</id><content type="html" xml:base="http://localhost:4000/django/django-deploy-aws/">&lt;p&gt;django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. &lt;a href=&quot;https://nachwon.github.io/django-deploy-1-aws/&quot;&gt;이 블로그&lt;/a&gt;를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.&lt;/p&gt;
 
 &lt;h2 id=&quot;aws-가입-후-ec2-서버-셋팅&quot;&gt;AWS 가입 후 EC2 서버 셋팅&lt;/h2&gt;
 
@@ -1208,7 +1323,7 @@ sudo chgrp [deploy를 수행하는 유저그룹] [path-to-parent-directory-of-db
   &lt;li&gt;&lt;a href=&quot;https://nachwon.github.io/django-deploy-2-wsgi/&quot;&gt;https://nachwon.github.io/django-deploy-2-wsgi/&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://nachwon.github.io/django-deploy-3-nginx/&quot;&gt;https://nachwon.github.io/django-deploy-3-nginx/&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://nachwon.github.io/django-deploy-7-s3/&quot;&gt;https://nachwon.github.io/django-deploy-7-s3/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. 이 블로그를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.</summary></entry><entry><title type="html">시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/" rel="alternate" type="text/html" title="시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH" /><published>2019-01-15T00:00:00+09:00</published><updated>2019-01-15T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/">&lt;p&gt;지금까지 우리는 시계열 데이터를 설명하기 위해 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARMA&lt;/code&gt;모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARIMA&lt;/code&gt; 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
+&lt;/ul&gt;</content><author><name>yjucho</name></author><summary type="html">django application을 Amazon Web Service(AWS)에 배포하는 과정을 요약한 포스팅입니다. 이 블로그를 주로 참고하였고, 수행 중 발생하는 문제에 대한 trouble shooting 과정을 기억하기 위해 작성하였습니다.</summary></entry><entry><title type="html">시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/" rel="alternate" type="text/html" title="시계열 분석 part5 - ARMAX, ARFIMA, ARCH, GARCH" /><published>2019-01-15T00:00:00+08:00</published><updated>2019-01-15T00:00:00+08:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part5/">&lt;p&gt;지금까지 우리는 시계열 데이터를 설명하기 위해 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARMA&lt;/code&gt;모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARIMA&lt;/code&gt; 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
 &lt;code class=&quot;highlighter-rouge&quot;&gt;Vector AR&lt;/code&gt; 모델도 알아보았습니다.&lt;/p&gt;
 
 &lt;p&gt;이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARMAX&lt;/code&gt; 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARFIMA&lt;/code&gt; 모델, 3) non-linear 모형의 대표적인 예인 &lt;code class=&quot;highlighter-rouge&quot;&gt;ARCH&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GARCH&lt;/code&gt;에 대해서 설명드리고자 합니다. 각 각의 모델들은 ARIMA 모델들의 확장판으로 기존 모델과의 차이점을 이해하는 것을 목표로 합니다.&lt;/p&gt;
@@ -1478,7 +1593,7 @@ Covariance estimator: robust
 
 &lt;p&gt;[6] &lt;a href=&quot;https://en.wikipedia.org/wiki/Autoregressive_conditional_heteroskedasticity&quot;&gt;https://en.wikipedia.org/wiki/Autoregressive_conditional_heteroskedasticity&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;[7] &lt;a href=&quot;https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/&quot;&gt;https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록 Vector AR 모델도 알아보았습니다.</summary></entry><entry><title type="html">시계열 분석 part4 - VAR</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 part4 - VAR" /><published>2019-01-07T00:00:00+09:00</published><updated>2019-01-07T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
+&lt;p&gt;[7] &lt;a href=&quot;https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/&quot;&gt;https://datascienceschool.net/view-notebook/dac8a9bfac6740ff85d5b6dcc9e9e908/&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지 우리는 시계열 데이터를 설명하기 위해 ARMA모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 ARIMA 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록 Vector AR 모델도 알아보았습니다.</summary></entry><entry><title type="html">시계열 분석 part4 - VAR</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4/" rel="alternate" type="text/html" title="시계열 분석 part4 - VAR" /><published>2019-01-07T00:00:00+08:00</published><updated>2019-01-07T00:00:00+08:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4/">&lt;p&gt;지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.&lt;/p&gt;
 
 &lt;p&gt;Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. &lt;script type=&quot;math/tex&quot;&gt;(X_{t1}, X_{t2})’&lt;/script&gt; at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t1}\}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\{X_{t2}\}&lt;/script&gt;를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.&lt;/p&gt;
 
@@ -1749,7 +1864,7 @@ pm25Value     0.273513   1.000000
 
 &lt;p&gt;[3] &lt;a href=&quot;http://www.kocw.net/home/search/kemView.do?kemId=977301&quot;&gt;시계열분석 강의, 한양대학교(이기천)&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;[4]  &lt;a href=&quot;https://en.wikipedia.org/wiki/Cointegration&quot;&gt;https://en.wikipedia.org/wiki/Cointegration&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</summary></entry><entry><title type="html">시계열 분석 part3 - Non-stationary</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 part3 - Non-stationary" /><published>2018-12-31T00:00:00+09:00</published><updated>2018-12-31T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
+&lt;p&gt;[4]  &lt;a href=&quot;https://en.wikipedia.org/wiki/Cointegration&quot;&gt;https://en.wikipedia.org/wiki/Cointegration&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</summary></entry><entry><title type="html">시계열 분석 part3 - Non-stationary</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3/" rel="alternate" type="text/html" title="시계열 분석 part3 - Non-stationary" /><published>2018-12-31T00:00:00+08:00</published><updated>2018-12-31T00:00:00+08:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3/">&lt;p&gt;Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다.  또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.&lt;/p&gt;
 
 &lt;p&gt;이번 Part3에서는 non-stationary 시계열 데이터를 모델링하는 방법들에 대해서 이야기해보도록 하겠습니다. 앞서 포스팅에서 살펴보았듯이 주어진 데이터 &lt;script type=&quot;math/tex&quot;&gt;{x_1, …, x_n}&lt;/script&gt;에 대한 시계열 차트를 그렸을때, (a) stationarity와 비교하여 명확한 편차 변화가 보이지 않고 (b) ACF가 점차 감소하는 모습을 보이면 (평균을 0로 맞춘 후) ARMA를 사용하면 됩니다.&lt;/p&gt;
 
@@ -2116,7 +2231,7 @@ NormaltestResult(statistic=561.8797124030831, pvalue=9.758222244224708e-123)&lt;
 
 &lt;p&gt;[5] &lt;a href=&quot;https://en.wikipedia.org/wiki/Partial_correlation&quot;&gt;wikipedia - Partial correlation&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;[6] &lt;a href=&quot;https://machinelearningmastery.com/how-to-grid-search-sarima-model-hyperparameters-for-time-series-forecasting-in-python/&quot;&gt;How to grid search SARIMA model hyperparameters for time series forecasting in python&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다. 또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.</summary></entry><entry><title type="html">Deploying Keras models using TensorFlow Serving and Flask</title><link href="http://localhost:4000/tensorflow/tensorflow-serving/" rel="alternate" type="text/html" title="Deploying Keras models using TensorFlow Serving and Flask" /><published>2018-12-26T00:00:00+09:00</published><updated>2018-12-26T00:00:00+09:00</updated><id>http://localhost:4000/tensorflow/tensorflow-serving</id><content type="html" xml:base="http://localhost:4000/tensorflow/tensorflow-serving/">&lt;blockquote&gt;
+&lt;p&gt;[6] &lt;a href=&quot;https://machinelearningmastery.com/how-to-grid-search-sarima-model-hyperparameters-for-time-series-forecasting-in-python/&quot;&gt;How to grid search SARIMA model hyperparameters for time series forecasting in python&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">Part1에서는 stationarity를 가정으로, 시계열 데이터의 기본 모델인 AR과 MA에 대해서 알아보고 모델의 파라미터를 추정하기 위해서 Yule-Walker Equations을 알아보았습니다. 또한 모델의 order를 결정하기 위해 ACF, PACF를 이용하는 방법을 살펴보았습니다. 실제 분석에서 모델의 파라미터를 추정하는 것은 소프트웨어를 이용해 자동적으로 계산되기 때문에 하나 하나를 기억할 필요는 없지만, 그 원리에 대해서 이해하는 것을 목적으로 합니다. Part2에서는 실제 데이터를 이용해 stationarity 가정을 검증하고, 적합한 모델을 찾고 모델의 order를 결정하는 방법, 추정한 모델을 진단하고 검증하는 방법들을 알아보았습니다. AIC, BIC, HQIC와 같은 지표를 사용하여 여러가지 모델 중 더 나은 성능의 모델을 선택할 수 있고, 모델의 residual을 이용해 모델을 진단하는 과정을 직접 수행해보았습니다. 또한 최종 선택한 모델을 이용해 미래 값을 예측(forecast)해보고, MSE를 이용해 예측력을 평가해보기도 하였습니다.</summary></entry><entry><title type="html">Deploying Keras models using TensorFlow Serving and Flask</title><link href="http://localhost:4000/tensorflow/tensorflow-serving/" rel="alternate" type="text/html" title="Deploying Keras models using TensorFlow Serving and Flask" /><published>2018-12-26T00:00:00+08:00</published><updated>2018-12-26T00:00:00+08:00</updated><id>http://localhost:4000/tensorflow/tensorflow-serving</id><content type="html" xml:base="http://localhost:4000/tensorflow/tensorflow-serving/">&lt;blockquote&gt;
   &lt;p&gt;이 글은 &lt;a href=&quot;https://towardsdatascience.com/deploying-keras-models-using-tensorflow-serving-and-flask-508ba00f1037&quot;&gt;Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask&lt;/a&gt;을 참고하여 작성한 글입니다.&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2727,449 +2842,4 @@ urls.py를 생성하여 http://localhost:8000/predict에 접속하면 view.predi
 
 &lt;h3 id=&quot;conclusion---결론&quot;&gt;Conclusion - 결론&lt;/h3&gt;
 
-&lt;p&gt;여기까지 머신러닝 모델을 배포하는 과정을 알아보았습니다. TensorFlow Serving은 머신러닝을 웹사이트나 다른 어플리케이션과 통합되도록 도와줍니다. 잘 학습된 다양한 케라스 모델을 사용하여 머신러닝에 대한 최소 지식으로도 유용한 어플리케이션 개발이 가능합니다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">이 글은 Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask을 참고하여 작성한 글입니다.</summary></entry><entry><title type="html">시계열 분석 part2 - practical example</title><link href="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part2/" rel="alternate" type="text/html" title="시계열 분석 part2 - practical example" /><published>2018-12-25T00:00:00+09:00</published><updated>2018-12-25T00:00:00+09:00</updated><id>http://localhost:4000/spatio-temporal%20data/time-series/time-series-part2</id><content type="html" xml:base="http://localhost:4000/spatio-temporal%20data/time-series/time-series-part2/">&lt;p&gt;지난 &lt;a href=&quot;/spatio-temporal%20data/time-series/time-series-part1/&quot;&gt;포스팅&lt;/a&gt;에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다.&lt;/p&gt;
-
-&lt;p&gt;stationary하고 causal하다는 가정 하에서 Auto-Regressive 또는 Moving average, 또는 두가지가 섞인 ARMA 모델을 사용할 수 있고, 모델의 order를 결정하기 위해서 ACF와 PACF를 사용하는 방법을 학습하였습니다.&lt;/p&gt;
-
-&lt;p&gt;실제 분석 과정에서는 ACF, PACF 이외에 여러가지 방법을 복합적으로 사용하여 적합한 모델을 찾아나갑니다. 예를 들어 1차로 시계열 모델을 추정한 후 추정값과 실제값의 차이로 residual을 계산합니다. residual이 정규분포를 따르는 white noise라는 가정을 검증함으로써 모델이 적합한지 확인할 수 있습니다.  이를 위해 q-q plot 등을 사용합니다. 또한 이론적인 예측력을 확인하기 위해서 AIC(Akaike Information Criterion), BIC(Bayesian information criterion)와 같은 지표를 살펴봅니다. 새로운 데이터에 대해서도 로버스트한지 확인하기 위해 cross validation기법 등을 사용할 수도 있습니다.&lt;/p&gt;
-
-&lt;p&gt;정리하면, 실제 분석 과정은 이와 같은 검증 기법들을 사용하여 적합한 모델을 규명하고, unknown 파라미터를 추정하는 방법을 반복하여 점점 더 좋은 성능의 모델을 찾아내는 방식으로 진행됩니다.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Model Building &lt;br /&gt;
-1) identify model &lt;br /&gt;
-2) estimate unknowns &lt;br /&gt;
-3) diagonstic checking &lt;br /&gt;
-4) prediction &lt;br /&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;for 1), 3) use :&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;ACF, PACF&lt;/li&gt;
-  &lt;li&gt;for large - n cases, Box-Ljung test, Sign test, Rank test, q-q plot .. =&amp;gt; for the residuals after fitting the model&lt;/li&gt;
-  &lt;li&gt;theoretical predictive power : AIC, BIC&lt;/li&gt;
-  &lt;li&gt;empirical predictive power : Cross validation&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;이번 포스팅에서는 실제 데이터를 이용해 시계열 데이터를 모델링하는 전반적인 과정에 대해서 알아보도록 하겠습니다. 특히 모델을 선택하는데 사용할 지표(AIC, BIC, HQIC)와 검증 방법들(residual’s auto-correlation function, q-q plot)에 대해서 개념적으로 이해하고, statsmodels 패키지에서 출력되는 결과값들을 해석하며 더 나은 성능의 모델을 찾아가는 방법에 대해서 소개하도록 하겠습니다.&lt;/p&gt;
-
-&lt;h3 id=&quot;실제-데이터---초미세먼지-농도&quot;&gt;실제 데이터 - 초미세먼지 농도&lt;/h3&gt;
-
-&lt;p&gt;분석할 데이터는 초미세먼지 농도입니다.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;데이터 :  경남 창원시 의창구 원이대로 450(시설관리공단 실내수영장 앞)에서 측정된 초미세먼지(PM.25)&lt;/li&gt;
-  &lt;li&gt;기간 : 	2018-9-18 19:00 ~ 2018-12-18 17:00 (3개월, 1시간 단위)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sqlite3&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sklearn.model_selection&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;train_test_split&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;datetime&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;datetime&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dt&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;statsmodels.api&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matplotlib&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inline&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;가장 먼저 할일은 시계열 차트를 그려보는 것입니다. Part1에서의 내용들은 모두 시계열 데이터가 stationary하다는 가정이 있습니다. 평균과 분산이 시간에 따라 변하지 않아야합니다.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_4_1.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;어떻게 보이시나요? 보기에 따라 stationary하다고 판단할수도 있고 그렇지 않다고 할수도 있겠습니다. 
-특히 9월부터 10월초까지는 대체적으로 초미세먼지의 농도가 낮게 지속된 것으로 보이네요. 그래프를 통해서 stationary를 판단하는 것은 아무래도 주관적인 판단이 개입할수밖에 없습니다.&lt;/p&gt;
-
-&lt;p&gt;통계적인 방법으로 stationary를 확인할수 있는 방법도 있습니다. 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Augmented Dickey-Fuller test&lt;/code&gt;는 단일변량 프로세스에서 unit root가 존재여부를 검증하기 위해서 사용됩니다. 
-Part1을 잘 보셨다면 causality condition에서 &lt;script type=&quot;math/tex&quot;&gt;\phi(B)&lt;/script&gt;의 모든 해가 unit circle밖에 존재할 경우, causality를 만족한다는 부분을 기억하실겁니다. causality condition을 만족하는 프로세스는 이에 대응되는 유일한(unique) stationary solution이 한개 존재한다는 것을 보장합니다. Augmented Dickey-Fuller test에서의 귀무가설은 &lt;code class=&quot;highlighter-rouge&quot;&gt;unit root가 존재한다&lt;/code&gt;이고 귀무가설을 기각하면 unit root가 존재하지 않는다, 즉 주어진 데이터가 stationary하다는 결론을 얻을 수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;statmodels 패키지의 adfuller 함수를 이용해 stationary를 검증해보도록 하겠습니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stattools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;adfuller&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'ADF Statistic: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;f'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'p-value: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;f'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Critical Values:'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;s: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%.3&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;f'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ADF Statistic: -4.860059
-p-value: 0.000042
-Critical Values:
-	10%: -2.567
-	1%: -3.433
-	5%: -2.863
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;adfuller 검증 결과, p-value가 0.05 이하로 critical value보다 작기때문에 우리는 귀무가설을 기각할수 있습니다.
-이를 통해 주어진 데이터가 stationary하다는 가정이 합리적임을 확인할 수 있습니다.&lt;/p&gt;
-
-&lt;p&gt;두번째 단계는 ACF와 PACF를 통해서 데이터에 적합한 모델을 규명하는 것입니다. statmodels의 plot_acf와 plot_pacf함수를 사용할 수 있습니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;211&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graphics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_acf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;212&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graphics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_pacf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_8_0.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;ACF는 lag가 증가할수록 decay 혹은 tail-off 모습을 보입니다. PACF는 lag=1일때 강한 스파이크를 보이고 이후 값들은 제로에 가까운 값들을 보입니다. 이를 토대로 모델을 선정한다면 AR(1)프로세스로 추정할수 있습니다. 다만 PCAF 상에서 &lt;script type=&quot;math/tex&quot;&gt;lag \ge 2&lt;/script&gt; 값들이 confidence-band에 걸쳐있기때문에 AR(1)이외에 AR(2)와 AR(3)의 가능성도 조금은 열어두도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;우선 AR(1)이라는 가정하에 모델의 파라미터를 추정해보도록 하겠습니다. tsa.ARMA(series, order=(p, q))로 ARMA 모델 객체를 만들고, fit 메서드를 이용해 파라미터를 추정할수 있습니다. summary를 통해서 추정된 파라미터의 값과 모델 성능에 대한 지표를  얻을 수 있습니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;arma_mod10&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arma_mod10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                              ARMA Model Results                              
-==============================================================================
-Dep. Variable:              pm25Value   No. Observations:                 2183
-Model:                     ARMA(1, 0)   Log Likelihood               -6095.592
-Method:                       css-mle   S.D. of innovations              3.947
-Date:                Wed, 26 Dec 2018   AIC                          12197.184
-Time:                        09:39:11   BIC                          12214.249
-Sample:                    09-18-2018   HQIC                         12203.422
-                         - 12-18-2018                                         
-===================================================================================
-                      coef    std err          z      P&amp;gt;|z|      [0.025      0.975]
------------------------------------------------------------------------------------
-const              21.1381      1.512     13.983      0.000      18.175      24.101
-ar.L1.pm25Value     0.9446      0.007    134.299      0.000       0.931       0.958
-                                    Roots                                    
-=============================================================================
-                 Real           Imaginary           Modulus         Frequency
------------------------------------------------------------------------------
-AR.1            1.0587           +0.0000j            1.0587            0.0000
------------------------------------------------------------------------------
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;우리가 가정한 모델은 다음과 같습니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t -\phi X_{t-1} = Z_t + const&lt;/script&gt;
-
-&lt;p&gt;const는 상수값으로 모델 평균에 해당합니다. 약 26.4892로 추정되며, 이계수에 대한 p-value가 0.000으로 통계적으로 유의한 수준으로 나타납니다. 또한 &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt;는 이전 데이터에 대한 계수로 0.9589으로 추정되며, 마찬가지로 p-value가 0.000으로 통계적으로 유의합니다.&lt;/p&gt;
-
-&lt;p&gt;위 결과 테이블에서 주의깊게 보아야할 것은 AIC, BIC, HQIC입니다. 이 지표들은 추정된 모델의 성능을 이론적으로 나타나낸 값들로 이 지표들의 값이 낮을수록 모델이 데이터를 더 잘 설명하는 모델이됩니다. 세가지 모두 데이터가 가지고 있는 정보량 중 모델에 의해 설명되는 정보량을 빼어 모델이 설명하지 못하는 정보량(손실되는 정보량)의 크기를 측정하는 것입니다. 손실되는 정보량이 적을수록 모델이 본래 데이터가 가진 정보를 그대로 표현하는 것이기때문에 더 나은 모델이라고 할 수 있습니다. 또한 3가지 모두 파라미터의 개수(k)에 따라 penalty를 주어 같은 정보량을 표현하더라도 파라미터가 적은 단순한 모델을 더 나은 모델로 판단하도록 합니다. 세 지표의 차이점은 파라미터수에 따른 penalty를 주는 방법이 다릅니다. (n = number of observation)&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;AIC = -2*ln(maximum likelihood) + 2k \\
-BIC = -2*ln(maximum likelihood) + ln(n)*k \\
-HQIC = -2*ln(maximum likelihood) + 2k*ln(ln(n))&lt;/script&gt;
-
-&lt;p&gt;더 자세한 내용은 여기를 참고하세요.
-&lt;a href=&quot;https://en.wikipedia.org/wiki/Akaike_information_criterion&quot;&gt;AIC&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Bayesian_information_criterion&quot;&gt;BIC&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Hannan%E2%80%93Quinn_information_criterion&quot;&gt;HQIC&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;arma_mod20&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arma_mod20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                              ARMA Model Results                              
-==============================================================================
-Dep. Variable:              pm25Value   No. Observations:                 2183
-Model:                     ARMA(2, 0)   Log Likelihood               -6087.365
-Method:                       css-mle   S.D. of innovations              3.932
-Date:                Wed, 26 Dec 2018   AIC                          12182.729
-Time:                        09:39:19   BIC                          12205.483
-Sample:                    09-18-2018   HQIC                         12191.047
-                         - 12-18-2018                                         
-===================================================================================
-                      coef    std err          z      P&amp;gt;|z|      [0.025      0.975]
------------------------------------------------------------------------------------
-const              21.1422      1.647     12.839      0.000      17.915      24.370
-ar.L1.pm25Value     0.8625      0.021     40.340      0.000       0.821       0.904
-ar.L2.pm25Value     0.0869      0.021      4.064      0.000       0.045       0.129
-                                    Roots                                    
-=============================================================================
-                 Real           Imaginary           Modulus         Frequency
------------------------------------------------------------------------------
-AR.1            1.0487           +0.0000j            1.0487            0.0000
-AR.2          -10.9723           +0.0000j           10.9723            0.5000
------------------------------------------------------------------------------
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;위 결과는 AR(2)로 가정한 후 파라미터를 추정한 결과입니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t -\phi_1 X_{t-1} -\phi_2 X_{t-2} = Z_t + const&lt;/script&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;const, \phi_1, \phi_2&lt;/script&gt;는 각각 21.1422, 0.8625, 0.0869로 추정되며, 모두 p-value가 0.000으로 유의한 수준임을 알수 있습니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;arma_mod30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arma_mod30&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;                              ARMA Model Results                              
-==============================================================================
-Dep. Variable:              pm25Value   No. Observations:                 2183
-Model:                     ARMA(3, 0)   Log Likelihood               -6087.201
-Method:                       css-mle   S.D. of innovations              3.931
-Date:                Wed, 26 Dec 2018   AIC                          12184.401
-Time:                        09:59:51   BIC                          12212.843
-Sample:                    09-18-2018   HQIC                         12194.798
-                         - 12-18-2018                                         
-===================================================================================
-                      coef    std err          z      P&amp;gt;|z|      [0.025      0.975]
------------------------------------------------------------------------------------
-const              21.1413      1.627     12.994      0.000      17.952      24.330
-ar.L1.pm25Value     0.8635      0.021     40.245      0.000       0.821       0.906
-ar.L2.pm25Value     0.0975      0.028      3.446      0.001       0.042       0.153
-ar.L3.pm25Value    -0.0123      0.021     -0.573      0.567      -0.054       0.030
-                                    Roots                                    
-=============================================================================
-                 Real           Imaginary           Modulus         Frequency
------------------------------------------------------------------------------
-AR.1            1.0500           +0.0000j            1.0500            0.0000
-AR.2           -6.0083           +0.0000j            6.0083            0.5000
-AR.3           12.8897           +0.0000j           12.8897            0.0000
------------------------------------------------------------------------------
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;AR(3)는 어떨까요? AR(3)로 가정한 후 파라미터를 추정한 결과입니다.&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;X_t -\phi_1 X_{t-1} -\phi_2 X_{t-2} -\phi_3 X_{t-3} = Z_t + const&lt;/script&gt;
-
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;const, \phi_1, \phi_2, \phi_3&lt;/script&gt;는 각각 21.1413, 0.8635, 0.0975, -0.0123로 추정되며, &lt;script type=&quot;math/tex&quot;&gt;\phi_3&lt;/script&gt;을 제외한 나머지 파라미터는 p-value가 0.000 수준으로 유의한 수준입니다. &lt;script type=&quot;math/tex&quot;&gt;\phi_3&lt;/script&gt;은 p-value가 0.567로 유의수준(95%신뢰수준, &amp;gt;0.05)보다 크기 때문에, 95%신뢰수준으로는 유의하지 않은 계수로 판단됩니다.&lt;/p&gt;
-
-&lt;p&gt;order변화에 따라 AIC와 BIC, HQIC의 값을 정리하면 다음 표와 같습니다. AR(2)모델에서 세 지표 모두 가장 낮은 값을 보이고 있습니다.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;model&lt;/th&gt;
-      &lt;th&gt;AIC&lt;/th&gt;
-      &lt;th&gt;BIC&lt;/th&gt;
-      &lt;th&gt;HQIC&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;AR(1)&lt;/td&gt;
-      &lt;td&gt;12197.184&lt;/td&gt;
-      &lt;td&gt;12214.249&lt;/td&gt;
-      &lt;td&gt;12203.422&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;AR(2)&lt;/td&gt;
-      &lt;td&gt;12182.729&lt;/td&gt;
-      &lt;td&gt;12205.483&lt;/td&gt;
-      &lt;td&gt;12191.047&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;AR(2)&lt;/td&gt;
-      &lt;td&gt;12184.401&lt;/td&gt;
-      &lt;td&gt;12212.843&lt;/td&gt;
-      &lt;td&gt;12194.798&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;좀더 편리하게 statmodels의 AR 모듈에서 제공하는 select_order 메소드를 이용할수도 있습니다. 탐색할 order의 최대값과 평가기준으로 삼을 지표를 지정하면 자동으로 최적은 order를 선택하여 출력해줍니다. 단 order의 최대값이 10이상이 될 경우, 계산속도가 눈에 띄게 늦어지니 주의하시길 바랍니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;AR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;select_order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'aic'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;8
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;aics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;bics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;hqics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;aics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;bics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;hqics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hqic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;aics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hqics&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;legend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'AIC'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'BIC'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'HQIC'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_19_0.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;order를 1부터 10까지 변경하면서 모델을 평가해보면 AIC, HQIC 기준으로는 order=8에서 가장 낮은 값을 보이고, BIC 기준으로는 order=2에서 가장 낮은 값을 보입니다.&lt;/p&gt;
-
-&lt;p&gt;여기서는 모델의 복잡도를 고려하여 이후 과정은 AR(2)에 대해서만 수행하도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;그렇다면 정말 AR(2)가 적합한 모델일까요? 모델의 파라미터를 추정한 이후에는 우리가 가정한 것들이 실제로 그러한지 diagonstic checking이 필요합니다. 특히 실제 값에서 모델의 추정값을 뺀 나머지 잔차(residual)에 대해서 이 잔차가 정규분포를 따르는 white noise인지를 확인해야합니다.&lt;/p&gt;
-
-&lt;p&gt;먼저 가로축을 시간으로 하는 잔차를 그려보아 시간에 다른 분포의 변화가 있는지 확인합니다. 또한 t 시점의 residual은 이전, 이후 시점의 residual과 서로 uncorrelate되어야하기 때문에 residual의 ACF와 PACF를 그렸을때, lag=0(자기자신과의 correlation)을 제외하고는 모두 제로에 가까워야합니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;111&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_21_0.png&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;211&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graphics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_acf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;squeeze&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;212&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graphics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_pacf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_22_0.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;두번째로는 q-q plot을 통해서 정규분포 가정을 확인할 수 있습니다. residual이 정규분포를 따를 경우, q-q plot의 점들은 linear한 모습을 띄어야합니다. 
-q-q plot에 대한 자세한 내용은 &lt;a href=&quot;https://en.wikipedia.org/wiki/Q%E2%80%93Q_plot&quot;&gt;여기&lt;/a&gt;를 참고하세요.&lt;/p&gt;
-
-&lt;p&gt;세번재로는 통계적인 검증 방법으로 scipy의 normaltest를 이용할 수도 있습니다. residual plot이나 q-q plot이 그래프를 통해서 눈으로 확인하는 것이라면, scipy의 normaltest는 skewness와 kurtosis를 이용해 정규성을 통계적으로 검증하는 방법입니다. 이때 귀무가설은 샘플데이터들이 정규분포를 따른다는 것으로 p-value가 유의수준보다 적을 경우, 귀무가설이 기각되어 샘플데이터가 정규분포를 따르지 않는 다는 결론을 얻게 됩니다. &lt;a href=&quot;https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.normaltest.html&quot;&gt;참고&lt;/a&gt;를 참고하세요.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;111&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;graphics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;qqplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'q'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_24_0.png&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scipy&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stats&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;stats&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;normaltest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;resid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;NormaltestResult(statistic=211.93394539357183, pvalue=9.530781075241752e-47)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;normaltest의 p-value가 0.05보다 작기때문에 residual이 정규분포를 따른다는 귀무가설을 기각하게 됩니다. 즉 AR(2) 모델을 사용할 경우, white noise가 정규분포를 따른다는 가정이 위배되기 때문에 이는 적합한 모델이 아닐수 있습니다. 실제 분석에서는 이런 경우가 발생할 때는 log transformation(로그변환)이나 differencing(차분)등 합리적인 전처리를 수행하고 전처리된 데이터를 이용해 위의 과정을 반복하여 적합한 시계열 모델을 찾아야합니다.&lt;/p&gt;
-
-&lt;p&gt;반복적인 작업을 통해서 적합한 모델이 만들어지면, 이제 이 모델을 이용해 미래값을 예측할 수 있습니다. statmodels의 모델 객체는 predict 메소드를 통해서 미래값을 쉽게 얻을 수 있습니다. dynamic 옵션을 False로 설정하는 것은 항상 in-sample 데이터를 사용하여 미래값을 예측하는 것이고, True로 설정할 경우 이전 lag의 모델 예측값을 사용해서 계산하는 것입니다. 첫번째 예측값을 이후 lag에서 계속 사용하게 됩니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2018-12-11 03:00:00    17.296624
-2018-12-11 04:00:00    17.209714
-2018-12-11 05:00:00    18.072176
-2018-12-11 06:00:00    19.021547
-2018-12-11 07:00:00    18.245995
-2018-12-11 08:00:00    19.884008
-2018-12-11 09:00:00    20.920289
-2018-12-11 10:00:00    21.007199
-2018-12-11 11:00:00    21.869661
-2018-12-11 12:00:00    20.231647
-2018-12-11 13:00:00    34.719674
-2018-12-11 14:00:00    24.985140
-2018-12-11 15:00:00    23.855313
-2018-12-11 16:00:00    14.368236
-2018-12-11 17:00:00    13.412229
-2018-12-11 18:00:00    14.274691
-2018-12-11 19:00:00    12.636677
-2018-12-11 20:00:00    12.462858
-2018-12-11 21:00:00    12.462858
-2018-12-11 22:00:00    12.462858
-2018-12-11 23:00:00    15.050242
-2018-12-12 00:00:00    15.310972
-2018-12-12 01:00:00    16.173433
-2018-12-12 02:00:00    15.397881
-2018-12-12 03:00:00    17.035895
-2018-12-12 04:00:00    17.209714
-2018-12-12 05:00:00    12.897406
-2018-12-12 06:00:00    12.462858
-2018-12-12 07:00:00    18.500089
-2018-12-12 08:00:00    19.108457
-                         ...    
-2018-12-18 06:00:00    19.623279
-2018-12-18 07:00:00    25.232597
-2018-12-18 08:00:00    24.891594
-2018-12-18 09:00:00    26.529607
-2018-12-18 10:00:00    23.253581
-2018-12-18 11:00:00    25.493326
-2018-12-18 12:00:00    13.679594
-2018-12-18 13:00:00    12.462858
-2018-12-18 14:00:00     9.875473
-2018-12-18 15:00:00     9.614744
-2018-12-18 16:00:00    10.477205
-2018-12-18 17:00:00    11.426577
-2018-12-18 18:00:00     9.788563
-2018-12-18 19:00:00    10.294849
-2018-12-18 20:00:00    10.800036
-2018-12-18 21:00:00    11.279740
-2018-12-18 22:00:00    11.737373
-2018-12-18 23:00:00    12.173754
-2018-12-19 00:00:00    12.589889
-2018-12-19 01:00:00    12.986715
-2018-12-19 02:00:00    13.365129
-2018-12-19 03:00:00    13.725984
-2018-12-19 04:00:00    14.070096
-2018-12-19 05:00:00    14.398240
-2018-12-19 06:00:00    14.711159
-2018-12-19 07:00:00    15.009559
-2018-12-19 08:00:00    15.294112
-2018-12-19 09:00:00    15.565463
-2018-12-19 10:00:00    15.824223
-2018-12-19 11:00:00    16.070976
-Freq: H, Length: 201, dtype: float64
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subplots&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;figsize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;211&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1800&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot_insample&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Dynamic : True -  in-sample forecasts are used in place of lagged dependent variables'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fig&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_subplot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;212&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1800&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fig2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ax&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot_insample&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ax2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set_title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Dynamic : False - the in-sample lagged values are used for prediction'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/assets/img/2018-12-25/output_28_1.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;학습한 AR(2)모델을 이용해서 한시간 뒤의 초미세먼지 농도를 예측했을 때, 어느정도로 정확할까요? 회귀분석과 마찬가지로 RMSE 값을 이용해 예측력을 평가할 수 있습니다. AR(2) RMSE가 2.9750로 평균적으로 약 2.9750 ㎍/㎥ 오차가 발생하는 수준입니다.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;mean_forecast_err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yhat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;yhat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;mean_forecast_err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;2.9750026461548287
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;arma_mod10&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AR(1) model's RMSE: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mean_forecast_err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;arma_mod30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod30&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AR(3) model's RMSE: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mean_forecast_err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;arma_mod80&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tsa&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ARMA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arma_mod80&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;predict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dynamic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;AR(8) model's RMSE: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mean_forecast_err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pm25Value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;predict_pm25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;AR(1) model's RMSE:  3.006486217286414
-AR(3) model's RMSE:  2.9717700323027256
-AR(8) model's RMSE:  2.9174007777104203
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;여기까지 실제 데이터와 statmodels 패키지를 이용해 ARMA 모델을 학습하는 방법을 알아보았습니다!&lt;/p&gt;
-
-&lt;p&gt;다음 포스팅에서는 non-stationary 모델이 어떤 것들이 있는지 살펴보도록 하겠습니다.&lt;/p&gt;
-
-&lt;p&gt;Happy new year!&lt;/p&gt;
-
-&lt;p&gt;&lt;b&gt;Reference&lt;/b&gt;&lt;/p&gt;
-
-&lt;p&gt;[1] &lt;a href=&quot;https://www.statsmodels.org/dev/index.html&quot;&gt;Statsmodel’s Documentation&lt;/a&gt;&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">지난 포스팅에서는 시계열 데이터를 모델링하기 위한 모델과 모델의 파라미터를 추정하기 위한 이론적 배경을 살펴보았습니다.</summary></entry></feed>
+&lt;p&gt;여기까지 머신러닝 모델을 배포하는 과정을 알아보았습니다. TensorFlow Serving은 머신러닝을 웹사이트나 다른 어플리케이션과 통합되도록 도와줍니다. 잘 학습된 다양한 케라스 모델을 사용하여 머신러닝에 대한 최소 지식으로도 유용한 어플리케이션 개발이 가능합니다.&lt;/p&gt;</content><author><name>yjucho</name></author><summary type="html">이 글은 Himanshu Rawlani의 Deploying Keras models using TensorFlow Serving and Flask을 참고하여 작성한 글입니다.</summary></entry></feed>

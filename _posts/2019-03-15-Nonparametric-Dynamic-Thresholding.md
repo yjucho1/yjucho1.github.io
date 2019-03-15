@@ -5,10 +5,10 @@ categories:
  - Time-series
 comments: true
 mathjax : true
-published: false
+published: true
 
 ---
-<b>Kyle Hundman et al (KDD 2018, NASA)</b>
+<b>Kyle Hundman et al (2018 KDD, NASA)</b>
 
 Implementation : [https://github.com/khundman/telemanom](https://github.com/khundman/telemanom)
 
@@ -23,16 +23,75 @@ Implementation : [https://github.com/khundman/telemanom](https://github.com/khun
 * 다변량 시계열 데이터의 어려운 이슈이 우주선 데이터를 분석하는데 여전히 유효하고, 라벨링 부족한 상황에서 비지도학습방식이나 세미지도학습방법의 필요성 역시 존재합니다. 또한 대부분의 실제 시계열 데이터가 그러하듯이 non-stationary한 특징과 현재 컨텍스에 매우 종속된 특징을 갖는 것들도 어려운 점입니다. 또한 엔지니어에게 인사이트를 줄수 있도록 interpretability도 필요한 요소입니다. 마지막으로 false positive와 false negative를 최소화하면서 적절한 발런스를 찾는 것 역시 중요합니다.
 
 * <b> Contributions </b>
-    * we describe our use of Long Short-Term Memory (LSTM) recurrent neural networks (RNNs) to achieve high prediction performance while maintaining interpretability throughout the system
-    * Once model predictions are generated, we offer a nonparametric, dynamic, and unsupervised thresholding approach for evaluating residuals. This approach addresses diversity, non-stationarity, and noise issues associated with automatically setting thresholds for data streams characterized by varying behaviors and value ranges. Methods for utilizing user-feedback and historical anomaly data to improve system performance are also detailed
+    * 이 논문은 LSTM을 이용하여 높은 예측력을 얻고, 각 채널별 예측모델을 구축하여 전체 시스템의 interpretability를 유지하였습니다. 
+    * 일단 모델의 예측값을 이용해 실제 값과의 오차(residual)을 이용해 어노말리인지 판단하게 됩니다. 이때 nonparametric, dynamic, and unsupervised thresholding approach를 사용합니다. 이 방식을 이용해 신호의 다양성, 비정상성과 노이즈에 대해서 논의하고 이후 사용자 피드백과 과거 데이터를 이용해 시스템을 향상시키는 방법도 함께 논의하였습니다. 
 
 ## Background and Related Work
 
+* 일반적으로 3가지 종류의 어노말리가 존재합니다. 
+    * point anomaly : low density regions에 해당하는 싱글 포인트가 발생하는 것을 의미합니다. 
+    * contextual anomaly : low density region은 아니지만 로컬 값들과 비교했을때는 비정상적인 싱글 포인트가 발생하는 경우입니다. 
+    * collective anomaly : 여러개의 시퀀스값들이 비정상적일 때를 의미합니다. 
+* 가장 기본적인 어노말리 디텍션은 out-of-limit(OOL)입니다. 
+    * 그 외 clustering based approaches, nearest neighbors approaches, expert systems, dimensionality reduction approaches 등이 있지만, parameter specification, interpretability, generalizability, or computational expense 등의 단점이 존재합니다. 
+* 기존에도 우주선에 적용가능한 어노말리 디텍션 방법들이 다수 연구되었습니다. ISACS-DOC, IMSE, ELMER, Deep Space One spacecrash 등과 같은 프로젝트들이 있었습니다만, 여전히 직관적인 결과를 얻을수 있고 관리가 쉬운 OOL 방식이 사용되고 있습니다. 
+* 최근 딥러닝이 발전하면서 seq-to-seq 학습에서도 큰 성과를 얻고 있습니다. LSTM과 RNN계열의 모델을 이용해 과거값을 이용해 예측값을 학습할수 있습니다. 정상데이터로 학습된 LSTM을 이용하여 정상적인 상태에서의 시스템을 모니터링할수 있습니다. LSTM은 차원축소를 하지 않아도 다변량 시계열 데이터에 적용가능하고, 특별한 도메인 날리지를 요구하지 않기 때문에 다른 우주선에 일반적으로 적용가능합니다. 
+
 ## Method
+
 ### Telemetry Value Prediction with LSTMs
-* single channel models : A single model is created for each telemetry channel and each model is used to predict values for that channel.
-    * traceability down to the channel level
-    * low-level anomalies can later be aggregated into various groupings and ultimately subsystems. --> granular control of the system
-* predicting values for a channel : our aim is to predict telemetry values for a single channel we consider the situation where d = 1. We also use lp = 1 to limit the number of predictions for each step t and decrease processing time. the inputs $$x^{(t)}$$ into the LSTM consist of prior telemetry values for a given channel and encoded command information sent to the spacecraft
+
+* <b>single channel models</b> : 여기서는 각 채널별로 모델을 생성합니다. 싱글 모델의 장점은 
+    * 채널 레벨로 추정가능하다는 것
+    * 로우 레벨의 어노말리를 그룹핑하여 서브시스템 형태로 통합할수 있습니다. 이로인해서 더 세분화된 시스템 관리가 가능합니다. 
+* <b>predicting values for a channel </b>: 주어진 시계열은 $$X=\left\{ x^{(1)}, x^{(2)}, ..., x^{(n)} \right\}$$ 이고, $$x^{(t)}$$는 m차원의 벡터를 나타내고 각 element가 채널의 입력값을 나타냅니다.  $$l_s$$는 모델 입력으로 사용한 시퀀스의 길이를 의미합니다. $$l_p$$는 예측할 시퀀스의 길이를 나타내며 이 논문에서는 계산 속도를 위해서 1을 사용하였습니다. 또한 각 채널별 예측을 수행하기 때문에 예측값의 차원 d=1로 설정하였습니다. $$x^{(t)}$$ 는 각 채널의 이전 값과 함께 우주선에 전송된 encoded command information이 포함됩니다. 커멘드를 생성한 것과 커멘드를 수신한 정보가 one-hot encoded되어 입력으로 사용됩니다. (Fig3 참고)
+
 ### Dynamic Error Thresholds
+
+* 수천개의 원격 데이터를 자동으로 모니터링하기 위해서 계산속도가 빠르고, 예측값이 어노말리인지 판단하는 과정이 비지도 학습방식이어야합니다. 이를 위한 일방적인 방식은 과거의 스무딩된 에러들을 가우시안 분포로 가정하여 새로운 에러값과 이전 값들의 compact representation간의 빠른 비교가 되도록 하는 것입니다. 하지만 이 방식은 가우시안 분포라는 가정이 맞지 않을때는 문제가 되기때문에 여기서는 어떠한 가정없이 extreme values를 찾아내는 방식을 제안합니다. distance-based method가 비슷하지만 기존의 distance based method는 각 포인트들을 인근의 k개와 비교하기 때문에 계산량이 많다는 단점이 있습니다. 
+* <b>Errors and Smoothing</b> : 우선 예측갑과 실제값 사이의 에러를 계산합니다. $$e^{(t)} = \left\vert y^{(t)} - \hat{y}^{(t)} \right\vert$$ 
+
+$$
+\boldsymbol{e}=[e^{(t-h)}, ..,e^{(t-1)}, e^{(t)}]
+$$
+
+* 이때 각 에러값들은 스무딩(smoothed)된 값들을 사용합니다. 정상적인 상태라도 값이 급변하여 완벽하게 예측이 되지 않아 스파이크 형태의 에러값이 생기는 경우가 종종 있기 때문입니다. 여기서는 Exponentially-weighted average(EWMA)를 사용하였습니다. 
+
+$$
+\boldsymbol{e_s}=[e_s^{(t-h)}, ..,e_s^{(t-1)}, e_s^{(t)}]
+$$
+
+* 값들이 정상인지 판단하기 위해서는 threshold를 설정하여 사용하였습니다. threshold보다 큰 값은 anomalies로 분류됩니다. 
+
+* <b>Threshold Calculation and Anomaly Scoring </b> : 일반적으로 threshold를 결정하기 위해서 지도학습방식으로 학습을 합니다. 하지만 이 방식은 라벨링된 데이터가 필요하기 때문에 여기서는 비지도학습 형태로 threshold를 결정하는 방법을 제안하였습니다. 
+
+$$
+\boldsymbol{\epsilon} = \mu(\boldsymbol{e_s}) + z\sigma(\boldsymbol{e_s})
+$$
+
+* Where $$\epsilon$$ is determined by:
+
+$$
+\epsilon = argmax(\boldsymbol{\epsilon}) = \frac{\triangle\mu(\boldsymbol{e_s})/\mu(\boldsymbol{e_s}) + \triangle\sigma(\boldsymbol{e_s})/\sigma(\boldsymbol{e_s})}{\left\vert \boldsymbol{e_a} \right\vert + \left\vert \boldsymbol{E_{seq}} \right\vert^2}
+$$
+
+* such that:
+
+$$
+\triangle\mu(\boldsymbol{e_s}) = \mu(\boldsymbol{e_s}) - \mu(\left\{ e_s \in \boldsymbol{e_s} \vert e_s \lt \epsilon \right\}) \\
+\triangle\sigma(\boldsymbol{e_s}) = \sigma(\boldsymbol{e_s}) - \sigma(\left\{ e_s \in \boldsymbol{e_s} \vert e_s \lt \epsilon \right\}) \\
+\boldsymbol{e_a} = \left\{ e_s \in \boldsymbol{e_s} \vert e_s \gt \epsilon \right\} \\
+\boldsymbol{E_{seq}} = \mbox{continuous sequences of }e_a \in \boldsymbol{e_a}
+$$
+
+* anomaly score 
+
+$$
+s^{(i)} = \frac{max(e^{(i)}_{seq})-argmax({\epsilon})}{\mu(\boldsymbol{e_s}) + \sigma( \boldsymbol{e_s})}
+$$
+
 ### Mitigating False Positives
+
+* <b>Pruning Anomalies</b>
+    * prediction-based 방식은 과거데이터의 갯수(h)에 영향을 많이 받습니다. 
+* <b>Learning from History</b>
