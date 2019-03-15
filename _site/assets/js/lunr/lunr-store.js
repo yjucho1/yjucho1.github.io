@@ -140,7 +140,7 @@ var store = [{
         "url": "http://localhost:4000/deep%20learning%20paper/time-series/robustSTL/",
         "teaser":null},{
         "title": "Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding",
-        "excerpt":"Kyle Hundman et al (2018 KDD, NASA) Implementation : https://github.com/khundman/telemanom Abstract NASA의 우주선은 많은 양의 원격 데이터를 송신합니다. NASA 연구원들은 엔지니어의 모니터링 부담과 운영 비용을 줄이기 위해서 어노말리 디텍션 시스템을 개선하고 있습니다. 이 논문은 expert-labeled 어노말리 데이터가 포함된 Soil Moiture Active Passive(SMAP) satelite와 Mars Science Laboratory(MSL) rover 데이터에 LSTM을 이용해...","categories": ["Deep Learning paper","Time-series"],
+        "excerpt":"Kyle Hundman et al (2018 KDD, NASA) Implementation : https://github.com/khundman/telemanom Abstract NASA의 우주선은 많은 양의 원격 데이터를 송신합니다. NASA 연구원들은 우주선이 보내는 데이터들을 이용해 엔지니어의 모니터링 부담과 운영 비용을 줄이기 위해서 어노말리 디텍션 시스템을 구축/개선하고 있습니다. 이 논문은 우주선 데이터에 적용가능한 어노말리 디텍션 알고리즘을 제안합니다. expert-labeled 어노말리 데이터가 포함된 Soil...","categories": ["Deep Learning paper","Time-series"],
         "tags": [],
         "url": "http://localhost:4000/deep%20learning%20paper/time-series/Nonparametric-Dynamic-Thresholding/",
         "teaser":null}]
