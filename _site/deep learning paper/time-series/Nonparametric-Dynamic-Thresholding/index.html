@@ -29,7 +29,7 @@
 
 
 
-  <meta property="article:published_time" content="2019-03-15T00:00:00+08:00">
+  <meta property="article:published_time" content="2019-03-15T00:00:00+09:00">
 
 
 
@@ -341,11 +341,12 @@
 <h3 id="dynamic-error-thresholds">Dynamic Error Thresholds</h3>
 
 <ul>
-  <li>수천개의 원격 데이터를 자동으로 모니터링하기 위해서 계산속도가 빠르고, 예측값이 어노말리인지 판단하는 과정이 비지도 학습방식이어야합니다. 이를 위한 일방적인 방식은 과거의 스무딩된 에러들을 가우시안 분포로 가정하여 새로운 에러값과 이전 값들의 compact representation간의 빠른 비교가 되도록 하는 것입니다. 하지만 이 방식은 가우시안 분포라는 가정이 맞지 않을때는 문제가 되기때문에 여기서는 어떠한 가정없이 extreme values를 찾아내는 방식을 제안합니다. distance-based method가 비슷하지만 기존의 distance based method는 각 포인트들을 인근의 k개와 비교하기 때문에 계산량이 많다는 단점이 있습니다.</li>
-  <li><b>Errors and Smoothing</b> : 우선 예측갑과 실제값 사이의 에러를 계산합니다. <script type="math/tex">e^{(t)} = \left\vert y^{(t)} - \hat{y}^{(t)} \right\vert</script></li>
+  <li>수천개의 원격 데이터를 자동으로 모니터링하기 위해서는 계산속도가 빠르고, 예측값이 어노말리인지 판단하는 과정이 비지도 학습방식이어야합니다. 이를 위한 일방적인 방식은 과거의 스무딩된 에러들을 가우시안 분포로 가정하여 새로운 에러값과 이전 값들의 compact representation간의 빠른 비교가 되도록 하는 것입니다. 하지만 이 방식은 가우시안 분포라는 가정이 맞지 않을때는 문제가 되기때문에 여기서는 어떠한 가정없이 extreme values를 찾아내는 방식을 제안합니다. distance-based method가 비슷하지만 기존의 distance based method는 각 포인트들을 인근의 k개와 비교하기 때문에 계산량이 많다는 단점이 있습니다.</li>
+  <li><b>Errors and Smoothing</b> : 우선 예측값과 실제값 사이의 에러를 계산합니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">\boldsymbol{e}=[e^{(t-h)}, ..,e^{(t-1)}, e^{(t)}]</script>
+<script type="math/tex; mode=display">e^{(t)} = \left\vert y^{(t)} - \hat{y}^{(t)} \right\vert \\
+\boldsymbol{e}=[e^{(t-h)}, ..,e^{(t-1)}, e^{(t)}]</script>
 
 <ul>
   <li>이때 각 에러값들은 스무딩(smoothed)된 값들을 사용합니다. 정상적인 상태라도 값이 급변하여 완벽하게 예측이 되지 않아 스파이크 형태의 에러값이 생기는 경우가 종종 있기 때문입니다. 여기서는 Exponentially-weighted average(EWMA)를 사용하였습니다.</li>
@@ -391,10 +392,23 @@
   <li><b>Pruning Anomalies</b>
     <ul>
       <li>prediction-based 방식은 과거데이터의 갯수(h)에 영향을 많이 받습니다.</li>
+      <li>너무 많은 과거 데이터를 이용할 경우, 실시간 모니터링 시나리오에서 계산 비용이 너무 크게 됩니다. 너무 적은 과거 데이터를 이용할 경우, 좁은 컨텍스트만 고려하여 판단하기 때문에 false positive가 많아지게 됩니다. 그렇다고 false positive를 너무 줄이다보면 감지되지 못한 어노말리를 찾기위해서 휴먼 인스펙션 부담이 커지게 됩니다. 따라서 false positives를 약화시키기 위해서 pruning procedure를 도입하였습니다.</li>
+      <li><script type="math/tex">\boldsymbol{e_{max}}</script> is created containing <script type="math/tex">max(\boldsymbol{e_{seq}})</script> for all <script type="math/tex">\boldsymbol{e_{seq}}</script> sorted in descending order. we also add the maximum smoothed error that isn’t anomalous, <script type="math/tex">max(\left\{ e_s \in \boldsymbol{e_s} \in \boldsymbol{E_{seq}} \vert e_s \ni \boldsymbol{e_a} \right\} )</script>, to the end of <script type="math/tex">\boldsymbol{e_{max}}</script>.</li>
+      <li>The sequence is then stepped through incrementally and the the percent decrease <script type="math/tex">d^{(i)} = ( e_{max}^{(i-1)} - e_{max}^{(i)}) / e_{max}^{(i-1)}</script> at each step <script type="math/tex">i</script> is calculated where <script type="math/tex">i \in \left\{1, 2, ..., (\left\vert \boldsymbol{E_{seq}} \right\vert + 1)\right\}</script>.</li>
+      <li>If at some step <script type="math/tex">i</script> a minimum percentage decrease p is exceeded by <script type="math/tex">d^{(i)}</script>, all <script type="math/tex">e_{max}^{(j)} \in \boldsymbol{e_{max}} \vert j \lt i</script> and their corresponding anomaly sequences remain anomalies.</li>
+      <li>If the minimum decrease p in not met by <script type="math/tex">d^{(i)}</script> and for all subsequent errors <script type="math/tex">d^{(i)}, d^{(i+1)}, ..., d^{(i+\left\vert \boldsymbol{E_{seq}} \right\vert + 1)}</script> those smoothed error sequences are reclassified as nominal.</li>
+      <li>이와 같은 pruning 과정은 정상적인 흐름에서의 노이즈가 어노말리로 판단되는 것을 방지합니다. 또한 단순히 값과 값을 여러번 비교하여 판단하는 것보다 잠재가능성이 있는 비정상적인 시퀀스 중에 맥시멈 에러갓을 비교하는 것이 더 효율적이라는 장점이 있습니다.</li>
     </ul>
   </li>
-  <li><b>Learning from History</b></li>
+  <li><b>Learning from History</b>
+    <ul>
+      <li>false postive를 감소시키는 두번째 전략은 적은양이더라도 과거의 비정상 값들 또는 라벨링된 데이터를 적용시키는 것입니다. 각 채널 데이터에서 일정 비율 이상 수집된 값들을 어노말리로 판단하여 미니멈 값 <script type="math/tex">s_{min}</script>로 설정합니다. 이후 새로운 값들 중 <script type="math/tex">s \lt s_{min}</script>조건을 만족하는 경우 정상값으로 분류합니다.  <script type="math/tex">s_{min}</script>는 precision과 recall사이의 적절한 밸러스가 되도록 설정할수 있습니다.</li>
+      <li>또는 유저가 제공하는 라벨링 정보를 이용하여 <script type="math/tex">s_{min}</script>를 설정할수도 있습니다.</li>
+    </ul>
+  </li>
 </ul>
+
+<p><img src="/assets/img/2019-03-15/fig3.png" width="550" /><br /></p>
 
         
       </section>
@@ -428,7 +442,7 @@
 
 
         
-          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-03-15T00:00:00+08:00">March 15, 2019</time></p>
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2019-03-15T00:00:00+09:00">March 15, 2019</time></p>
         
       </footer>
 
