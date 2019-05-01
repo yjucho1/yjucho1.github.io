@@ -143,4 +143,9 @@ var store = [{
         "excerpt":"Kyle Hundman et al (2018 KDD, NASA) Implementation : https://github.com/khundman/telemanom Abstract NASA의 우주선은 많은 양의 원격 데이터를 송신합니다. NASA 연구원들은 우주선이 보내는 데이터들을 이용해 엔지니어의 모니터링 부담과 운영 비용을 줄이기 위해서 어노말리 디텍션 시스템을 구축/개선하고 있습니다. 이 논문은 우주선 데이터에 적용가능한 어노말리 디텍션 알고리즘을 제안합니다. expert-labeled 어노말리 데이터가 포함된 Soil...","categories": ["Deep Learning paper","Time-series"],
         "tags": [],
         "url": "http://localhost:4000/deep%20learning%20paper/time-series/Nonparametric-Dynamic-Thresholding/",
+        "teaser":null},{
+        "title": "Dynamic Time Warping(DTW)",
+        "excerpt":"두 시계열 데이터간의 유사도를 어떻게 계산할 수 있을까? 두 시계열이 동일한 길이의 시퀀스라면 단순히 상관계수를 구하는 것이 가능하지만, 현실 세계의 시계열 데이터는 그렇지 않은 경우가 많습니다. 예를 들어 아래와 같은 두 시계열 데이터를 살펴보겠습니다. import matplotlib.pyplot as pltts1 = [1, 5, 3, 4, 7, 6]ts2 = [0, 2, 6, 3,...","categories": ["Time-series"],
+        "tags": [],
+        "url": "http://localhost:4000/time-series/dtw/",
         "teaser":null}]
