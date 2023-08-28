@@ -155,7 +155,12 @@ var store = [{
         "url": "http://localhost:4000/time-series/LTSF-CD-and-CI/",
         "teaser":null},{
         "title": "SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series",
-        "excerpt":"Huijben, Iris AM, et al. (ICLR poster 2023) self-organizing map (SOM) an unsupervised machine learning technique used to produce a low-dimensional (typically two-dimensional) representation of a higher dimensional data set while preserving the topological structure of the data K개의 node\\(\\phi\\)를 가정하고 각 데이터 포인트 \\(z\\)를 1개의 카운터파트 노드(winning node) \\(q_{\\phi}(z)\\)로...","categories": ["s"],
+        "excerpt":"Huijben, Iris AM, et al. (ICLR poster 2023) self-organizing map (SOM) an unsupervised machine learning technique used to produce a low-dimensional (typically two-dimensional) representation of a higher dimensional data set while preserving the topological structure of the data K개의 node\\(\\phi\\)를 가정하고 각 데이터 포인트 \\(z\\)를 1개의 카운터파트 노드(winning node) \\(q_{\\phi}(z)\\)로...","categories": ["unsupervised learning","Time-series"],
         "tags": [],
-        "url": "http://localhost:4000/s/SOMCPC/",
+        "url": "http://localhost:4000/unsupervised%20learning/time-series/SOMCPC/",
+        "teaser":null},{
+        "title": "time series representation learning with consistency ",
+        "excerpt":"Temporal consistency Tonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020 Subseries consistency Franceschi, Jean-Yves, Aymeric Dieuleveut, and Martin Jaggi. “Unsupervised scalable representation learning for multivariate time series.” Advances in neural information processing systems 32 (2019)...","categories": ["Time-series","consistency injection"],
+        "tags": [],
+        "url": "http://localhost:4000/time-series/consistency%20injection/consistency/",
         "teaser":null}]

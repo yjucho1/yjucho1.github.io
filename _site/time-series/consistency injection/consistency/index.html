@@ -9,38 +9,38 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series - yjucho’s blog</title>
-<meta name="description" content="Huijben, Iris AM, et al. (ICLR poster 2023)">
+<!-- begin _includes/seo.html --><title>time series representation learning with consistency  - yjucho’s blog</title>
+<meta name="description" content="Temporal consistencyTonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020">
 
 
 
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series">
-<meta property="og:url" content="http://localhost:4000/s/SOMCPC/">
+<meta property="og:title" content="time series representation learning with consistency">
+<meta property="og:url" content="http://localhost:4000/time-series/consistency%20injection/consistency/">
 
 
-  <meta property="og:description" content="Huijben, Iris AM, et al. (ICLR poster 2023)">
-
-
-
-
-
-
-
-  <meta property="article:published_time" content="2023-08-22T00:00:00+09:00">
+  <meta property="og:description" content="Temporal consistencyTonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020">
 
 
 
 
 
-  
+
+
+  <meta property="article:published_time" content="2023-08-28T00:00:00+09:00">
+
+
+
+
 
   
 
+  
 
-<link rel="canonical" href="http://localhost:4000/s/SOMCPC/">
+
+<link rel="canonical" href="http://localhost:4000/time-series/consistency%20injection/consistency/">
 
 
 
@@ -263,15 +263,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series">
-    <meta itemprop="description" content="Huijben, Iris AM, et al. (ICLR poster 2023)">
-    <meta itemprop="datePublished" content="August 22, 2023">
+    <meta itemprop="headline" content="time series representation learning with consistency">
+    <meta itemprop="description" content="Temporal consistencyTonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020">
+    <meta itemprop="datePublished" content="August 28, 2023">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series
+          <h1 id="page-title" class="page__title" itemprop="headline">time series representation learning with consistency
 </h1>
           
         </header>
@@ -279,36 +279,42 @@
 
       <section class="page__content" itemprop="text">
         
-        <p><b>Huijben, Iris AM, et al. (ICLR poster 2023)</b></p>
+        <h2 id="temporal-consistency">Temporal consistency</h2>
+<p>Tonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020</p>
 
-<h2 id="self-organizing-map-som">self-organizing map (SOM)</h2>
+<h2 id="subseries-consistency">Subseries consistency</h2>
+<p>Franceschi, Jean-Yves, Aymeric Dieuleveut, and Martin Jaggi. “Unsupervised scalable representation learning for multivariate time series.” Advances in neural information processing systems 32 (2019)</p>
+
+<h2 id="transformation-consistency">Transformation consistency</h2>
+<p>Eldele, Emadeldeen, et al. “Time-series representation learning via temporal and contextual contrasting.” arXiv preprint arXiv:2106.14112 (IJCAI 2021).</p>
 <ul>
-  <li>an unsupervised machine learning technique used to produce a low-dimensional (typically two-dimensional) representation of a higher dimensional data set while <code class="language-plaintext highlighter-rouge">preserving the topological structure</code> of the data</li>
-  <li>K개의 node\(\phi\)를 가정하고 각 데이터 포인트 \(z\)를 1개의 카운터파트 노드(winning node) \(q_{\phi}(z)\)로 할당함</li>
+  <li>weak augmentation : jitter-and scale</li>
+  <li>strong augmentation : permutation-and-jitter</li>
+  <li>a tough cross-view prediction task by using the context of the strong
+augmentation \(c^s_t\) to predict the future timesteps of the weak augmentation \(z^w
+_{t+k}\) and vice versa  (temporal contrasting module)</li>
+  <li>\(c_t^{i+}\) as the positive sample of \(c_t^{i}\) that comes from the other augmented view of the same inut (contextual contrasting module)</li>
 </ul>
 
-\[q_{\phi}(z) = \phi[argmin_i(||\phi, z||_2^2)] \\\]
+<p><img src="/assets/img/2023-08-28/fig_transf.png" width="500" /><br /></p>
 
-<p>At training, each ϕi is updated as follows</p>
-
-\[\phi(i)^{(n+1)} = \phi(i)^{(n)} + \eta^{(n)}\mathcal{S}_i(q_{\phi}(z))(z - \phi(i)^{(n)} ) \\
-where \ \mathcal{S}_i(q_{\phi}(z)) = \text{exp}(-\frac{d_i^{(n)}}{2(\sigma^{(n)})^2}) \\
-d_i^{(n)} = ||\mathcal{P}[q_{\phi}(z)],\mathcal{P}[\phi_i^{(n)}]||_2^{2} \\
-\sigma^{(n)} =\sigma^{(0)}\text{exp}(-\frac{n}{\lambda})\]
-
+<h2 id="contextual-consistency">Contextual consistency</h2>
+<p>Yue, Zhihan, et al. “Ts2vec: Towards universal representation of time series.” Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 36. No. 8. 2022.</p>
 <ul>
-  <li>winning node와 그와 가가운 노드들은 데이터 z와 가까운 쪽으로 업데이트됨</li>
-  <li>\(\eta^{(n)}\) : decreasing learning rate</li>
-  <li>\mathcal{S}<em>i(q</em>{\phi}(z)) : distance from the winning node</li>
+  <li>random cropping : randomly samples two overlapping time segments [a1, b1], [a2, b2] a1&lt;=a2&lt;=b1&lt;=b2 (the overlapped segment [a2, b1] should be consistent for two context views)</li>
+  <li>timestamp masking : randomly mask the latent vector \(z_i\)</li>
+  <li>hierarchical constrative loss encapsulate representations in different levels of granularity</li>
 </ul>
 
-<h2 id="som-cpc">SOM-CPC</h2>
-<ul>
-  <li>a representation learning model that learns to map windows of time series data to a structured 2D grid for the purpose of pattern discovery
-<img src="/assets/img/2023-08-22/fig1.png" /><br /></li>
-</ul>
+<p><img src="/assets/img/2023-08-28/fig_contextual.png" /><br /></p>
 
-<p><code class="language-plaintext highlighter-rouge">TBU</code></p>
+<h2 id="frequency-consistency">Frequency consistency</h2>
+<p>Zhang, Xiang, et al. “Self-supervised contrastive pre-training for time series via time-frequency consistency.” Advances in Neural Information Processing Systems 35 (2022): 3988-4003.</p>
+
+<h2 id="multi-granularity">Multi-granularity</h2>
+<p>Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022.</p>
+
+<p>TBU</p>
 
         
       </section>
@@ -331,34 +337,38 @@ d_i^{(n)} = ||\mathcal{P}[q_{\phi}(z)],\mathcal{P}[\phi_i^{(n)}]||_2^{2} \\
     
       
       
-      <a href="/categories/#s" class="page__taxonomy-item" rel="tag">s</a>
+      <a href="/categories/#consistency-injection" class="page__taxonomy-item" rel="tag">consistency injection</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#time-series" class="page__taxonomy-item" rel="tag">Time-series</a>
     
     </span>
   </p>
 
 
         
-          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-08-22T00:00:00+09:00">August 22, 2023</time></p>
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-08-28T00:00:00+09:00">August 28, 2023</time></p>
         
       </footer>
 
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=SOM-CPC%3A+Unsupervised+Contrastive+Learning+with+Self-Organizing+Maps+for+Structured+Representations+of+High-Rate+Time+Series%20http%3A%2F%2Flocalhost%3A4000%2Fs%2FSOMCPC%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=time+series+representation+learning+with+consistency+%20http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fs%2FSOMCPC%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fs%2FSOMCPC%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fs%2FSOMCPC%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/time-series/LTSF-CD-and-CI/" class="pagination--pager" title="The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting
+      <a href="/unsupervised%20learning/time-series/SOMCPC/" class="pagination--pager" title="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series
 ">Previous</a>
     
     
@@ -425,8 +435,8 @@ d_i^{(n)} = ||\mathcal{P}[q_{\phi}(z)],\mathcal{P}[\phi_i^{(n)}]||_2^{2} \\
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/s/SOMCPC/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/s/SOMCPC"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/time-series/consistency%20injection/consistency/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/time-series/consistency%20injection/consistency"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');

@@ -9,19 +9,19 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting - yjucho’s blog</title>
-<meta name="description" content="Han, Lu, Han-Jia Ye, and De-Chuan Zhan (2023)">
+<!-- begin _includes/seo.html --><title>SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series - yjucho’s blog</title>
+<meta name="description" content="Huijben, Iris AM, et al. (ICLR poster 2023)">
 
 
 
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting">
-<meta property="og:url" content="http://localhost:4000/time-series/LTSF-CD-and-CI/">
+<meta property="og:title" content="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series">
+<meta property="og:url" content="http://localhost:4000/unsupervised%20learning/time-series/SOMCPC/">
 
 
-  <meta property="og:description" content="Han, Lu, Han-Jia Ye, and De-Chuan Zhan (2023)">
+  <meta property="og:description" content="Huijben, Iris AM, et al. (ICLR poster 2023)">
 
 
 
@@ -40,7 +40,7 @@
   
 
 
-<link rel="canonical" href="http://localhost:4000/time-series/LTSF-CD-and-CI/">
+<link rel="canonical" href="http://localhost:4000/unsupervised%20learning/time-series/SOMCPC/">
 
 
 
@@ -263,15 +263,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting">
-    <meta itemprop="description" content="Han, Lu, Han-Jia Ye, and De-Chuan Zhan (2023)">
+    <meta itemprop="headline" content="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series">
+    <meta itemprop="description" content="Huijben, Iris AM, et al. (ICLR poster 2023)">
     <meta itemprop="datePublished" content="August 22, 2023">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting
+          <h1 id="page-title" class="page__title" itemprop="headline">SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series
 </h1>
           
         </header>
@@ -279,38 +279,36 @@
 
       <section class="page__content" itemprop="text">
         
-        <p><b>Han, Lu, Han-Jia Ye, and De-Chuan Zhan (2023)</b></p>
+        <p><b>Huijben, Iris AM, et al. (ICLR poster 2023)</b></p>
 
-<p>우왕 2023년ㅎㅎㅎ</p>
-
-<h2 id="abstract">Abstract</h2>
-
-<h2 id="analysis">Analysis</h2>
+<h2 id="self-organizing-map-som">self-organizing map (SOM)</h2>
 <ul>
-  <li>CD전략과 CI전략에서의 yule-walker equation 분석과 train과 test데이터셋의 각 채널별 ACF와 전체 채널의 ACF합 비교해 봄</li>
-  <li>학습데이터로부터 파라미터 \(W\)를 추정한 모델 (\(R(\hat{W})\))의 리스크분석과 CD 및 CI 전락으로 학습된 모델에 대해 각 데이터셋뱔 통계값(train error, test error, diff W, generalization error)를 확인함</li>
+  <li>an unsupervised machine learning technique used to produce a low-dimensional (typically two-dimensional) representation of a higher dimensional data set while <code class="language-plaintext highlighter-rouge">preserving the topological structure</code> of the data</li>
+  <li>K개의 node\(\phi\)를 가정하고 각 데이터 포인트 \(z\)를 1개의 카운터파트 노드(winning node) \(q_{\phi}(z)\)로 할당함</li>
 </ul>
 
-<h2 id="practical-guide">Practical Guide</h2>
+\[q_{\phi}(z) = \phi[argmin_i(||\phi, z||_2^2)] \\\]
+
+<p>At training, each ϕi is updated as follows</p>
+
+\[\phi(i)^{(n+1)} = \phi(i)^{(n)} + \eta^{(n)}\mathcal{S}_i(q_{\phi}(z))(z - \phi(i)^{(n)} ) \\
+where \ \mathcal{S}_i(q_{\phi}(z)) = \text{exp}(-\frac{d_i^{(n)}}{2(\sigma^{(n)})^2}) \\
+d_i^{(n)} = ||\mathcal{P}[q_{\phi}(z)],\mathcal{P}[\phi_i^{(n)}]||_2^{2} \\
+\sigma^{(n)} =\sigma^{(0)}\text{exp}(-\frac{n}{\lambda})\]
+
 <ul>
-  <li>이전 섹션을 통해서 CD 학습전략이 capacity는 높지만, robustness 측면에서는 떨어지는 것을 확인하였다. 반대로 CI 학습전략은 robustness 측면에서는 강건함을 보였다.</li>
-  <li>이번 섹션은 위와 같은 특성을 고려하여 CD 전략을 개선함으로써 CI 전략의 성능(capacity)보다 더 좋은 성능을 낼수있음을 실험적으로 확인하고자 한다.</li>
+  <li>winning node와 그와 가가운 노드들은 데이터 z와 가까운 쪽으로 업데이트됨</li>
+  <li>\(\eta^{(n)}\) : decreasing learning rate</li>
+  <li>\mathcal{S}<em>i(q</em>{\phi}(z)) : distance from the winning node</li>
 </ul>
 
-<h3 id="predict-residuals-with-regularization">Predict Residuals with Regularization</h3>
-<p><img src="/assets/img/2023-08-22/fig7.png" /><br />
-위에 Fig 7은 실제 값과, CD와 CI 전략간의 예측값을 비교하여 살펴본 결과, CD 학습에 의한 모델이 sharp하며, 강견하지 않은(non-robust) 예측값을 생성하는 것을 예시로 보여주고 있다. 이러한 현상을 개선하기 위해 이 연구에서는 regularization를 이용하며 Residual을 예측하는 objective를 제안하였다.</p>
+<h2 id="som-cpc">SOM-CPC</h2>
+<ul>
+  <li>a representation learning model that learns to map windows of time series data to a structured 2D grid for the purpose of pattern discovery
+<img src="/assets/img/2023-08-22/fig1.png" /><br /></li>
+</ul>
 
-\[min_{f} \frac{1}{N} \sum_{i=1}^{N} \ell (f(X^{(i)}-N^{(i)})+N^{(i)}, Y^{(i)}) + \lambda\Omega(f)
-\\ where \ N^{(i)}=X_{:,L}^{(i)}\]
-
-<p>\(N^{(i)}\)는 입력값 X의 마지막 값입니다. reqularization term \(\Omega\)는 pytorch의 L2를 사용하였다고 한다.</p>
-
-<p><img src="/assets/img/2023-08-22/table4.png" /><br />
-Table4는 실험 결과를 보여준다. Linear 모델과 Transformer 모델에 제안한 방법(PRReg)를 목적식으로 사용하였을때 결과로, 적절한 \(\lambda\)를 사용할경우 CI전략보다 더 우수한 성능을 보인다. PRReg는 기본적으로 CD전략이고 regularization term의 \(\lambda\)가 너무 크면 언더피팅되고, 너무 작으면 CD와 마찬가지로 오버피팅되어 robustness가 떨어지는 것을 확인할수 있었다.</p>
-
-<p><img src="/assets/img/2023-08-22/table5.png" /><br />
-PatchTST와 비교 (patchtst가 가장 우수하거나, transfomer+PRReg모델모다 더 나은 성능)</p>
+<p><code class="language-plaintext highlighter-rouge">TBU</code></p>
 
         
       </section>
@@ -333,7 +331,11 @@ PatchTST와 비교 (patchtst가 가장 우수하거나, transfomer+PRReg모델�
     
       
       
-      <a href="/categories/#time-series" class="page__taxonomy-item" rel="tag">Time-series</a>
+      <a href="/categories/#time-series" class="page__taxonomy-item" rel="tag">Time-series</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/#unsupervised-learning" class="page__taxonomy-item" rel="tag">unsupervised learning</a>
     
     </span>
   </p>
@@ -347,24 +349,24 @@ PatchTST와 비교 (patchtst가 가장 우수하거나, transfomer+PRReg모델�
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=The+Capacity+and+Robustness+Trade-off%3A+Revisiting+the+Channel+Independent+Strategy+for+Multivariate+Time+Series+Forecasting%20http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2FLTSF-CD-and-CI%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=SOM-CPC%3A+Unsupervised+Contrastive+Learning+with+Self-Organizing+Maps+for+Structured+Representations+of+High-Rate+Time+Series%20http%3A%2F%2Flocalhost%3A4000%2Funsupervised%2520learning%2Ftime-series%2FSOMCPC%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2FLTSF-CD-and-CI%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Funsupervised%2520learning%2Ftime-series%2FSOMCPC%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2FLTSF-CD-and-CI%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Funsupervised%2520learning%2Ftime-series%2FSOMCPC%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2FLTSF-CD-and-CI%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Funsupervised%2520learning%2Ftime-series%2FSOMCPC%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/time-series/dtw/" class="pagination--pager" title="Dynamic Time Warping(DTW)
+      <a href="/time-series/LTSF-CD-and-CI/" class="pagination--pager" title="The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting
 ">Previous</a>
     
     
-      <a href="/unsupervised%20learning/time-series/SOMCPC/" class="pagination--pager" title="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series
+      <a href="/time-series/consistency%20injection/consistency/" class="pagination--pager" title="time series representation learning with consistency
 ">Next</a>
     
   </nav>
@@ -428,8 +430,8 @@ PatchTST와 비교 (patchtst가 가장 우수하거나, transfomer+PRReg모델�
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/time-series/LTSF-CD-and-CI/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/time-series/LTSF-CD-and-CI"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/unsupervised%20learning/time-series/SOMCPC/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/unsupervised%20learning/time-series/SOMCPC"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');

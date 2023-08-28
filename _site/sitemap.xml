@@ -125,8 +125,12 @@
 <lastmod>2023-08-22T00:00:00+09:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/s/SOMCPC/</loc>
+<loc>http://localhost:4000/unsupervised%20learning/time-series/SOMCPC/</loc>
 <lastmod>2023-08-22T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/time-series/consistency%20injection/consistency/</loc>
+<lastmod>2023-08-28T00:00:00+09:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/about/</loc>
