@@ -281,159 +281,149 @@
         
         <p>지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다.</p>
 
-<p>Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. <script type="math/tex">(X_{t1}, X_{t2})’</script> at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 <script type="math/tex">\{X_{t1}\}</script>와 <script type="math/tex">\{X_{t2}\}</script>를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.</p>
+<p>Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. \((X_{t1}, X_{t2})’\) at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다. 두 컴포넌트 \(\{X_{t1}\}\)와 \(\{X_{t2}\}\)를 각 각 독립적인 univariate time series로 분석할 수 있지만, 만약 두 컴포넌트사이에 dependency가 존재할 경우 이를 고려해서 모델링하는 것이 더 바람직합니다.</p>
 
-<p>랜덤 벡터 <script type="math/tex">\mathbf{X_t} =(X_{t1}, X_{t2})</script>’에 대해서 평균벡터와 공분산 메트릭스는 <script type="math/tex">\mu_t</script>와 <script type="math/tex">\Gamma(t+h, t)</script>와 같이 정의됩니다.</p>
+<p>랜덤 벡터 \(\mathbf{X_t} =(X_{t1}, X_{t2})\)’에 대해서 평균벡터와 공분산 메트릭스는 \(\mu_t\)와 \(\Gamma(t+h, t)\)와 같이 정의됩니다.</p>
 
-<script type="math/tex; mode=display">\mu_t := EX_t = \begin{bmatrix} EX_{t1} \\ EX_{t2} \end{bmatrix}</script>
+\[\mu_t := EX_t = \begin{bmatrix} EX_{t1} \\ EX_{t2} \end{bmatrix}\]
 
-<script type="math/tex; mode=display">% <![CDATA[
-\Gamma(t+h, t) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} Cov(X_{t+h,1}, X_{t1}) & Cov(X_{t+h,1}, X_{t2}) \\ Cov(X_{t+h,2}, X_{t1}) & Cov(X_{t+h,2}, X_{t2}) \end{bmatrix} %]]></script>
+\[\Gamma(t+h, t) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} Cov(X_{t+h,1}, X_{t1}) &amp; Cov(X_{t+h,1}, X_{t2}) \\ Cov(X_{t+h,2}, X_{t1}) &amp; Cov(X_{t+h,2}, X_{t2}) \end{bmatrix}\]
 
-<p>또한 univariate와 마찬가지로 <script type="math/tex">\mu_t</script>와 <script type="math/tex">\Gamma(t+h, t)</script>가 모두 t와 독립적일 때, (weakly) stationary하다고 정의합니다. 이 때의 공분산 메트릭스는 <script type="math/tex">\Gamma(h)</script>로 표기하고, 메트릭스의 diagonal은 각 각 univariate series인 <script type="math/tex">\{X_{t1}\}</script>와 <script type="math/tex">\{X_{t2}\}</script>의 Auto-Covariance Function와 같습니다. 반면 off-diagonal elements는 <script type="math/tex">X_{t+h, i}</script>와 <script type="math/tex">X_{t, i}</script>, <script type="math/tex">i \ne j</script>의 covariances를 나타냅니다. 이 때, <script type="math/tex">\gamma_{12}(h) = \gamma_{21}(-h)</script>	의 특성이 있습니다.</p>
+<p>또한 univariate와 마찬가지로 \(\mu_t\)와 \(\Gamma(t+h, t)\)가 모두 t와 독립적일 때, (weakly) stationary하다고 정의합니다. 이 때의 공분산 메트릭스는 \(\Gamma(h)\)로 표기하고, 메트릭스의 diagonal은 각 각 univariate series인 \(\{X_{t1}\}\)와 \(\{X_{t2}\}\)의 Auto-Covariance Function와 같습니다. 반면 off-diagonal elements는 \(X_{t+h, i}\)와 \(X_{t, i}\), \(i \ne j\)의 covariances를 나타냅니다. 이 때, \(\gamma_{12}(h) = \gamma_{21}(-h)\)	의 특성이 있습니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\Gamma(h) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} \gamma_{11}(h) & \gamma_{12}(h) \\ \gamma_{21}(h) & \gamma_{22}(h) \end{bmatrix} \\ %]]></script>
+\[\Gamma(h) := Cov(\mathbf{X_{t+h}, X_t}) = \begin{bmatrix} \gamma_{11}(h) &amp; \gamma_{12}(h) \\ \gamma_{21}(h) &amp; \gamma_{22}(h) \end{bmatrix} \\\]
 
-<p><script type="math/tex">\mu</script> vector와 <script type="math/tex">\Gamma(h)</script>, <script type="math/tex">\rho_{ij}(h)</script>의 estimator는 다음과 같습니다.</p>
+<p>\(\mu\) vector와 \(\Gamma(h)\), \(\rho_{ij}(h)\)의 estimator는 다음과 같습니다.</p>
 
-<script type="math/tex; mode=display">\bar{\mathbf{X_n}} = \frac{1}{n} \sum_{t=1}^n\mathbf{X_t}</script>
+\[\bar{\mathbf{X_n}} = \frac{1}{n} \sum_{t=1}^n\mathbf{X_t}\]
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-\hat\Gamma(h) & = n^{-1} \sum_{t=1}^{n-h} \left( \mathbf{X_{t+h}} - \bar{\mathbf{X_n}} \right) \left( \mathbf{X_{t}} - \bar{\mathbf{X_n}} \right) \ \ \ \ \ \ \ & for \ 0 \le h \le n-1 \\
-& = \hat\Gamma(-h)'\ \ \ \ \ \ \  & for \ -n+1 \le h \le 0 \\
-\end{align} %]]></script>
+\[\begin{align}
+\hat\Gamma(h) &amp; = n^{-1} \sum_{t=1}^{n-h} \left( \mathbf{X_{t+h}} - \bar{\mathbf{X_n}} \right) \left( \mathbf{X_{t}} - \bar{\mathbf{X_n}} \right) \ \ \ \ \ \ \ &amp; for \ 0 \le h \le n-1 \\
+&amp; = \hat\Gamma(-h)'\ \ \ \ \ \ \  &amp; for \ -n+1 \le h \le 0 \\
+\end{align}\]
 
-<p>correlation between <script type="math/tex">X_{t+h,i}</script> and <script type="math/tex">X_{t,j}</script></p>
+<p>correlation between \(X_{t+h,i}\) and \(X_{t,j}\)</p>
 
-<script type="math/tex; mode=display">\hat{\rho_{ij}}(h) = \hat{\gamma_{ij}}(h) (\hat{\gamma_{ii}}(0)\hat{\gamma_{jj}}(0))^{-1/2}</script>
+\[\hat{\rho_{ij}}(h) = \hat{\gamma_{ij}}(h) (\hat{\gamma_{ii}}(0)\hat{\gamma_{jj}}(0))^{-1/2}\]
 
 <p>이를 m개의 다변량 시계열 데이터로 확대하면 다음과 같습니다.</p>
 
-<script type="math/tex; mode=display">\mathbf{X_t} :=\begin{bmatrix} X_{t1} \\ \vdots \\ X_{tm} \end{bmatrix}</script>
+\[\mathbf{X_t} :=\begin{bmatrix} X_{t1} \\ \vdots \\ X_{tm} \end{bmatrix}\]
 
-<script type="math/tex; mode=display">\mu_t := EX_t = \begin{bmatrix} \mu_{t1} \\ \vdots \\ \mu_{tm} \end{bmatrix}</script>
+\[\mu_t := EX_t = \begin{bmatrix} \mu_{t1} \\ \vdots \\ \mu_{tm} \end{bmatrix}\]
 
-<script type="math/tex; mode=display">% <![CDATA[
-\Gamma(t+h, t) := \begin{bmatrix} \gamma_{11}(t+h, t) & \cdots & \gamma_{1m}(t+h, t) \\ 
-\vdots & \vdots & \vdots \\
-\gamma_{m1}(t+h, t) & \cdots & \gamma_{mm}(t+h, t) \end{bmatrix} \\
-where \ \gamma_{ij}(t+h, t):=Cov(X_{t+h, i}, X_{t, j}) %]]></script>
+\[\Gamma(t+h, t) := \begin{bmatrix} \gamma_{11}(t+h, t) &amp; \cdots &amp; \gamma_{1m}(t+h, t) \\ 
+\vdots &amp; \vdots &amp; \vdots \\
+\gamma_{m1}(t+h, t) &amp; \cdots &amp; \gamma_{mm}(t+h, t) \end{bmatrix} \\
+where \ \gamma_{ij}(t+h, t):=Cov(X_{t+h, i}, X_{t, j})\]
 
 <p><b>Definition</b><br />
-The m-variate series <script type="math/tex">\{\mathbf{X_t}\}</script> is (weakly) stationary if <br />
-(1) <script type="math/tex">\mu_X(t)</script> is independent of t, and <br />
-(2) <script type="math/tex">\Gamma_X(t+h, t)</script> is independent of t for each h.</p>
+The m-variate series \(\{\mathbf{X_t}\}\) is (weakly) stationary if <br />
+(1) \(\mu_X(t)\) is independent of t, and <br />
+(2) \(\Gamma_X(t+h, t)\) is independent of t for each h.</p>
 
-<p>이 때 <script type="math/tex">\gamma_{ij}(\cdot)</script>, <script type="math/tex">i \ne j</script> 는 서로 다른 두 시리즈 <script type="math/tex">\{X_{ti}\}</script>와 <script type="math/tex">\{X_{tj}\}</script> 의 cross-covariance라고 부릅니다. 일반적으로 <script type="math/tex">\gamma_{ij}(\cdot)</script>는 <script type="math/tex">\gamma_{ji}(\cdot)</script>와 같지 않기 때문에 주의하셔야합니다.</p>
+<p>이 때 \(\gamma_{ij}(\cdot)\), \(i \ne j\) 는 서로 다른 두 시리즈 \(\{X_{ti}\}\)와 \(\{X_{tj}\}\) 의 cross-covariance라고 부릅니다. 일반적으로 \(\gamma_{ij}(\cdot)\)는 \(\gamma_{ji}(\cdot)\)와 같지 않기 때문에 주의하셔야합니다.</p>
 
-<p><b>Basic Properties of <script type="math/tex">\Gamma(\cdot)</script>:</b><br />
-(1) <script type="math/tex">\Gamma(h) = \Gamma'(h)</script> \   <br />
-(2) <script type="math/tex">\left\vert\gamma_{ij}(h)\right\vert \le [\gamma_{ii}(0)\gamma_{jj}(0)]^{1/2}</script>, i,j=1,…,m <br />
-(3) <script type="math/tex">\gamma_{ii}(\cdot)</script> is an autocovariance function, i = 1,…,m <br />
-(4) <script type="math/tex">\rho_{ii}(0) = 1</script> for all i</p>
+<p><b>Basic Properties of \(\Gamma(\cdot)\):</b><br />
+(1) \(\Gamma(h) = \Gamma'(h)\) \   <br />
+(2) \(\left\vert\gamma_{ij}(h)\right\vert \le [\gamma_{ii}(0)\gamma_{jj}(0)]^{1/2}\), i,j=1,…,m <br />
+(3) \(\gamma_{ii}(\cdot)\) is an autocovariance function, i = 1,…,m <br />
+(4) \(\rho_{ii}(0) = 1\) for all i</p>
 
 <p>Univariate에서 살펴본 white noise 역시 아래와 같이 다변량 정규분포를 따르는 벡터로 정의됩니다.</p>
 
 <p><b>Definition</b> <br />
-The m-variate series <script type="math/tex">\{Z_t\}</script> is called white noise with mean 0 and covariance matrix <script type="math/tex">\Sigma</script>, written
-<script type="math/tex">\{Z_t\} \sim WN(\mathbf{0}, \Sigma)</script>, <br />
-if <script type="math/tex">\{Z_t\}</script> is stationary with mean vector <script type="math/tex">\mathbf{0}</script> and covariance matrix function <br />
-<script type="math/tex">% <![CDATA[
-\begin{align} \Gamma(h) & = \Sigma, \ \ if \ h = 0 \\ & = 0, \ \ \ \ otherwise. \end{align} %]]></script></p>
+The m-variate series \(\{Z_t\}\) is called white noise with mean 0 and covariance matrix \(\Sigma\), written
+\(\{Z_t\} \sim WN(\mathbf{0}, \Sigma)\), <br />
+if \(\{Z_t\}\) is stationary with mean vector \(\mathbf{0}\) and covariance matrix function <br />
+\(\begin{align} \Gamma(h) &amp; = \Sigma, \ \ if \ h = 0 \\ &amp; = 0, \ \ \ \ otherwise. \end{align}\)</p>
 
-<p>White noise의 선형조합으로 표현되는 m-variate series <script type="math/tex">\{X_t\}</script>를 linear process로 부르며, MA(<script type="math/tex">\infty</script>) 프로세스는 j가 0보다 작은 경우에는 <script type="math/tex">C_j=0</script>인 linear process에 해당합니다.</p>
+<p>White noise의 선형조합으로 표현되는 m-variate series \(\{X_t\}\)를 linear process로 부르며, MA(\(\infty\)) 프로세스는 j가 0보다 작은 경우에는 \(C_j=0\)인 linear process에 해당합니다.</p>
 
 <p><b>Definition</b><br />
-The m-variate series <script type="math/tex">\{X_t\}</script> is a linear process if it has the representation
-<script type="math/tex">\mathbf{X_t} = \sum_{j=-\infty}^\infty C_j \mathbf{Z_{t-j}}, \ \ \ \ \ \{\mathbf{Z_{t-j}}\} \sim WN(\mathbf{0}, \mathbf{\Sigma})</script>,<br />
-where <script type="math/tex">\{C_j\}</script> is a sequence of m X m matrics whose components are absolutely summable.</p>
+The m-variate series \(\{X_t\}\) is a linear process if it has the representation
+\(\mathbf{X_t} = \sum_{j=-\infty}^\infty C_j \mathbf{Z_{t-j}}, \ \ \ \ \ \{\mathbf{Z_{t-j}}\} \sim WN(\mathbf{0}, \mathbf{\Sigma})\),<br />
+where \(\{C_j\}\) is a sequence of m X m matrics whose components are absolutely summable.</p>
 
-<p>또한 causality를 만족하는 모든 ARMA(p, q) 프로세스는 MA(<script type="math/tex">\infty</script>) 프로세스로 변환할 수 있으며, invertibiliy를 만족하는 모든 ARMA(p, q) 프로세스는 AR(<script type="math/tex">\infty</script>) 프로세스로 변환할 수 있습니다. causality 조건을 만족하면 항상 stationary하고, stationary ARMA(p, q) process는 항상 causality를 만족합니다.</p>
+<p>또한 causality를 만족하는 모든 ARMA(p, q) 프로세스는 MA(\(\infty\)) 프로세스로 변환할 수 있으며, invertibiliy를 만족하는 모든 ARMA(p, q) 프로세스는 AR(\(\infty\)) 프로세스로 변환할 수 있습니다. causality 조건을 만족하면 항상 stationary하고, stationary ARMA(p, q) process는 항상 causality를 만족합니다.</p>
 
 <p><b>Causality</b> <br />
-An ARMA(p, q) process <script type="math/tex">\{X_t\}</script> is causal, or a causal function of <script type="math/tex">\{Z_t\}</script>, if there exist matrices <script type="math/tex">\{\Psi_t\}</script> with absolutely summable components such that <br />
-<script type="math/tex">X_t = \sum_{j=0}^{\infty}\Psi_jZ_{t-j}</script> for all t.<br />
+An ARMA(p, q) process \(\{X_t\}\) is causal, or a causal function of \(\{Z_t\}\), if there exist matrices \(\{\Psi_t\}\) with absolutely summable components such that <br />
+\(X_t = \sum_{j=0}^{\infty}\Psi_jZ_{t-j}\) for all t.<br />
 Causality is equivalent to the condition<br />
-<script type="math/tex">det\Phi(z) \ne 0</script> for all <script type="math/tex">z \in \mathbb{C}</script> such that <script type="math/tex">\vert z \vert \le 1</script></p>
+\(det\Phi(z) \ne 0\) for all \(z \in \mathbb{C}\) such that \(\vert z \vert \le 1\)</p>
 
-<p>Causality 조건을 다시 보면 1보다 작은 모든 z에 대해서 <script type="math/tex">\Phi(z)</script>의 determinant는 0이 아니여야합니다.  이는 <b><script type="math/tex">\Phi(z)</script>의 모든 eigenvalue들이 1보다 작아야한다</b> 것과 동일합니다.</p>
+<p>Causality 조건을 다시 보면 1보다 작은 모든 z에 대해서 \(\Phi(z)\)의 determinant는 0이 아니여야합니다.  이는 <b>\(\Phi(z)\)의 모든 eigenvalue들이 1보다 작아야한다</b> 것과 동일합니다.</p>
 
 <p><b> Yule-walker equation</b> <br />
 Yule-walker equation을 이용해 모델의 파라미터를 추정하는 방법에 대해서 살펴보도록 하겠습니다. 실제로는 소프트웨어를 통해 계산되기 때문에 복잡한 계산을 수행할 필요는 없지만, 원리를 이해하는 것을 목적으로 합니다.</p>
 
-<script type="math/tex; mode=display">X_t = \Phi X_{t-1} + Z_t</script>
+\[X_t = \Phi X_{t-1} + Z_t\]
 
-<p>양변에 <script type="math/tex">X_{t-h}'</script>를 곱해줍니다.</p>
+<p>양변에 \(X_{t-h}'\)를 곱해줍니다.</p>
 
-<script type="math/tex; mode=display">X_t X_{t-h}' = \Phi X_{t-1}X_{t-h}' + Z_tX_{t-h}'</script>
+\[X_t X_{t-h}' = \Phi X_{t-1}X_{t-h}' + Z_tX_{t-h}'\]
 
 <p>이후 Expectation을 취해줍니다.</p>
 
-<script type="math/tex; mode=display">E[X_t X_{t-h}'] = \Phi E[ X_{t-1}X_{t-h}' ] + E[Z_tX_{t-h}' ]</script>
+\[E[X_t X_{t-h}'] = \Phi E[ X_{t-1}X_{t-h}' ] + E[Z_tX_{t-h}' ]\]
 
-<p><script type="math/tex">X_t</script>의 평균이 0인 시리즈라고 가정하고, h가 1보다 크거나 같을 때와 h가 0일때로 나눠서 생각해볼수 있습니다.
-<script type="math/tex">% <![CDATA[
-\begin{align}
-\Gamma(h) & = \Phi \Gamma(h-1) + \mathbf{0} \ \ \ \ \ \ for \ h \ge 1 \\
-\Gamma(0) & = \Phi \Gamma(-1) + \Sigma_Z \\
-& = \Phi \Gamma(1)' + \Sigma_Z \ \ \ \ \ \ for \ h =0
-\end{align} %]]></script></p>
+<p>\(X_t\)의 평균이 0인 시리즈라고 가정하고, h가 1보다 크거나 같을 때와 h가 0일때로 나눠서 생각해볼수 있습니다.
+\(\begin{align}
+\Gamma(h) &amp; = \Phi \Gamma(h-1) + \mathbf{0} \ \ \ \ \ \ for \ h \ge 1 \\
+\Gamma(0) &amp; = \Phi \Gamma(-1) + \Sigma_Z \\
+&amp; = \Phi \Gamma(1)' + \Sigma_Z \ \ \ \ \ \ for \ h =0
+\end{align}\)</p>
 
-<p>h가 1일때와 h가 0일때의 두 식을 연립하여 풀면 <script type="math/tex">\Phi</script>를 구할수 있습니다. 
-<script type="math/tex">% <![CDATA[
-\begin{align}
-\Gamma(1) & = \Phi \Gamma(0) + \mathbf{0} \ \ \ \ \ \ for \ h = 1 \\
-\Gamma(0) & = \Phi \Gamma(1) + \Sigma_Z \ \ \ \ \ \ for \ h =0 
-\end{align} %]]></script></p>
+<p>h가 1일때와 h가 0일때의 두 식을 연립하여 풀면 \(\Phi\)를 구할수 있습니다. 
+\(\begin{align}
+\Gamma(1) &amp; = \Phi \Gamma(0) + \mathbf{0} \ \ \ \ \ \ for \ h = 1 \\
+\Gamma(0) &amp; = \Phi \Gamma(1) + \Sigma_Z \ \ \ \ \ \ for \ h =0 
+\end{align}\)</p>
 
 <h3 id="cointegration">Cointegration</h3>
 
-<p>앞선 nonstationary univariate time series에서 <script type="math/tex">\nabla = 1-B</script>를 이용하여 stationary를 만드는 방법을 이야기한 적 있습니다. 만약 <script type="math/tex">\{\nabla^d X_t\}</script>가 어떤 양수 d에 대해서 stationary이나, <script type="math/tex">\{\nabla^{d-1} X_t\}</script>에 대해서는 nonstationary할 때, <script type="math/tex">\{X_t\}</script> is integrated of order d라고 하며, <script type="math/tex">\{X_t\} \sim I(d)</script>라고 표기합니다. 마찬가지로 <script type="math/tex">\{X_t\}</script> 가 k-variate time series일 경우에도, <script type="math/tex">\{\nabla^{d} X_t\}</script>는 j번째(j=1, …, k) 컴포넌트에 <script type="math/tex">(1-B)^d</script> 오퍼레이터를 적용하여 얻은 시리즈를 의미합니다.</p>
+<p>앞선 nonstationary univariate time series에서 \(\nabla = 1-B\)를 이용하여 stationary를 만드는 방법을 이야기한 적 있습니다. 만약 \(\{\nabla^d X_t\}\)가 어떤 양수 d에 대해서 stationary이나, \(\{\nabla^{d-1} X_t\}\)에 대해서는 nonstationary할 때, \(\{X_t\}\) is integrated of order d라고 하며, \(\{X_t\} \sim I(d)\)라고 표기합니다. 마찬가지로 \(\{X_t\}\) 가 k-variate time series일 경우에도, \(\{\nabla^{d} X_t\}\)는 j번째(j=1, …, k) 컴포넌트에 \((1-B)^d\) 오퍼레이터를 적용하여 얻은 시리즈를 의미합니다.</p>
 
 <p>cointegration이라는 개념은 Granger(1981)에서 처음 도입되고, Engle and Granger(1987)가 개발하였습니다. 여기서는 Lukepohl(1993)의 개념을 사용하도록 하겠습니다.</p>
 
-<p>If d is a positive integer, <script type="math/tex">\{\nabla^d X_t\}</script> is stationary and <script type="math/tex">\{\nabla^{d-1} X_t\}</script> is nonstationary, the k-dimensional time series <script type="math/tex">\{X_t\}</script> is integrated of order d (<script type="math/tex">\{X_t\} \sim I(d)</script>).</p>
+<p>If d is a positive integer, \(\{\nabla^d X_t\}\) is stationary and \(\{\nabla^{d-1} X_t\}\) is nonstationary, the k-dimensional time series \(\{X_t\}\) is integrated of order d (\(\{X_t\} \sim I(d)\)).</p>
 
-<p>The I(d) process <script type="math/tex">\{X_t\}</script> is said to be cointegrated with cointegration vector <script type="math/tex">\alpha</script> if <script type="math/tex">\alpha</script> is a k <script type="math/tex">\times</script> 1 vector such that <script type="math/tex">\{\alpha' X_t\}</script> is integrated of order less than d.</p>
-
-<p><b>example</b></p>
-
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-X_t = \sum_{j=1}^t Z_j, & & t =1, 2, ...,  \ \ & \{Z_t\} \sim IID(0, \sigma^2) \\
-Y_t = X_t + W_t, & & t=1, 2, ..., \ \ & \{W_t\} \sim IID(0, \tau^2) \\
-\end{align} %]]></script>
-
-<p>where <script type="math/tex">\{W_t\}</script> is independent of <script type="math/tex">\{Z_t\}</script>. Then <script type="math/tex">\{(X_t, Y_t)'\}</script> is integrated of order 1 and cointegrated with cointegration vector <script type="math/tex">\alpha = (1, -1)'</script></p>
-
-<p>cointegration 개념은 univariate nonstationary time series가 “함께 움직인다”는 아이디어를 설명하는 것입니다.  위의 예제에서 <script type="math/tex">\{X_t\}</script>와 <script type="math/tex">\{Y_t\}</script>는 모두 nonstationary이지만, stationary한 <script type="math/tex">\{W_t\}</script> 부문만 다를뿐 서로 연결되어 있습니다.</p>
-
-<p>cointegration 방식으로 움직이는 시리즈들은 경제학에서 많이 볼 수 있는데, Engle and Granger (1991)에서는 Northern California와 Southern California에서의 토마토 가격인 <script type="math/tex">\{U_t\}</script>, <script type="math/tex">\{V_t\}</script>를 대표적인 예로 설명하였습니다. 두 시리즈는 서로 연결되어 있기때문에 한 도시에서의 토마토 가격이 상승하면, 다른 도시에서의 토마토를 사서 되파는 상황이 가능하고 이 때문에 두 도시의 가격은 v=u 형태의 직선에 가깝게 됩니다.</p>
-
-<p>즉, <script type="math/tex">\{U_t\}</script>, <script type="math/tex">\{V_t\}</script>는 시간의 흐름에 따라 nonstationary하게 움직이지만, <script type="math/tex">(U_t, V_t)'</script> 을 2차원 평면에 점으로 표현하면, v=u 직선에서 약간의 랜덤한 편차가 존재하는 형태로 표현될 것입니다. 이때, 이 직선을 attractor for <script type="math/tex">(U_t, V_t)'</script> 라고 합니다.</p>
+<p>The I(d) process \(\{X_t\}\) is said to be cointegrated with cointegration vector \(\alpha\) if \(\alpha\) is a k \(\times\) 1 vector such that \(\{\alpha' X_t\}\) is integrated of order less than d.</p>
 
 <p><b>example</b></p>
 
-<p>위의 예제에서 <script type="math/tex">\nabla = 1-B</script>를 적용하여 얻은 새로운 시리즈 <script type="math/tex">(U_t, V_t)'</script>라고 하겠습니다.</p>
+\[\begin{align}
+X_t = \sum_{j=1}^t Z_j, &amp; &amp; t =1, 2, ...,  \ \ &amp; \{Z_t\} \sim IID(0, \sigma^2) \\
+Y_t = X_t + W_t, &amp; &amp; t=1, 2, ..., \ \ &amp; \{W_t\} \sim IID(0, \tau^2) \\
+\end{align}\]
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-U_t & =  Z_t \\
-V_t & = Z_t + W_t - W_{t-1}
-\end{align} %]]></script>
+<p>where \(\{W_t\}\) is independent of \(\{Z_t\}\). Then \(\{(X_t, Y_t)'\}\) is integrated of order 1 and cointegrated with cointegration vector \(\alpha = (1, -1)'\)</p>
 
-<p><script type="math/tex">\{(U_t, V_t)'\}</script>는 stationary mutivariate MA(1) process입니다.</p>
+<p>cointegration 개념은 univariate nonstationary time series가 “함께 움직인다”는 아이디어를 설명하는 것입니다.  위의 예제에서 \(\{X_t\}\)와 \(\{Y_t\}\)는 모두 nonstationary이지만, stationary한 \(\{W_t\}\) 부문만 다를뿐 서로 연결되어 있습니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{bmatrix}
+<p>cointegration 방식으로 움직이는 시리즈들은 경제학에서 많이 볼 수 있는데, Engle and Granger (1991)에서는 Northern California와 Southern California에서의 토마토 가격인 \(\{U_t\}\), \(\{V_t\}\)를 대표적인 예로 설명하였습니다. 두 시리즈는 서로 연결되어 있기때문에 한 도시에서의 토마토 가격이 상승하면, 다른 도시에서의 토마토를 사서 되파는 상황이 가능하고 이 때문에 두 도시의 가격은 v=u 형태의 직선에 가깝게 됩니다.</p>
+
+<p>즉, \(\{U_t\}\), \(\{V_t\}\)는 시간의 흐름에 따라 nonstationary하게 움직이지만, \((U_t, V_t)'\) 을 2차원 평면에 점으로 표현하면, v=u 직선에서 약간의 랜덤한 편차가 존재하는 형태로 표현될 것입니다. 이때, 이 직선을 attractor for \((U_t, V_t)'\) 라고 합니다.</p>
+
+<p><b>example</b></p>
+
+<p>위의 예제에서 \(\nabla = 1-B\)를 적용하여 얻은 새로운 시리즈 \((U_t, V_t)'\)라고 하겠습니다.</p>
+
+\[\begin{align}
+U_t &amp; =  Z_t \\
+V_t &amp; = Z_t + W_t - W_{t-1}
+\end{align}\]
+
+<p>\(\{(U_t, V_t)'\}\)는 stationary mutivariate MA(1) process입니다.</p>
+
+\[\begin{bmatrix}
 U_t \\
 V_t
 \end{bmatrix}
 = \begin{bmatrix}
-1 & 0 \\
-0 & 1
+1 &amp; 0 \\
+0 &amp; 1
 \end{bmatrix}
 \begin{bmatrix}
 Z_t \\
@@ -441,16 +431,15 @@ Z_t + W_t
 \end{bmatrix}
 - 
 \begin{bmatrix}
-0 & 0 \\
--1 & 1
+0 &amp; 0 \\
+-1 &amp; 1
 \end{bmatrix}
 \begin{bmatrix}
 Z_{t-1} \\
 Z_{t-1} + W_{t-1}
-\end{bmatrix} %]]></script>
+\end{bmatrix}\]
 
-<p>하지만 <script type="math/tex">\{(U_t, V_t)'\}</script>는 AR(<script type="math/tex">\infty</script>)로 표현될수는 없습니다. 메트릭스 <script type="math/tex">% <![CDATA[
-\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} - z \begin{bmatrix} 0 & 0 \\ -1 & 1 \end{bmatrix} %]]></script> 가 z=1일때 zero determinant이기때문에 causuality condition을 만족하지 않기때문입니다.</p>
+<p>하지만 \(\{(U_t, V_t)'\}\)는 AR(\(\infty\))로 표현될수는 없습니다. 메트릭스 \(\begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} - z \begin{bmatrix} 0 &amp; 0 \\ -1 &amp; 1 \end{bmatrix}\) 가 z=1일때 zero determinant이기때문에 causuality condition을 만족하지 않기때문입니다.</p>
 
 <h2 id="실제-데이터를-이용한-var-forecasting">실제 데이터를 이용한 VAR Forecasting</h2>
 
@@ -466,20 +455,19 @@ Z_{t-1} + W_{t-1}
 <p>statsmodel의 VAR 모듈을 이용해 multivariate time sereis 모델링을 수행할 수 있습니다. VAR 모듈의 select_order 함수는 AIC, BIC, HQIC와 같은 지표를 기준으로 가장 최적의 order를 결정할수 있도록 도와줍니다. 최대 order를 30으로 하고 최적 order를 탐색한 결과, 아래와 같이 AIC 기준으로는 9, BIC 기준으로 5가 결정된 것을 볼 수 있습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s">'pm10Value'</span><span class="p">,</span> <span class="s">'pm25Value'</span><span class="p">]]</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">VAR</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">'H'</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">select_order</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s">'nc'</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="p">.</span><span class="n">tsa</span><span class="p">.</span><span class="n">VAR</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">'H'</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">select_order</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s">'nc'</span><span class="p">)</span>
 <span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="c">## &lt;statsmodels.tsa.vector_ar.var_model.LagOrderResults object. Selected orders are: AIC -&gt; 9, BIC -&gt; 5, FPE -&gt; 9, HQIC -&gt; 5&gt;</span>
-</code></pre></div></div>
+<span class="c1">## &lt;statsmodels.tsa.vector_ar.var_model.LagOrderResults object. Selected orders are: AIC -&gt; 9, BIC -&gt; 5, FPE -&gt; 9, HQIC -&gt; 5&gt;
+</span></code></pre></div></div>
 <p>BIC 기준으로 order 5를 선택하여 모델을 학습한 결과는 아래와 같습니다. 모델이 추정한 파라미터를 이용해 수식으로 적어보면 다음과 같습니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align} \begin{bmatrix} X_t \\ Y_t \end{bmatrix} = & \begin{bmatrix} 0.227950 & 1.021808 \\ 0.013951 & 0.856883 \end{bmatrix} + \begin{bmatrix} X_{t-1} \\ Y_{t-1} \end{bmatrix} + \\ & \begin{bmatrix} 0.175133 & -0.172207 \\ 0.005520 & 0.090531 \end{bmatrix} + \begin{bmatrix} X_{t-2} \\ Y_{t-2} \end{bmatrix} +  \\ & \begin{bmatrix} 0.114712 &-0.170387  \\ -0.000139 & -0.031543 \end{bmatrix} + \begin{bmatrix} X_{t-3} \\ Y_{t-3} \end{bmatrix} + \\ & \begin{bmatrix} 0.07475107 & -0.01361328 \\ -0.00297173 & -0.0174331 \end{bmatrix} +  \begin{bmatrix} X_{t-4} \\ Y_{t-4} \end{bmatrix} + \\ & \begin{bmatrix} 0.16981114 & -0.20771503 \\ 0.00960018 & 0.03822593 \end{bmatrix} + \begin{bmatrix} X_{t-5} \\ Y_{t-5} \end{bmatrix} +  \begin{bmatrix} Z_t \\ W_t \end{bmatrix}\end{align} %]]></script>
+\[\begin{align} \begin{bmatrix} X_t \\ Y_t \end{bmatrix} = &amp; \begin{bmatrix} 0.227950 &amp; 1.021808 \\ 0.013951 &amp; 0.856883 \end{bmatrix} + \begin{bmatrix} X_{t-1} \\ Y_{t-1} \end{bmatrix} + \\ &amp; \begin{bmatrix} 0.175133 &amp; -0.172207 \\ 0.005520 &amp; 0.090531 \end{bmatrix} + \begin{bmatrix} X_{t-2} \\ Y_{t-2} \end{bmatrix} +  \\ &amp; \begin{bmatrix} 0.114712 &amp;-0.170387  \\ -0.000139 &amp; -0.031543 \end{bmatrix} + \begin{bmatrix} X_{t-3} \\ Y_{t-3} \end{bmatrix} + \\ &amp; \begin{bmatrix} 0.07475107 &amp; -0.01361328 \\ -0.00297173 &amp; -0.0174331 \end{bmatrix} +  \begin{bmatrix} X_{t-4} \\ Y_{t-4} \end{bmatrix} + \\ &amp; \begin{bmatrix} 0.16981114 &amp; -0.20771503 \\ 0.00960018 &amp; 0.03822593 \end{bmatrix} + \begin{bmatrix} X_{t-5} \\ Y_{t-5} \end{bmatrix} +  \begin{bmatrix} Z_t \\ W_t \end{bmatrix}\end{align}\]
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s">'nc'</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="s">'nc'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">results</span><span class="p">.</span><span class="n">summary</span><span class="p">())</span>
 </code></pre></div></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Summary of Regression Results   
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Summary of Regression Results   
 ==================================
 Model:                         VAR
 Method:                        OLS
@@ -527,18 +515,18 @@ pm25Value     0.273513   1.000000
 
 <p>Univariate에서와 마찬가지로 모델의 적합성을 검증하기 위해 residual analysis를 수행합니다. residual plot과 residual acf 등을 그려 모델 적합성을 검증합니다. 두 시리즈의 residual acf가 거의 zero에 가가운 것을 볼 수가 있습니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="o">.</span><span class="n">resid</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">results</span><span class="o">.</span><span class="n">plot_acorr</span><span class="p">(</span><span class="n">nlags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">resid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="p">.</span><span class="n">resid</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">results</span><span class="p">.</span><span class="n">plot_acorr</span><span class="p">(</span><span class="n">nlags</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">resid</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 <p><img src="/assets/img/2019-01-07/output_1_0.png" />
 <img src="/assets/img/2019-01-07/output_1_2.png" /></p>
 
 <p>또한 plot_forecast 혹은 forecast 함수를 이용해 미래값을 예측할 수 있습니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="o">.</span><span class="n">plot_forecast</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">plot_stderr</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="p">.</span><span class="n">plot_forecast</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">plot_stderr</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 <p><img src="/assets/img/2019-01-07/output_2_0.png" /></p>
 
@@ -654,7 +642,7 @@ pm25Value     0.273513   1.000000
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

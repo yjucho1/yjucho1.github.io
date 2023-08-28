@@ -333,12 +333,12 @@
   </li>
 </ul>
 
-<script type="math/tex; mode=display">\mbox{We define internal covariate shift(ICS) of activation i at time t  to be the difference } \lVert G_{t, i} - G’_{t, I} \rVert_2  \mbox{ where} \\
+\[\mbox{We define internal covariate shift(ICS) of activation i at time t  to be the difference } \lVert G_{t, i} - G’_{t, I} \rVert_2  \mbox{ where} \\
 G_{t,i} = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t)}, …, W_k^{(t)} ; x^{(t)}, y^{(t)}) \\
-G^\prime_{t,i}  = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t+1)}, …, W_{i-1}^{(t+1)}, W_i^{(t)}, W_{i+1}^{(t)}, …, W_k^{(t)} ; x^{(t)}, y^{(t)})</script>
+G^\prime_{t,i}  = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t+1)}, …, W_{i-1}^{(t+1)}, W_i^{(t)}, W_{i+1}^{(t)}, …, W_k^{(t)} ; x^{(t)}, y^{(t)})\]
 
 <ul>
-  <li><script type="math/tex">G_{t, i}</script>는 모든 레이어가 동시에 업데이트되는 가정에서의 그래디언트(as is typical)이고, <script type="math/tex">G’_{t, I}</script>는 i번째 레이어 이전의 레이어들이 새로운 값으로 업데이트된 후의 그래디언트입니다. 따라서 G와 G’의 차이는 i번째 레이어의 인풋이 변함에 따라 그 파라미터(<script type="math/tex">W_i</script>)의 optimization landscape가 얼마나 변화하는지를 나타냅니다.</li>
+  <li>\(G_{t, i}\)는 모든 레이어가 동시에 업데이트되는 가정에서의 그래디언트(as is typical)이고, \(G’_{t, I}\)는 i번째 레이어 이전의 레이어들이 새로운 값으로 업데이트된 후의 그래디언트입니다. 따라서 G와 G’의 차이는 i번째 레이어의 인풋이 변함에 따라 그 파라미터(\(W_i\))의 optimization landscape가 얼마나 변화하는지를 나타냅니다.</li>
   <li>정의된 지표를 internal covariate shift 정도로 사용하고, batchnorm을 사용했을때와 사용하지 않았을때를 비교했습니다. <i>기존의 Batchnorm 논문의 주장대로라면 batchnorm을 사용하는 경우, G와 G’간의 상관관계가 높아지기 때문에 ICS는 낮아져야합니다.</i></li>
 </ul>
 
@@ -354,13 +354,13 @@ G^\prime_{t,i}  = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t+1)}, …, W_{i-1}^{(t+1
   <li>The smoothing effect of BatchNorm
     <ul>
       <li>그렇다면 왜 BatchNorm이 효과적일까?</li>
-      <li>결론부터 말하면, BatchNorm이 우리가 풀어야할 최적화문제의 landscape를 smooth하게 만들어주기 때문입니다. loss function의 Lipschitzness를 높여줘, 더 효과적인 <script type="math/tex">\beta</script>-smoothness를 갖도록 합니다. loss가 작은 비율로 변화하면 gradient의 변화량도 작아집니다.</li>
+      <li>결론부터 말하면, BatchNorm이 우리가 풀어야할 최적화문제의 landscape를 smooth하게 만들어주기 때문입니다. loss function의 Lipschitzness를 높여줘, 더 효과적인 \(\beta\)-smoothness를 갖도록 합니다. loss가 작은 비율로 변화하면 gradient의 변화량도 작아집니다.</li>
     </ul>
   </li>
 </ul>
 
-<p><script type="math/tex">\mbox{f is L-Lipschitz, If} \left\vert f(x_1) - f(x_2) \right\vert \le L \lVert x_1 - x_2 \rVert, \mbox{for all} x_1 \ and \ x_2 \\
-\mbox{f is } \beta-smooth \mbox{, If its gradients are } \beta-Lipschitz \mbox{i.e, if} \left\vert \nabla f(x_1) - \nabla f(x_2) \right\vert \le \beta \lVert x_1 - x_2 \rVert, \mbox{for all } x_1 \ and \ x_2</script></p>
+<p>\(\mbox{f is L-Lipschitz, If} \left\vert f(x_1) - f(x_2) \right\vert \le L \lVert x_1 - x_2 \rVert, \mbox{for all} x_1 \ and \ x_2 \\
+\mbox{f is } \beta-smooth \mbox{, If its gradients are } \beta-Lipschitz \mbox{i.e, if} \left\vert \nabla f(x_1) - \nabla f(x_2) \right\vert \le \beta \lVert x_1 - x_2 \rVert, \mbox{for all } x_1 \ and \ x_2\)</p>
 <ul>
   <li>
     <p>Non-BatchNorm 네트워크의 loss function은 non-convex하고 flat regions 또는 sharp local minima를 갖고 있고 있어 gradient가 갑자기 사라지거나(flat region), 갑자기 폭발하기도(sharp local minima)하죠. 반면 BatchNorm에 의해 smooth된 loss function은 gradient가 이러한 위험에 빠질 가능성이 더 낮아 더 안정적이고 예측가능한 학습을 할수 있게 됩니다.</p>
@@ -369,14 +369,14 @@ G^\prime_{t,i}  = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t+1)}, …, W_{i-1}^{(t+1
 <img src="/assets/img/2019-02-12/fig4.png" width="550" /><br />
     <ul>
       <li>우선 Loss function의 Lipschitzness를 실험적으로 살펴보았습니다.</li>
-      <li>(Fig4)(a)는 학습시간에 따라 그래디언트에 따라서 움직였을때, loss값이 얼마나 바뀌었는지를 나타냅니다. BatchNorm을 사용한지 않은 바닐라 네트워크에서는 값의 변동폭이 큰 것을 볼수 있습니다. (b)현재 그래디언트 방향과 이전 그래디언트 방향간의 l2 distance를 나타납니다. 마찬가지로 바닐라 네트워크는 그래디언트 간의 거리가 상대적으로 멀고 이는 predictiveness of the gradient가 낮다는 것을 의미합니다. (c)는 effective <script type="math/tex">\beta</script>-smoothness를 나타냅니다. effective라는 것은 그래디언트 방향으로 움직였을때 그래디언트가 얼마나 바뀌는지를 나타내며, 낮을수록 effective하다고 생각합니다. 이 결과도 앞서와 마찬가지로 BatchNorm을 사용한 경우가 더 effective하다고 나타납니다.</li>
+      <li>(Fig4)(a)는 학습시간에 따라 그래디언트에 따라서 움직였을때, loss값이 얼마나 바뀌었는지를 나타냅니다. BatchNorm을 사용한지 않은 바닐라 네트워크에서는 값의 변동폭이 큰 것을 볼수 있습니다. (b)현재 그래디언트 방향과 이전 그래디언트 방향간의 l2 distance를 나타납니다. 마찬가지로 바닐라 네트워크는 그래디언트 간의 거리가 상대적으로 멀고 이는 predictiveness of the gradient가 낮다는 것을 의미합니다. (c)는 effective \(\beta\)-smoothness를 나타냅니다. effective라는 것은 그래디언트 방향으로 움직였을때 그래디언트가 얼마나 바뀌는지를 나타내며, 낮을수록 effective하다고 생각합니다. 이 결과도 앞서와 마찬가지로 BatchNorm을 사용한 경우가 더 effective하다고 나타납니다.</li>
     </ul>
   </li>
   <li>Is BatchNorm the best (only?) way to smoothen the landscape?
     <ul>
       <li>loss function의 landscape을 smooth하게 만드는 것이 BatchNorm방식이 유일한 것일까?</li>
-      <li>실험을 위해서 여기서는 first momentum(평균)은 batchnorm처럼 고정하고 normalizes를 <script type="math/tex">l_p</script>-norm으로 normalizes해보았습니다. (이렇게 정규화된 값들은 더이상 가우시안 분포가 아니고 안정적인 분포를 보장하진 않지만, Fig5에서 나타나듯 BatchNorm과 동일한 성능을 보입니다.</li>
-      <li>논문에서는 Appendix 결과들을 통해서 <script type="math/tex">l_p</script>-normalization 기법들이 covariate shift를 더 많이 일으키지만, Batchnorm과 마찬가지로 standard 네트워크보다 성능이 좋고 landscape의 smoothness를 개선시킨다는 결과를 말해주고 있습니다.</li>
+      <li>실험을 위해서 여기서는 first momentum(평균)은 batchnorm처럼 고정하고 normalizes를 \(l_p\)-norm으로 normalizes해보았습니다. (이렇게 정규화된 값들은 더이상 가우시안 분포가 아니고 안정적인 분포를 보장하진 않지만, Fig5에서 나타나듯 BatchNorm과 동일한 성능을 보입니다.</li>
+      <li>논문에서는 Appendix 결과들을 통해서 \(l_p\)-normalization 기법들이 covariate shift를 더 많이 일으키지만, Batchnorm과 마찬가지로 standard 네트워크보다 성능이 좋고 landscape의 smoothness를 개선시킨다는 결과를 말해주고 있습니다.</li>
     </ul>
   </li>
 </ul>
@@ -491,7 +491,7 @@ G^\prime_{t,i}  = \nabla_{W_i^{(t)}} \mathcal{L}(W_1^{(t+1)}, …, W_{i-1}^{(t+1
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

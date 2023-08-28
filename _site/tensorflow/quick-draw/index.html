@@ -341,7 +341,7 @@
   <li>아래 명령어로 모델을 학습시켜보세요. 데이터가 있는 경로를 올바르게 조정하세요.</li>
 </ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python train_model.py \
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python train_model.py \
     --training_data=rnn_tutorial_data/training.tfrecord-?????-of-????? \
     --eval_data=rnn_tutorial_data/eval.tfrecord-?????-of-????? \
     --classes_file=rnn_tutorial_data/training.tfrecord.classes
@@ -360,11 +360,11 @@ http://download.tensorflow.org/data/quickdraw_tutorial_dataset_v1.tar.gz</p>
 <p>전체 데이터를 다운로드하기 위해서 <a href="https://cloud.google.com/storage/docs/gsutil_install#install">gsutil</a>을 사용하는 것을 추천합니다. 전체 ndjson file은 ~22GB 크기인 것을 참고하세요.</p>
 
 <p>gustil이 잘 설치되었고 데이터 버켓에 접근가능한지 확인하기 위해 아래의 명령어를 수행하세요.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gsutil ls -r "gs://quickdraw_dataset/full/simplified/*"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gsutil ls -r "gs://quickdraw_dataset/full/simplified/*"
 </code></pre></div></div>
 
 <p>아래와 같은 결과가 나타나는지 확인하세요.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gs://quickdraw_dataset/full/simplified/The Eiffel Tower.ndjson
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gs://quickdraw_dataset/full/simplified/The Eiffel Tower.ndjson
 gs://quickdraw_dataset/full/simplified/The Great Wall of China.ndjson
 gs://quickdraw_dataset/full/simplified/The Mona Lisa.ndjson
 gs://quickdraw_dataset/full/simplified/aircraft carrier.ndjson
@@ -372,14 +372,14 @@ gs://quickdraw_dataset/full/simplified/aircraft carrier.ndjson
 </code></pre></div></div>
 <p>그리고나서 폴더를 생성하고 그 폴더에 데이터를 다운로드하세요.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir rnn_tutorial_data
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir rnn_tutorial_data
 cd rnn_tutorial_data
 gsutil -m cp "gs://quickdraw_dataset/full/simplified/*" .
 </code></pre></div></div>
 
 <h3 id="optional-converting-the-data">Optional: Converting the data</h3>
 <p>ndjson 파일을 tf.train.Example 프로토콜을 포함한 TERecord파일로 변환하ㅣ 위해 아래 명령어를 수행하세요.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   python create_dataset.py --ndjson_path rnn_tutorial_data \
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   python create_dataset.py --ndjson_path rnn_tutorial_data \
       --output_path rnn_tutorial_data
 </code></pre></div></div>
 
@@ -388,7 +388,7 @@ gsutil -m cp "gs://quickdraw_dataset/full/simplified/*" .
 <p>이 변환 작업은 더 자세히 아래와 같습니다.</p>
 
 <p>OuickDraw의 원본데이터인 ndjson 파일의 각 라인은 아래와 같은 JSON 형태로 이루어져 있습니다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"word":"cat",
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"word":"cat",
  "countrycode":"VE",
  "timestamp":"2017-03-02 23:25:10.07453 UTC",
  "recognized":true,
@@ -428,7 +428,7 @@ gsutil -m cp "gs://quickdraw_dataset/full/simplified/*" .
 
 <p>분류기를 학습하기 위해서 필요한 것은 word와 drawing 필드입니다. ndjson 파일을 parsing하는 동시에 drawing필드를 [number of points, 3]의 텐서로 변환하기 위해서 아래와 같은 함수를 사용합니다. 이 함수는 클래스 이름을 스트링으로 반환합니다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def parse_line(ndjson_line):
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def parse_line(ndjson_line):
   """Parse an ndjson line and return ink (as np array) and classname."""
   sample = json.loads(ndjson_line)
   class_name = sample["word"]
@@ -479,7 +479,7 @@ gsutil -m cp "gs://quickdraw_dataset/full/simplified/*" .
 
 <p>코드는 아래와 같습니다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inks, lengths, targets = _get_input_tensors(features, targets)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inks, lengths, targets = _get_input_tensors(features, targets)
 convolved = _add_conv_layers(inks)
 final_state = _add_rnn_layers(convolved, lengths)
 logits =_add_fc_layers(final_state)
@@ -487,7 +487,7 @@ logits =_add_fc_layers(final_state)
 
 <h3 id="_get_input_tensors">_get_input_tensors</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## feature dict에서 shape을 얻습니다. 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## feature dict에서 shape을 얻습니다. 
 shapes = features["shape"]
 ## 입력 시퀀스의 길이값을 가진 1D 텐서(사이즈:[batch_size])를 만듭니다.  
 lengths = tf.squeeze(
@@ -505,7 +505,7 @@ if targets is not None:
 <p>param dict의 num_conv와 conv_len 파라미터값을 통해 각 몇개의 컨볼루션 레이어를 쌓을지, 필터의 길이는 어느정도로 할지를 구성합니다.</p>
 
 <p>인풋은 3차원의 포인트들의 시퀀스입니다. 우리는 1D convolutions을 사용하고, 3개의 피처는 채널로 대응되도록 할 것입니다. 이 말은 [batch_size, length, 3] 형태의 텐서를 인풋으로 받고, 아웃풋은 [batch_size, length, number_of_filters] 형태의 텐서라는 말입니다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## inks 데이터를 입력을 받습니다.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## inks 데이터를 입력을 받습니다.
 convolved = inks
 ## params.num_conv에 지정된 수만큼 컨볼루션 레이어를 쌓습니다.
 for i in range(len(params.num_conv)):
@@ -538,7 +538,7 @@ return convolved, lengths
 
 <p>컨볼루션 결과를 bidirectional LSTM의 입력값으로 사용합니다. contrib 라이브러리에서 헬퍼 함수를 이용합니다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>outputs, _, _ = contrib_rnn.stack_bidirectional_dynamic_rnn(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>outputs, _, _ = contrib_rnn.stack_bidirectional_dynamic_rnn(
     cells_fw=[cell(params.num_nodes) for _ in range(params.num_layers)],
     cells_bw=[cell(params.num_nodes) for _ in range(params.num_layers)],
     inputs=convolved,
@@ -550,7 +550,7 @@ return convolved, lengths
 <p>자세한 정보와 CUDA를 이용한 가속 실행은 코드를 참고하세요.</p>
 
 <p>압축된, 고정된 길이의 임베딩을 위해서 LSTM 결과값들을 모두 더합니다. 먼저 배치 영역에서 시퀀스 데이터가 없는 곳은 0으로 채웁니다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mask = tf.tile(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mask = tf.tile(
     tf.expand_dims(tf.sequence_mask(lengths, tf.shape(outputs)[1]), 2),
     [1, 1, tf.shape(outputs)[2]])
 zero_outside = tf.where(mask, outputs, tf.zeros_like(outputs))
@@ -560,14 +560,14 @@ outputs = tf.reduce_sum(zero_outside, axis=1)
 <h3 id="_add_fc_layers">_add_fc_layers</h3>
 <p>인풋의 임베딩이 fully connected layer로 연결됩니다. 소프트맥스 레이어를 사용합니다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tf.layers.dense(final_state, params.num_classes)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tf.layers.dense(final_state, params.num_classes)
 </code></pre></div></div>
 
 <h3 id="loss-predictions-and-optimizer">Loss, predictions, and optimizer</h3>
 
 <p>마지막으로 loss, 옵티마이저, predictions을 만듭니다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cross_entropy = tf.reduce_mean(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cross_entropy = tf.reduce_mean(
     tf.nn.sparse_softmax_cross_entropy_with_logits(
         labels=targets, logits=logits))
 # Add the optimizer.
@@ -592,7 +592,7 @@ return model_fn_lib.ModelFnOps(
 <h2 id="training-and-evaluating-the-model">Training and evaluating the model</h2>
 
 <p>모델을 학습하고 평가하기 위해 Estimator APIs의 함수들을 사용합니다. 학습과 평가를 쉽게 실행하기 위해서 EXperiment APIs를 사용합니다.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  estimator = tf.estimator.Estimator(
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  estimator = tf.estimator.Estimator(
       model_fn=model_fn,
       model_dir=output_dir,
       config=config,
@@ -715,7 +715,7 @@ return model_fn_lib.ModelFnOps(
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

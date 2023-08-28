@@ -331,11 +331,11 @@
   </li>
 </ul>
 
-<script type="math/tex; mode=display">L_G = -V(G,D) - \alpha \mathbb{E}_{x \sim P_G}  \mathbb{E}_{r \sim R} [log Q_D (R = r \vert x^r )], \\
-L_D = V(G,D) - \beta \mathbb{E}_{x \sim P_{data}}  \mathbb{E}_{r \sim R} [log Q_D (R = r \vert x^r )]</script>
+\[L_G = -V(G,D) - \alpha \mathbb{E}_{x \sim P_G}  \mathbb{E}_{r \sim R} [log Q_D (R = r \vert x^r )], \\
+L_D = V(G,D) - \beta \mathbb{E}_{x \sim P_{data}}  \mathbb{E}_{r \sim R} [log Q_D (R = r \vert x^r )]\]
 
 <ul>
-  <li><script type="math/tex">V(G,D)</script>은 GAN의 loss function이고, <script type="math/tex">r \in R</script>은 회전각입니다. 이 논문에서는 <script type="math/tex">R={0도, 90도, 180도, 270도}</script>을 사용하였습니다. 이미지 x가 r degree만큼 회전한 것을 <script type="math/tex">x^r</script>이라고 나타냈으며, <script type="math/tex">Q(R \vert x^r)</script>은 주어진 샘플에 대해서 discriminator의 회전각 예측 분포를 의미합니다.</li>
+  <li>\(V(G,D)\)은 GAN의 loss function이고, \(r \in R\)은 회전각입니다. 이 논문에서는 \(R={0도, 90도, 180도, 270도}\)을 사용하였습니다. 이미지 x가 r degree만큼 회전한 것을 \(x^r\)이라고 나타냈으며, \(Q(R \vert x^r)\)은 주어진 샘플에 대해서 discriminator의 회전각 예측 분포를 의미합니다.</li>
 </ul>
 
 <p><b> Collaborative Adversarial Training</b></p>
@@ -493,7 +493,7 @@ L_D = V(G,D) - \beta \mathbb{E}_{x \sim P_{data}}  \mathbb{E}_{r \sim R} [log Q_
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

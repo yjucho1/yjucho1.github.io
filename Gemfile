@@ -14,3 +14,5 @@ group :jekyll_plugins do
   gem "jemoji"
   gem "jekyll-algolia"
 end
+gem "webrick", "~> 1.8"
+gem "faraday", "< 1.0"

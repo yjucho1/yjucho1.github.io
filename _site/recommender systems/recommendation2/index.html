@@ -281,10 +281,10 @@
         
         <p>추천시스템에 대해서 알아보자! - 지난 1편에서는 앤드류 응의 강의를 통해서 추천시스템의 전반적인 내용에 대해 알아보았습니다. 이번에는 Collaboratvie Filtering에 대해서 더 자세히 알아보고자 합니다.</p>
 
-<p>Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2가지 접근 방식이 있습니다. <code class="highlighter-rouge">neighborhood method</code>와 <code class="highlighter-rouge">latent factor models</code> 입니다.</p>
+<p>Collaborative filtering을 이용해 상품을 추천하는 방법은 크게 2가지 접근 방식이 있습니다. <code class="language-plaintext highlighter-rouge">neighborhood method</code>와 <code class="language-plaintext highlighter-rouge">latent factor models</code> 입니다.</p>
 
 <h2 id="neighborhood-method">Neighborhood method</h2>
-<p><code class="highlighter-rouge">neighborhood method</code>는 아이템간 혹은 유저간 관계를 계산하는 것에 중점을 둡니다.</p>
+<p><code class="language-plaintext highlighter-rouge">neighborhood method</code>는 아이템간 혹은 유저간 관계를 계산하는 것에 중점을 둡니다.</p>
 
 <p>유저 기반의 방법은 해당 유저와 유사한 다른 유저를 찾은 후, 비슷한 유저가 좋아하는 아이템을 추천하는 방식입니다. 그림1에서처럼, 세가지 영화를 좋아하는 Joe를 위해서, 세가지 영화를 동일하게 좋아하는 비슷한 유저를 찾습니다. 이들이 좋아하는 영화 중에서 가장 인기있는 영화인 Saving Private Ryan(라이언 일병 구하기, denoted #1)를 Joe에게 추천할 수 있습니다.</p>
 
@@ -295,58 +295,57 @@
 <p>아이템 기반의 방법은 해당 유저가 좋아하는 아이템과 유사한 아이템을 추천하는 방식입니다. 유사한 아이템은 해당 유저에게 동일한 평가를 받을 가능성이 크기 때문입니다. 예를 들어, Saving Private Ryan와 유사한 영화는 전쟁 영화거나, 톰행크스가 나오거나, 스필버그 감동의 다른 영화일 수 있습니다. 만약 누군가가 Saving Private Ryan를 어떻게 평가할지 궁금하다면, 그 사람이 실제로 본 영화 중에서 Saving Private Ryan와 유사한 영화를 어떻게 평가했는지 찾는 것과 같은 맥락입니다.</p>
 
 <h3 id="similarity">similarity</h3>
-<p><code class="highlighter-rouge">neighborhood method</code>는 두 유저간 혹은 아이템간 유사도를 계산해야합니다. 유사도를 정량적으로 평가하기 위해서 일반적으로 2가지 measure를 사용합니다.</p>
+<p><code class="language-plaintext highlighter-rouge">neighborhood method</code>는 두 유저간 혹은 아이템간 유사도를 계산해야합니다. 유사도를 정량적으로 평가하기 위해서 일반적으로 2가지 measure를 사용합니다.</p>
 
 <p><b> (1) pearson correlation coefficient</b></p>
 
-<p>유저 <script type="math/tex">u</script>와 유저 <script type="math/tex">v</script>의 유사도를 <script type="math/tex">s(u, v)</script>로 나타내면,</p>
+<p>유저 \(u\)와 유저 \(v\)의 유사도를 \(s(u, v)\)로 나타내면,</p>
 
-<p><script type="math/tex">s(u, v) = {
-{\sum_{i \in I_{uv}} (r_{ui} - \mu_u) \cdot (r_{vi} - \mu_v)}\over{\sqrt{\sum_{i \in I_{uv}} {(r_{ui} - \mu_u)}^2} \cdot \sqrt{\sum_{i \in I_{uv}} {(r_{vi} - \mu_v)}^2}}}</script></p>
+<p>\(s(u, v) = {
+{\sum_{i \in I_{uv}} (r_{ui} - \mu_u) \cdot (r_{vi} - \mu_v)}\over{\sqrt{\sum_{i \in I_{uv}} {(r_{ui} - \mu_u)}^2} \cdot \sqrt{\sum_{i \in I_{uv}} {(r_{vi} - \mu_v)}^2}}}\)</p>
 <ul>
-  <li><script type="math/tex">r_{ui}</script>는 사용자 u가 아이템 i에 대해서 평가한 평점</li>
-  <li><script type="math/tex">I_{uv}</script>는 유저 <script type="math/tex">u</script> 와 유저 <script type="math/tex">v</script> 모두에 의해 평가된 아이템의 집합</li>
-  <li><script type="math/tex">\mu_u</script>는 유저 <script type="math/tex">u</script>의 평균 평점과 <script type="math/tex">\mu_v</script>는 유저 <script type="math/tex">v</script>의 평균 평점</li>
+  <li>\(r_{ui}\)는 사용자 u가 아이템 i에 대해서 평가한 평점</li>
+  <li>\(I_{uv}\)는 유저 \(u\) 와 유저 \(v\) 모두에 의해 평가된 아이템의 집합</li>
+  <li>\(\mu_u\)는 유저 \(u\)의 평균 평점과 \(\mu_v\)는 유저 \(v\)의 평균 평점</li>
 </ul>
 
-<p>마찬가지로 아이템 <script type="math/tex">i</script>와 아이템 <script type="math/tex">j</script>의 유사도를 <script type="math/tex">s(i, j)</script>로 나타내면,</p>
+<p>마찬가지로 아이템 \(i\)와 아이템 \(j\)의 유사도를 \(s(i, j)\)로 나타내면,</p>
 
-<p><script type="math/tex">s(i, j) = {
-{\sum_{u \in U_{ij}} (r_{ui} - \mu_i) \cdot (r_{uj} - \mu_j)}\over{\sqrt{\sum_{u \in U_{ij}} {(r_{ui} - \mu_i)}^2} \cdot \sqrt{\sum_{u \in U_{ij}} {(r_{uj} - \mu_j)}^2}}}</script></p>
+<p>\(s(i, j) = {
+{\sum_{u \in U_{ij}} (r_{ui} - \mu_i) \cdot (r_{uj} - \mu_j)}\over{\sqrt{\sum_{u \in U_{ij}} {(r_{ui} - \mu_i)}^2} \cdot \sqrt{\sum_{u \in U_{ij}} {(r_{uj} - \mu_j)}^2}}}\)</p>
 <ul>
-  <li><script type="math/tex">U_{ij}</script>는 아이템 <script type="math/tex">i</script> 와 아이템 <script type="math/tex">j</script>를 모두 평가한 유저들의 집합</li>
-  <li><script type="math/tex">\mu_i</script>는 아이템 <script type="math/tex">i</script>의 평균 평점과 <script type="math/tex">\mu_j</script>는 아이템 <script type="math/tex">j</script>의 평균 평점</li>
+  <li>\(U_{ij}\)는 아이템 \(i\) 와 아이템 \(j\)를 모두 평가한 유저들의 집합</li>
+  <li>\(\mu_i\)는 아이템 \(i\)의 평균 평점과 \(\mu_j\)는 아이템 \(j\)의 평균 평점</li>
 </ul>
 
-<p>의미적으로는 유저 <script type="math/tex">u</script>(혹은 아이템 <script type="math/tex">i</script>) 평점이 1점 증가할때, 유저 <script type="math/tex">v</script>(혹은 아이템 <script type="math/tex">j</script>) 평점은 어느정도 증가/감소하는지를 평가하는 것입니다. 상관계수는 상관관계가 클수록 <script type="math/tex">\pm1</script>에 가까운 값을 갖고, 0일 경우 상관관계가 거의 없는 것을 의미합니다.</p>
+<p>의미적으로는 유저 \(u\)(혹은 아이템 \(i\)) 평점이 1점 증가할때, 유저 \(v\)(혹은 아이템 \(j\)) 평점은 어느정도 증가/감소하는지를 평가하는 것입니다. 상관계수는 상관관계가 클수록 \(\pm1\)에 가까운 값을 갖고, 0일 경우 상관관계가 거의 없는 것을 의미합니다.</p>
 
 <p><b> (2) Cosine Similarity </b></p>
 
 <p>코사인 유사도는 두 non-zero vector간의 코사인 각을 측정하는 것입니다. 
-두 벡터 A와 B의 코사인 유사도는 두 벡터의 내적을 이용해 정의됩니다. 각도 <script type="math/tex">\theta</script>가 0도이면 코사인 유사도는 1이 되고, <script type="math/tex">\theta</script>가 90도이면 코사인 유사도는 0이 됩니다.</p>
+두 벡터 A와 B의 코사인 유사도는 두 벡터의 내적을 이용해 정의됩니다. 각도 \(\theta\)가 0도이면 코사인 유사도는 1이 되고, \(\theta\)가 90도이면 코사인 유사도는 0이 됩니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-A \cdot B & = |A| |B| cos \theta \\ \\
-similarity  =  cos \theta & = \frac{A \cdot B}{|A||B|} \\
-& =  \frac{\sum_{i=1}^{n}A_i \cdot B_i}{\sqrt{\sum_{i=1}^{n}(A_i)^2}{\sqrt{\sum_{i=1}^{n}(B_i)^2}}}
-\end{align} %]]></script>
+\[\begin{align}
+A \cdot B &amp; = |A| |B| cos \theta \\ \\
+similarity  =  cos \theta &amp; = \frac{A \cdot B}{|A||B|} \\
+&amp; =  \frac{\sum_{i=1}^{n}A_i \cdot B_i}{\sqrt{\sum_{i=1}^{n}(A_i)^2}{\sqrt{\sum_{i=1}^{n}(B_i)^2}}}
+\end{align}\]
 
-<p>유저 <script type="math/tex">u</script>와 유저 <script type="math/tex">v</script>의 유사도를 <script type="math/tex">s(u, v)</script>로 나타내면,</p>
+<p>유저 \(u\)와 유저 \(v\)의 유사도를 \(s(u, v)\)로 나타내면,</p>
 
-<script type="math/tex; mode=display">s(u, v) = \frac{\sum_{i \in I_{uv}} r_{ui} \cdot r_{vi} }{ \sqrt{\sum_{i \in I_{uv}}r_{ui}^2} \sqrt{\sum_{i \in I_{uv}}r_{vi}^2} }</script>
+\[s(u, v) = \frac{\sum_{i \in I_{uv}} r_{ui} \cdot r_{vi} }{ \sqrt{\sum_{i \in I_{uv}}r_{ui}^2} \sqrt{\sum_{i \in I_{uv}}r_{vi}^2} }\]
 
 <ul>
-  <li><script type="math/tex">r_{ui}</script>는 사용자 u가 아이템 i에 대해서 평가한 평점</li>
-  <li><script type="math/tex">I_{uv}</script>는 유저 <script type="math/tex">u</script> 와 유저 <script type="math/tex">v</script> 모두에 의해 평가된 아이템의 집합</li>
+  <li>\(r_{ui}\)는 사용자 u가 아이템 i에 대해서 평가한 평점</li>
+  <li>\(I_{uv}\)는 유저 \(u\) 와 유저 \(v\) 모두에 의해 평가된 아이템의 집합</li>
 </ul>
 
-<p>마찬가지로 아이템 <script type="math/tex">i</script>와 아이템 <script type="math/tex">j</script>의 유사도를 <script type="math/tex">s(i, j)</script>로 나타내면,</p>
+<p>마찬가지로 아이템 \(i\)와 아이템 \(j\)의 유사도를 \(s(i, j)\)로 나타내면,</p>
 
-<script type="math/tex; mode=display">s(i, j) = \frac{\sum_{u \in U_{ij}} r_{ui} \cdot r_{uj} }{ \sqrt{\sum_{u \in U_{ij}}r_{ui}^2} \sqrt{\sum_{u \in U_{ij}}r_{uj}^2} }</script>
+\[s(i, j) = \frac{\sum_{u \in U_{ij}} r_{ui} \cdot r_{uj} }{ \sqrt{\sum_{u \in U_{ij}}r_{ui}^2} \sqrt{\sum_{u \in U_{ij}}r_{uj}^2} }\]
 
 <ul>
-  <li><script type="math/tex">U_{ij}</script>는 아이템 <script type="math/tex">i</script> 와 아이템 <script type="math/tex">j</script>를 모두 평가한 유저들의 집합</li>
+  <li>\(U_{ij}\)는 아이템 \(i\) 와 아이템 \(j\)를 모두 평가한 유저들의 집합</li>
 </ul>
 
 <p>pearson correlation coefficient와 비교하여 평균 평점에 대한 교정이 포함되지 않은 것을 볼수 있습니다.</p>
@@ -467,7 +466,7 @@ similarity  =  cos \theta & = \frac{A \cdot B}{|A||B|} \\
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

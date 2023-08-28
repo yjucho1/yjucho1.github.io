@@ -279,23 +279,23 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>지금까지 우리는 시계열 데이터를 설명하기 위해 <code class="highlighter-rouge">ARMA</code>모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 <code class="highlighter-rouge">ARIMA</code> 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
-<code class="highlighter-rouge">Vector AR</code> 모델도 알아보았습니다.</p>
+        <p>지금까지 우리는 시계열 데이터를 설명하기 위해 <code class="language-plaintext highlighter-rouge">ARMA</code>모델을 살펴보고, non-stationary 시그널의 경우 differecing을 통해서 stationary 시그널을 얻은 후, ARMA를 적용하는 <code class="language-plaintext highlighter-rouge">ARIMA</code> 모델을 공부하였습니다. 또한 여러개의 시그널을 동시에 모델링하도록
+<code class="language-plaintext highlighter-rouge">Vector AR</code> 모델도 알아보았습니다.</p>
 
-<p>이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 <code class="highlighter-rouge">ARMAX</code> 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 <code class="highlighter-rouge">ARFIMA</code> 모델, 3) non-linear 모형의 대표적인 예인 <code class="highlighter-rouge">ARCH</code>, <code class="highlighter-rouge">GARCH</code>에 대해서 설명드리고자 합니다. 각 각의 모델들은 ARIMA 모델들의 확장판으로 기존 모델과의 차이점을 이해하는 것을 목표로 합니다.</p>
+<p>이번 포스팅에서는 1) ARMA 모델에 exogenous(외적 요인) 입력이 추가된 형태인 <code class="language-plaintext highlighter-rouge">ARMAX</code> 모델과 2) 자연수 형태였던 difference order를 유리수로 확장하여 long-term memory를 모델링한 <code class="language-plaintext highlighter-rouge">ARFIMA</code> 모델, 3) non-linear 모형의 대표적인 예인 <code class="language-plaintext highlighter-rouge">ARCH</code>, <code class="language-plaintext highlighter-rouge">GARCH</code>에 대해서 설명드리고자 합니다. 각 각의 모델들은 ARIMA 모델들의 확장판으로 기존 모델과의 차이점을 이해하는 것을 목표로 합니다.</p>
 
 <h2 id="armax---arma-with-exogenous-inputs">ARMAX - ARMA with exogenous inputs</h2>
 
-<p><code class="highlighter-rouge">ARMAX</code>는 일반적인 ARMA(p, q) process에 시간따라 변하는 외적 요인(<code class="highlighter-rouge">exogenous inputs</code>, <script type="math/tex">d_t</script>)을 추가하여 고려하는 모델입니다. ARMA 모델에 과거 b개의 외적 요인 <script type="math/tex">\{d_t\}</script>의 선형 조합이 포함되며, 이에 따라 <script type="math/tex">\eta_1, ..., \eta_k</script>가 모델 파라미터로 추가됩니다.</p>
+<p><code class="language-plaintext highlighter-rouge">ARMAX</code>는 일반적인 ARMA(p, q) process에 시간따라 변하는 외적 요인(<code class="language-plaintext highlighter-rouge">exogenous inputs</code>, \(d_t\))을 추가하여 고려하는 모델입니다. ARMA 모델에 과거 b개의 외적 요인 \(\{d_t\}\)의 선형 조합이 포함되며, 이에 따라 \(\eta_1, ..., \eta_k\)가 모델 파라미터로 추가됩니다.</p>
 
-<p>ARMA(p, q) : <script type="math/tex">X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}</script></p>
+<p>ARMA(p, q) : \(X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j}\)</p>
 
 <p><b>Definition</b>
 ARMAX(p, q, b) :</p>
 
-<script type="math/tex; mode=display">X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j} + \sum_{k=1}^b \eta_k d_{t-k}</script>
+\[X_t = Z_t + \sum_{i=1}^p \phi_i X_{t-i} + \sum_{j=1}^q \theta_j Z_{t-j} + \sum_{k=1}^b \eta_k d_{t-k}\]
 
-<p>statsmodels의 시계열 모형 클래스 <code class="highlighter-rouge">ARMA</code>, <code class="highlighter-rouge">ARIMA</code>, <code class="highlighter-rouge">SARIMAX</code> 등은 모두 외부 시계열의 영향을 포함하기 위한 <code class="highlighter-rouge">exog</code> 라는 인자를 가지고 있습니다. 이 인자에 외부요인에 해당하는 데이터를 지정해주면 <code class="highlighter-rouge">ARMAX</code> 모델이 됩니다.</p>
+<p>statsmodels의 시계열 모형 클래스 <code class="language-plaintext highlighter-rouge">ARMA</code>, <code class="language-plaintext highlighter-rouge">ARIMA</code>, <code class="language-plaintext highlighter-rouge">SARIMAX</code> 등은 모두 외부 시계열의 영향을 포함하기 위한 <code class="language-plaintext highlighter-rouge">exog</code> 라는 인자를 가지고 있습니다. 이 인자에 외부요인에 해당하는 데이터를 지정해주면 <code class="language-plaintext highlighter-rouge">ARMAX</code> 모델이 됩니다.</p>
 
 <p><b>실제 데이터를 이용한 분석</b></p>
 
@@ -308,7 +308,7 @@ ARMAX(p, q, b) :</p>
 
 <p>미세먼지 측정 농도는 온도와 습도에 영향을 받습니다. 측정방식에 따른 한게점이기도 하고, 미세먼지 발생량 자체가 온도, 습도 기상 상태에 따라 달라질 수 있기 때문입니다. 따라서 초미세먼지 농도를 예측함에 있어서 해당 시간대의 기상 데이터를 외부 요인으로 사용하여 모델을 추정해보았습니다.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df = df[['pm25Value', 'temp','hm']]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df = df[['pm25Value', 'temp','hm']]
 df = np.array(df)
 
 arma_mod30 = sm.tsa.ARMA(df[:,0], (3,0)).fit(disp=False)
@@ -320,7 +320,7 @@ predict_pm25 = armax_mod30.predict(dynamic=True)
 print("ARX(3) model's RMSE: ", mean_forecast_err(df[3:,0], predict_pm25))
 </code></pre></div></div>
 <p>output :</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AR(3) model's RMSE:  8.036039331569588
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>AR(3) model's RMSE:  8.036039331569588
 ARX(3) model's RMSE:  7.710071937116329
 </code></pre></div></div>
 
@@ -328,133 +328,126 @@ ARX(3) model's RMSE:  7.710071937116329
 
 <h2 id="arfima---autoregressive-fractionally-integrated-moving-average">ARFIMA - Autoregressive fractionally integrated moving average</h2>
 
-<p>일반적인 ARMA(p, q)모델은 ACF가 빠르게 감소하는 모습을 띕니다. 이러한 형태를 <code class="highlighter-rouge">short-term memory process</code>라고 합니다.</p>
+<p>일반적인 ARMA(p, q)모델은 ACF가 빠르게 감소하는 모습을 띕니다. 이러한 형태를 <code class="language-plaintext highlighter-rouge">short-term memory process</code>라고 합니다.</p>
 
-<script type="math/tex; mode=display">\rho(h) \to 0 \ as \ h \to \infty</script>
+\[\rho(h) \to 0 \ as \ h \to \infty\]
 
-<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다. 이 경우, <a href="/spatio-temporal%20data/time-series/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 설명하였지만, differencing을 반복적으로 수행하더라도 여전히 ACF가 long tail 형태를 띄는 경우가 있습니다. 이를 <code class="highlighter-rouge">long-term memory process</code>라고 하며, <code class="highlighter-rouge">ARFIMA</code> 모델을 사용합니다.</p>
+<p>하지만 실제 사례에서의 시그널의 ACF는 이상적인 것처럼 빠르게 감소하지 않습니다. 이 경우, <a href="/spatio-temporal%20data/time-series/time-series-part3/">Part3</a>에서 알아본 것처럼 differencing 등을 통해서 이상적인 성질(fast dacaying ACF)을 갖는 새로운 시그널로 변환하여 모델링한다고 설명하였지만, differencing을 반복적으로 수행하더라도 여전히 ACF가 long tail 형태를 띄는 경우가 있습니다. 이를 <code class="language-plaintext highlighter-rouge">long-term memory process</code>라고 하며, <code class="language-plaintext highlighter-rouge">ARFIMA</code> 모델을 사용합니다.</p>
 
 <p><b>Definition</b></p>
 
-<script type="math/tex; mode=display">(1-B)^d X_t = Z_t, \ \ \ \ \ 0 \lt d \lt \frac{1}{2}</script>
+\[(1-B)^d X_t = Z_t, \ \ \ \ \ 0 \lt d \lt \frac{1}{2}\]
 
-<p><code class="highlighter-rouge">ARIMA</code>의 <script type="math/tex">(1-B)^d</script> 부분은 d가 양수로 몇번의 differencing을 수행할것인지를 의미했습니다. 하지만 <code class="highlighter-rouge">ARFIMA</code>모델에서는 d가 0과 1/2 사이의 유리수라는 점이 다릅니다. 여기서 <script type="math/tex">(1-B)^d</script>는 “fractionally differenced”된 <script type="math/tex">\Phi(B)</script> 라고 부릅니다.</p>
+<p><code class="language-plaintext highlighter-rouge">ARIMA</code>의 \((1-B)^d\) 부분은 d가 양수로 몇번의 differencing을 수행할것인지를 의미했습니다. 하지만 <code class="language-plaintext highlighter-rouge">ARFIMA</code>모델에서는 d가 0과 1/2 사이의 유리수라는 점이 다릅니다. 여기서 \((1-B)^d\)는 “fractionally differenced”된 \(\Phi(B)\) 라고 부릅니다.</p>
 
-<script type="math/tex; mode=display">X_t = (1-B)^{-d} Z_t
-= \sum_{j=0}^\infty \Theta_j B^j Z_t</script>
+\[X_t = (1-B)^{-d} Z_t
+= \sum_{j=0}^\infty \Theta_j B^j Z_t\]
 
-<p>ACF of <script type="math/tex">X_t</script>:</p>
+<p>ACF of \(X_t\):</p>
 
-<script type="math/tex; mode=display">\rho(h) = \frac{\Gamma(h+d)\Gamma(1-d)}{\Gamma(h-d+1)\Gamma(d)} \sim h^{2d-1} \ for \ large \ h</script>
+\[\rho(h) = \frac{\Gamma(h+d)\Gamma(1-d)}{\Gamma(h-d+1)\Gamma(d)} \sim h^{2d-1} \ for \ large \ h\]
 
-<script type="math/tex; mode=display">\sum_{h=-\infty}^{\infty} |\rho(h)| = \infty</script>
+\[\sum_{h=-\infty}^{\infty} |\rho(h)| = \infty\]
 
-<p>위와 같이 모든 lag에 대한 ACF를 모두 더하면 <script type="math/tex">\infty</script>가 되기 때문에, 이를 <code class="highlighter-rouge">long-term memory process</code>를 설명할 수 있습니다. 추정해야할 모델 파라미터는 <script type="math/tex">d</script>가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다.</p>
+<p>위와 같이 모든 lag에 대한 ACF를 모두 더하면 \(\infty\)가 되기 때문에, 이를 <code class="language-plaintext highlighter-rouge">long-term memory process</code>를 설명할 수 있습니다. 추정해야할 모델 파라미터는 \(d\)가 되며, 일반적인 ARFIMA(p, d, q)는 다음과 같습니다.</p>
 
-<script type="math/tex; mode=display">\Phi(B)(1-B)^d X_t = \Theta(B) Z_t</script>
+\[\Phi(B)(1-B)^d X_t = \Theta(B) Z_t\]
 
 <p><small>statsmodels에는 ARFIMA 기능이 지원되지 않아, 분석 사례는 생략하도록 하겠습니다.</small></p>
 
 <h2 id="arch">ARCH</h2>
 
-<p>앞서 살펴본 모델들은 {X_t}가 이전 값 혹은 white noise 등 과의 선형(linear) 조합으로 설명되는 경우였습니다. 지금부터는 non-linear 모델의 대표적인 예인 <code class="highlighter-rouge">ARCH</code>와 <code class="highlighter-rouge">GARCH</code>를 소개하도록 하겠습니다. 먼저 <code class="highlighter-rouge">ARCH(autoregressive conditional heteroskedasticity)</code> 모델은 다음과 같이 정의됩니다.</p>
+<p>앞서 살펴본 모델들은 {X_t}가 이전 값 혹은 white noise 등 과의 선형(linear) 조합으로 설명되는 경우였습니다. 지금부터는 non-linear 모델의 대표적인 예인 <code class="language-plaintext highlighter-rouge">ARCH</code>와 <code class="language-plaintext highlighter-rouge">GARCH</code>를 소개하도록 하겠습니다. 먼저 <code class="language-plaintext highlighter-rouge">ARCH(autoregressive conditional heteroskedasticity)</code> 모델은 다음과 같이 정의됩니다.</p>
 
 <p><b>Definition</b></p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-X_t & = \sigma_t * Z_t \\
-\sigma_t^2 & = \alpha_0 + \sum_{I=1}^p \alpha_i x_{t-i}^2
-\end{align} %]]></script>
+\[\begin{align}
+X_t &amp; = \sigma_t * Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \sum_{I=1}^p \alpha_i x_{t-i}^2
+\end{align}\]
 
 <p>ARCH(p)를 이해하기 위해서 평균과 분산을 살펴보겠습니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-E[X_t \vert  X_{t-1}, X_{t-2}, …] & = E[\sigma_t * Z_t \vert  X_{t-1}, X_{t-2}, …] \\
-& = \sigma_t E[ Z_t \vert  X_{t-1}, X_{t-2}, …]  \\
-& = 0 \\ 
+\[\begin{align}
+E[X_t \vert  X_{t-1}, X_{t-2}, …] &amp; = E[\sigma_t * Z_t \vert  X_{t-1}, X_{t-2}, …] \\
+&amp; = \sigma_t E[ Z_t \vert  X_{t-1}, X_{t-2}, …]  \\
+&amp; = 0 \\ 
 \\
-E[X_t] & = E_{X_{t-1}, X_{t-2}, …}[E_{X_t \vert  X_{t-1}, X_{t-2}, …} [X_t] ] \\
-&= 0\\
+E[X_t] &amp; = E_{X_{t-1}, X_{t-2}, …}[E_{X_t \vert  X_{t-1}, X_{t-2}, …} [X_t] ] \\
+&amp;= 0\\
 \\
-Var[X_t \vert  X_{t-1}, X_{t-2}, …] & = E[X_t^2 \vert  X_{t-1}, X_{t-2}, …] \\
-& = E[ \sigma_t^2Z_t^2 \vert  X_{t-1}, X_{t-2}, …] \\ 
-& = \sigma_t^2 E[ Z_t^2 \vert  X_{t-1}, X_{t-2}, …] \\
-& = \sigma_t^2 \\ 
+Var[X_t \vert  X_{t-1}, X_{t-2}, …] &amp; = E[X_t^2 \vert  X_{t-1}, X_{t-2}, …] \\
+&amp; = E[ \sigma_t^2Z_t^2 \vert  X_{t-1}, X_{t-2}, …] \\ 
+&amp; = \sigma_t^2 E[ Z_t^2 \vert  X_{t-1}, X_{t-2}, …] \\
+&amp; = \sigma_t^2 \\ 
 \\
-Cov[X_{t+h}, X_t] & = E[X_{t+h} X_t] \\
-& = E_{X_{t+h-1}, X_{t+h-2}, …}[X_t E_{X_{t+h} \vert  X_{t+h-1}, X_{t+h-2}, …} [X_{t+h}] ]\\
-& =0
-\end{align} %]]></script>
+Cov[X_{t+h}, X_t] &amp; = E[X_{t+h} X_t] \\
+&amp; = E_{X_{t+h-1}, X_{t+h-2}, …}[X_t E_{X_{t+h} \vert  X_{t+h-1}, X_{t+h-2}, …} [X_{t+h}] ]\\
+&amp; =0
+\end{align}\]
 
-<p><script type="math/tex">\{X_t\}</script>의 평균은 0이고, lag=h인 관측값간의 공분산은 0입니다. 즉 시간에 따라 변하지 않는 성질을 가지고 있습니다. (<script type="math/tex">\{X_t\}</script>가 white noise라는 것을 의미합니다) 하지만 <script type="math/tex">Var[X_t]=\sigma_t^2</script>이기때문에, nonstationary합니다.  <script type="math/tex">\sigma_t^2</script>를 volatility 라고 부르기도 합니다.</p>
+<p>\(\{X_t\}\)의 평균은 0이고, lag=h인 관측값간의 공분산은 0입니다. 즉 시간에 따라 변하지 않는 성질을 가지고 있습니다. (\(\{X_t\}\)가 white noise라는 것을 의미합니다) 하지만 \(Var[X_t]=\sigma_t^2\)이기때문에, nonstationary합니다.  \(\sigma_t^2\)를 volatility 라고 부르기도 합니다.</p>
 
 <p><b>example</b></p>
 
 <p>ARCH(1) : 
-<script type="math/tex">% <![CDATA[
-\left\{
+\(\left\{
 \begin{align}
-X_t & = \sigma_t * Z_t \\
-\sigma_t^2 & = \alpha_0 + \alpha_1 X_{t-1}^2 \\
+X_t &amp; = \sigma_t * Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \alpha_1 X_{t-1}^2 \\
 \end{align}
-\right. %]]></script></p>
+\right.\)</p>
 
 <p>첫번째 식을 제곱한 후, 두 식을 빼면 다음과 같습니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-X_t^2 & = \sigma_t^2 * Z_t^2 \\
-\alpha_0 + \alpha_1 X_{t-1}^2  & = \sigma_t^2 \\
-X_t^2 - (\alpha_0 + \alpha_1 X_{t-1}^2) & = \sigma_t^2(Z_t^2 - 1) \\
-X_t^2 & = \alpha_0 + \alpha_1 X_{t-1}^2 + \sigma_t^2(Z_t^2 - 1)
-\end{align} %]]></script>
+\[\begin{align}
+X_t^2 &amp; = \sigma_t^2 * Z_t^2 \\
+\alpha_0 + \alpha_1 X_{t-1}^2  &amp; = \sigma_t^2 \\
+X_t^2 - (\alpha_0 + \alpha_1 X_{t-1}^2) &amp; = \sigma_t^2(Z_t^2 - 1) \\
+X_t^2 &amp; = \alpha_0 + \alpha_1 X_{t-1}^2 + \sigma_t^2(Z_t^2 - 1)
+\end{align}\]
 
-<p>마지막 수식을 살펴보면 <script type="math/tex">\{X_t^2\}</script> 가 직전 값인 <script type="math/tex">\{X_{t-1}^2\}</script>에 영향을 받는 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 <script type="math/tex">\{X_t^2\}</script>가 AR(1)인 프로세스와 동일한 것을 알 수 있습니다. 다만 AR(1)의 noise가 non-Gaussian인 것은 주의해야합니다.</p>
+<p>마지막 수식을 살펴보면 \(\{X_t^2\}\) 가 직전 값인 \(\{X_{t-1}^2\}\)에 영향을 받는 auto-regressive 형태로 설명됩니다. 즉, ARCH(1) 모델은 \(\{X_t^2\}\)가 AR(1)인 프로세스와 동일한 것을 알 수 있습니다. 다만 AR(1)의 noise가 non-Gaussian인 것은 주의해야합니다.</p>
 
-<p>ARCH(p) 모델에서 추정해야하는 모델 파라미터는 <script type="math/tex">\alpha_0, \alpha_1</script>으로 Maximum Likelihood Estimation(MLE)를 이용해 추정합니다.</p>
+<p>ARCH(p) 모델에서 추정해야하는 모델 파라미터는 \(\alpha_0, \alpha_1\)으로 Maximum Likelihood Estimation(MLE)를 이용해 추정합니다.</p>
 
 <p>ARCH(p) 모델을 앞서 살펴본 linear 모델들과 합친 joint ARCH model도 생각해볼수 있습니다. 예를 들어, AR(1)-ARCH(1) 모델은 다음과 같습니다.</p>
 
 <p><b>example</b></p>
 
-<p>AR(1)-ARCH(1) : <script type="math/tex">\{X_t\}</script>는 AR(1) process이고, <script type="math/tex">\{Z_t\}</script>가 ARCH인 모델</p>
+<p>AR(1)-ARCH(1) : \(\{X_t\}\)는 AR(1) process이고, \(\{Z_t\}\)가 ARCH인 모델</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\left\{
+\[\left\{
 \begin{align}
-X_t & = \phi X_{t-1} + Z_t \\
-\sigma_t^2 & = \alpha_0 + \alpha_1 Z_{t-1}^2 \\
+X_t &amp; = \phi X_{t-1} + Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \alpha_1 Z_{t-1}^2 \\
 \end{align}
-\right. %]]></script>
+\right.\]
 
 <h2 id="generalized-archgarch">Generalized ARCH(GARCH)</h2>
 
-<p><code class="highlighter-rouge">GARCH</code>는 ARCH 모델의 <script type="math/tex">\sigma_t^2</script>에 auto-regressive한 성질을 추가한 것입니다.</p>
+<p><code class="language-plaintext highlighter-rouge">GARCH</code>는 ARCH 모델의 \(\sigma_t^2\)에 auto-regressive한 성질을 추가한 것입니다.</p>
 
 <p><b>example</b></p>
 
 <p>GARCH(1, 1) : 
-<script type="math/tex">% <![CDATA[
-\left\{
+\(\left\{
 \begin{align}
-X_t & = \sigma_t * Z_t \\
-\sigma_t^2 & = \alpha_0 + \alpha_1 X_{t-1}^2 + \beta_1 \sigma_{t-1}^2 \\
+X_t &amp; = \sigma_t * Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \alpha_1 X_{t-1}^2 + \beta_1 \sigma_{t-1}^2 \\
 \end{align}
-\right. %]]></script></p>
+\right.\)</p>
 
 <p>일반적인 GARCH(p, q) 모델은 다음과 같습니다.</p>
 
 <p><b>Definition</b></p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-X_t & = \sigma_t * Z_t \\
-\sigma_t^2 & = \alpha_0 + \sum_{i=1}^p \alpha_i X_{t-i}^2 + \sum_{j=1}^q \beta_j \sigma_{t-j}^2
-\end{align} %]]></script>
+\[\begin{align}
+X_t &amp; = \sigma_t * Z_t \\
+\sigma_t^2 &amp; = \alpha_0 + \sum_{i=1}^p \alpha_i X_{t-i}^2 + \sum_{j=1}^q \beta_j \sigma_{t-j}^2
+\end{align}\]
 
-<p><script type="math/tex">\{X_t\}</script>가 ARCH(p) 모델일 경우, <script type="math/tex">\{X_t^2\}</script>는 AR(p)모델이 된다는 것을 앞서 설명드렸습니다. 마찬가지로,  <script type="math/tex">\{X_t\}</script>가 GARCH(p, q) 모델일 경우, <script type="math/tex">\{X_t^2\}</script>는 ARMA(p, q)모델이 됩니다.</p>
+<p>\(\{X_t\}\)가 ARCH(p) 모델일 경우, \(\{X_t^2\}\)는 AR(p)모델이 된다는 것을 앞서 설명드렸습니다. 마찬가지로,  \(\{X_t\}\)가 GARCH(p, q) 모델일 경우, \(\{X_t^2\}\)는 ARMA(p, q)모델이 됩니다.</p>
 
 <p><b>실제 데이터를 이용한 분석</b></p>
 
@@ -464,34 +457,34 @@ X_t & = \sigma_t * Z_t \\
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="k">as</span> <span class="n">web</span>
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="n">dt</span>
-<span class="n">st</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">en</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">get_data_yahoo</span><span class="p">(</span><span class="s">'^GSPC'</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">st</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">en</span><span class="p">)</span>
-<span class="n">returns</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="s">'Adj Close'</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-<span class="n">returns</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">st</span> <span class="o">=</span> <span class="n">dt</span><span class="p">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1990</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">en</span> <span class="o">=</span> <span class="n">dt</span><span class="p">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2016</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="p">.</span><span class="n">get_data_yahoo</span><span class="p">(</span><span class="s">'^GSPC'</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">st</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">en</span><span class="p">)</span>
+<span class="n">returns</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="s">'Adj Close'</span><span class="p">].</span><span class="n">pct_change</span><span class="p">().</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">returns</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 <p><img src="/assets/img/2019-01-15/fig2.png" /></p>
 
 <p>수익률 그 자체로는 자기 상관관계가 없지만, 수익률의 제곱값은 자기 상관관계를 갖고 있는 것을 볼 수 있습니다.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">sm</span><span class="o">.</span><span class="n">graphics</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">((</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sm</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">tsa</span><span class="p">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="p">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">lags</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">sm</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">tsa</span><span class="p">.</span><span class="n">plot_acf</span><span class="p">((</span><span class="n">returns</span> <span class="o">-</span> <span class="n">returns</span><span class="p">.</span><span class="n">mean</span><span class="p">())</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div></div>
 <p><img src="/assets/img/2019-01-15/fig4.png" />
 <img src="/assets/img/2019-01-15/fig5.png" /></p>
 
-<p>ARCH모델은 파이썬의 <code class="highlighter-rouge">arch</code>패키지를 통해서 사용할 수 있습니다. ARCH(1)모델로 추정해보도록 하겠습니다.</p>
+<p>ARCH모델은 파이썬의 <code class="language-plaintext highlighter-rouge">arch</code>패키지를 통해서 사용할 수 있습니다. ARCH(1)모델로 추정해보도록 하겠습니다.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">arch</span> <span class="kn">import</span> <span class="n">arch_model</span>
 <span class="n">am1</span> <span class="o">=</span> <span class="n">arch_model</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
-<span class="n">res1</span> <span class="o">=</span> <span class="n">am1</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">res1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<span class="n">res1</span> <span class="o">=</span> <span class="n">am1</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">res1</span><span class="p">.</span><span class="n">summary</span><span class="p">())</span>
 </code></pre></div></div>
 <p>output :</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration:      1,   Func. Count:      5,   Neg. LLF: 10051.187042085134
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration:      1,   Func. Count:      5,   Neg. LLF: 10051.187042085134
 Iteration:      2,   Func. Count:     14,   Neg. LLF: 10047.115662777182
 Iteration:      3,   Func. Count:     23,   Neg. LLF: 9820.333972115874
 Iteration:      4,   Func. Count:     29,   Neg. LLF: 9810.75544390718
@@ -531,7 +524,7 @@ alpha[1]       0.3147  4.866e-02      6.467  9.971e-11 [  0.219,  0.410]
 Covariance estimator: robust
 </code></pre></div></div>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res1</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res1</span><span class="p">.</span><span class="n">plot</span><span class="p">()</span>
 </code></pre></div></div>
 <p><img src="/assets/img/2019-01-15/fig3.png" /></p>
 
@@ -653,7 +646,7 @@ Covariance estimator: robust
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

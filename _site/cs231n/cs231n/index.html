@@ -317,9 +317,9 @@
 
 <p>Sigmoid outputs are not zero-centered. This is undesirable since neurons in later layers of processing in a Neural Network (more on this soon) would be receiving data that is not zero-centered. This has implications on the dynamics during gradient descent, because if the data coming into a neuron is always positive (e.g. x&gt;0 elementwise in f=wTx+b)), then the gradient on the weights w will during backpropagation become either all be positive, or all negative (depending on the gradient of the whole expression f). This could introduce undesirable zig-zagging dynamics in the gradient updates for the weights. However, notice that once these gradients are added up across a batch of data the final update for the weights can have variable signs, somewhat mitigating this issue. Therefore, this is an inconvenience but it has less severe consequences compared to the saturated activation problem above.</p>
 
-<script type="math/tex; mode=display">\frac{dL}{dw} =  \frac{dL}{df}\frac{df}{dw}\\
+\[\frac{dL}{dw} =  \frac{dL}{df}\frac{df}{dw}\\
 \frac{df}{dw} =  x \ and \ x \ are \ all \ positive,\\ 
-the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{df} \ (all \ positive \ or \ all \ negative )</script>
+the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{df} \ (all \ positive \ or \ all \ negative )\]
 
 <h3 id="nesterov-momentum">Nesterov Momentum</h3>
 
@@ -329,26 +329,26 @@ the \ gradient \frac{dL}{dw} \ always \ has \ the \ same \ sign \ as \frac{dL}{d
 <p><img src="https://tensorflowkorea.files.wordpress.com/2017/03/ec8aa4ed81aceba6b0ec83b7-2017-03-22-ec98a4eca084-11-40-58.png" /></p>
 
 <blockquote>
-  <p>현재 위치의 그래디언트 g(<script type="math/tex">\theta_t</script>) 를 이용하는 것이 아니고 현재 위치에서 속도 <script type="math/tex">\mu v_t</script>만큼 전진한 후의 그래디언트 g(<script type="math/tex">\theta_t + \mu v_t</script>) 를 이용합니다. 사람들은 이를 가리켜 선험적으로 혹은 모험적으로 먼저 진행한 후 에러를 교정한다라고 표현합니다. <small> (ref : https://tensorflow.blog/2017/03/22/momentum-nesterov-momentum/) </small></p>
+  <p>현재 위치의 그래디언트 g(\(\theta_t\)) 를 이용하는 것이 아니고 현재 위치에서 속도 \(\mu v_t\)만큼 전진한 후의 그래디언트 g(\(\theta_t + \mu v_t\)) 를 이용합니다. 사람들은 이를 가리켜 선험적으로 혹은 모험적으로 먼저 진행한 후 에러를 교정한다라고 표현합니다. <small> (ref : https://tensorflow.blog/2017/03/22/momentum-nesterov-momentum/) </small></p>
 </blockquote>
 
 <h3 id="optimizer">optimizer</h3>
 
 <p>1) SGD</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while True : 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>while True : 
   dx = compute_gradient(x)
   x += -learning_rate * dx
 </code></pre></div></div>
 
 <p>2) SGD + Momentum</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vx = 0 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vx = 0 
 while True :
   dx = compute_gradient(x)
   vx = rho * vx + dx 
   x += -learning_rate * vx
 </code></pre></div></div>
 <p>3) Nesterov Accelerated Gradient(NAG)</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vx = 0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vx = 0
 while True :
   dx = compute_gradient(x)
   old_vx = vx
@@ -356,21 +356,21 @@ while True :
   x += -rho * old_vx + (1 + rho) * vx
 </code></pre></div></div>
 <p>4) AdaGrad</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grad_squared = 0 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grad_squared = 0 
 while True :
   dx = compute_gradient(x)
   grad_squared += dx * dx
   x += -learning_rate * dx / (np.sqrt(grad_squared) + 1e-7)
 </code></pre></div></div>
 <p>5) RMSProp</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grad_squared = 0 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grad_squared = 0 
 while True :
   dx = compute_gradient(x)
   grad_squared += decay_rate * grad_squared + (1-dacay_rate) * dx * dx
   x += -learning_rate * dx / (np.sqrt(grad_squared) + 1e-7)
 </code></pre></div></div>
 <p>6) Adam</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>first_moment = 0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>first_moment = 0
 second_moment = 0
 for t in range(num_iterations):
   dx = compute_gradient(x)
@@ -651,7 +651,7 @@ minibatch별로 나눠서 그래디언트 업데이트 <br /></p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

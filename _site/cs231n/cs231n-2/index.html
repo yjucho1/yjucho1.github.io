@@ -517,12 +517,11 @@ What are the intermediate features looking for?</p>
 <p><img src="/assets/img/2018-10-11/cs231n-12.png" width="300" /> 
 <img src="/assets/img/2018-10-11/cs231n-13.png" width="300" /></p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-log p_\theta(x^{(i)}) & =  E_z[log p_\theta(x^{(i)}|z)] - D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) + D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z|x^{(i)}))) \\ \\
-E_z[log p_\theta(x^{(i)}|z)] & \  reconstruct \ the \ input \ data \\ \\
-D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) & \  make \ approximate \ posterior \ distribution \ close \ to \ prior \\
-\end{align} %]]></script>
+\[\begin{align}
+log p_\theta(x^{(i)}) &amp; =  E_z[log p_\theta(x^{(i)}|z)] - D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) + D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z|x^{(i)}))) \\ \\
+E_z[log p_\theta(x^{(i)}|z)] &amp; \  reconstruct \ the \ input \ data \\ \\
+D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) &amp; \  make \ approximate \ posterior \ distribution \ close \ to \ prior \\
+\end{align}\]
 
 <ul>
   <li>GAN</li>
@@ -632,7 +631,7 @@ D_{KL}(q_\phi(z|x^{(i)}||p_\theta(z))) & \  make \ approximate \ posterior \ dis
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

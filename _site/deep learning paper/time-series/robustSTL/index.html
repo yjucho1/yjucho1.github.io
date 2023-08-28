@@ -318,16 +318,15 @@
 <h2 id="robust-stl-decomposition">Robust STL Decomposition</h2>
 <h3 id="model-overview">Model Overview</h3>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-y_t & = \tau_t + s_t + r_t, & t = 1, 2, …, N \\
-r_t & = a_t + n_t \\
-\end{align} %]]></script>
+\[\begin{align}
+y_t &amp; = \tau_t + s_t + r_t, &amp; t = 1, 2, …, N \\
+r_t &amp; = a_t + n_t \\
+\end{align}\]
 
-<p>where <script type="math/tex">a_t</script> denotes spike or dip, and <script type="math/tex">n_t</script> denotes the white noise.</p>
+<p>where \(a_t\) denotes spike or dip, and \(n_t\) denotes the white noise.</p>
 
 <ul>
-  <li>시계열 모델은 트렌드(<script type="math/tex">\tau_t</script>), 시즈널리티(<script type="math/tex">s_t</script>), 리마인더(<script type="math/tex">r_t</script>)로 구성되어 있고, 리마인더는 스파크 또는 딥과 같은 어노말리(<script type="math/tex">a_t</script>)와 화이트 노이즈(<script type="math/tex">n_t</script>)로 이루어집니다.</li>
+  <li>시계열 모델은 트렌드(\(\tau_t\)), 시즈널리티(\(s_t\)), 리마인더(\(r_t\))로 구성되어 있고, 리마인더는 스파크 또는 딥과 같은 어노말리(\(a_t\))와 화이트 노이즈(\(n_t\))로 이루어집니다.</li>
   <li>제안하는 알고리즘은 크게 4-steps 으로 각 성분을 분해합니다.
     <ul>
       <li>Denoise time series by applying bilateral filtering</li>
@@ -340,11 +339,10 @@ r_t & = a_t + n_t \\
 
 <h3 id="noise-removal">Noise Removal</h3>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-y^\prime_t & = \sum_{j \in J} w_j^t y_t, & J = t, t \pm 1, …, t \pm H \\
-w_j^t & = \frac{1}{z} e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y_j - y_t \right\vert ^2}{2\delta_i^2}}
-\end{align} %]]></script>
+\[\begin{align}
+y^\prime_t &amp; = \sum_{j \in J} w_j^t y_t, &amp; J = t, t \pm 1, …, t \pm H \\
+w_j^t &amp; = \frac{1}{z} e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y_j - y_t \right\vert ^2}{2\delta_i^2}}
+\end{align}\]
 
 <ul>
   <li>J는 필터의 윈도우를 의미하며, 윈도우 사이즈는 2H+1 입니다.</li>
@@ -354,48 +352,46 @@ w_j^t & = \frac{1}{z} e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^
   <li>After denoising,</li>
 </ul>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-y^\prime_t & = \tau_t + s_t + r^\prime_t, & t = 1, 2, …, N \\
-r^\prime_t & = a_t + (n_t - \hat{n}_t \\
-\end{align} %]]></script>
+\[\begin{align}
+y^\prime_t &amp; = \tau_t + s_t + r^\prime_t, &amp; t = 1, 2, …, N \\
+r^\prime_t &amp; = a_t + (n_t - \hat{n}_t \\
+\end{align}\]
 
-<p>Where the <script type="math/tex">\hat{n}_t = y_t - y^\prime_t</script> is the filtered noise.</p>
+<p>Where the \(\hat{n}_t = y_t - y^\prime_t\) is the filtered noise.</p>
 
 <h3 id="trend-extraction">Trend Extraction</h3>
 <ul>
   <li>시즈널 디퍼런스 오퍼레이터는 같은 주기의 값을 차분하는 것으로 아래와 같이 정의할 수 있습니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-g_t & = \nabla_T y^\prime_t = y^\prime_t - y^\prime_{t-T} \\
-& = \nabla_T \tau_t + \nabla_T s_t + \nabla_T r^\prime_t \\
-& = \sum_{I=0}^{T-1} \nabla \tau_{t-i} + ( \nabla_T s_t + \nabla_T r^\prime_t )
-\end{align} %]]></script>
+\[\begin{align}
+g_t &amp; = \nabla_T y^\prime_t = y^\prime_t - y^\prime_{t-T} \\
+&amp; = \nabla_T \tau_t + \nabla_T s_t + \nabla_T r^\prime_t \\
+&amp; = \sum_{I=0}^{T-1} \nabla \tau_{t-i} + ( \nabla_T s_t + \nabla_T r^\prime_t )
+\end{align}\]
 
 <ul>
-  <li>마지막 줄의 수식에서 첫번째 항이 <script type="math/tex">g_t</script>에 가장 많은 기여를 합니다. <script type="math/tex">s_t</script> and <script type="math/tex">r^\prime_t</script>에 시즈널 디퍼런스 오퍼레이터를 적용하면 값이 매우 작아진다고 가정하기 때문입니다.</li>
-  <li><script type="math/tex">g_t</script>에서 트렌드의 first order differece(<script type="math/tex">\nabla \tau_t</script>)를 구하기 위해서 다음과 같은 최적화 식을 사용합니다.</li>
+  <li>마지막 줄의 수식에서 첫번째 항이 \(g_t\)에 가장 많은 기여를 합니다. \(s_t\) and \(r^\prime_t\)에 시즈널 디퍼런스 오퍼레이터를 적용하면 값이 매우 작아진다고 가정하기 때문입니다.</li>
+  <li>\(g_t\)에서 트렌드의 first order differece(\(\nabla \tau_t\))를 구하기 위해서 다음과 같은 최적화 식을 사용합니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">Minimize \ \sum_{t=T+1}^N \left\vert g_t - \sum_{I=0}^{T-1} \nabla \tau_{t-i} \right\vert + \lambda_1 \sum_{t=2}^N \left\vert \nabla \tau_t \right\vert + \lambda_2 \sum_{t=3}^N \left\vert \nabla^2 \tau_t \right\vert</script>
+\[Minimize \ \sum_{t=T+1}^N \left\vert g_t - \sum_{I=0}^{T-1} \nabla \tau_{t-i} \right\vert + \lambda_1 \sum_{t=2}^N \left\vert \nabla \tau_t \right\vert + \lambda_2 \sum_{t=3}^N \left\vert \nabla^2 \tau_t \right\vert\]
 
 <ul>
   <li>첫번째 항은 LAD를 사용한 emprical error를 의미합니다. sum-of-squares 보다 아웃라이어에 대해서 더 로버스트하기 때문에 LAD를 사용하였습니다.</li>
   <li>두번째와 세번째 항은 각 각 트렌드에 대한 first-order 와 second-order difference operator 입니다.</li>
-  <li>두번째 항은 트렌드 디퍼런스 <script type="math/tex">\nabla \tau_t</script> 가 천천히 변화하지만 종종 갑작스러운 레벨 쉬프트(abrupt level shift)가 있다는 것을 의미합니다.</li>
+  <li>두번째 항은 트렌드 디퍼런스 \(\nabla \tau_t\) 가 천천히 변화하지만 종종 갑작스러운 레벨 쉬프트(abrupt level shift)가 있다는 것을 의미합니다.</li>
   <li>
-    <p>세번째 항은 트렌드가 smooth하고 piecewise linear such that <script type="math/tex">\nabla^2 x_t = \nabla(\nabla x_t)) = x_t -2 x_{t-1} + x_{t-2}</script> are sparse</p>
+    <p>세번째 항은 트렌드가 smooth하고 piecewise linear such that \(\nabla^2 x_t = \nabla(\nabla x_t)) = x_t -2 x_{t-1} + x_{t-2}\) are sparse</p>
   </li>
   <li>이를 매트릭스 형태로 표현하면 다음과 같습니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">\Vert P \nabla \tau - q \Vert _1</script>
+\[\Vert P \nabla \tau - q \Vert _1\]
 
 <p>where the matrix P and vector q are</p>
 
-<script type="math/tex; mode=display">P = \begin{bmatrix}
+\[P = \begin{bmatrix}
 M_{(N-T) \times (N-1)} \\
 \lambda_1 I_{(N-1) \times (N-1)} \\
 \lambda_2 D_{(N-2) \times (N-1)} \\
@@ -403,48 +399,47 @@ M_{(N-T) \times (N-1)} \\
 q = \begin{bmatrix}
 g_{(N-T) \times 1} \\
 0_{(2N-3) \times 1} \\
-\end{bmatrix}</script>
+\end{bmatrix}\]
 
 <p>M and D are Toeplitz matrix (refer to the paper for details)</p>
 
 <ul>
-  <li>위의 최적화식을 통해서 <script type="math/tex">\tau_1</script>에 대한 상대적인 트렌드(relative trend, <script type="math/tex">\tilde{\tau}_t^r</script>)를 구할수 있습니다.</li>
+  <li>위의 최적화식을 통해서 \(\tau_1\)에 대한 상대적인 트렌드(relative trend, \(\tilde{\tau}_t^r\))를 구할수 있습니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\tilde{\tau}_t^r = \tilde{\tau}_t - \tau_1 = 
+\[\tilde{\tau}_t^r = \tilde{\tau}_t - \tau_1 = 
 \begin{cases}
-0, & t=1 \\
-\sum_{I=2}^t \nabla \tilde{\tau}_i, & t \ge 2
-\end{cases} %]]></script>
+0, &amp; t=1 \\
+\sum_{I=2}^t \nabla \tilde{\tau}_i, &amp; t \ge 2
+\end{cases}\]
 
 <ul>
   <li>그리고 나서, 디컴포지션 모델은 아래와 같이 업데이트 됩니다. 
-<script type="math/tex">y_t'' = y_t' - \tilde{\tau}_t^r = s_t + \tau_1 + r_t'' \\
-r_t’’ = a_t + (n_t - \hat{n}_t) +  (\tau_t - \tilde{\tau}_t)</script></li>
+\(y_t'' = y_t' - \tilde{\tau}_t^r = s_t + \tau_1 + r_t'' \\
+r_t’’ = a_t + (n_t - \hat{n}_t) +  (\tau_t - \tilde{\tau}_t)\)</li>
 </ul>
 
 <h3 id="seasonality-extraction">Seasonality Extraction</h3>
 <ul>
-  <li>relative trend component를 분리한 후에는, <script type="math/tex">y’’_t</script>는 시즈널리티로 오염되어 있다고 생각할 수 있습니다.</li>
+  <li>relative trend component를 분리한 후에는, \(y’’_t\)는 시즈널리티로 오염되어 있다고 생각할 수 있습니다.</li>
   <li>
-    <p>기존의 시즈널리티 분해 방법들은 주기가 <script type="math/tex">T</script>인 <script type="math/tex">s_t</script>’를 구하기 위해서는 K개의 연속적인 값 <script type="math/tex">y_{t-KT}, y_{t-(K-1)T}, …, y_{t-T}</script> 만 고려하였습니다. 하지만, 이 방식은 시즈널리 쉬프트 현상을 설명할수 없다는 단점이 있습니다.</p>
+    <p>기존의 시즈널리티 분해 방법들은 주기가 \(T\)인 \(s_t\)’를 구하기 위해서는 K개의 연속적인 값 \(y_{t-KT}, y_{t-(K-1)T}, …, y_{t-T}\) 만 고려하였습니다. 하지만, 이 방식은 시즈널리 쉬프트 현상을 설명할수 없다는 단점이 있습니다.</p>
   </li>
-  <li>여기서는  <script type="math/tex">y’’_{t-KT}</script>를 중심으로 인접한 값들을 고려합니다.  <script type="math/tex">y’’_{t-KT}</script>를 계산할때는 그 값을 중심으로 2H+1개의 인접값들 <script type="math/tex">y’’_{t-KT-H}, y’’_{t-KT-H+1}, …, y’’_{t-KT}, y’’_{t-KT+1}…, y’’_{t-KT+H}</script>를 사용합니다.</li>
-  <li>시즈널 컴포넌트 <script type="math/tex">s_t</script> 는 아래와 같이 of <script type="math/tex">y’’_t</script>의 가중합으로 표현됩니다.</li>
+  <li>여기서는  \(y’’_{t-KT}\)를 중심으로 인접한 값들을 고려합니다.  \(y’’_{t-KT}\)를 계산할때는 그 값을 중심으로 2H+1개의 인접값들 \(y’’_{t-KT-H}, y’’_{t-KT-H+1}, …, y’’_{t-KT}, y’’_{t-KT+1}…, y’’_{t-KT+H}\)를 사용합니다.</li>
+  <li>시즈널 컴포넌트 \(s_t\) 는 아래와 같이 of \(y’’_t\)의 가중합으로 표현됩니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">\tilde{s}_t = \sum_{(t’, j) \in \Omega} w^t_{(t’,j’)}y’’_j</script>
+\[\tilde{s}_t = \sum_{(t’, j) \in \Omega} w^t_{(t’,j’)}y’’_j\]
 
-<p>Where the <script type="math/tex">w^t_{(t’,j’)}</script> and <script type="math/tex">\Omega</script> are defined as</p>
+<p>Where the \(w^t_{(t’,j’)}\) and \(\Omega\) are defined as</p>
 
-<script type="math/tex; mode=display">w^t_{(t’,j’)} = \frac{1}{z}e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y’’_j - y’’_{t’} \right\vert ^2}{2\delta_i^2}} \\
+\[w^t_{(t’,j’)} = \frac{1}{z}e^{-\frac{\left\vert j- t \right\vert ^2}{2\delta_d^2}} e^{-\frac{\left\vert y’’_j - y’’_{t’} \right\vert ^2}{2\delta_i^2}} \\
 \Omega = \{(t’,j) \vert (t’=t-k \times T, j= t’ \pm h )\} \\
-k=1, 2, …, K; \ h=0, 1, …, H</script>
+k=1, 2, …, K; \ h=0, 1, …, H\]
 
 <ul>
   <li>시즈널티리를 분리한 후에는, 리마이더 시그널은 아래와 같이 표현됩니다. 
-<script type="math/tex">r’’’_t = y’’_t - \tilde{s}_t = a_t + (n_t - \hat{n}_t) + (\tau_t - \tilde{\tau}_t) + (s_t - \tilde{s}_t)</script></li>
+\(r’’’_t = y’’_t - \tilde{s}_t = a_t + (n_t - \hat{n}_t) + (\tau_t - \tilde{\tau}_t) + (s_t - \tilde{s}_t)\)</li>
 </ul>
 
 <h3 id="final-adjustment">Final Adjustment</h3>
@@ -452,19 +447,19 @@ k=1, 2, …, K; \ h=0, 1, …, H</script>
   <li>시즈널리티 컴포넌트의 합계는 0으로 조정되어야합니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">\sum_{I=j}^{I=j+T-1}s_i = 0</script>
+\[\sum_{I=j}^{I=j+T-1}s_i = 0\]
 
 <ul>
-  <li>따라서 평균값(트렌드 <script type="math/tex">\tau_1</script>에 대응되는 값)을 빼줌으로서 시즈널리트를 조정합니다.</li>
+  <li>따라서 평균값(트렌드 \(\tau_1\)에 대응되는 값)을 빼줌으로서 시즈널리트를 조정합니다.</li>
 </ul>
 
-<script type="math/tex; mode=display">\hat{\tau}_1 = \frac{1}{T\lfloor N/T \rfloor} \sum_{t=1}^{T\lfloor N/T \rfloor} \tilde{s}_t \\
+\[\hat{\tau}_1 = \frac{1}{T\lfloor N/T \rfloor} \sum_{t=1}^{T\lfloor N/T \rfloor} \tilde{s}_t \\
 \hat{s}_t = \tilde{s}_t - \hat{\tau}_1 \\
 \hat{\tau}_t = \tilde{\tau}^r_t + \hat{\tau}_1 \\
-\hat{r}_t = y_t - \hat{s}_t + \hat{\tau}_t</script>
+\hat{r}_t = y_t - \hat{s}_t + \hat{\tau}_t\]
 
 <ul>
-  <li>리마인더 시그널 <script type="math/tex">\hat{r}_t</script> 가 수렴할 때까지 위 과정을 반복합니다.</li>
+  <li>리마인더 시그널 \(\hat{r}_t\) 가 수렴할 때까지 위 과정을 반복합니다.</li>
 </ul>
 
 <p><img src="/assets/img/2019-02-24/algorithm1.png" width="550" /><br /></p>
@@ -579,7 +574,7 @@ k=1, 2, …, K; \ h=0, 1, …, H</script>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

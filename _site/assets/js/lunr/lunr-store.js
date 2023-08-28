@@ -105,7 +105,7 @@ var store = [{
         "url": "http://localhost:4000/spatio-temporal%20data/time-series/time-series-part3/",
         "teaser":null},{
         "title": "시계열 분석 part4 - VAR",
-        "excerpt":"지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다. Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. at time t ( t= 1, 2, 3, …) 와 같이 표현하도록 하겠습니다....","categories": ["Spatio-Temporal Data","Time-series"],
+        "excerpt":"지금까지는 시계열 데이터가 univariate일 경우를 모델링하는 방법을 알아보았습니다. 이번 포스팅에서는 여러개의 시계열 데이터가 존재할 경우, 즉 multivariate 모델인 Vector AutoRegression (VAR) Model을 알아보도록 하겠습니다. Bivariate time series에 대해서 알아보도록 하겠습니다. Bivariate time series는 2차원의 벡터 시리즈로 표현됩니다. \\((X_{t1}, X_{t2})’\\) at time t ( t= 1, 2, 3, …) 와 같이...","categories": ["Spatio-Temporal Data","Time-series"],
         "tags": [],
         "url": "http://localhost:4000/spatio-temporal%20data/time-series/time-series-part4/",
         "teaser":null},{
@@ -148,4 +148,14 @@ var store = [{
         "excerpt":"두 시계열 데이터간의 유사도를 어떻게 계산할 수 있을까? 두 시계열이 동일한 길이의 시퀀스라면 단순히 상관계수를 구하는 것이 가능하지만, 현실 세계의 시계열 데이터는 그렇지 않은 경우가 많습니다. 예를 들어 아래와 같은 두 시계열 데이터를 살펴보겠습니다. import matplotlib.pyplot as pltts1 = [1, 5, 3, 4, 7, 6]ts2 = [0, 2, 6, 3,...","categories": ["Time-series"],
         "tags": [],
         "url": "http://localhost:4000/time-series/dtw/",
+        "teaser":null},{
+        "title": "The Capacity and Robustness Trade-off: Revisiting the Channel Independent Strategy for Multivariate Time Series Forecasting",
+        "excerpt":"Han, Lu, Han-Jia Ye, and De-Chuan Zhan (2023) 우왕 2023년ㅎㅎㅎ Abstract Analysis CD전략과 CI전략에서의 yule-walker equation 분석과 train과 test데이터셋의 각 채널별 ACF와 전체 채널의 ACF합 비교해 봄 학습데이터로부터 파라미터 \\(W\\)를 추정한 모델 (\\(R(\\hat{W})\\))의 리스크분석과 CD 및 CI 전락으로 학습된 모델에 대해 각 데이터셋뱔 통계값(train error, test error, diff W, generalization...","categories": ["Time-series"],
+        "tags": [],
+        "url": "http://localhost:4000/time-series/LTSF-CD-and-CI/",
+        "teaser":null},{
+        "title": "SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series",
+        "excerpt":"Huijben, Iris AM, et al. (ICLR poster 2023) self-organizing map (SOM) an unsupervised machine learning technique used to produce a low-dimensional (typically two-dimensional) representation of a higher dimensional data set while preserving the topological structure of the data K개의 node\\(\\phi\\)를 가정하고 각 데이터 포인트 \\(z\\)를 1개의 카운터파트 노드(winning node) \\(q_{\\phi}(z)\\)로...","categories": ["s"],
+        "tags": [],
+        "url": "http://localhost:4000/s/SOMCPC/",
         "teaser":null}]

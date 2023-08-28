@@ -310,14 +310,14 @@
 <ul>
   <li>Region : we partition a city into an I*J grid map</li>
   <li>Inflow/outflow : Let P be a collection of trajectories at the t<sup>th</sup> time interval. For a grid (i, j) that lies at the i<sup>th</sup> row and j<sup>th</sup> column, the inflow and outflow of the crowds at the tiem interval t are defined respectively as
-  <script type="math/tex">x_t^{in, i, j} = \sum_{T_r \in P} |{k > 1 |g_{k-1} \notin (i, j) \land g_k \in (i, j)}| \\
-  x_t^{out, i, j} = \sum_{T_r \in P} |{k \ge 1 |g_{k-1} \in (i, j) \land g_{k+1} \notin (i, j)}|</script>
+  \(x_t^{in, i, j} = \sum_{T_r \in P} |{k &gt; 1 |g_{k-1} \notin (i, j) \land g_k \in (i, j)}| \\
+  x_t^{out, i, j} = \sum_{T_r \in P} |{k \ge 1 |g_{k-1} \in (i, j) \land g_{k+1} \notin (i, j)}|\)
   where
     <ul>
-      <li><script type="math/tex">T_r : g_1 \to g_2 \to ... \to g_{\left\vert T_r \right\vert}</script> is a trajectory in P</li>
-      <li><script type="math/tex">g_k</script> is the geospatial coordinate</li>
-      <li><script type="math/tex">g_k \in (i, j)</script> means the point <script type="math/tex">g_k</script> lies within grid (i, j), and vice versa</li>
-      <li><script type="math/tex">\left\vert \cdot \right\vert</script> denotes the cardinality of a set</li>
+      <li>\(T_r : g_1 \to g_2 \to ... \to g_{\left\vert T_r \right\vert}\) is a trajectory in P</li>
+      <li>\(g_k\) is the geospatial coordinate</li>
+      <li>\(g_k \in (i, j)\) means the point \(g_k\) lies within grid (i, j), and vice versa</li>
+      <li>\(\left\vert \cdot \right\vert\) denotes the cardinality of a set</li>
     </ul>
   </li>
 </ul>
@@ -335,13 +335,13 @@
   <li>Then, we divide the time axis into three fragments, denoting recent time, near history and distant history. The 2-channel flow matrics of intervals in each time fragment are the fed into the first three components seperately to model the aforementioned three temporal properties: <i>closeness, period, and trend</i>
     <ul>
       <li>three components share the same network structure(Regisudal Unit sequence)</li>
-      <li>The output of the three components are fused as <script type="math/tex">X_{Res}</script> based on parameter metrics, which assign different weights to the results of different components in different regions.</li>
+      <li>The output of the three components are fused as \(X_{Res}\) based on parameter metrics, which assign different weights to the results of different components in different regions.</li>
     </ul>
   </li>
   <li>
     <p>In the <i>external</i> component, we manually extract some feature form external datasets, such as weather conditions and events, feeding them into a two-layer fully-connected neural network.</p>
   </li>
-  <li><script type="math/tex">X_{Res}</script> and <script type="math/tex">X_{Ext}</script> are integrated together. Then, the final output is mapped into [-1, 1] using Tanh function.</li>
+  <li>\(X_{Res}\) and \(X_{Ext}\) are integrated together. Then, the final output is mapped into [-1, 1] using Tanh function.</li>
 </ul>
 
 <h3 id="structures-of-the-first-three-components">Structures of the First Three Components</h3>
@@ -351,12 +351,12 @@
   <li>Do not user subsampling, but only convolutions</li>
   <li>closeness component
     <ul>
-      <li><script type="math/tex">[X_{t-l_c}, X_{t-l_c-1}, ..., X_{t-1}]</script> : concatnate them along with the first axis</li>
-      <li><script type="math/tex">X_c^{(0)} \in R^{2l_c \times I \times J}</script> is followed by <code class="highlighter-rouge">conv1</code></li>
-      <li><code class="highlighter-rouge">Residual Unit</code> : stack <script type="math/tex">L</script> residual units to capture very large citywide dependencies</li>
-      <li><code class="highlighter-rouge">Residual Unit</code> combinations fo “ReLu + Convolution” and “BatchNormalization” is added before ReLu.</li>
-      <li>On top of the <script type="math/tex">L^{th}</script> residual unit, we append a convolutional layer <code class="highlighter-rouge">conv2</code></li>
-      <li>output of the closeness componet is <script type="math/tex">X_c^{(L+2)}</script></li>
+      <li>\([X_{t-l_c}, X_{t-l_c-1}, ..., X_{t-1}]\) : concatnate them along with the first axis</li>
+      <li>\(X_c^{(0)} \in R^{2l_c \times I \times J}\) is followed by <code class="language-plaintext highlighter-rouge">conv1</code></li>
+      <li><code class="language-plaintext highlighter-rouge">Residual Unit</code> : stack \(L\) residual units to capture very large citywide dependencies</li>
+      <li><code class="language-plaintext highlighter-rouge">Residual Unit</code> combinations fo “ReLu + Convolution” and “BatchNormalization” is added before ReLu.</li>
+      <li>On top of the \(L^{th}\) residual unit, we append a convolutional layer <code class="language-plaintext highlighter-rouge">conv2</code></li>
+      <li>output of the closeness componet is \(X_c^{(L+2)}\)</li>
     </ul>
   </li>
 </ul>
@@ -366,16 +366,16 @@
 <ul>
   <li>period component
     <ul>
-      <li>Assume that there are <script type="math/tex">l_p</script> time intervals from the period fragment and the period is <script type="math/tex">p</script> ;<script type="math/tex">[X_{t-l_p \cdot p}, X_{t-(l_p-1) \cdot p}, ..., X_{t-p}]</script></li>
-      <li>output : <script type="math/tex">X_p^{(L+2)}</script></li>
+      <li>Assume that there are \(l_p\) time intervals from the period fragment and the period is \(p\) ;\([X_{t-l_p \cdot p}, X_{t-(l_p-1) \cdot p}, ..., X_{t-p}]\)</li>
+      <li>output : \(X_p^{(L+2)}\)</li>
       <li>in implementation, p is equal to one-day (daily periodicity)</li>
     </ul>
   </li>
   <li>trend component
     <ul>
-      <li><script type="math/tex">l_q</script> is the length of the trend dependent sequence and q is the trend span</li>
-      <li>input : <script type="math/tex">[X_{t-l_q \cdot q}, X_{t-(l_q-1) \cdot q}, ..., X_{t-q}]</script></li>
-      <li>output : <script type="math/tex">X_q^{(L+2)}</script></li>
+      <li>\(l_q\) is the length of the trend dependent sequence and q is the trend span</li>
+      <li>input : \([X_{t-l_q \cdot q}, X_{t-(l_q-1) \cdot q}, ..., X_{t-q}]\)</li>
+      <li>output : \(X_q^{(L+2)}\)</li>
       <li>in implementation, q is equal to one-week(week trend)</li>
     </ul>
   </li>
@@ -388,10 +388,10 @@
     <p>mainly consider weather, holiday event, and metadata(DayOfWeek, Weekday/Weekend)</p>
   </li>
   <li>
-    <p>stack two fully-connected layers upon <script type="math/tex">E_t</script></p>
+    <p>stack two fully-connected layers upon \(E_t\)</p>
     <ul>
       <li>first layer : embedding layer</li>
-      <li>second layer : to map low to high dimensions that have the same shape with <script type="math/tex">X_t</script></li>
+      <li>second layer : to map low to high dimensions that have the same shape with \(X_t\)</li>
     </ul>
   </li>
 </ul>
@@ -402,17 +402,17 @@
   <li>flows of two regions are all affected by closeness, period, and trend, but the degrees of influence may be very different ; parametric-matrix-based fusion</li>
 </ul>
 
-<script type="math/tex; mode=display">X_{Res} = W_c \circ X_c^{L+2} + W_p \circ X_p^{L+2} + W_q \circ X_q^{L+2}</script>
+\[X_{Res} = W_c \circ X_c^{L+2} + W_p \circ X_p^{L+2} + W_q \circ X_q^{L+2}\]
 
 <ul>
-  <li><script type="math/tex">\circ</script> is Hadamard product (i.e., element-wise multiplication)</li>
+  <li>\(\circ\) is Hadamard product (i.e., element-wise multiplication)</li>
   <li>
-    <p><script type="math/tex">W_c, W_p, W_q</script> are learnable parameters</p>
+    <p>\(W_c, W_p, W_q\) are learnable parameters</p>
   </li>
   <li>fusing the external component</li>
 </ul>
 
-<script type="math/tex; mode=display">\hat{X_t} = tanh(X_{Res} + X_{Ext})</script>
+\[\hat{X_t} = tanh(X_{Res} + X_{Ext})\]
 
 <ul>
   <li>objectives : minimizing mean squared error between the predicted flow matrix and the true flow matrix.</li>
@@ -550,7 +550,7 @@
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

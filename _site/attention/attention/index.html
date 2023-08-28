@@ -363,31 +363,30 @@
 <p><small><em>그림4. additive attention mechanism이 있는 인코더-디코더 모델 <a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau et al., 2015</a></em></small></p>
 
 <h3 id="definition">Definition</h3>
-<p>NMT에서 사용되는 어텐션 메커니즘을 과학적으로 정의해보도록 하겠습니다. 우리는 길이가 <script type="math/tex">n</script>인 소스 문장 <script type="math/tex">x</script>를 이용해 길이가 <script type="math/tex">m</script>인 타겟 문장 <script type="math/tex">y</script>을 만든다고 해봅시다.</p>
+<p>NMT에서 사용되는 어텐션 메커니즘을 과학적으로 정의해보도록 하겠습니다. 우리는 길이가 \(n\)인 소스 문장 \(x\)를 이용해 길이가 \(m\)인 타겟 문장 \(y\)을 만든다고 해봅시다.</p>
 
-<script type="math/tex; mode=display">\mathbf{x} = [x_1, x_2, ..., x_n] \\
-\mathbf{y} = [y_1, y_2, ..., y_m]</script>
+\[\mathbf{x} = [x_1, x_2, ..., x_n] \\
+\mathbf{y} = [y_1, y_2, ..., y_m]\]
 
 <p>(볼드 표시된 변수는 벡터를 의미합니다. 이하의 모든 내용에 적용됩니다)</p>
 
-<p>인코더는 <a href="https://www.coursera.org/lecture/nlp-sequence-models/bidirectional-rnn-fyXnn">bidirectional RNN</a>(또는 다른 구조의 RNN를 갖을 수 있습니다)로 히든 스테이트 <script type="math/tex">\mathbf{\overrightarrow{h_i}}</script> 와 반대방향 히든 스테이트 <script type="math/tex">\mathbf{\overleftarrow{h_i}}</script>를 갖습니다. 두 표현식을 간단히 연결(concatenation)하여 인코더의 히든 스테이트를 나타냅니다. 이렇게 하여 한 단어의 앞 뒷 단어를 표시할수 있습니다.</p>
+<p>인코더는 <a href="https://www.coursera.org/lecture/nlp-sequence-models/bidirectional-rnn-fyXnn">bidirectional RNN</a>(또는 다른 구조의 RNN를 갖을 수 있습니다)로 히든 스테이트 \(\mathbf{\overrightarrow{h_i}}\) 와 반대방향 히든 스테이트 \(\mathbf{\overleftarrow{h_i}}\)를 갖습니다. 두 표현식을 간단히 연결(concatenation)하여 인코더의 히든 스테이트를 나타냅니다. 이렇게 하여 한 단어의 앞 뒷 단어를 표시할수 있습니다.</p>
 
-<script type="math/tex; mode=display">\mathbf{h_i} = [\mathbf{\overrightarrow{h_i}}^\top; \mathbf{\overrightarrow{h_i}}^\top]^\top, \ i=1, ..., n</script>
+\[\mathbf{h_i} = [\mathbf{\overrightarrow{h_i}}^\top; \mathbf{\overrightarrow{h_i}}^\top]^\top, \ i=1, ..., n\]
 
-<p>디코더의 히든 스테이트는 t번째 아웃풋 단어를 만들기 위해 <script type="math/tex">s_t = f(s_{t-1}, y_{t-1}, c_t)</script> 로 정의됩니다. 이때, <script type="math/tex">c_t</script>(context vector)는 어라인먼트 스코어를 가중치로 갖는 인코더 히든스테이트의 가중 합계입니다.</p>
+<p>디코더의 히든 스테이트는 t번째 아웃풋 단어를 만들기 위해 \(s_t = f(s_{t-1}, y_{t-1}, c_t)\) 로 정의됩니다. 이때, \(c_t\)(context vector)는 어라인먼트 스코어를 가중치로 갖는 인코더 히든스테이트의 가중 합계입니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align}
-\mathbf{c_t} & = \sum_{i=1}^{n}\alpha_{t, i} \mathbf{h_i} & ; \ Context \ vector \ for \ output \ y_t \\\\
-\alpha_{t,i} & = align(y_t, x_i) & ; \ How \ well \ two \ words \ y_t \ and \ x_i \ are \ aligned. \\\\
- & = \frac{score(s_{t-1}, \mathbf{h_{i^{'}}})}{\sum_{i=1}^{n} score(s_{t-1},\mathbf{h_{i^{'}}})} & ; \ Softmax \ of \ some \ predefined \ alignment \ score. &
-\end{align} %]]></script>
+\[\begin{align}
+\mathbf{c_t} &amp; = \sum_{i=1}^{n}\alpha_{t, i} \mathbf{h_i} &amp; ; \ Context \ vector \ for \ output \ y_t \\\\
+\alpha_{t,i} &amp; = align(y_t, x_i) &amp; ; \ How \ well \ two \ words \ y_t \ and \ x_i \ are \ aligned. \\\\
+ &amp; = \frac{score(s_{t-1}, \mathbf{h_{i^{'}}})}{\sum_{i=1}^{n} score(s_{t-1},\mathbf{h_{i^{'}}})} &amp; ; \ Softmax \ of \ some \ predefined \ alignment \ score. &amp;
+\end{align}\]
 
-<p>alignment model은 i번째 입력과 t번째 결과값이 얼마나 잘 매치되는지 확인 한 후  스코어 <script type="math/tex">\alpha_{t, i}</script>를 이 쌍 <script type="math/tex">(y_t, x_i)</script>에 할당합니다. <script type="math/tex">{\alpha_{t,i}}</script>의 집합은 각 소스의 히든 스테이트가 결과값에 어느정도 연관되어 있는지를 정의하는 가중치 입니다. Bahdanau의 논문은 alignment score <script type="math/tex">\alpha</script>는 한개의 히든 레이어를 가진 <b>feed-forward network</b>로 파라미터라이즈됩니다. 그리고 이 네트워크는 모델의 다른 부분들과 함께 학습됩니다. 스코어 함수는 아래와 같은 형태이고, tanh는 비선형 활성함수로 사용되었습니다.</p>
+<p>alignment model은 i번째 입력과 t번째 결과값이 얼마나 잘 매치되는지 확인 한 후  스코어 \(\alpha_{t, i}\)를 이 쌍 \((y_t, x_i)\)에 할당합니다. \({\alpha_{t,i}}\)의 집합은 각 소스의 히든 스테이트가 결과값에 어느정도 연관되어 있는지를 정의하는 가중치 입니다. Bahdanau의 논문은 alignment score \(\alpha\)는 한개의 히든 레이어를 가진 <b>feed-forward network</b>로 파라미터라이즈됩니다. 그리고 이 네트워크는 모델의 다른 부분들과 함께 학습됩니다. 스코어 함수는 아래와 같은 형태이고, tanh는 비선형 활성함수로 사용되었습니다.</p>
 
-<script type="math/tex; mode=display">score(\mathbf{s_t}, \mathbf{h_i}) = \mathbf{v_a^\top} tanh(\mathbf{W_a}[\mathbf{s_t} ; \mathbf{h_i}])</script>
+\[score(\mathbf{s_t}, \mathbf{h_i}) = \mathbf{v_a^\top} tanh(\mathbf{W_a}[\mathbf{s_t} ; \mathbf{h_i}])\]
 
-<p><script type="math/tex">\mathbf{v_a}</script> 와 <script type="math/tex">\mathbf{W_a}</script>는 alignment model에서 학습되는 가중치 메트릭스입니다.</p>
+<p>\(\mathbf{v_a}\) 와 \(\mathbf{W_a}\)는 alignment model에서 학습되는 가중치 메트릭스입니다.</p>
 
 <p>alignment score를 메트릭스로 표시하여 시각적으로 소스 단어와 타겟 단어 사이의 상관관계를 명시적으로 확인할수 있습니다.</p>
 
@@ -416,27 +415,27 @@
   <tbody>
     <tr>
       <td>Additive(*)</td>
-      <td><script type="math/tex">score(\mathbf{s}_t</script>, <script type="math/tex">\mathbf{h}_i</script>) = <script type="math/tex">\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]</script>)</td>
+      <td>\(score(\mathbf{s}_t\), \(\mathbf{h}_i\)) = \(\mathbf{v}_a^\top tanh(\mathbf{W}_a[\mathbf{s}_t; \mathbf{h}_i]\))</td>
       <td><a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau2015</a></td>
     </tr>
     <tr>
       <td>Location-Base</td>
-      <td><script type="math/tex">\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)</script> <br /> Note : This simplifies the softmax alignment max to only depend on the target position.</td>
+      <td>\(\alpha_{t,i} = softmax(\mathbf{W}_a \mathbf{s}_t)\) <br /> Note : This simplifies the softmax alignment max to only depend on the target position.</td>
       <td><a href="https://arxiv.org/pdf/1508.04025.pdf">Luong2015</a></td>
     </tr>
     <tr>
       <td>General</td>
-      <td><script type="math/tex">score(\mathbf{s}_t, \mathbf{h}_i)=\mathbf{s}_t^\top \mathbf{W}_a \mathbf{h}_i</script> <br /> where <script type="math/tex">\mathbf{W}_a</script> is a trainable weight matrix in the attention layer.</td>
+      <td>\(score(\mathbf{s}_t, \mathbf{h}_i)=\mathbf{s}_t^\top \mathbf{W}_a \mathbf{h}_i\) <br /> where \(\mathbf{W}_a\) is a trainable weight matrix in the attention layer.</td>
       <td><a href="https://arxiv.org/pdf/1508.04025.pdf">Luong2015</a></td>
     </tr>
     <tr>
       <td>Dot-Product</td>
-      <td><script type="math/tex">score(\mathbf{s}_t, \mathbf{h}_i) = \mathbf{s}_t^\top \mathbf{h}_i</script></td>
+      <td>\(score(\mathbf{s}_t, \mathbf{h}_i) = \mathbf{s}_t^\top \mathbf{h}_i\)</td>
       <td><a href="https://arxiv.org/pdf/1508.04025.pdf">Luong2015</a></td>
     </tr>
     <tr>
       <td>Scaled Dot-Product(^)</td>
-      <td><script type="math/tex">score(\mathbf{s}_t, \mathbf{h}_i) =</script>  <script type="math/tex">{\mathbf{s}_t^\top \mathbf{h}_i}\over{\sqrt{n}}</script> <br /> Note: very similar to dot-product attention except for a scaling factor; where n is the dimension of the source hidden state.</td>
+      <td>\(score(\mathbf{s}_t, \mathbf{h}_i) =\)  \({\mathbf{s}_t^\top \mathbf{h}_i}\over{\sqrt{n}}\) <br /> Note: very similar to dot-product attention except for a scaling factor; where n is the dimension of the source hidden state.</td>
       <td><a href="http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf">Vaswani2017</a></td>
     </tr>
     <tr>
@@ -459,7 +458,7 @@
 
 <p>(*) 이 방식은 Luong, et al., 2015 에서는 “concat”이라고 언급되었으며, Vaswani, et al., 2017에서는 “additive attention”이라고 언급되었습니다.</p>
 
-<p>(^)인풋이 매우 길어서 소프트맥스 함수의 그래디언트가 아주 작아져 학습이 어려운 경우를 보완하기 위해서 스케일링 펙터, <script type="math/tex">1/\sqrt{n}</script>,가 더해진 것입니다.</p>
+<p>(^)인풋이 매우 길어서 소프트맥스 함수의 그래디언트가 아주 작아져 학습이 어려운 경우를 보완하기 위해서 스케일링 펙터, \(1/\sqrt{n}\),가 더해진 것입니다.</p>
 
 <p>(&amp;) Cheng et al., 2016 등 다른 논문들에서는 intra-attention이라고도 불리웁니다.</p>
 
@@ -510,11 +509,11 @@
 <p>핵심은 바로 모델 구조에 있습니다.</p>
 
 <h3 id="key-value-and-query">key, Value and Query</h3>
-<p>가장 중요한 부분은 <em>multi-head self-attention mechanism</em>입니다. 트랜스포머는 인풋의 인코딩된 representation을 <b>key-value</b> 쌍, <script type="math/tex">(\mathbf{K, V})</script>의 집합체로 보았습니다; 둘다 n(인풋 시퀀스 길이)차원 벡터로 인코더의 히든 스테이트에 해당. 디코더에서 이전 결과값들은 <b>query</b>(<script type="math/tex">\mathbf{Q}</script> of dimension m)로 압축되고, 다음 아웃풋은 이 쿼리와 키-벨류 셋트를 맵핑함으로써 계산됩니다.</p>
+<p>가장 중요한 부분은 <em>multi-head self-attention mechanism</em>입니다. 트랜스포머는 인풋의 인코딩된 representation을 <b>key-value</b> 쌍, \((\mathbf{K, V})\)의 집합체로 보았습니다; 둘다 n(인풋 시퀀스 길이)차원 벡터로 인코더의 히든 스테이트에 해당. 디코더에서 이전 결과값들은 <b>query</b>(\(\mathbf{Q}\) of dimension m)로 압축되고, 다음 아웃풋은 이 쿼리와 키-벨류 셋트를 맵핑함으로써 계산됩니다.</p>
 
 <p>트렌스포머는 <a href="">scaled dot-product attention</a>을 사용하였습니다: 아웃풋은 가중합산된 값이고, 가중치들은 쿼리와 키값들의 dot-product로 결정됩니다.</p>
 
-<script type="math/tex; mode=display">Attention(\mathbf{Q, K, V}) = softmax( {\mathbf{Q}\mathbf{K}^\top \over {\sqrt{n}}} )\mathbf{V}</script>
+\[Attention(\mathbf{Q, K, V}) = softmax( {\mathbf{Q}\mathbf{K}^\top \over {\sqrt{n}}} )\mathbf{V}\]
 
 <h3 id="multi-head-self-attention">multi-Head Self-Attention</h3>
 
@@ -524,10 +523,10 @@
 
 <p>어텐션을 한번만 계산하는 것보다 멀티-헤드 메커니즘은 스케일 닷-프로덕트 어텐션을 병렬로 여러번 계산된다. 독립적인 어텐션 아웃풋은 단순히 concatenated되며, 선형으로 예상되는 차원으로 변형됩니다. 이렇게 하는 이유는 앙상블은 항상 도움이 되기 때문이 아닐까요? 논문에 따르면 “multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With a single attention head, averaging inhibits this (멀티-헤드 어텐션은 서로 다른 representation 공간에 있는 포지션 정보를 결합하여 이용할수 있게 해줍니다. 싱글 어텐션 헤드를 이용하면 이런 정보들이 서로 평균화되어 버립니다.)</p>
 
-<script type="math/tex; mode=display">MultiHead(\mathbf{Q, K, V}) = [head_1; ... ; head_h]\mathbf{W}^O \\
-where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)</script>
+\[MultiHead(\mathbf{Q, K, V}) = [head_1; ... ; head_h]\mathbf{W}^O \\
+where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)\]
 
-<p>where <script type="math/tex">\mathbf{W}_i^Q, \mathbf{W}_i^K, \mathbf{W}_i^V</script> and <script type="math/tex">\mathbf{W}^O</script> are parameter matrics to be learned.</p>
+<p>where \(\mathbf{W}_i^Q, \mathbf{W}_i^K, \mathbf{W}_i^V\) and \(\mathbf{W}^O\) are parameter matrics to be learned.</p>
 
 <h3 id="encoder">Encoder</h3>
 
@@ -540,7 +539,7 @@ where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)</sc
 <ul>
   <li>동일한 6개의 레이어를 쌓습니다.</li>
   <li>각 레이어는 멀티-헤드 셀프어텐션 레이어와 포지션-와이즈 풀리 커넥티드 피드-포워드 네트워크를 서브 레이어로 갖습니다.</li>
-  <li>각 서브 레이어는 <a href="https://arxiv.org/pdf/1512.03385.pdf"><code class="highlighter-rouge">residual</code></a> 커넥션과 <code class="highlighter-rouge">layer normalization</code> 이 적용됩니다. 모든 서브 레이어는 <script type="math/tex">d_{model}=512</script>로 동일한 차원의 아웃풋을 갖습니다.</li>
+  <li>각 서브 레이어는 <a href="https://arxiv.org/pdf/1512.03385.pdf"><code class="language-plaintext highlighter-rouge">residual</code></a> 커넥션과 <code class="language-plaintext highlighter-rouge">layer normalization</code> 이 적용됩니다. 모든 서브 레이어는 \(d_{model}=512\)로 동일한 차원의 아웃풋을 갖습니다.</li>
 </ul>
 
 <h3 id="decoder">Decoder</h3>
@@ -563,7 +562,7 @@ where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)</sc
 <p>트렌스포머의 전체적인 구조는 다음과 같습니다.</p>
 
 <ul>
-  <li>먼저 소스와 타겟 시퀀스 모두 동일한 디멘션 <script type="math/tex">d_{model} = 512</script>을 갖도록 임베딩 레이어를 거칩니다.</li>
+  <li>먼저 소스와 타겟 시퀀스 모두 동일한 디멘션 \(d_{model} = 512\)을 갖도록 임베딩 레이어를 거칩니다.</li>
   <li>포지션 정보를 유지하기 위해 sinusoid-wave-based positional encoding을 적용한 후 임베딩 아웃풋과 합칩니다.</li>
   <li>마지막 디코더 아웃풋에 소프트맥스와 선형 레이어가 추가됩니다.</li>
 </ul>
@@ -594,30 +593,30 @@ where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)</sc
 
 <p><small>*그림14. 컨볼루션 오퍼레이션과 셀프-어텐션은 서로 다른 사이즈의 영역을 다룹니다. *</small>&gt;</p>
 
-<p>SAGAN은 어텐션 계산을 위해서 <a href="https://arxiv.org/pdf/1711.07971.pdf">non-local neural network</a>를 도입하였습니다. 컨볼루셔널 이미지 피쳐맵 <script type="math/tex">x</script>는 3개로 복제되어 나눠지며, 이는 트랜스포머에서 각 각 <a href="#key-value-and-query">key, value, and query</a> 개념에 대응됩니다.</p>
+<p>SAGAN은 어텐션 계산을 위해서 <a href="https://arxiv.org/pdf/1711.07971.pdf">non-local neural network</a>를 도입하였습니다. 컨볼루셔널 이미지 피쳐맵 \(x\)는 3개로 복제되어 나눠지며, 이는 트랜스포머에서 각 각 <a href="#key-value-and-query">key, value, and query</a> 개념에 대응됩니다.</p>
 
 <ul>
-  <li>Key : <script type="math/tex">f(x)=W_fx</script></li>
-  <li>Query : <script type="math/tex">g(x)=W_gx</script></li>
-  <li>Value : <script type="math/tex">h(x)=W_hx</script></li>
+  <li>Key : \(f(x)=W_fx\)</li>
+  <li>Query : \(g(x)=W_gx\)</li>
+  <li>Value : \(h(x)=W_hx\)</li>
 </ul>
 
 <p>그리고 나서 dot-product 어텐션을 셀프-어텐션 피쳐맵에 적용합니다 :</p>
 
-<script type="math/tex; mode=display">\alpha_{i, j} = softmax(f(\mathbf{x}_i)^{\top}g(\mathbf{x}_j))\\
-\mathbf{o}_j = \sum_{i=1}^{N} \alpha_{i,j}h(\mathbf{x}_i)</script>
+\[\alpha_{i, j} = softmax(f(\mathbf{x}_i)^{\top}g(\mathbf{x}_j))\\
+\mathbf{o}_j = \sum_{i=1}^{N} \alpha_{i,j}h(\mathbf{x}_i)\]
 
 <p><img src="/assets/img/2018-10-13/self-attention-gan-network.png" width="600" /></p>
 
 <p><small>*그림15. SAGAN에서 셀프-어텐션 메커니즘 (Image source : Fig 2 in <a href="https://arxiv.org/pdf/1805.08318.pdf">Zhang et al., 2018</a>) *</small>&gt;</p>
 
-<p><script type="math/tex">\alpha_{i,j}</script>는 j번째 위치를 합성할 때 모델이 i번째 위치에 얼마나 많은 주의를 기울여야하는지를 나타내는 어텐션 맵의 엔트리입니다. <script type="math/tex">\mathbf{W}_f, \mathbf{W}_g, \mathbf{W}_h</script>는 1x1 컨볼루션 필터입니다. 만약 1x1 conv가 이상하다고 생각되면(단순히 피쳐맵 전체 값에 한개 값을 곱하는 것 아니냐?라고 생각한다면) 앤드류 응의 <a href="https://www.youtube.com/watch?v=9EZVpLTPGz8">튜토리얼</a>을 보세요. 아웃풋 <script type="math/tex">\mathbf{o}_j</script>는 마지막 아웃풋 <script type="math/tex">\mathbf{o} = (\mathbf{o}_1, \mathbf{o}_2, ..., \mathbf{o}_j, ..., \mathbf{o}_N)</script>의 컬럼 벡터입니다.</p>
+<p>\(\alpha_{i,j}\)는 j번째 위치를 합성할 때 모델이 i번째 위치에 얼마나 많은 주의를 기울여야하는지를 나타내는 어텐션 맵의 엔트리입니다. \(\mathbf{W}_f, \mathbf{W}_g, \mathbf{W}_h\)는 1x1 컨볼루션 필터입니다. 만약 1x1 conv가 이상하다고 생각되면(단순히 피쳐맵 전체 값에 한개 값을 곱하는 것 아니냐?라고 생각한다면) 앤드류 응의 <a href="https://www.youtube.com/watch?v=9EZVpLTPGz8">튜토리얼</a>을 보세요. 아웃풋 \(\mathbf{o}_j\)는 마지막 아웃풋 \(\mathbf{o} = (\mathbf{o}_1, \mathbf{o}_2, ..., \mathbf{o}_j, ..., \mathbf{o}_N)\)의 컬럼 벡터입니다.</p>
 
 <p>추가로 어텐션 레이어의 아웃풋에 스케일 파라미터를 곱하고, 오리지날 인풋 피쳐맵을 더해줍니다.</p>
 
-<script type="math/tex; mode=display">\mathbf{y} = \mathbf{x}_i + \rho \mathbf{o}_i</script>
+\[\mathbf{y} = \mathbf{x}_i + \rho \mathbf{o}_i\]
 
-<p>스케일링 파라미터 <script type="math/tex">\rho</script>는 학습과정에서 0에서 점차 증가하고, 네트워크는 처음에는 로컬 영역에만 의존하다가 점차 멀리있는 영역에 더 많은 가중치를 주는 방법을 배우도록 구성됩니다.</p>
+<p>스케일링 파라미터 \(\rho\)는 학습과정에서 0에서 점차 증가하고, 네트워크는 처음에는 로컬 영역에만 의존하다가 점차 멀리있는 영역에 더 많은 가중치를 주는 방법을 배우도록 구성됩니다.</p>
 
 <p><img src="/assets/img/2018-10-13/SAGAN-examples.png" width="600" /></p>
 
@@ -750,7 +749,7 @@ where \ head_i = Attenton(\mathbf{QW}_i^Q, \mathbf{KW}_i^K, \mathbf{VW}_i^V)</sc
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>

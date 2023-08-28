@@ -334,18 +334,18 @@
   </tbody>
 </table>
 
-<p><script type="math/tex">n_u</script> = number of users <br />
-<script type="math/tex">n_m</script> = number of movies <br />
-<script type="math/tex">r(i, j)</script> = 1 if user <script type="math/tex">j</script> has rated movie <script type="math/tex">i</script> <br />
-<script type="math/tex">y^{(i, j)}</script> = rating given by user <script type="math/tex">j</script> to movie <script type="math/tex">i</script> (defined only if <script type="math/tex">r(i, j) = 1</script> )</p>
+<p>\(n_u\) = number of users <br />
+\(n_m\) = number of movies <br />
+\(r(i, j)\) = 1 if user \(j\) has rated movie \(i\) <br />
+\(y^{(i, j)}\) = rating given by user \(j\) to movie \(i\) (defined only if \(r(i, j) = 1\) )</p>
 
 <blockquote>
-  <p>given <script type="math/tex">r(i, j)</script> and <script type="math/tex">y^{(i, j)}</script>, we try to predict what these values of the question mark should be</p>
+  <p>given \(r(i, j)\) and \(y^{(i, j)}\), we try to predict what these values of the question mark should be</p>
 </blockquote>
 
 <h2 id="content-based-recommendations">Content Based Recommendations</h2>
 
-<p>우선 모든 영화가 로맨스인지, 액션인지 평가된 특징 정보가 있다고 가정하겠습니다. 아래 테이블은 각 영화의 특징에 해당하는 정보(피쳐 벡터), <script type="math/tex">x_1</script>과 <script type="math/tex">x_2</script>를 추가한 것입니다. 이 경우, 각 사용자의 평점은 피쳐벡서를 입력으로 하는 회귀 문제가 됩니다. 회귀문제에서 가중치 <script type="math/tex">\theta</script>는 사용자마다 다르며, 이미 평가한 데이터와 예측값의 오차를 최소화하는 방향으로 회귀식의 가중치을 학습할 수 있습니다.</p>
+<p>우선 모든 영화가 로맨스인지, 액션인지 평가된 특징 정보가 있다고 가정하겠습니다. 아래 테이블은 각 영화의 특징에 해당하는 정보(피쳐 벡터), \(x_1\)과 \(x_2\)를 추가한 것입니다. 이 경우, 각 사용자의 평점은 피쳐벡서를 입력으로 하는 회귀 문제가 됩니다. 회귀문제에서 가중치 \(\theta\)는 사용자마다 다르며, 이미 평가한 데이터와 예측값의 오차를 최소화하는 방향으로 회귀식의 가중치을 학습할 수 있습니다.</p>
 
 <table>
   <thead>
@@ -355,8 +355,8 @@
       <th>Bob(2)</th>
       <th>Carol(3)</th>
       <th>Dave(4)</th>
-      <th><script type="math/tex">x_1 \\ (romance)</script></th>
-      <th><script type="math/tex">x_2 \\ (action)</script></th>
+      <th>\(x_1 \\ (romance)\)</th>
+      <th>\(x_2 \\ (action)\)</th>
     </tr>
   </thead>
   <tbody>
@@ -408,16 +408,16 @@
   </tbody>
 </table>
 
-<p>For each user <script type="math/tex">j</script>, learn a prarameter <script type="math/tex">\theta ^{(j)} \in \mathbb{R}^{n+1}</script> <br />
-( n is the number of features. In above example, n = 2 because of <script type="math/tex">x_1,\ x_2</script>. By default <script type="math/tex">x_0</script>=0 )</p>
+<p>For each user \(j\), learn a prarameter \(\theta ^{(j)} \in \mathbb{R}^{n+1}\) <br />
+( n is the number of features. In above example, n = 2 because of \(x_1,\ x_2\). By default \(x_0\)=0 )</p>
 
-<p>Predict user <script type="math/tex">j</script> as rating movie <script type="math/tex">i</script> with <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script> <br />
-( <script type="math/tex">x^{(i)}</script> = feature vector of movie <script type="math/tex">i</script> )</p>
+<p>Predict user \(j\) as rating movie \(i\) with \((\theta ^{(j)})^T x^{(i)}\) <br />
+( \(x^{(i)}\) = feature vector of movie \(i\) )</p>
 
 <p><b><em>example of Alice’s rating of “Cute pupples of love”</em></b> <br />
-<small>(Assumed <script type="math/tex">\theta ^{(1)}</script> learned by model) </small></p>
+<small>(Assumed \(\theta ^{(1)}\) learned by model) </small></p>
 
-<script type="math/tex; mode=display">x^{(3)} = 
+\[x^{(3)} = 
 \begin{bmatrix}
 1  \\
 0.99 \\
@@ -430,27 +430,27 @@
 0 
 \end{bmatrix}
 \\
-(\theta ^{(1)})^T x^{(3)} = 5 * 0.99 = 4.95</script>
+(\theta ^{(1)})^T x^{(3)} = 5 * 0.99 = 4.95\]
 
-<p><script type="math/tex">\theta ^{(j)}</script> = parameter vector of user <script type="math/tex">j</script> <br />
-<script type="math/tex">x ^{(i)}</script> = feature vector for movie <script type="math/tex">i</script> <br />
-For user <script type="math/tex">j</script>, movie <script type="math/tex">i</script>, predicted rating : <script type="math/tex">(\theta ^{(j)})^T x^{(i)}</script></p>
+<p>\(\theta ^{(j)}\) = parameter vector of user \(j\) <br />
+\(x ^{(i)}\) = feature vector for movie \(i\) <br />
+For user \(j\), movie \(i\), predicted rating : \((\theta ^{(j)})^T x^{(i)}\)</p>
 
-<p><b>To learn <script type="math/tex">\theta ^{(j)}</script> (parameter for user <script type="math/tex">j</script>)</b>:</p>
+<p><b>To learn \(\theta ^{(j)}\) (parameter for user \(j\))</b>:</p>
 
-<script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+\[\min_{\theta ^{(j)}} \frac{1}{2} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(\theta_k^{(j)})^2\]
 
-<p><b>To learn  <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script> </b>:</p>
+<p><b>To learn  \(\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}\) </b>:</p>
 
-<script type="math/tex; mode=display">\min_{\theta ^{(j)}} \frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+\[\min_{\theta ^{(j)}} \frac{1}{2} \sum_{j=1}^{n_u} \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2\]
 
 <p><b>Gradient descent update</b> :</p>
 
-<script type="math/tex; mode=display">\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} \ \ (for \ k=0) \\
-\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right) \ \ (for \ k \neq 0)</script>
+\[\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} \ \ (for \ k=0) \\
+\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right) \ \ (for \ k \neq 0)\]
 
 <h2 id="collaborative-filtering">Collaborative Filtering</h2>
-<p>이제까지는 모든 영화가 로맨스인지, 액션인지 평가된 피쳐벡터가 존재한다는 가정을 하였습니다. 하지만 모든 영화를 보고 특징 정보를 정리하는 것은 매우 비용이 많이 드는 작업입니다. 이를 극복하기 위해서 반대로 사용자에게 로맨스 영화를 얼마나 좋아하는지, 액션 영화를 얼마나 좋아하는지를 조사하고, 이 값을 토대로 피쳐 벡터를 추정하는 방법을 택할 수 있습니다. 사용자 <script type="math/tex">i</script>가 응답한 정보를 <script type="math/tex">\theta^{(i)}</script>로 이용하여 아래와 같이 계산할 수 있습니다.</p>
+<p>이제까지는 모든 영화가 로맨스인지, 액션인지 평가된 피쳐벡터가 존재한다는 가정을 하였습니다. 하지만 모든 영화를 보고 특징 정보를 정리하는 것은 매우 비용이 많이 드는 작업입니다. 이를 극복하기 위해서 반대로 사용자에게 로맨스 영화를 얼마나 좋아하는지, 액션 영화를 얼마나 좋아하는지를 조사하고, 이 값을 토대로 피쳐 벡터를 추정하는 방법을 택할 수 있습니다. 사용자 \(i\)가 응답한 정보를 \(\theta^{(i)}\)로 이용하여 아래와 같이 계산할 수 있습니다.</p>
 
 <table>
   <thead>
@@ -460,8 +460,8 @@ For user <script type="math/tex">j</script>, movie <script type="math/tex">i</sc
       <th>Bob(2)</th>
       <th>Carol(3)</th>
       <th>Dave(4)</th>
-      <th><script type="math/tex">x_1 \\ (romance)</script></th>
-      <th><script type="math/tex">x_2 \\ (action)</script></th>
+      <th>\(x_1 \\ (romance)\)</th>
+      <th>\(x_2 \\ (action)\)</th>
     </tr>
   </thead>
   <tbody>
@@ -513,7 +513,7 @@ For user <script type="math/tex">j</script>, movie <script type="math/tex">i</sc
   </tbody>
 </table>
 
-<script type="math/tex; mode=display">\theta^{(1)} = 
+\[\theta^{(1)} = 
 \begin{bmatrix}
 0  \\
 5 \\
@@ -536,39 +536,39 @@ For user <script type="math/tex">j</script>, movie <script type="math/tex">i</sc
 0  \\
 0 \\
 5 
-\end{bmatrix} \ \ \</script>
+\end{bmatrix} \ \ \\]
 
-<p><b> Given <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script>, to learn <script type="math/tex">x^{(i)}</script> </b> :</p>
+<p><b> Given \(\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}\), to learn \(x^{(i)}\) </b> :</p>
 
-<script type="math/tex; mode=display">\min_{x^{(i)}} \frac{1}{2} \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(x_k^{(i)})^2</script>
+\[\min_{x^{(i)}} \frac{1}{2} \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n}(x_k^{(i)})^2\]
 
-<p><b> Given <script type="math/tex">\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}</script>, to learn <script type="math/tex">x^{(1)}, ..., x^{(n_m)}</script> </b> :</p>
+<p><b> Given \(\theta ^{(1)},\theta ^{(2)}, ..., \theta ^{(n_u)}\), to learn \(x^{(1)}, ..., x^{(n_m)}\) </b> :</p>
 
-<script type="math/tex; mode=display">\min_{x^{(1)},...,x^{(n_m)}} \frac{1}{2} \sum_{i=1}^{n_m} \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^{n}(x_k^{(i)})^2</script>
+\[\min_{x^{(1)},...,x^{(n_m)}} \frac{1}{2} \sum_{i=1}^{n_m} \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^{n}(x_k^{(i)})^2\]
 
 <blockquote>
   <p>Collaborative filtering refers to the observation that when you run this algorithm with a large set of users, all of these users are effectively doing collaboratively to get better movie ratings for everyone. because with every user rating, some subset of the movies, every user is helping the algorithm a little bit to learn better features. By rating a few movies myself, I would be hoping the systerm learn better features and then these features can be used by the system to make better movies predictions for everyone else. <u>So there's a sense of collaboration where every user is helping the system learn better features for the common good.</u></p>
 </blockquote>
 
-<p>Content based 방법은 영화별 특징 정보가 존재할 때, 유저별 가중치를 추정하는 것이고, Collaborative filtering은 유저별 가중치가 존재할 때 영화별 특징 정보를 추정하는 것입니다. 따라서 우리는 이 두가지를 결합하여, forward and backward 방식으로 초기값 <script type="math/tex">\theta^{(i)}</script>를 랜덤하게 설정한 후 피쳐벡터를 추정하고, 추정된 피쳐벡터로 다시 유저 가중치를 구할수 있습니다. 더 간단하게는 <script type="math/tex">\theta^{(i)}</script>와 <script type="math/tex">x^{j}</script>를 동시에 추정할 수 있습니다.</p>
+<p>Content based 방법은 영화별 특징 정보가 존재할 때, 유저별 가중치를 추정하는 것이고, Collaborative filtering은 유저별 가중치가 존재할 때 영화별 특징 정보를 추정하는 것입니다. 따라서 우리는 이 두가지를 결합하여, forward and backward 방식으로 초기값 \(\theta^{(i)}\)를 랜덤하게 설정한 후 피쳐벡터를 추정하고, 추정된 피쳐벡터로 다시 유저 가중치를 구할수 있습니다. 더 간단하게는 \(\theta^{(i)}\)와 \(x^{j}\)를 동시에 추정할 수 있습니다.</p>
 
-<p>if we are given <script type="math/tex">x^{(i)}</script>, we can estimate <script type="math/tex">\theta^{(i)}</script>. Likewise if we are given <script type="math/tex">\theta^{(i)}</script>, we can estimate <script type="math/tex">x^{(i)}</script>.</p>
+<p>if we are given \(x^{(i)}\), we can estimate \(\theta^{(i)}\). Likewise if we are given \(\theta^{(i)}\), we can estimate \(x^{(i)}\).</p>
 
-<p>So we can initialize <script type="math/tex">\theta^{(i)}</script> randomly, then estimate <script type="math/tex">x^{(i)}</script>. After that, we update  <script type="math/tex">\theta^{(i)}</script> and repeat.</p>
+<p>So we can initialize \(\theta^{(i)}\) randomly, then estimate \(x^{(i)}\). After that, we update  \(\theta^{(i)}\) and repeat.</p>
 
 <p>Putting togeter, we can solve for theta and x simultaneously.</p>
 
-<script type="math/tex; mode=display">\min_{x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}} J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) \\
-J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) = \frac{1}{2} \sum_{(i, j):r(i,j)=1}  ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^{n}(x_k^{(i)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2</script>
+\[\min_{x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}} J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) \\
+J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) = \frac{1}{2} \sum_{(i, j):r(i,j)=1}  ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \frac{\lambda}{2} \sum_{i=1}^{n_m} \sum_{k=1}^{n}(x_k^{(i)})^2 + \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2\]
 
-<p>note : in this version, <script type="math/tex">x \in \mathbb{R}^{n}, \theta \in \mathbb{R}^{n}</script></p>
+<p>note : in this version, \(x \in \mathbb{R}^{n}, \theta \in \mathbb{R}^{n}\)</p>
 
 <ol>
-  <li>Initialize <script type="math/tex">x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}</script> to small random values</li>
-  <li>Minimize <script type="math/tex">J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)})</script> using gradient descent(or an advanced optimization algorithm). E.g. for every <script type="math/tex">j=1, ..., n_u, i=1,...,n_m</script> :
-<script type="math/tex">x_k^{(i)} := x_k^{(i)} -  \alpha \left( \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})\theta_k^{(j)} + \lambda x_k^{(i)} \right) \\
-\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right)</script></li>
-  <li>For a user with parameters <script type="math/tex">\theta</script> and a movie with (learned) features <script type="math/tex">x</script>, predict a star rating of <script type="math/tex">\theta^Tx</script>.</li>
+  <li>Initialize \(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}\) to small random values</li>
+  <li>Minimize \(J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)})\) using gradient descent(or an advanced optimization algorithm). E.g. for every \(j=1, ..., n_u, i=1,...,n_m\) :
+\(x_k^{(i)} := x_k^{(i)} -  \alpha \left( \sum_{j:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})\theta_k^{(j)} + \lambda x_k^{(i)} \right) \\
+\theta_k^{(j)} := \theta_k^{(j)} -  \alpha \left( \sum_{i:r(i,j)=1} ((\theta ^{(j)})^T x^{(i)} - y^{(i,j)})x_k^{(i)} + \lambda \theta_k^{(j)} \right)\)</li>
+  <li>For a user with parameters \(\theta\) and a movie with (learned) features \(x\), predict a star rating of \(\theta^Tx\).</li>
 </ol>
 
 <h2 id="vectorization--low-rank-matrix-factorization">Vectorization : Low Rank Matrix Factorization</h2>
@@ -623,26 +623,24 @@ J(x^{(1)}, ... , x^{(n_m)}, \theta^{(1)}, ..., \theta ^{(n_u)}) = \frac{1}{2} \s
   </tbody>
 </table>
 
-<script type="math/tex; mode=display">% <![CDATA[
-Y = 
+\[Y = 
 \begin{bmatrix}
-5 & 5 & 0 & 0 \\
-5 & ? & ? & 0 \\
-? & 4 & 0 & ? \\
-0 & 0 & 5 & 4 \\
-0 & 0 & 5 & 0 \\
+5 &amp; 5 &amp; 0 &amp; 0 \\
+5 &amp; ? &amp; ? &amp; 0 \\
+? &amp; 4 &amp; 0 &amp; ? \\
+0 &amp; 0 &amp; 5 &amp; 4 \\
+0 &amp; 0 &amp; 5 &amp; 0 \\
 \end{bmatrix} \ \ \ \
 
 predicted \ ratings : 
 \begin{bmatrix}
-(\theta ^{(1)})^T x^{(1)} & (\theta ^{(2)})^T x^{(1)} & \cdots & (\theta ^{(n_u)})^T x^{(1)} \\
-(\theta ^{(1)})^T x^{(2)} & (\theta ^{(2)})^T x^{(2)} & \cdots & (\theta ^{(n_u)})^T x^{(2)} \\
-\vdots & \vdots & \vdots & \vdots \\
-(\theta ^{(1)})^T x^{(n_m)} & (\theta ^{(2)})^T x^{(n_m)} & \cdots & (\theta ^{(n_u)})^T x^{(n_m)} 
-\end{bmatrix} %]]></script>
+(\theta ^{(1)})^T x^{(1)} &amp; (\theta ^{(2)})^T x^{(1)} &amp; \cdots &amp; (\theta ^{(n_u)})^T x^{(1)} \\
+(\theta ^{(1)})^T x^{(2)} &amp; (\theta ^{(2)})^T x^{(2)} &amp; \cdots &amp; (\theta ^{(n_u)})^T x^{(2)} \\
+\vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+(\theta ^{(1)})^T x^{(n_m)} &amp; (\theta ^{(2)})^T x^{(n_m)} &amp; \cdots &amp; (\theta ^{(n_u)})^T x^{(n_m)} 
+\end{bmatrix}\]
 
-<script type="math/tex; mode=display">% <![CDATA[
-X = 
+\[X = 
 \begin{bmatrix}
 -(x^{(1)})^T- \\
 -(x^{(2)})^T- \\
@@ -652,21 +650,21 @@ X =
 
 \Theta = 
 \begin{bmatrix}
-| & | & \ & | \\
-(\Theta^{(1)})^T & (\Theta^{(2)})^T & \cdots &(\Theta^{(n_u)})^T \\
-| & | & \ & | \\
+| &amp; | &amp; \ &amp; | \\
+(\Theta^{(1)})^T &amp; (\Theta^{(2)})^T &amp; \cdots &amp;(\Theta^{(n_u)})^T \\
+| &amp; | &amp; \ &amp; | \\
 \end{bmatrix} 
 \\
 then, \\
-predicted \ ratings = X\Theta %]]></script>
+predicted \ ratings = X\Theta\]
 
 <blockquote>
-  <p><script type="math/tex">X\Theta</script> has mathematical property of low rank matrix</p>
+  <p>\(X\Theta\) has mathematical property of low rank matrix</p>
 </blockquote>
 
-<p><b> How to find movies <script type="math/tex">j</script> related to movie <script type="math/tex">i</script> </b></p>
+<p><b> How to find movies \(j\) related to movie \(i\) </b></p>
 <ul>
-  <li>small <script type="math/tex">\parallel x^{(i)} - x^{(j)} \parallel</script> \to moving <script type="math/tex">j</script> and <script type="math/tex">i</script> are “similar”</li>
+  <li>small \(\parallel x^{(i)} - x^{(j)} \parallel\) \to moving \(j\) and \(i\) are “similar”</li>
 </ul>
 
 <h2 id="implementation-detail-mean-normalization">Implementation Detail Mean Normalization</h2>
@@ -727,19 +725,19 @@ predicted \ ratings = X\Theta %]]></script>
   </tbody>
 </table>
 
-<p><b>For Eve</b>, compute <script type="math/tex">\theta^{(5)}</script> : 
+<p><b>For Eve</b>, compute \(\theta^{(5)}\) : 
 let’s say that n is equal to 2.</p>
 
-<p>Since Eve rated no movies, there are no movies for which r(i, j) is equal to one. So the first term of the objective plays no role at all in determining <script type="math/tex">\theta^{(5)}</script>.</p>
+<p>Since Eve rated no movies, there are no movies for which r(i, j) is equal to one. So the first term of the objective plays no role at all in determining \(\theta^{(5)}\).</p>
 
-<p>the only term that affects  <script type="math/tex">\theta^{(5)}</script> is the last term</p>
+<p>the only term that affects  \(\theta^{(5)}\) is the last term</p>
 
-<script type="math/tex; mode=display">\min \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2 = \frac{\lambda}{2} 
+\[\min \frac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^{n}(\theta_k^{(j)})^2 = \frac{\lambda}{2} 
 \begin{bmatrix}
 (\Theta_1^{(5)})^2 + (\Theta_2^{(5)})^2
-\end{bmatrix}</script>
+\end{bmatrix}\]
 
-<p>Minimizing above term, we’re going to end up with <script type="math/tex">(\theta^{(5)})^T =[0 \ \ 0]</script>. So all predicted ratings for Eve(<script type="math/tex">(\theta^{(5)})^T x^{(i)}</script>) is equal to zero.</p>
+<p>Minimizing above term, we’re going to end up with \((\theta^{(5)})^T =[0 \ \ 0]\). So all predicted ratings for Eve(\((\theta^{(5)})^T x^{(i)}\)) is equal to zero.</p>
 
 <blockquote>
   <p>This approach is not useful. The idea of mean normalization will let us fix this problem.</p>
@@ -747,14 +745,13 @@ let’s say that n is equal to 2.</p>
 
 <p>이를 해결하기 위해 일반적으로 mean normalization이라는 전처리 과정을 추가합니다. 직관적으로 평점데이터가 없는 유저의 경우, 영화별 평균 평점으로 예측하도록 하는 방법입니다.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-Y = 
+\[Y = 
 \begin{bmatrix}
-5 & 5 & 0 & 0 & ? \\
-5 & ? & ? & 0 & ? \\
-? & 4 & 0 & ? & ? \\
-0 & 0 & 5 & 4 & ? \\
-0 & 0 & 5 & 0 & ? \\
+5 &amp; 5 &amp; 0 &amp; 0 &amp; ? \\
+5 &amp; ? &amp; ? &amp; 0 &amp; ? \\
+? &amp; 4 &amp; 0 &amp; ? &amp; ? \\
+0 &amp; 0 &amp; 5 &amp; 4 &amp; ? \\
+0 &amp; 0 &amp; 5 &amp; 0 &amp; ? \\
 \end{bmatrix} \ \ \ \
 
 \mu = 
@@ -768,18 +765,18 @@ Y =
 \to
 Y = 
 \begin{bmatrix}
-2.5 & 2.5 & -2.5 & -2.5 & ? \\
-2.5 & ? & ? & -2.5 & ? \\
-? & 2 & -2 & ? & ? \\
--2.25 & -2.25 & 2.75 & 1.75 & ? \\
--1.25 & -1.25 & 3.75 & -1.25 & ? \\
-\end{bmatrix} \ \ \ \ %]]></script>
+2.5 &amp; 2.5 &amp; -2.5 &amp; -2.5 &amp; ? \\
+2.5 &amp; ? &amp; ? &amp; -2.5 &amp; ? \\
+? &amp; 2 &amp; -2 &amp; ? &amp; ? \\
+-2.25 &amp; -2.25 &amp; 2.75 &amp; 1.75 &amp; ? \\
+-1.25 &amp; -1.25 &amp; 3.75 &amp; -1.25 &amp; ? \\
+\end{bmatrix} \ \ \ \\]
 
-<p><b>For user <script type="math/tex">j</script>, on movie <script type="math/tex">i</script> predict :
-<script type="math/tex">(\theta^{(j)})^T(x^{i}) + \mu_i</script></b></p>
+<p><b>For user \(j\), on movie \(i\) predict :
+\((\theta^{(j)})^T(x^{i}) + \mu_i\)</b></p>
 
 <p><b>For Eve :
-<script type="math/tex">(\theta^{(j)})^T(x^{i}) + \mu_i = 0 + \mu_i = \mu_i</script></b></p>
+\((\theta^{(j)})^T(x^{i}) + \mu_i = 0 + \mu_i = \mu_i\)</b></p>
 
 <blockquote>
   <p>Mean normalization as a solid pre-processing step for collaborative filtering.</p>
@@ -898,7 +895,7 @@ Y =
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2019 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2023 yjucho. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
