@@ -32,12 +32,12 @@ Yue, Zhihan, et al. "Ts2vec: Towards universal representation of time series." P
 - timestamp masking : randomly mask the latent vector $$z_i$$
 - hierarchical constrative loss encapsulate representations in different levels of granularity 
 
+<img src = "/assets/img/2023-08-28/fig_hierarchical.png" ><br>
 <img src = "/assets/img/2023-08-28/fig_contextual.png" ><br>
 
 ## Frequency consistency 
 Zhang, Xiang, et al. "Self-supervised contrastive pre-training for time series via time-frequency consistency." Advances in Neural Information Processing Systems 35 (2022): 3988-4003.
 
-## Multi-granularity
-Hou, Min, et al. "Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction." Proceedings of the ACM Web Conference 2022. 2022.
+
 
 TBU

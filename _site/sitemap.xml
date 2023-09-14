@@ -133,6 +133,14 @@
 <lastmod>2023-08-28T00:00:00+09:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/time-series/consistency%20injection/granularity/</loc>
+<lastmod>2023-08-30T00:00:00+09:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/time-series/consistency%20injection/twin-nn-regression/</loc>
+<lastmod>2023-09-14T00:00:00+09:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/about/</loc>
 <lastmod>2018-10-05T00:00:00+09:00</lastmod>
 </url>

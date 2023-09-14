@@ -9,38 +9,38 @@
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>time series representation learning with consistency  - yjucho’s blog</title>
-<meta name="description" content="Temporal consistencyTonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020">
+<!-- begin _includes/seo.html --><title>Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction - yjucho’s blog</title>
+<meta name="description" content="Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022. ">
 
 
 
 <meta property="og:type" content="article">
 <meta property="og:locale" content="en_EN">
 <meta property="og:site_name" content="yjucho's blog">
-<meta property="og:title" content="time series representation learning with consistency">
-<meta property="og:url" content="http://localhost:4000/time-series/consistency%20injection/consistency/">
+<meta property="og:title" content="Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction">
+<meta property="og:url" content="http://localhost:4000/time-series/consistency%20injection/granularity/">
 
 
-  <meta property="og:description" content="Temporal consistencyTonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020">
-
-
-
-
-
-
-
-  <meta property="article:published_time" content="2023-08-28T00:00:00+09:00">
+  <meta property="og:description" content="Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022. ">
 
 
 
 
 
-  
+
+
+  <meta property="article:published_time" content="2023-08-30T00:00:00+09:00">
+
+
+
+
 
   
 
+  
 
-<link rel="canonical" href="http://localhost:4000/time-series/consistency%20injection/consistency/">
+
+<link rel="canonical" href="http://localhost:4000/time-series/consistency%20injection/granularity/">
 
 
 
@@ -263,15 +263,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="time series representation learning with consistency">
-    <meta itemprop="description" content="Temporal consistencyTonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020">
-    <meta itemprop="datePublished" content="August 28, 2023">
+    <meta itemprop="headline" content="Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction">
+    <meta itemprop="description" content="Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022. ">
+    <meta itemprop="datePublished" content="August 30, 2023">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 id="page-title" class="page__title" itemprop="headline">time series representation learning with consistency
+          <h1 id="page-title" class="page__title" itemprop="headline">Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction
 </h1>
           
         </header>
@@ -279,40 +279,11 @@
 
       <section class="page__content" itemprop="text">
         
-        <h2 id="temporal-consistency">Temporal consistency</h2>
-<p>Tonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020</p>
+        <p><b>Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022. </b></p>
 
-<h2 id="subseries-consistency">Subseries consistency</h2>
-<p>Franceschi, Jean-Yves, Aymeric Dieuleveut, and Martin Jaggi. “Unsupervised scalable representation learning for multivariate time series.” Advances in neural information processing systems 32 (2019)</p>
+\[\mathcal{L} = \sum^S_{s=1}||y^s - \hat{y}^s||^2 + \lambda_1 \sum_{s=1}^{S} \mathcal{L}_{Rec} + \frac{\lambda_{\theta}}{2}||\Theta||_F^2\]
 
-<h2 id="transformation-consistency">Transformation consistency</h2>
-<p>Eldele, Emadeldeen, et al. “Time-series representation learning via temporal and contextual contrasting.” arXiv preprint arXiv:2106.14112 (IJCAI 2021).</p>
-<ul>
-  <li>weak augmentation : jitter-and scale</li>
-  <li>strong augmentation : permutation-and-jitter</li>
-  <li>a tough cross-view prediction task by using the context of the strong
-augmentation \(c^s_t\) to predict the future timesteps of the weak augmentation \(z^w
-_{t+k}\) and vice versa  (temporal contrasting module)</li>
-  <li>\(c_t^{i+}\) as the positive sample of \(c_t^{i}\) that comes from the other augmented view of the same inut (contextual contrasting module)</li>
-</ul>
-
-<p><img src="/assets/img/2023-08-28/fig_transf.png" width="500" /><br /></p>
-
-<h2 id="contextual-consistency">Contextual consistency</h2>
-<p>Yue, Zhihan, et al. “Ts2vec: Towards universal representation of time series.” Proceedings of the AAAI Conference on Artificial Intelligence. Vol. 36. No. 8. 2022.</p>
-<ul>
-  <li>random cropping : randomly samples two overlapping time segments [a1, b1], [a2, b2] a1&lt;=a2&lt;=b1&lt;=b2 (the overlapped segment [a2, b1] should be consistent for two context views)</li>
-  <li>timestamp masking : randomly mask the latent vector \(z_i\)</li>
-  <li>hierarchical constrative loss encapsulate representations in different levels of granularity</li>
-</ul>
-
-<p><img src="/assets/img/2023-08-28/fig_hierarchical.png" /><br />
-<img src="/assets/img/2023-08-28/fig_contextual.png" /><br /></p>
-
-<h2 id="frequency-consistency">Frequency consistency</h2>
-<p>Zhang, Xiang, et al. “Self-supervised contrastive pre-training for time series via time-frequency consistency.” Advances in Neural Information Processing Systems 35 (2022): 3988-4003.</p>
-
-<p>TBU</p>
+\[\mathcal{L}_{Rec} = \sum_{m=1,2,..m} ||F^m - G^{m-1}||^2_F\]
 
         
       </section>
@@ -346,31 +317,31 @@ _{t+k}\) and vice versa  (temporal contrasting module)</li>
 
 
         
-          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-08-28T00:00:00+09:00">August 28, 2023</time></p>
+          <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-08-30T00:00:00+09:00">August 30, 2023</time></p>
         
       </footer>
 
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=time+series+representation+learning+with+consistency+%20http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Multi-Granularity+Residual+Learning+with+Confidence+Estimation+for+Time+Series+Prediction%20http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fgranularity%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fgranularity%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fgranularity%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fab fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fconsistency%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Ftime-series%2Fconsistency%2520injection%2Fgranularity%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="/unsupervised%20learning/time-series/SOMCPC/" class="pagination--pager" title="SOM-CPC: Unsupervised Contrastive Learning with Self-Organizing Maps for Structured Representations of High-Rate Time Series
+      <a href="/time-series/consistency%20injection/consistency/" class="pagination--pager" title="time series representation learning with consistency
 ">Previous</a>
     
     
-      <a href="/time-series/consistency%20injection/granularity/" class="pagination--pager" title="Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction
+      <a href="/time-series/consistency%20injection/twin-nn-regression/" class="pagination--pager" title="Twin neural network regression is a semi-supervised regression algorithm
 ">Next</a>
     
   </nav>
@@ -434,8 +405,8 @@ _{t+k}\) and vice versa  (temporal contrasting module)</li>
     
   <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/time-series/consistency%20injection/consistency/";  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = "/time-series/consistency%20injection/consistency"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+      this.page.url = "http://localhost:4000/time-series/consistency%20injection/granularity/";  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = "/time-series/consistency%20injection/granularity"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     (function() { // DON'T EDIT BELOW THIS LINE
       var d = document, s = d.createElement('script');

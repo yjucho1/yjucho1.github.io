@@ -163,4 +163,14 @@ var store = [{
         "excerpt":"Temporal consistency Tonekaboni, Sana, Danny Eytan, and Anna Goldenberg. “Unsupervised Representation Learning for Time Series with Temporal Neighborhood Coding.” International Conference on Learning Representations. 2020 Subseries consistency Franceschi, Jean-Yves, Aymeric Dieuleveut, and Martin Jaggi. “Unsupervised scalable representation learning for multivariate time series.” Advances in neural information processing systems 32 (2019)...","categories": ["Time-series","consistency injection"],
         "tags": [],
         "url": "http://localhost:4000/time-series/consistency%20injection/consistency/",
+        "teaser":null},{
+        "title": "Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction",
+        "excerpt":"Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022.  \\[\\mathcal{L} = \\sum^S_{s=1}||y^s - \\hat{y}^s||^2 + \\lambda_1 \\sum_{s=1}^{S} \\mathcal{L}_{Rec} + \\frac{\\lambda_{\\theta}}{2}||\\Theta||_F^2\\]\\[\\mathcal{L}_{Rec} = \\sum_{m=1,2,..m} ||F^m - G^{m-1}||^2_F\\]","categories": ["Time-series","consistency injection"],
+        "tags": [],
+        "url": "http://localhost:4000/time-series/consistency%20injection/granularity/",
+        "teaser":null},{
+        "title": "Twin neural network regression is a semi-supervised regression algorithm",
+        "excerpt":"Wetzel, Sebastian J., Roger G. Melko, and Isaac Tamblyn. “Twin neural network regression is a semi-supervised regression algorithm.” Machine Learning: Science and Technology 3.4 (2022): 045007. \\[F(x_i, x_j) = y_i -y_j\\]\\[\\begin{align}F(x_1, x_2) + F(x_2, x_3) + f(x_3, x_1) &amp;= (y_1 - y_2) + (y_2 -y_3) + (y_3 - y_1) \\\\&amp;=...","categories": ["Time-series","consistency injection"],
+        "tags": [],
+        "url": "http://localhost:4000/time-series/consistency%20injection/twin-nn-regression/",
         "teaser":null}]
