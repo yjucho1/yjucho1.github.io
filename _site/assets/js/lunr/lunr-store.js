@@ -165,12 +165,17 @@ var store = [{
         "url": "http://localhost:4000/time-series/consistency%20injection/consistency/",
         "teaser":null},{
         "title": "Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction",
-        "excerpt":"Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022.  \\[\\mathcal{L} = \\sum^S_{s=1}||y^s - \\hat{y}^s||^2 + \\lambda_1 \\sum_{s=1}^{S} \\mathcal{L}_{Rec} + \\frac{\\lambda_{\\theta}}{2}||\\Theta||_F^2\\]\\[\\mathcal{L}_{Rec} = \\sum_{m=1,2,..m} ||F^m - G^{m-1}||^2_F\\]","categories": ["Time-series","consistency injection"],
+        "excerpt":"Hou, Min, et al. “Multi-Granularity Residual Learning with Confidence Estimation for Time Series Prediction.” Proceedings of the ACM Web Conference 2022. 2022. \\[\\mathcal{L} = \\sum^S_{s=1}||y^s - \\hat{y}^s||^2 + \\lambda_1 \\sum_{s=1}^{S} \\mathcal{L}_{Rec} + \\frac{\\lambda_{\\theta}}{2}||\\Theta||_F^2\\]\\[\\mathcal{L}_{Rec} = \\sum_{m=1,2,..m} ||F^m - G^{m-1}||^2_F\\]\\[\\mathcal{L} = \\sum^S_{s=1}||y^s - \\hat{y}^s||^2 + \\lambda_1 \\sum_{s=1}^{S} \\mathcal{L}_{Rec} + \\lambda_2 \\sum_{x=1}^S \\sum_{m=1}^M...","categories": ["Time-series","consistency injection"],
         "tags": [],
         "url": "http://localhost:4000/time-series/consistency%20injection/granularity/",
         "teaser":null},{
         "title": "Twin neural network regression is a semi-supervised regression algorithm",
-        "excerpt":"Wetzel, Sebastian J., Roger G. Melko, and Isaac Tamblyn. “Twin neural network regression is a semi-supervised regression algorithm.” Machine Learning: Science and Technology 3.4 (2022): 045007. \\[F(x_i, x_j) = y_i -y_j\\]\\[\\begin{align}F(x_1, x_2) + F(x_2, x_3) + f(x_3, x_1) &amp;= (y_1 - y_2) + (y_2 -y_3) + (y_3 - y_1) \\\\&amp;=...","categories": ["Time-series","consistency injection"],
+        "excerpt":"Wetzel, Sebastian J., Roger G. Melko, and Isaac Tamblyn. “Twin neural network regression is a semi-supervised regression algorithm.” Machine Learning: Science and Technology 3.4 (2022): 045007. \\[F(x_i, x_j) = y_i -y_j\\]\\[\\begin{align}F(x_1, x_2) + F(x_2, x_3) + F(x_3, x_1) &amp;= (y_1 - y_2) + (y_2 -y_3) + (y_3 - y_1) \\\\&amp;=...","categories": ["Time-series","consistency injection"],
         "tags": [],
         "url": "http://localhost:4000/time-series/consistency%20injection/twin-nn-regression/",
+        "teaser":null},{
+        "title": "Semi-Supervised Learning on Meta Structure: Multi-Task Tagging and Parsing in Low-Resource Scenarios",
+        "excerpt":"Lim, K., Lee, J. Y., Carbonell, J., &amp; Poibeau, T. (2020, April). Semi-Supervised Learning on Meta Structure: Multi-Task Tagging and Parsing in Low-Resource Scenarios. In Proceedings of the AAAI Conference on Artificial Intelligence (Vol. 34, No. 05, pp. 8344-8351). \\[loss = \\sum_{(x_j, y_j)\\in T} - \\log P(y_j|x_j, \\theta) - \\sum_{vi\\in...","categories": ["nlp","consistency injection"],
+        "tags": [],
+        "url": "http://localhost:4000/nlp/consistency%20injection/cometa/",
         "teaser":null}]
